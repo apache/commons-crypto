@@ -14,25 +14,25 @@ else
   TAR:= tar
 endif
 
-$(TARGET)/jni-classes/org/apache/chimera/OpensslCipherNative.class : $(SRC)/org/apache/chimera/OpensslCipherNative.java
+$(TARGET)/jni-classes/org/chimera/OpensslCipherNative.class : $(SRC)/org/chimera/OpensslCipherNative.java
 	@mkdir -p $(TARGET)/jni-classes
 	$(JAVAC) -source 1.6 -target 1.6 -d $(TARGET)/jni-classes -sourcepath $(SRC) $<
 
-$(TARGET)/jni-classes/org/apache/chimera/random/OpensslSecureRandomNative.class : $(SRC)/org/apache/chimera/random/OpensslSecureRandomNative.java
+$(TARGET)/jni-classes/org/chimera/random/OpensslSecureRandomNative.class : $(SRC)/org/chimera/random/OpensslSecureRandomNative.java
 	@mkdir -p $(TARGET)/jni-classes
 	$(JAVAC) -source 1.6 -target 1.6 -d $(TARGET)/jni-classes -sourcepath $(SRC) $<
 
-$(TARGET)/jni-classes/org/apache/chimera/OpensslCipherNative.h: $(TARGET)/jni-classes/org/apache/chimera/OpensslCipherNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ org.apache.chimera.OpensslCipherNative
+$(TARGET)/jni-classes/org/chimera/OpensslCipherNative.h: $(TARGET)/jni-classes/org/chimera/OpensslCipherNative.class
+	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ org.chimera.OpensslCipherNative
 
-$(TARGET)/jni-classes/org/apache/chimera/random/OpensslSecureRandomNative.h: $(TARGET)/jni-classes/org/apache/chimera/random/OpensslSecureRandomNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ org.apache.chimera.random.OpensslSecureRandomNative
+$(TARGET)/jni-classes/org/chimera/random/OpensslSecureRandomNative.h: $(TARGET)/jni-classes/org/chimera/random/OpensslSecureRandomNative.class
+	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ org.chimera.random.OpensslSecureRandomNative
 
-$(CHIMERA_OUT)/OpensslCipherNative.o : $(SRC_NATIVE)/org/apache/chimera/OpensslCipherNative.c $(TARGET)/jni-classes/org/apache/chimera/OpensslCipherNative.h  
+$(CHIMERA_OUT)/OpensslCipherNative.o : $(SRC_NATIVE)/org/chimera/OpensslCipherNative.c $(TARGET)/jni-classes/org/chimera/OpensslCipherNative.h  
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(CHIMERA_OUT)/OpensslSecureRandom.o : $(SRC_NATIVE)/org/apache/chimera/random/OpensslSecureRandomNative.c $(TARGET)/jni-classes/org/apache/chimera/random/OpensslSecureRandomNative.h
+$(CHIMERA_OUT)/OpensslSecureRandom.o : $(SRC_NATIVE)/org/chimera/random/OpensslSecureRandomNative.c $(TARGET)/jni-classes/org/chimera/random/OpensslSecureRandomNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -46,8 +46,8 @@ clean-native:
 clean:
 	rm -rf $(TARGET)
 
-NATIVE_DIR:=src/main/resources/org/apache/chimera/native/$(OS_NAME)/$(OS_ARCH)
-NATIVE_TARGET_DIR:=$(TARGET)/classes/org/apache/chimera/native/$(OS_NAME)/$(OS_ARCH)
+NATIVE_DIR:=src/main/resources/org/chimera/native/$(OS_NAME)/$(OS_ARCH)
+NATIVE_TARGET_DIR:=$(TARGET)/classes/org/chimera/native/$(OS_NAME)/$(OS_ARCH)
 NATIVE_DLL:=$(NATIVE_DIR)/$(LIBNAME)
 
 chimera-jar-version:=chimera-$(shell perl -npe "s/version in ThisBuild\s+:=\s+\"(.*)\"/\1/" version.sbt | sed -e "/^$$/d")
