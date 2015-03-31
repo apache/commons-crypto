@@ -4,13 +4,13 @@ sonatypeSettings
 
 name := "chimera"
 
-organization := "org.chimera" 
+organization := "com.intel.chimera" 
 
-organizationName := "chimera.org"
+organizationName := "intel.com"
 
 description  := "chimera: A fast encryption/decryption library"
 
-profileName := "org.chimera" 
+profileName := "com.intel" 
 
 pomExtra := {
    <url>https://github.comm/intel-hadoop/chimera</url>

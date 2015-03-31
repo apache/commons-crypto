@@ -8,16 +8,16 @@ Chimera is a project which strips code related to CryptoInputStream/CryptoOutput
   * [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). Free for both commercial and non-commercial use.
 
 ## Download
-  * Release version: http://central.maven.org/maven2/org/chimera/chimera/
-  * Snapshot version (the latest beta version): https://oss.sonatype.org/content/repositories/snapshots/org/chimera/chimera/
+  * Release version: http://central.maven.org/maven2/com/intel/chimera/chimera/
+  * Snapshot version (the latest beta version): https://oss.sonatype.org/content/repositories/snapshots/com/intel/chimera/chimera/
 
 ### Using with Maven
-  * Chimera is available from Maven's central repository:  <http://central.maven.org/maven2/org/chimera/chimera>
+  * Chimera is available from Maven's central repository:  <http://central.maven.org/maven2/com/intel/chimera/chimera>
 
 Add the following dependency to your pom.xml:
 
     <dependency>
-      <groupId>org.chimera</groupId>
+      <groupId>com.intel.chimera</groupId>
       <artifactId>chimera</artifactId>
       <version>0.0.1</version>
       <type>jar</type>
@@ -27,7 +27,7 @@ Add the following dependency to your pom.xml:
 ### Using with sbt
 
 ```
-libraryDependencies += "org.chimera" % "chimera" % "0.0.1"
+libraryDependencies += "com.intel.chimera" % "chimera" % "0.0.1"
 ```
 
 ## Usage 
@@ -54,8 +54,8 @@ int decryptedLen = cis.read(decryptedData, 0, 1024);
 ### Configuration
 Currently, two crypto codec are supported: JceAesCtrCryptoCodec and OpensslAesCtrCryptoCodec, you can configure which codec to use as follows:
 
-    $ java -Dchimera.crypto.codec.classes.aes.ctr.nopadding=org.chimera.OpensslAesCtrCryptoCodec Sample
-    $ java -Dchimera.crypto.codec.classes.aes.ctr.nopadding=org.chimera.JceAesCtrCryptoCodec Sample
+    $ java -Dchimera.crypto.codec.classes.aes.ctr.nopadding=com.intel.chimera.OpensslAesCtrCryptoCodec Sample
+    $ java -Dchimera.crypto.codec.classes.aes.ctr.nopadding=com.intel.chimera.JceAesCtrCryptoCodec Sample
 
 ## Building from the source code 
 Building from the source code is an option when your OS platform and CPU architecture is not supported. To build chimera, you need Git, JDK (1.6 or higher), g++ compiler (mingw in Windows) etc.

@@ -1,7 +1,7 @@
 TARGET:=target
 SRC:=src/main/java
 SRC_NATIVE:=src/main/native
-include $(SRC)/org/chimera/VERSION
+include $(SRC)/com/intel/chimera/VERSION
 
 ifndef JAVA_HOME
 $(error Set JAVA_HOME environment variable)
@@ -12,13 +12,13 @@ JAVA  := "$$JAVA_HOME/bin/java"
 JAVAC := "$$JAVA_HOME/bin/javac" 
 JAVAH := "$$JAVA_HOME/bin/javah"
 
-OSINFO_CLASS := org.chimera.utils.OSInfo
-OSINFO_PROG := lib/org/chimera/utils/OSInfo.class
+OSINFO_CLASS := com.intel.chimera.utils.OSInfo
+OSINFO_PROG := lib/com/intel/chimera/utils/OSInfo.class
 
 ## building OSInfo.java 
 $(info compiling OSInfo.java)
 $(shell mkdir -p lib)
-$(shell $(JAVAC) src/main/java/org/chimera/utils/OSInfo.java -d lib)
+$(shell $(JAVAC) src/main/java/com/intel/chimera/utils/OSInfo.java -d lib)
 
 OS_NAME := $(shell $(JAVA) -cp lib $(OSINFO_CLASS) --os)
 OS_ARCH := $(shell $(JAVA) -cp lib $(OSINFO_CLASS) --arch)
@@ -252,9 +252,9 @@ LIBNAME   := $($(os_arch)_LIBNAME)
 CHIMERA_FLAGS := $($(os_arch)_CHIMERA_FLAGS)
 
 
-CFLAGS := $(CFLAGS) -Ilib/include -I/usr/include -I"$(SRC_NATIVE)/org/chimera"
+CFLAGS := $(CFLAGS) -Ilib/include -I/usr/include -I"$(SRC_NATIVE)/com/intel/chimera"
 CXXFLAGS := $(CXXFLAGS) -Ilib/include  -I/usr/include
 ifneq ($(jni_include),)
-CFLAGS := $(CFLAGS) -I"$(jni_include)" -I"$(TARGET)/jni-classes/org/chimera/" -I"$(TARGET)/jni-classes/org/chimera/random"
-CXXFLAGS := $(CXXFLAGS) -I"$(jni_include)" -I"$(TARGET)/jni-classes/org/chimera/" -I"$(TARGET)/jni-classes/org/chimera/random"
+CFLAGS := $(CFLAGS) -I"$(jni_include)" -I"$(TARGET)/jni-classes/com/intel/chimera/" -I"$(TARGET)/jni-classes/com/intel/chimera/random"
+CXXFLAGS := $(CXXFLAGS) -I"$(jni_include)" -I"$(TARGET)/jni-classes/com/intel/chimera/" -I"$(TARGET)/jni-classes/com/intel/chimera/random"
 endif
