@@ -20,6 +20,7 @@
   <groupId>com.intel.chimera</groupId>
   <artifactId>chimera</artifactId>
   <packaging>jar</packaging>
+  <description>chimera: A fast encryption/decryption library</description>
   <version>0.0.1</version>
   <name>chimera</name>
   <url>https://github.com/intel-hadoop/chimera</url>
@@ -30,12 +31,42 @@
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
-  
+  <developers>
+    <developer>
+      <id>dianfu</id>
+      <name>Dian Fu</name>
+      <email>dian.fu@intel.com</email>
+      <organization>Chimera Project</organization>
+      <roles>
+        <role>Chief Developer</role>
+      </roles>
+      <timezone>+8</timezone>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git@github.com:intel-hadoop/chimera.git</connection>
+    <developerConnection>scm:git:git@github.com:intel-hadoop/chimera.git</developerConnection>
+    <url>git@github.com:intel-hadoop/chimera.git</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-classworlds</artifactId>
+      <version>2.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_2.11</artifactId>
+      <version>2.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

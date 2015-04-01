@@ -106,7 +106,10 @@ clean-native-win32:
 	$(MAKE) clean-native OS_NAME=Windows OS_ARCH=x86
 
 javadoc:
-	$(SBT) doc
+	$(SBT) packageDoc
+
+packageSource:
+	$(SBT) packageSrc
 
 install-m2:
 	$(SBT) publishM2
