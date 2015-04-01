@@ -19,7 +19,7 @@ package com.intel.chimera;
 
 public class ConfigurationKeys {
   public static final String CHIMERA_SYSTEM_PROPERTIES_FILE =
-      "org-chimera.properties";
+      "com-intel-chimera.properties";
 
   public static final String CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX = 
       "chimera.crypto.codec.classes";

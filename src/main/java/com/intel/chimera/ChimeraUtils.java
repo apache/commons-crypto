@@ -69,7 +69,7 @@ public class ChimeraUtils {
       Enumeration<?> names = props.propertyNames();
       while (names.hasMoreElements()) {
         String name = (String) names.nextElement();
-        if (name.startsWith("com.intel.chimera.")) {
+        if (name.startsWith("chimera.")) {
           if (System.getProperty(name) == null) {
             System.setProperty(name, props.getProperty(name));
           }

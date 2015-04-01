@@ -45,29 +45,33 @@ public abstract class CryptoCodec {
    */
   public static CryptoCodec getInstance(CipherSuite cipherSuite) {
     List<Class<? extends CryptoCodec>> klasses = getCodecClasses(cipherSuite);
-    if (klasses == null) {
-      return null;
-    }
     CryptoCodec codec = null;
-    for (Class<? extends CryptoCodec> klass : klasses) {
-      try {
-        CryptoCodec c = ReflectionUtils.newInstance(klass);
-        if (c.getCipherSuite().getName().equals(cipherSuite.getName())) {
-          if (codec == null) {
-            LOG.debug("Using crypto codec {}.", klass.getName());
-            codec = c;
+    if (klasses != null) {
+      for (Class<? extends CryptoCodec> klass : klasses) {
+        try {
+          CryptoCodec c = ReflectionUtils.newInstance(klass);
+          if (c.getCipherSuite().getName().equals(cipherSuite.getName())) {
+            if (codec == null) {
+              LOG.debug("Using crypto codec {}.", klass.getName());
+              codec = c;
+            }
+          } else {
+            LOG.debug(
+                "Crypto codec {} doesn't meet the cipher suite {}.",
+                klass.getName(), cipherSuite.getName());
           }
-        } else {
-          LOG.debug(
-              "Crypto codec {} doesn't meet the cipher suite {}.",
-              klass.getName(), cipherSuite.getName());
+        } catch (Exception e) {
+          LOG.debug("Crypto codec {} is not available.",
+              klass.getName());
         }
-      } catch (Exception e) {
-        LOG.debug("Crypto codec {} is not available.",
-            klass.getName());
       }
     }
     
+    if (codec == null) {
+      // use JceAesCtrCryptoCodec as the default CryptoCodec
+      codec = new JceAesCtrCryptoCodec();
+    }
+
     return codec;
   }
 
