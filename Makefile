@@ -111,6 +111,11 @@ javadoc:
 packageSource:
 	$(SBT) packageSrc
 
+publishSigned:
+	$(SBT) publishSigned
+
+sonatypeRelease:
+	$(SBT) sonatypeRelease
 install-m2:
 	$(SBT) publishM2
 
