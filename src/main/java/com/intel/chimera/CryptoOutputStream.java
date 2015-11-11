@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
+import java.util.Properties;
 
 import com.google.common.base.Preconditions;
 
@@ -65,7 +66,12 @@ public class CryptoOutputStream extends FilterOutputStream {
   private final byte[] key;
   private final byte[] initIV;
   private byte[] iv;
-  
+
+  public CryptoOutputStream(Properties props, OutputStream out,
+      byte[] key, byte[] iv) throws IOException {
+    this(out, CryptoCodec.getInstance(props), ChimeraUtils.getBufferSize(props), key, iv);
+  }
+
   public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(out, codec, bufferSize, key, iv, 0);
@@ -90,17 +96,6 @@ public class CryptoOutputStream extends FilterOutputStream {
       throw new IOException(e);
     }
     updateEncryptor();
-  }
-  
-  public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
-      byte[] key, byte[] iv) throws IOException {
-    this(out, codec, key, iv, 0);
-  }
-  
-  public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
-      byte[] key, byte[] iv, long streamOffset) throws IOException {
-    this(out, codec, ChimeraUtils.getBufferSize(), 
-        key, iv, streamOffset);
   }
   
   public OutputStream getWrappedStream() {

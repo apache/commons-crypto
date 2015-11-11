@@ -19,6 +19,7 @@ package com.intel.chimera;
 
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,20 +37,22 @@ public abstract class CryptoCodec {
   /**
    * Get crypto codec for specified algorithm/mode/padding.
    * 
-   * @param conf
-   *          the configuration
+   * @param props
+   *          the configuration properties
    * @param cipherSuite
    *          algorithm/mode/padding
    * @return CryptoCodec the codec object. Null value will be returned if no
    *         crypto codec classes with cipher suite configured.
    */
-  public static CryptoCodec getInstance(CipherSuite cipherSuite) {
-    List<Class<? extends CryptoCodec>> klasses = getCodecClasses(cipherSuite);
+  public static CryptoCodec getInstance(Properties props,
+      CipherSuite cipherSuite) {
+    List<Class<? extends CryptoCodec>> klasses =
+        getCodecClasses(props, cipherSuite);
     CryptoCodec codec = null;
     if (klasses != null) {
       for (Class<? extends CryptoCodec> klass : klasses) {
         try {
-          CryptoCodec c = ReflectionUtils.newInstance(klass);
+          CryptoCodec c = ReflectionUtils.newInstance(klass, props);
           if (c.getCipherSuite().getName().equals(cipherSuite.getName())) {
             if (codec == null) {
               LOG.debug("Using crypto codec {}.", klass.getName());
@@ -69,7 +72,7 @@ public abstract class CryptoCodec {
     
     if (codec == null) {
       // use JceAesCtrCryptoCodec as the default CryptoCodec
-      codec = new JceAesCtrCryptoCodec();
+      codec = new JceAesCtrCryptoCodec(props);
     }
 
     return codec;
@@ -79,19 +82,30 @@ public abstract class CryptoCodec {
    * Get crypto codec for algorithm/mode/padding in config value
    * chimera.crypto.cipher.suite
    * 
-   * @param conf
-   *          the configuration
    * @return CryptoCodec the codec object Null value will be returned if no
    *         crypto codec classes with cipher suite configured.
    */
   public static CryptoCodec getInstance() {
-    return getInstance(ChimeraUtils.getCryptoSuite());
+    return getInstance(new Properties());
+  }
+
+  /**
+   * Get crypto codec for algorithm/mode/padding in config value
+   * chimera.crypto.cipher.suite
+   *
+   * @param props the properties which contain the configurations
+   *         of the crypto codec
+   * @return CryptoCodec the codec object Null value will be returned if no
+   *         crypto codec classes with cipher suite configured.
+   */
+  public static CryptoCodec getInstance(Properties props) {
+    return getInstance(props, ChimeraUtils.getCryptoSuite(props));
   }
 
   private static List<Class<? extends CryptoCodec>> getCodecClasses(
-      CipherSuite cipherSuite) {
+      Properties props, CipherSuite cipherSuite) {
     List<Class<? extends CryptoCodec>> result = Lists.newArrayList();
-    String codecString = ChimeraUtils.getCodecString(cipherSuite);
+    String codecString = ChimeraUtils.getCodecString(props, cipherSuite);
     if (codecString == null) {
       LOG.debug(
           "No crypto codec classes with cipher suite configured.");

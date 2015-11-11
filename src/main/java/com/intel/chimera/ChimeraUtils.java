@@ -90,11 +90,14 @@ public class ChimeraUtils {
       bufferCleaner.clean();
     }
   }
-  
+
   /** Read crypto buffer size */
-  public static int getBufferSize() {
-    String bufferSizeStr = System
+  public static int getBufferSize(Properties props) {
+    String bufferSizeStr = props.getProperty(CHIMERA_CRYPTO_BUFFER_SIZE_KEY);
+    if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
+      bufferSizeStr = System
         .getProperty(CHIMERA_CRYPTO_BUFFER_SIZE_KEY);
+    }
     if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
       return CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
     } else {
@@ -102,37 +105,55 @@ public class ChimeraUtils {
     }
   }
 
-  public static String getCodecString(CipherSuite cipherSuite) {
+  public static String getCodecString(Properties props, CipherSuite cipherSuite) {
     String configName = CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX
         + cipherSuite.getConfigSuffix();
-    return System.getProperty(configName);
+    return props.getProperty(configName) != null ?
+        props.getProperty(configName) : System.getProperty(configName);
   }
 
-  public static CipherSuite getCryptoSuite() {
-    String name = System.getProperty(CHIMERA_CRYPTO_CIPHER_SUITE_KEY,
-        CHIMERA_CRYPTO_CIPHER_SUITE_DEFAULT);
+  public static CipherSuite getCryptoSuite(Properties props) {
+    String name = props.getProperty(CHIMERA_CRYPTO_CIPHER_SUITE_KEY);
+    if (name == null) {
+      name = System.getProperty(CHIMERA_CRYPTO_CIPHER_SUITE_KEY,
+          CHIMERA_CRYPTO_CIPHER_SUITE_DEFAULT);
+    }
     return CipherSuite.convert(name);
   }
 
-  public static String getJCEProvider() {
-    return System.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY);
+  public static String getJCEProvider(Properties props) {
+    return props.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY) != null ?
+        props.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY) :
+        System.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY);
   }
 
-  public static String getSecureRandomAlg() {
-    return System.getProperty(CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY,
-        CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT);
+  public static String getSecureRandomAlg(Properties props) {
+    String randomAlg = props.getProperty(CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY);
+    if (randomAlg == null) {
+      randomAlg = System.getProperty(CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY,
+          CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT);
+    }
+    return randomAlg;
   }
 
-  public static Class<? extends Random> getSecureRandomClass() {
+  public static Class<? extends Random> getSecureRandomClass(Properties props) {
+    String secureRandomImpl = props.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
+    if (secureRandomImpl == null) {
+      secureRandomImpl = System.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
+    }
     return ReflectionUtils.getClass(
-        CHIMERA_SECURE_RANDOM_IMPL_KEY, OsSecureRandom.class,
+        secureRandomImpl, OsSecureRandom.class,
         Random.class);
   }
 
-  public static String getRandomDevPath() {
-    return System.getProperty(
-        CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY,
-        CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT);
+  public static String getRandomDevPath(Properties props) {
+    String devPath = props.getProperty(CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY);
+    if (devPath == null) {
+      devPath = System.getProperty(
+          CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY,
+          CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT);
+    }
+    return devPath;
   }
 
   public static String getChimeraLibPath() {

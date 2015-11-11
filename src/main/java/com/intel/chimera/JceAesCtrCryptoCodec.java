@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
+import java.util.Properties;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -41,9 +42,9 @@ public class JceAesCtrCryptoCodec extends AesCtrCryptoCodec {
   private String provider;
   private SecureRandom random;
 
-  public JceAesCtrCryptoCodec() {
-    provider = ChimeraUtils.getJCEProvider();
-    final String secureRandomAlg = ChimeraUtils.getSecureRandomAlg();
+  public JceAesCtrCryptoCodec(Properties props) {
+    provider = ChimeraUtils.getJCEProvider(props);
+    final String secureRandomAlg = ChimeraUtils.getSecureRandomAlg(props);
     try {
       random = (provider != null) ? 
           SecureRandom.getInstance(secureRandomAlg, provider) : 

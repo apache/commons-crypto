@@ -22,13 +22,14 @@ import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.intel.chimera.CryptoCodec;
 
 public class ReflectionUtils {
-  private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE = 
-      new ConcurrentHashMap<Class<?>, Constructor<?>>();
+  public static Logger LOG = LoggerFactory.getLogger(ReflectionUtils.class);
 
   private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>>
     CACHE_CLASSES = new WeakHashMap<ClassLoader, Map<String, WeakReference<Class<?>>>>();
@@ -53,22 +54,25 @@ public class ReflectionUtils {
    */
   private static abstract class NegativeCacheSentinel {}
 
-  @SuppressWarnings("unchecked")
-  public static <T> T newInstance(Class<T> klass) {
-    T result;
+  @SuppressWarnings("rawtypes")
+  public static <T> T newInstance(Class<T> klass, Object ... args) {
     try {
-      Constructor<T> meth = (Constructor<T>) CONSTRUCTOR_CACHE.get(klass);
-      if (meth == null) {
-        meth = klass
-            .getDeclaredConstructor(new Class[] {});
-        meth.setAccessible(true);
-        CONSTRUCTOR_CACHE.put(klass, meth);
+      Constructor<T> ctor = null;
+
+      if (args.length == 0) {
+        ctor = klass.getDeclaredConstructor(new Class[] {});
+      } else {
+        Class[] argClses = new Class[args.length];
+        for (int i = 0; i < args.length; i++) {
+          argClses[i] = args[i].getClass();
+        }
+        ctor = klass.getDeclaredConstructor(argClses);
       }
-      result = meth.newInstance();
+      ctor.setAccessible(true);
+      return ctor.newInstance(args);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    return result;
   }
 
   /** 
@@ -91,7 +95,13 @@ public class ReflectionUtils {
                                          Class<? extends U> defaultValue, 
                                          Class<U> xface) {
     try {
-      Class<?> theClass = getClass(name, defaultValue);
+      Class<?> theClass = null;
+      if (name != null && !name.isEmpty()) {
+        theClass = getClassByName(name);
+      }
+      if (theClass == null) {
+        theClass = defaultValue;
+      }
       if (theClass != null && !xface.isAssignableFrom(theClass))
         throw new RuntimeException(theClass+" not "+xface.getName());
       else if (theClass != null)

@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
+import java.util.Properties;
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
@@ -46,11 +47,14 @@ public class CryptoCodecTest {
   private final String opensslCodecClass = 
       "com.intel.chimera.OpensslAesCtrCryptoCodec";
 
+  Properties props;
+
   @Before
   public void setUp() throws IOException {
     Random random = new SecureRandom();
     random.nextBytes(key);
     random.nextBytes(iv);
+    props = new Properties();
   }
 
   @Test
@@ -87,7 +91,7 @@ public class CryptoCodecTest {
     CryptoCodec encCodec = null;
     try {
       encCodec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(encCodecClass));
+          ReflectionUtils.getClassByName(encCodecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }
@@ -112,7 +116,7 @@ public class CryptoCodecTest {
     CryptoCodec decCodec = null;
     try {
       decCodec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(decCodecClass));
+          ReflectionUtils.getClassByName(decCodecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }

@@ -17,6 +17,7 @@
  */
 package com.intel.chimera.random;
 
+import java.util.Properties;
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
@@ -62,7 +63,7 @@ public class OpensslSecureRandom extends Random {
     return nativeEnabled;
   }
   
-  public OpensslSecureRandom() {
+  public OpensslSecureRandom(Properties props) {
     if (!nativeEnabled) {
       fallback = new java.security.SecureRandom();
     }

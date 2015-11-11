@@ -21,6 +21,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
@@ -59,8 +60,8 @@ public class OsSecureRandom extends Random implements Closeable {
     }
   }
 
-  public OsSecureRandom() {
-    randomDevPath = ChimeraUtils.getRandomDevPath();
+  public OsSecureRandom(Properties props) {
+    randomDevPath = ChimeraUtils.getRandomDevPath(props);
     File randomDevFile = new File(randomDevPath);
 
     try {

@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.security.GeneralSecurityException;
+import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -80,6 +81,11 @@ public class CryptoInputStream extends FilterInputStream implements
   private final Queue<Decryptor> decryptorPool = 
       new ConcurrentLinkedQueue<Decryptor>();
   
+  public CryptoInputStream(Properties props, InputStream in,
+      byte[] key, byte[] iv) throws IOException {
+    this(in, CryptoCodec.getInstance(props), ChimeraUtils.getBufferSize(props), key, iv);
+  }
+
   public CryptoInputStream(InputStream in, CryptoCodec codec, 
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(in, codec, bufferSize, key, iv, 0);
@@ -101,12 +107,7 @@ public class CryptoInputStream extends FilterInputStream implements
     decryptor = getDecryptor();
     resetStreamOffset(streamOffset);
   }
-  
-  public CryptoInputStream(InputStream in, CryptoCodec codec,
-      byte[] key, byte[] iv) throws IOException {
-    this(in, codec, ChimeraUtils.getBufferSize(), key, iv);
-  }
-  
+
   public InputStream getWrappedStream() {
     return in;
   }

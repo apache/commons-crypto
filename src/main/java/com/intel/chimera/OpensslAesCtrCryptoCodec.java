@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
+import java.util.Properties;
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
@@ -39,15 +40,15 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
 
   private Random random;
   
-  public OpensslAesCtrCryptoCodec() {
+  public OpensslAesCtrCryptoCodec(Properties props) {
     String loadingFailureReason = OpensslCipher.getLoadingFailureReason();
     if (loadingFailureReason != null) {
       throw new RuntimeException(loadingFailureReason);
     }
 
-    final Class<? extends Random> klass = ChimeraUtils.getSecureRandomClass();
+    final Class<? extends Random> klass = ChimeraUtils.getSecureRandomClass(props);
     try {
-      random = ReflectionUtils.newInstance(klass);
+      random = ReflectionUtils.newInstance(klass, props);
     } catch (Exception e) {
       LOG.info("Unable to use " + klass.getName() + ".  Falling back to " +
           "Java SecureRandom.", e);
