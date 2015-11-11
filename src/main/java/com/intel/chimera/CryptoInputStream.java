@@ -24,8 +24,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.google.common.base.Preconditions;
 
@@ -73,13 +71,6 @@ public class CryptoInputStream extends FilterInputStream implements
   private final byte[] initIV;
   private byte[] iv;
   private final boolean isReadableByteChannel;
-  
-  /** DirectBuffer pool */
-  private final Queue<ByteBuffer> bufferPool = 
-      new ConcurrentLinkedQueue<ByteBuffer>();
-  /** Decryptor pool */
-  private final Queue<Decryptor> decryptorPool = 
-      new ConcurrentLinkedQueue<Decryptor>();
   
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
@@ -437,29 +428,15 @@ public class CryptoInputStream extends FilterInputStream implements
   private void freeBuffers() {
     ChimeraUtils.freeDB(inBuffer);
     ChimeraUtils.freeDB(outBuffer);
-    cleanBufferPool();
   }
-  
-  /** Clean direct buffer pool */
-  private void cleanBufferPool() {
-    ByteBuffer buf;
-    while ((buf = bufferPool.poll()) != null) {
-      ChimeraUtils.freeDB(buf);
-    }
-  }
-  
+
   /** Get decryptor from pool */
   private Decryptor getDecryptor() throws IOException {
-    Decryptor decryptor = decryptorPool.poll();
-    if (decryptor == null) {
-      try {
-        decryptor = codec.createDecryptor();
-      } catch (GeneralSecurityException e) {
-        throw new IOException(e);
-      }
+    try {
+      return codec.createDecryptor();
+    } catch (GeneralSecurityException e) {
+      throw new IOException(e);
     }
-    
-    return decryptor;
   }
 
   @Override
