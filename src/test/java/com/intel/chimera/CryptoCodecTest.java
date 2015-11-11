@@ -17,8 +17,10 @@
  */
 package com.intel.chimera;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
@@ -96,14 +98,14 @@ public class CryptoCodecTest {
       throw new IOException("Illegal crypto codec!");
     }
     LOG.info("Created a Codec object of type: " + encCodecClass);
-    
+
     // Generate data
     SecureRandom random = new SecureRandom();
     byte[] originalData = new byte[count];
     byte[] decryptedData = new byte[count];
     random.nextBytes(originalData);
     LOG.info("Generated " + count + " records");
-    
+
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
     CryptoOutputStream out = new CryptoOutputStream(encryptedData, 
@@ -112,7 +114,7 @@ public class CryptoCodecTest {
     out.flush();
     out.close();
     LOG.info("Finished encrypting data");
-    
+
     CryptoCodec decCodec = null;
     try {
       decCodec = (CryptoCodec)ReflectionUtils.newInstance(
@@ -121,11 +123,11 @@ public class CryptoCodecTest {
       throw new IOException("Illegal crypto codec!");
     }
     LOG.info("Created a Codec object of type: " + decCodecClass);
-    
+
     // Decrypt data
     CryptoInputStream in = new CryptoInputStream(new ByteArrayInputStream(
         encryptedData.toByteArray()), decCodec, bufferSize, key, iv);
-    
+
     // Check
     int remainingToRead = count;
     int offset = 0;
@@ -136,9 +138,22 @@ public class CryptoCodecTest {
         offset += n;
       }
     }
-    
+
     Assert.assertArrayEquals("originalData and decryptedData not equal",
           originalData, decryptedData);
+
+    // Decrypt data byte-at-a-time
+    in = new CryptoInputStream(new ByteArrayInputStream(
+        encryptedData.toByteArray()), decCodec, bufferSize, key, iv);
+
+    // Check
+    DataInputStream originalIn = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(originalData)));
+    int expected;
+    do {
+      expected = originalIn.read();
+      Assert.assertEquals("Decrypted stream read by byte does not match",
+        expected, in.read());
+    } while (expected != -1);
 
     LOG.info("SUCCESS! Completed checking " + count + " records");
   }
