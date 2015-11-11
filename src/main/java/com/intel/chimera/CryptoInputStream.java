@@ -26,6 +26,7 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import com.google.common.base.Preconditions;
+import com.intel.chimera.utils.Utils;
 
 /**
  * CryptoInputStream decrypts data. It is not thread-safe. AES CTR mode is
@@ -72,7 +73,7 @@ public class CryptoInputStream extends FilterInputStream implements
   
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
-    this(in, CryptoCodec.getInstance(props), ChimeraUtils.getBufferSize(props), key, iv);
+    this(in, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
   public CryptoInputStream(InputStream in, CryptoCodec codec, 
@@ -88,8 +89,8 @@ public class CryptoInputStream extends FilterInputStream implements
       byte[] iv,
       long streamOffset) throws IOException {
     super(in);
-    ChimeraUtils.checkCodec(codec);
-    this.bufferSize = ChimeraUtils.checkBufferSize(codec, bufferSize);
+    Utils.checkCodec(codec);
+    this.bufferSize = Utils.checkBufferSize(codec, bufferSize);
     this.input = getInput(in, bufferSize);
     this.codec = codec;
     this.key = key.clone();
@@ -375,8 +376,8 @@ public class CryptoInputStream extends FilterInputStream implements
 
   /** Forcibly free the direct buffers. */
   private void freeBuffers() {
-    ChimeraUtils.freeDB(inBuffer);
-    ChimeraUtils.freeDB(outBuffer);
+    Utils.freeDB(inBuffer);
+    Utils.freeDB(outBuffer);
   }
 
   /** Get decryptor from pool */

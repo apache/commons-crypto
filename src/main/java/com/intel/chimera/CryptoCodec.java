@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.intel.chimera.utils.Utils;
 import com.intel.chimera.utils.ReflectionUtils;
 
 /**
@@ -99,13 +100,13 @@ public abstract class CryptoCodec {
    *         crypto codec classes with cipher suite configured.
    */
   public static CryptoCodec getInstance(Properties props) {
-    return getInstance(props, ChimeraUtils.getCryptoSuite(props));
+    return getInstance(props, Utils.getCryptoSuite(props));
   }
 
   private static List<Class<? extends CryptoCodec>> getCodecClasses(
       Properties props, CipherSuite cipherSuite) {
     List<Class<? extends CryptoCodec>> result = Lists.newArrayList();
-    String codecString = ChimeraUtils.getCodecString(props, cipherSuite);
+    String codecString = Utils.getCodecString(props, cipherSuite);
     if (codecString == null) {
       LOG.debug(
           "No crypto codec classes with cipher suite configured.");

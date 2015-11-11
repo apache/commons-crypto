@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Preconditions;
+import com.intel.chimera.utils.Utils;
 import com.intel.chimera.utils.ReflectionUtils;
 
 /**
@@ -46,7 +47,7 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
       throw new RuntimeException(loadingFailureReason);
     }
 
-    final Class<? extends Random> klass = ChimeraUtils.getSecureRandomClass(props);
+    final Class<? extends Random> klass = Utils.getSecureRandomClass(props);
     try {
       random = ReflectionUtils.newInstance(klass, props);
     } catch (Exception e) {

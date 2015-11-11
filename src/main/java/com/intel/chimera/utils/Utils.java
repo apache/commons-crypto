@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera;
+package com.intel.chimera.utils;
 
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
@@ -40,10 +40,12 @@ import java.util.Properties;
 import java.util.Random;
 
 import com.google.common.base.Preconditions;
+import com.intel.chimera.CipherSuite;
+import com.intel.chimera.CryptoCodec;
+import com.intel.chimera.UnsupportedCodecException;
 import com.intel.chimera.random.OsSecureRandom;
-import com.intel.chimera.utils.ReflectionUtils;
 
-public class ChimeraUtils {
+public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
   
   static {

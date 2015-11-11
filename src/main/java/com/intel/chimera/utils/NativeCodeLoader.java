@@ -30,7 +30,6 @@ import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.intel.chimera.ChimeraUtils;
 
 /**
  * A helper to load the native chimera code i.e. libchimera.so.
@@ -78,9 +77,9 @@ public class NativeCodeLoader {
 
   static File findNativeLibrary() {
     // Try to load the library in chimera.lib.path */
-    String chimeraNativeLibraryPath = ChimeraUtils
+    String chimeraNativeLibraryPath = Utils
         .getChimeraLibPath();
-    String chimeraNativeLibraryName = ChimeraUtils
+    String chimeraNativeLibraryName = Utils
         .getChimeraLibName();
 
     // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
@@ -119,7 +118,7 @@ public class NativeCodeLoader {
 
     // Temporary folder for the native lib. Use the value of
     // chimera.tempdir or java.io.tmpdir
-    String tempFolder = new File(ChimeraUtils.getChimeraTmpDir())
+    String tempFolder = new File(Utils.getChimeraTmpDir())
         .getAbsolutePath();
 
     // Extract and load a native library inside the jar file

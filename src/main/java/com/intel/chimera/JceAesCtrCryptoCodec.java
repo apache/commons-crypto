@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Preconditions;
+import com.intel.chimera.utils.Utils;
 
 /**
  * Implement the AES-CTR crypto codec using JCE provider.
@@ -43,8 +44,8 @@ public class JceAesCtrCryptoCodec extends AesCtrCryptoCodec {
   private SecureRandom random;
 
   public JceAesCtrCryptoCodec(Properties props) {
-    provider = ChimeraUtils.getJCEProvider(props);
-    final String secureRandomAlg = ChimeraUtils.getSecureRandomAlg(props);
+    provider = Utils.getJCEProvider(props);
+    final String secureRandomAlg = Utils.getSecureRandomAlg(props);
     try {
       random = (provider != null) ? 
           SecureRandom.getInstance(secureRandomAlg, provider) : 

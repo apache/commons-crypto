@@ -27,7 +27,7 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.intel.chimera.ChimeraUtils;
+import com.intel.chimera.utils.Utils;
 import com.intel.chimera.utils.IOUtils;
 
 /**
@@ -61,7 +61,7 @@ public class OsSecureRandom extends Random implements Closeable {
   }
 
   public OsSecureRandom(Properties props) {
-    randomDevPath = ChimeraUtils.getRandomDevPath(props);
+    randomDevPath = Utils.getRandomDevPath(props);
     File randomDevFile = new File(randomDevPath);
 
     try {
