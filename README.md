@@ -19,7 +19,7 @@ Add the following dependency to your pom.xml:
     <dependency>
       <groupId>com.intel.chimera</groupId>
       <artifactId>chimera</artifactId>
-      <version>0.0.1</version>
+      <version>0.5.0</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -27,7 +27,7 @@ Add the following dependency to your pom.xml:
 ### Using with sbt
 
 ```
-libraryDependencies += "com.intel.chimera" % "chimera" % "0.0.1"
+libraryDependencies += "com.intel.chimera" % "chimera" % "0.5.0"
 ```
 
 ## Usage 
