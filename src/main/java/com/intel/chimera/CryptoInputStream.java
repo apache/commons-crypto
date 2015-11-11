@@ -58,8 +58,6 @@ public class CryptoInputStream extends FilterInputStream implements
   private ByteBuffer outBuffer;
   private long streamOffset = 0; // Underlying stream offset.
   
-  private Boolean usingByteBufferRead = null;
-  
   /**
    * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer} 
    * before any other data goes in. The purpose of padding is to put the input 
@@ -70,7 +68,7 @@ public class CryptoInputStream extends FilterInputStream implements
   private final byte[] key;
   private final byte[] initIV;
   private byte[] iv;
-  private final boolean isReadableByteChannel;
+  private Input input;
   
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
@@ -81,18 +79,23 @@ public class CryptoInputStream extends FilterInputStream implements
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(in, codec, bufferSize, key, iv, 0);
   }
-  
-  public CryptoInputStream(InputStream in, CryptoCodec codec,
-      int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
+
+  public CryptoInputStream(
+      InputStream in,
+      CryptoCodec codec,
+      int bufferSize,
+      byte[] key,
+      byte[] iv,
+      long streamOffset) throws IOException {
     super(in);
     ChimeraUtils.checkCodec(codec);
     this.bufferSize = ChimeraUtils.checkBufferSize(codec, bufferSize);
+    this.input = getInput(in, bufferSize);
     this.codec = codec;
     this.key = key.clone();
     this.initIV = iv.clone();
     this.iv = iv.clone();
     this.streamOffset = streamOffset;
-    isReadableByteChannel = in instanceof ReadableByteChannel;
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     decryptor = getDecryptor();
@@ -103,6 +106,14 @@ public class CryptoInputStream extends FilterInputStream implements
     return in;
   }
   
+  private Input getInput(InputStream in, int bufferSize) {
+    if (in instanceof ReadableByteChannel) {
+      return new ChannelInput(in, bufferSize);
+    } else {
+      return new StreamInput(in, bufferSize);
+    }
+  }
+
   /**
    * Decryption is buffer based.
    * If there is data in {@link #outBuffer}, then read it out of this buffer.
@@ -131,33 +142,7 @@ public class CryptoInputStream extends FilterInputStream implements
       outBuffer.get(b, off, n);
       return n;
     } else {
-      int n = 0;
-      
-      /*
-       * Check whether the underlying stream is {@link ByteBufferReadable},
-       * it can avoid bytes copy.
-       */
-      if (usingByteBufferRead == null) {
-        if (isReadableByteChannel) {
-          try {
-            n = ((ReadableByteChannel) in).read(inBuffer);
-            usingByteBufferRead = Boolean.TRUE;
-          } catch (UnsupportedOperationException e) {
-            usingByteBufferRead = Boolean.FALSE;
-          }
-        } else {
-          usingByteBufferRead = Boolean.FALSE;
-        }
-        if (!usingByteBufferRead) {
-          n = readFromUnderlyingStream(inBuffer);
-        }
-      } else {
-        if (usingByteBufferRead) {
-          n = ((ReadableByteChannel) in).read(inBuffer);
-        } else {
-          n = readFromUnderlyingStream(inBuffer);
-        }
-      }
+      int n = input.read(inBuffer);
       if (n <= 0) {
         return n;
       }
@@ -169,25 +154,6 @@ public class CryptoInputStream extends FilterInputStream implements
       outBuffer.get(b, off, n);
       return n;
     }
-  }
-  
-  /** Read data from underlying stream. */
-  private int readFromUnderlyingStream(ByteBuffer inBuffer) throws IOException {
-    final int toRead = inBuffer.remaining();
-    final byte[] tmp = getTmpBuf();
-    final int n = in.read(tmp, 0, toRead);
-    if (n > 0) {
-      inBuffer.put(tmp, 0, n);
-    }
-    return n;
-  }
-  
-  private byte[] tmpBuf;
-  private byte[] getTmpBuf() {
-    if (tmpBuf == null) {
-      tmpBuf = new byte[bufferSize];
-    }
-    return tmpBuf;
   }
   
   /**
@@ -315,52 +281,35 @@ public class CryptoInputStream extends FilterInputStream implements
   @Override
   public int read(ByteBuffer buf) throws IOException {
     checkStream();
-    if (isReadableByteChannel) {
-      final int unread = outBuffer.remaining();
-      if (unread > 0) { // Have unread decrypted data in buffer.
-        int toRead = buf.remaining();
-        if (toRead <= unread) {
-          final int limit = outBuffer.limit();
-          outBuffer.limit(outBuffer.position() + toRead);
-          buf.put(outBuffer);
-          outBuffer.limit(limit);
-          return toRead;
-        } else {
-          buf.put(outBuffer);
-        }
-      }
-
-      final int pos = buf.position();
-      final int n = ((ReadableByteChannel) in).read(buf);
-      if (n > 0) {
-        streamOffset += n; // Read n bytes
-        decrypt(buf, n, pos);
-      }
-
-      if (n >= 0) {
-        return unread + n;
+    final int unread = outBuffer.remaining();
+    if (unread > 0) { // Have unread decrypted data in buffer.
+      int toRead = buf.remaining();
+      if (toRead <= unread) {
+        final int limit = outBuffer.limit();
+        outBuffer.limit(outBuffer.position() + toRead);
+        buf.put(outBuffer);
+        outBuffer.limit(limit);
+        return toRead;
       } else {
-        if (unread == 0) {
-          return -1;
-        } else {
-          return unread;
-        }
+        buf.put(outBuffer);
       }
+    }
+
+    final int pos = buf.position();
+    final int n = input.read(buf);
+    if (n > 0) {
+      streamOffset += n; // Read n bytes
+      decrypt(buf, pos, n);
+    }
+
+    if (n >= 0) {
+      return unread + n;
     } else {
-      int n = 0;
-      if (buf.hasArray()) {
-        n = read(buf.array(), buf.position(), buf.remaining());
-        if (n > 0) {
-          buf.position(buf.position() + n);
-        }
+      if (unread == 0) {
+        return -1;
       } else {
-        byte[] tmp = new byte[buf.remaining()];
-        n = read(tmp);
-        if (n > 0) {
-          buf.put(tmp, 0, n);
-        }
+        return unread;
       }
-      return n;
     }
   }
 
@@ -369,24 +318,24 @@ public class CryptoInputStream extends FilterInputStream implements
    * Output is also buf and same start position.
    * buf.position() and buf.limit() should be unchanged after decryption.
    */
-  private void decrypt(ByteBuffer buf, int n, int start) 
+  private void decrypt(ByteBuffer buf, int offset, int len) 
       throws IOException {
     final int pos = buf.position();
     final int limit = buf.limit();
-    int len = 0;
-    while (len < n) {
-      buf.position(start + len);
-      buf.limit(start + len + Math.min(n - len, inBuffer.remaining()));
+    int n = 0;
+    while (n < len) {
+      buf.position(offset + n);
+      buf.limit(offset + n + Math.min(len - n, inBuffer.remaining()));
       inBuffer.put(buf);
       // Do decryption
       try {
         decrypt(decryptor, inBuffer, outBuffer, padding);
-        buf.position(start + len);
+        buf.position(offset + n);
         buf.limit(limit);
-        len += outBuffer.remaining();
+        n += outBuffer.remaining();
         buf.put(outBuffer);
       } finally {
-        padding = afterDecryption(decryptor, inBuffer, streamOffset - (n - len), iv);
+        padding = afterDecryption(decryptor, inBuffer, streamOffset - (len - n), iv);
       }
     }
     buf.position(pos);
