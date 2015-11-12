@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+/**
+ * The StreamInput class takes a <code>InputStream</code> object and
+ * wraps it as <code>Input</code> object acceptable by <code>CryptoInputStream</code>.
+ */
 public class StreamInput implements Input {
   private byte[] buf;
   private int bufferSize;
@@ -31,6 +35,7 @@ public class StreamInput implements Input {
     this.bufferSize = bufferSize;
   }
 
+  @Override
   public int read(ByteBuffer dst) throws IOException {
     final int remaining = dst.remaining();
     final byte[] tmp = getBuf();

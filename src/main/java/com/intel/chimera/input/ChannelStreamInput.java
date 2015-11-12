@@ -22,6 +22,13 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
+/**
+ * The ChannelStreamInput class takes an <code>InputStream</code> object which also 
+ * implements <code>ReadableByteChannel</code> interface and wraps it as <code>Input</code> object 
+ * acceptable by <code>CryptoInputStream</code>. The <code>ReadableByteChannel</code> interface
+ * can be used to read data faster with <code>ByteBuffer</code> and only if when we find it not supported, 
+ * we fall back to the stream only .
+ */
 public class ChannelStreamInput extends StreamInput {
   private ReadableByteChannel channel;
   boolean isChannelReadSupported = true;
@@ -33,6 +40,7 @@ public class ChannelStreamInput extends StreamInput {
     this.channel = (ReadableByteChannel) inputStream;
   }
 
+  @Override
   public int read(ByteBuffer dst) throws IOException {
     if (isChannelReadSupported) {
       try {

@@ -45,12 +45,19 @@ import com.intel.chimera.utils.Utils;
  */
 public class CryptoOutputStream extends OutputStream implements
     WritableByteChannel {
-  private final byte[] oneByteBuf = new byte[1];
+  private Output output;
   private final CryptoCodec codec;
-  private final Encryptor encryptor;
   private final int bufferSize;
   
-  private Output output;
+  private final byte[] key;
+  private final byte[] initIV;
+  private byte[] iv;
+  
+  private long streamOffset = 0; // Underlying stream offset.
+ 
+  
+  private final byte[] oneByteBuf = new byte[1];
+  private final Encryptor encryptor;
   
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at 
@@ -63,7 +70,6 @@ public class CryptoOutputStream extends OutputStream implements
    * outBuffer.limit();
    */
   private ByteBuffer outBuffer;
-  private long streamOffset = 0; // Underlying stream offset.
   
   /**
    * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer} 
@@ -72,11 +78,13 @@ public class CryptoOutputStream extends OutputStream implements
    */
   private byte padding;
   private boolean closed;
-  private final byte[] key;
-  private final byte[] initIV;
-  private byte[] iv;
 
   public CryptoOutputStream(Properties props, OutputStream out,
+      byte[] key, byte[] iv) throws IOException {
+    this(out, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
+  }
+  
+  public CryptoOutputStream(Properties props, WritableByteChannel out,
       byte[] key, byte[] iv) throws IOException {
     this(out, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
   }
@@ -123,7 +131,7 @@ public class CryptoOutputStream extends OutputStream implements
    * @throws IOException
    */
   @Override
-  public synchronized void write(byte[] b, int off, int len) throws IOException {
+  public void write(byte[] b, int off, int len) throws IOException {
     checkStream();
     if (b == null) {
       throw new NullPointerException();
@@ -143,6 +151,74 @@ public class CryptoOutputStream extends OutputStream implements
         encrypt();
       }
     }
+  }
+  
+  @Override
+  public void close() throws IOException {
+    if (closed) {
+      return;
+    }
+    
+    try {
+      encrypt();
+      output.close();
+      freeBuffers();
+      super.close();
+    } finally {
+      closed = true;
+    }
+  }
+  
+  /**
+   * To flush, we need to encrypt the data in the buffer and write to the 
+   * underlying stream, then do the flush.
+   */
+  @Override
+  public void flush() throws IOException {
+    checkStream();
+    encrypt();
+    output.flush();
+    super.flush();
+  }
+  
+  @Override
+  public void write(int b) throws IOException {
+    oneByteBuf[0] = (byte)(b & 0xff);
+    write(oneByteBuf, 0, oneByteBuf.length);
+  }
+  
+  @Override
+  public boolean isOpen() {
+    return !closed;
+  }
+
+  @Override
+  public int write(ByteBuffer src) throws IOException {
+    checkStream();
+    final int len = src.remaining();
+    int remaining = len;
+    while (remaining > 0) {
+      final int space = inBuffer.remaining();
+      if (remaining < space) {
+        inBuffer.put(src);
+        remaining = 0;
+      } else {
+        // to void copy twice, we set the limit to copy directly
+        final int oldLimit = src.limit();
+        final int newLimit = src.position() + space;
+        src.limit(newLimit);
+        
+        inBuffer.put(src);
+        
+        // restore the old limit
+        src.limit(oldLimit);
+        
+        remaining -= space;
+        encrypt();
+      }
+    }
+    
+    return len;
   }
   
   /**
@@ -191,73 +267,6 @@ public class CryptoOutputStream extends OutputStream implements
     inBuffer.position(padding); // Set proper position for input data.
     codec.calculateIV(initIV, counter, iv);
     encryptor.init(key, iv);
-  }
-  
-  @Override
-  public synchronized void close() throws IOException {
-    if (closed) {
-      return;
-    }
-    
-    try {
-      output.close();
-      freeBuffers();
-      super.close();
-    } finally {
-      closed = true;
-    }
-  }
-  
-  /**
-   * To flush, we need to encrypt the data in the buffer and write to the 
-   * underlying stream, then do the flush.
-   */
-  @Override
-  public synchronized void flush() throws IOException {
-    checkStream();
-    encrypt();
-    output.flush();
-    super.flush();
-  }
-  
-  @Override
-  public void write(int b) throws IOException {
-    oneByteBuf[0] = (byte)(b & 0xff);
-    write(oneByteBuf, 0, oneByteBuf.length);
-  }
-  
-  @Override
-  public boolean isOpen() {
-    return !closed;
-  }
-
-  @Override
-  public int write(ByteBuffer src) throws IOException {
-    checkStream();
-    final int len = src.remaining();
-    int remaining = len;
-    while (remaining > 0) {
-      final int space = inBuffer.remaining();
-      if (remaining < space) {
-        inBuffer.put(src);
-        remaining = 0;
-      } else {
-        // to void copy twice, we set the limit to copy directly
-        final int oldLimit = src.limit();
-        final int newLimit = src.position() + space;
-        src.limit(newLimit);
-        
-        inBuffer.put(src);
-        
-        // restore the old limit
-        src.limit(oldLimit);
-        
-        remaining -= space;
-        encrypt();
-      }
-    }
-    
-    return len;
   }
 
   private void checkStream() throws IOException {

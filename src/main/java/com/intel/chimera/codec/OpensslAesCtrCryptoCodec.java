@@ -120,6 +120,11 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
       process(inBuffer, outBuffer);
     }
     
+    @Override
+    public boolean isContextReset() {
+      return contextReset;
+    }
+    
     private void process(ByteBuffer inBuffer, ByteBuffer outBuffer)
         throws IOException {
       try {
@@ -138,11 +143,6 @@ public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
       } catch (Exception e) {
         throw new IOException(e);
       }
-    }
-    
-    @Override
-    public boolean isContextReset() {
-      return contextReset;
     }
   }
 }

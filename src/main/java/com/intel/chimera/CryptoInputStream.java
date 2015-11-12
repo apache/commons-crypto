@@ -45,11 +45,18 @@ import com.intel.chimera.utils.Utils;
  */
 public class CryptoInputStream extends InputStream implements
     ReadableByteChannel {
-  private final byte[] oneByteBuf = new byte[1];
+  private Input input;
   private final CryptoCodec codec;
-  private final Decryptor decryptor;
   private final int bufferSize;
   
+  private final byte[] key;
+  private final byte[] initIV;
+  private byte[] iv;
+  
+  private long streamOffset = 0; // Underlying stream offset.
+  
+  private final byte[] oneByteBuf = new byte[1];
+  private final Decryptor decryptor;
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at 
    * to inBuffer.limit().
@@ -61,7 +68,6 @@ public class CryptoInputStream extends InputStream implements
    * ends at outBuffer.limit();
    */
   private ByteBuffer outBuffer;
-  private long streamOffset = 0; // Underlying stream offset.
   
   /**
    * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer} 
@@ -70,10 +76,6 @@ public class CryptoInputStream extends InputStream implements
    */
   private byte padding;
   private boolean closed;
-  private final byte[] key;
-  private final byte[] initIV;
-  private byte[] iv;
-  private Input input;
   
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
@@ -160,6 +162,116 @@ public class CryptoInputStream extends InputStream implements
     }
   }
   
+  @Override
+  public void close() throws IOException {
+    if (closed) {
+      return;
+    }
+    
+    input.close();
+    freeBuffers();
+    super.close();
+    closed = true;
+  }
+
+  /** Skip n bytes */
+  @Override
+  public long skip(long n) throws IOException {
+    Preconditions.checkArgument(n >= 0, "Negative skip length.");
+    checkStream();
+    
+    if (n == 0) {
+      return 0;
+    } else if (n <= outBuffer.remaining()) {
+      int pos = outBuffer.position() + (int) n;
+      outBuffer.position(pos);
+      return n;
+    } else {
+      /*
+       * Subtract outBuffer.remaining() to see how many bytes we need to 
+       * skip in the underlying stream. Add outBuffer.remaining() to the 
+       * actual number of skipped bytes in the underlying stream to get the 
+       * number of skipped bytes from the user's point of view.
+       */
+      n -= outBuffer.remaining();
+      long skipped = input.skip(n);
+      if (skipped < 0) {
+        skipped = 0;
+      }
+      long pos = streamOffset + skipped;
+      skipped += outBuffer.remaining();
+      resetStreamOffset(pos);
+      return skipped;
+    }
+  }
+  
+  @Override
+  public int available() throws IOException {
+    checkStream();
+    
+    return input.available() + outBuffer.remaining();
+  }
+
+  @Override
+  public boolean markSupported() {
+    return false;
+  }
+  
+  @Override
+  public void mark(int readLimit) {
+  }
+  
+  @Override
+  public void reset() throws IOException {
+    throw new IOException("Mark/reset not supported");
+  }
+
+  @Override
+  public int read() throws IOException {
+    return (read(oneByteBuf, 0, 1) == -1) ? -1 : (oneByteBuf[0] & 0xff);
+  }
+  
+  @Override
+  public boolean isOpen() {
+    return !closed;
+  }
+  
+  /** ByteBuffer read. */
+  @Override
+  public int read(ByteBuffer buf) throws IOException {
+    checkStream();
+    final int unread = outBuffer.remaining();
+    if (unread > 0) { // Have unread decrypted data in buffer.
+      int toRead = buf.remaining();
+      if (toRead <= unread) {
+        final int limit = outBuffer.limit();
+        outBuffer.limit(outBuffer.position() + toRead);
+        buf.put(outBuffer);
+        outBuffer.limit(limit);
+        return toRead;
+      } else {
+        buf.put(outBuffer);
+      }
+    }
+
+    final int pos = buf.position();
+    final int n = input.read(buf);
+    if (n > 0) {
+      streamOffset += n; // Read n bytes
+      decrypt(buf, pos, n);
+    }
+
+    if (n >= 0) {
+      return unread + n;
+    } else {
+      if (unread == 0) {
+        return -1;
+      } else {
+        return unread;
+      }
+    }
+  }
+  
   /**
    * Do the decryption using inBuffer as input and outBuffer as output.
    * Upon return, inBuffer is cleared; the decrypted data starts at 
@@ -237,85 +349,6 @@ public class CryptoInputStream extends InputStream implements
     padding = getPadding(offset);
     inBuffer.position(padding); // Set proper position for input data.
   }
-  
-  @Override
-  public void close() throws IOException {
-    if (closed) {
-      return;
-    }
-    
-    input.close();
-    freeBuffers();
-    super.close();
-    closed = true;
-  }
-
-  /** Skip n bytes */
-  @Override
-  public long skip(long n) throws IOException {
-    Preconditions.checkArgument(n >= 0, "Negative skip length.");
-    checkStream();
-    
-    if (n == 0) {
-      return 0;
-    } else if (n <= outBuffer.remaining()) {
-      int pos = outBuffer.position() + (int) n;
-      outBuffer.position(pos);
-      return n;
-    } else {
-      /*
-       * Subtract outBuffer.remaining() to see how many bytes we need to 
-       * skip in the underlying stream. Add outBuffer.remaining() to the 
-       * actual number of skipped bytes in the underlying stream to get the 
-       * number of skipped bytes from the user's point of view.
-       */
-      n -= outBuffer.remaining();
-      long skipped = input.skip(n);
-      if (skipped < 0) {
-        skipped = 0;
-      }
-      long pos = streamOffset + skipped;
-      skipped += outBuffer.remaining();
-      resetStreamOffset(pos);
-      return skipped;
-    }
-  }
-
-  /** ByteBuffer read. */
-  @Override
-  public int read(ByteBuffer buf) throws IOException {
-    checkStream();
-    final int unread = outBuffer.remaining();
-    if (unread > 0) { // Have unread decrypted data in buffer.
-      int toRead = buf.remaining();
-      if (toRead <= unread) {
-        final int limit = outBuffer.limit();
-        outBuffer.limit(outBuffer.position() + toRead);
-        buf.put(outBuffer);
-        outBuffer.limit(limit);
-        return toRead;
-      } else {
-        buf.put(outBuffer);
-      }
-    }
-
-    final int pos = buf.position();
-    final int n = input.read(buf);
-    if (n > 0) {
-      streamOffset += n; // Read n bytes
-      decrypt(buf, pos, n);
-    }
-
-    if (n >= 0) {
-      return unread + n;
-    } else {
-      if (unread == 0) {
-        return -1;
-      } else {
-        return unread;
-      }
-    }
-  }
 
   /**
    * Decrypt all data in buf: total n bytes from given start position.
@@ -345,32 +378,6 @@ public class CryptoInputStream extends InputStream implements
     buf.position(pos);
   }
   
-  @Override
-  public int available() throws IOException {
-    checkStream();
-    
-    return input.available() + outBuffer.remaining();
-  }
-
-  @Override
-  public boolean markSupported() {
-    return false;
-  }
-  
-  @Override
-  public void mark(int readLimit) {
-  }
-  
-  @Override
-  public void reset() throws IOException {
-    throw new IOException("Mark/reset not supported");
-  }
-
-  @Override
-  public int read() throws IOException {
-    return (read(oneByteBuf, 0, 1) == -1) ? -1 : (oneByteBuf[0] & 0xff);
-  }
-  
   private void checkStream() throws IOException {
     if (closed) {
       throw new IOException("Stream closed");
@@ -390,11 +397,6 @@ public class CryptoInputStream extends InputStream implements
     } catch (GeneralSecurityException e) {
       throw new IOException(e);
     }
-  }
-
-  @Override
-  public boolean isOpen() {
-    return !closed;
   }
 }
 
