@@ -183,7 +183,7 @@ public class CryptoCodecTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out = new CryptoOutputStream(encryptedData, 
+    CryptoOutputStream out = new CryptoOutputStream(Channels.newChannel(encryptedData), 
         encCodec, bufferSize, key, iv);
     out.write(originalData, 0, originalData.length);
     out.flush();

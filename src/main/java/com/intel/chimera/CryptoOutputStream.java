@@ -17,14 +17,17 @@
  */
 package com.intel.chimera;
 
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.WritableByteChannel;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import com.google.common.base.Preconditions;
+import com.intel.chimera.output.ChannelOutput;
+import com.intel.chimera.output.Output;
+import com.intel.chimera.output.StreamOutput;
 import com.intel.chimera.utils.Utils;
 
 /**
@@ -38,11 +41,13 @@ import com.intel.chimera.utils.Utils;
  * <p/>
  * The underlying stream offset is maintained as state.
  */
-public class CryptoOutputStream extends FilterOutputStream {
+public class CryptoOutputStream extends OutputStream {
   private final byte[] oneByteBuf = new byte[1];
   private final CryptoCodec codec;
   private final Encryptor encryptor;
   private final int bufferSize;
+  
+  private Output output;
   
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at 
@@ -75,14 +80,19 @@ public class CryptoOutputStream extends FilterOutputStream {
 
   public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
       int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(out, codec, bufferSize, key, iv, 0);
+    this(new StreamOutput(out, bufferSize), codec, bufferSize, key, iv, 0);
   }
-  
-  public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
+
+  public CryptoOutputStream(WritableByteChannel channel, CryptoCodec codec, 
+      int bufferSize, byte[] key, byte[] iv) throws IOException {
+    this(new ChannelOutput(channel), codec, bufferSize, key, iv, 0);
+  }
+
+  public CryptoOutputStream(Output output, CryptoCodec codec, 
       int bufferSize, byte[] key, byte[] iv, long streamOffset) 
       throws IOException {
-    super(out);
     Utils.checkCodec(codec);
+    this.output = output;
     this.bufferSize = Utils.checkBufferSize(codec, bufferSize);
     this.codec = codec;
     this.key = key.clone();
@@ -97,10 +107,6 @@ public class CryptoOutputStream extends FilterOutputStream {
       throw new IOException(e);
     }
     updateEncryptor();
-  }
-  
-  public OutputStream getWrappedStream() {
-    return out;
   }
   
   /**
@@ -159,16 +165,8 @@ public class CryptoOutputStream extends FilterOutputStream {
       outBuffer.position(padding);
       padding = 0;
     }
-    final int len = outBuffer.remaining();
     
-    /*
-     * If underlying stream supports {@link ByteBuffer} write in future, needs
-     * refine here. 
-     */
-    final byte[] tmp = getTmpBuf();
-    outBuffer.get(tmp, 0, len);
-    out.write(tmp, 0, len);
-    
+    final int len = output.write(outBuffer);
     streamOffset += len;
     if (encryptor.isContextReset()) {
       /*
@@ -192,14 +190,6 @@ public class CryptoOutputStream extends FilterOutputStream {
     encryptor.init(key, iv);
   }
   
-  private byte[] tmpBuf;
-  private byte[] getTmpBuf() {
-    if (tmpBuf == null) {
-      tmpBuf = new byte[bufferSize];
-    }
-    return tmpBuf;
-  }
-  
   @Override
   public synchronized void close() throws IOException {
     if (closed) {
@@ -207,8 +197,9 @@ public class CryptoOutputStream extends FilterOutputStream {
     }
     
     try {
-      super.close();
+      output.close();
       freeBuffers();
+      super.close();
     } finally {
       closed = true;
     }
@@ -222,6 +213,7 @@ public class CryptoOutputStream extends FilterOutputStream {
   public synchronized void flush() throws IOException {
     checkStream();
     encrypt();
+    output.flush();
     super.flush();
   }
   

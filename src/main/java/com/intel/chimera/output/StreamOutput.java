@@ -15,56 +15,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.input;
+package com.intel.chimera.output;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-public class StreamInput implements Input {
+public class StreamOutput implements Output {
   private byte[] buf;
   private int bufferSize;
-  InputStream in;
-
-  public StreamInput(InputStream inputStream, int bufferSize) {
-    this.in = inputStream;
+  protected OutputStream out;
+  
+  public StreamOutput(OutputStream out, int bufferSize) {
+    this.out = out;
     this.bufferSize = bufferSize;
   }
-
-  public int read(ByteBuffer dst) throws IOException {
-    final int remaining = dst.remaining();
-    final byte[] tmp = getBuf();
-    int pos = dst.position();
-    int total = 0;
-    while (remaining > total) {
-      final int n = in.read(tmp, 0, Math.min(remaining, bufferSize));
-      if (n == -1) {
-        if (total == 0) {
-          total = -1;
-        }
-        break;
-      } else if (n > 0) {
-        dst.put(tmp, pos, n);
-        pos += n;
-        total += n;
-      }
+  
+  @Override
+  public int write(ByteBuffer src) throws IOException {
+    final int len = src.remaining();
+    final byte[] buf = getBuf();
+    
+    int remaining = len;
+    while(remaining > 0) {
+      final int n = Math.min(remaining, bufferSize);
+      src.get(buf, 0, n);
+      out.write(buf, 0, n);
+      remaining = src.remaining();
     }
-    return total;
+    
+    return len;
   }
-
+  
   @Override
-  public long skip(long n) throws IOException {
-    return in.skip(n);
-  }
-
-  @Override
-  public int available() throws IOException {
-    return in.available();
+  public void flush() throws IOException {
+    out.flush();
   }
 
   @Override
   public void close() throws IOException {
-    in.close();
+    out.close();
   }
   
   private byte[] getBuf() {
@@ -73,4 +63,5 @@ public class StreamInput implements Input {
     }
     return buf;
   }
+
 }
