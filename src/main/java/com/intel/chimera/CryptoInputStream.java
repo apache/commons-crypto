@@ -17,7 +17,6 @@
  */
 package com.intel.chimera;
 
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -39,7 +38,7 @@ import com.intel.chimera.utils.Utils;
  * <p/>
  * The underlying stream offset is maintained as state.
  */
-public class CryptoInputStream extends FilterInputStream implements 
+public class CryptoInputStream extends InputStream implements 
     ReadableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
   private final CryptoCodec codec;
@@ -76,43 +75,42 @@ public class CryptoInputStream extends FilterInputStream implements
     this(in, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
+  public CryptoInputStream(Properties props, ReadableByteChannel in,
+      byte[] key, byte[] iv) throws IOException {
+    this(in, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
+  }
+
   public CryptoInputStream(InputStream in, CryptoCodec codec, 
       int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(in, codec, bufferSize, key, iv, 0);
+    this(new StreamInput(in, bufferSize), codec, bufferSize, key, iv, 0);
+  }
+
+  public CryptoInputStream(ReadableByteChannel in, CryptoCodec codec, 
+      int bufferSize, byte[] key, byte[] iv) throws IOException {
+    this(new ChannelInput(in), codec, bufferSize, key, iv, 0);
   }
 
   public CryptoInputStream(
-      InputStream in,
+      Input input,
       CryptoCodec codec,
       int bufferSize,
       byte[] key,
       byte[] iv,
       long streamOffset) throws IOException {
-    super(in);
     Utils.checkCodec(codec);
-    this.bufferSize = Utils.checkBufferSize(codec, bufferSize);
-    this.input = getInput(in, bufferSize);
+
+    this.input = input;
     this.codec = codec;
+    this.bufferSize = Utils.checkBufferSize(codec, bufferSize);
     this.key = key.clone();
     this.initIV = iv.clone();
     this.iv = iv.clone();
     this.streamOffset = streamOffset;
+
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     decryptor = getDecryptor();
     resetStreamOffset(streamOffset);
-  }
-
-  public InputStream getWrappedStream() {
-    return in;
-  }
-  
-  private Input getInput(InputStream in, int bufferSize) {
-    if (in instanceof ReadableByteChannel) {
-      return new ChannelInput(in, bufferSize);
-    } else {
-      return new StreamInput(in, bufferSize);
-    }
   }
 
   /**
@@ -241,12 +239,11 @@ public class CryptoInputStream extends FilterInputStream implements
       return;
     }
     
-    super.close();
+    input.close();
     freeBuffers();
     closed = true;
   }
 
-  
   /** Skip n bytes */
   @Override
   public long skip(long n) throws IOException {
@@ -267,7 +264,7 @@ public class CryptoInputStream extends FilterInputStream implements
        * number of skipped bytes from the user's point of view.
        */
       n -= outBuffer.remaining();
-      long skipped = in.skip(n);
+      long skipped = input.skip(n);
       if (skipped < 0) {
         skipped = 0;
       }
@@ -346,7 +343,7 @@ public class CryptoInputStream extends FilterInputStream implements
   public int available() throws IOException {
     checkStream();
     
-    return in.available() + outBuffer.remaining();
+    return input.available() + outBuffer.remaining();
   }
 
   @Override

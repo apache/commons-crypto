@@ -44,7 +44,7 @@ pomExtra := {
 
 scalaVersion := "2.11.1"
 
-javacOptions in (Compile, compile) ++= Seq("-encoding", "UTF-8", "-Xlint:unchecked", "-Xlint:deprecation", "-source", "1.6", "-target", "1.6")
+javacOptions in (Compile, compile) ++= Seq("-encoding", "UTF-8", "-Xlint:unchecked", "-Xlint:deprecation", "-source", "1.6", "-target", "1.6", "-g")
 
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
 

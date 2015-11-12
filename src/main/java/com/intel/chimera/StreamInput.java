@@ -58,4 +58,19 @@ public class StreamInput implements Input {
     }
     return buf;
   }
+
+  @Override
+  public long skip(long n) throws IOException {
+    return in.skip(n);
+  }
+
+  @Override
+  public int available() throws IOException {
+    return in.available();
+  }
+
+  @Override
+  public void close() throws IOException {
+    in.close();
+  }
 }
