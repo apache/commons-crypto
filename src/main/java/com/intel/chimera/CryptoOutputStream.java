@@ -41,7 +41,8 @@ import com.intel.chimera.utils.Utils;
  * <p/>
  * The underlying stream offset is maintained as state.
  */
-public class CryptoOutputStream extends OutputStream {
+public class CryptoOutputStream extends OutputStream implements
+    WritableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
   private final CryptoCodec codec;
   private final Encryptor encryptor;
@@ -223,6 +224,40 @@ public class CryptoOutputStream extends OutputStream {
     write(oneByteBuf, 0, oneByteBuf.length);
   }
   
+  @Override
+  public boolean isOpen() {
+    return !closed;
+  }
+
+  @Override
+  public int write(ByteBuffer src) throws IOException {
+    checkStream();
+    final int len = src.remaining();
+    int remaining = len;
+    while (remaining > 0) {
+      final int space = inBuffer.remaining();
+      if (remaining < space) {
+        inBuffer.put(src);
+        remaining = 0;
+      } else {
+        // to void copy twice, we set the limit to copy directly
+        final int oldLimit = src.limit();
+        final int newLimit = src.position() + space;
+        src.limit(newLimit);
+        
+        inBuffer.put(src);
+        
+        // restore the old limit
+        src.limit(oldLimit);
+        
+        remaining -= space;
+        encrypt();
+      }
+    }
+    
+    return len;
+  }
+
   private void checkStream() throws IOException {
     if (closed) {
       throw new IOException("Stream closed");

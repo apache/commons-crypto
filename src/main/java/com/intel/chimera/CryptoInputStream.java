@@ -41,7 +41,7 @@ import com.intel.chimera.utils.Utils;
  * <p/>
  * The underlying stream offset is maintained as state.
  */
-public class CryptoInputStream extends InputStream implements 
+public class CryptoInputStream extends InputStream implements
     ReadableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
   private final CryptoCodec codec;
