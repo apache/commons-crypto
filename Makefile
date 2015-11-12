@@ -116,6 +116,7 @@ publishSigned:
 
 sonatypeRelease:
 	$(SBT) sonatypeRelease
+
 install-m2:
 	$(SBT) publishM2
 
