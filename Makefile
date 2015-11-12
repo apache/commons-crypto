@@ -40,11 +40,9 @@ $(CHIMERA_OUT)/$(LIBNAME): $(CHIMERA_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $+ $(LINKFLAGS) 
 	$(STRIP) $@
 
-clean-native: 
-	rm -rf $(CHIMERA_OUT)
-
 clean:
 	rm -rf $(TARGET)
+	rm -rf $(CHIMERA_OUT)
 
 NATIVE_DIR:=src/main/resources/com/intel/chimera/native/$(OS_NAME)/$(OS_ARCH)
 NATIVE_TARGET_DIR:=$(TARGET)/classes/com/intel/chimera/native/$(OS_NAME)/$(OS_ARCH)

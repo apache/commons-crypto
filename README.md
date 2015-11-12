@@ -68,6 +68,25 @@ A file `target/chimera-$(version).jar` is the product additionally containing th
 
 ## For developers
 
+### Make a release
+#### Prepare GPG keys
+gpg --gen-key                                                 # generate gpg public/private key pair
+gpg --list-keys                                               # list available public/private key pairs
+gpg --keyserver hkp://pgp.mit.edu --send-keys [public key]    # we use mit pgp server, you can also choose others
+
+#### Configure the credential
+Set Sonatype account information (user name and password) in the global sbt settings [$HOME/.sbt/(sbt-version)/sonatype.sbt].
+credentials += Credentials("Sonatype Nexus Repository Manager",
+        "oss.sonatype.org",
+        "(Sonatype user name)",
+        "(Sonatype password)")
+
+#### Publish the release
+make clean;            # clean up the environment
+make publishSigned;    # publish your GPG-signed artifact to staging repository of Sonatype, related files will be uploaded to Sonatype server in this step
+make sonatypeRelease;  # make a release. You can also make a release manually in the site of Sonatype [https://oss.sonatype.org].
+
+### Other useful commands
 chimera uses sbt (simple build tool for Scala) as a build tool. Here is a simple usage
 
     $ ./sbt            # enter sbt console
