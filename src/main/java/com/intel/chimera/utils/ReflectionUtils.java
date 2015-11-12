@@ -26,7 +26,7 @@ import java.util.WeakHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.intel.chimera.CryptoCodec;
+import com.intel.chimera.codec.CryptoCodec;
 
 public class ReflectionUtils {
   public static Logger LOG = LoggerFactory.getLogger(ReflectionUtils.class);

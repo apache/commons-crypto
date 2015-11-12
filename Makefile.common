@@ -252,9 +252,9 @@ LIBNAME   := $($(os_arch)_LIBNAME)
 CHIMERA_FLAGS := $($(os_arch)_CHIMERA_FLAGS)
 
 
-CFLAGS := $(CFLAGS) -Ilib/include -I/usr/include -I"$(SRC_NATIVE)/com/intel/chimera"
+CFLAGS := $(CFLAGS) -Ilib/include -I/usr/include -I"$(SRC_NATIVE)/com/intel/chimera/"
 CXXFLAGS := $(CXXFLAGS) -Ilib/include  -I/usr/include
 ifneq ($(jni_include),)
-CFLAGS := $(CFLAGS) -I"$(jni_include)" -I"$(TARGET)/jni-classes/com/intel/chimera/" -I"$(TARGET)/jni-classes/com/intel/chimera/random"
-CXXFLAGS := $(CXXFLAGS) -I"$(jni_include)" -I"$(TARGET)/jni-classes/com/intel/chimera/" -I"$(TARGET)/jni-classes/com/intel/chimera/random"
+CFLAGS := $(CFLAGS) -I"$(jni_include)" -I"$(TARGET)/jni-classes/com/intel/chimera/codec" -I"$(TARGET)/jni-classes/com/intel/chimera/random"
+CXXFLAGS := $(CXXFLAGS) -I"$(jni_include)" -I"$(TARGET)/jni-classes/com/intel/chimera/codec" -I"$(TARGET)/jni-classes/com/intel/chimera/random"
 endif

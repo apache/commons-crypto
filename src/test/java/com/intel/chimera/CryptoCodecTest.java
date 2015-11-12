@@ -33,6 +33,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.intel.chimera.codec.CryptoCodec;
+import com.intel.chimera.codec.OpensslCipher;
 import com.intel.chimera.utils.ReflectionUtils;
 
 public class CryptoCodecTest {
@@ -45,9 +47,9 @@ public class CryptoCodecTest {
   private int count = 10000;
 
   private final String jceCodecClass = 
-      "com.intel.chimera.JceAesCtrCryptoCodec";
+      "com.intel.chimera.codec.JceAesCtrCryptoCodec";
   private final String opensslCodecClass = 
-      "com.intel.chimera.OpensslAesCtrCryptoCodec";
+      "com.intel.chimera.codec.OpensslAesCtrCryptoCodec";
 
   private Properties props;
 

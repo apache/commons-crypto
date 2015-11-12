@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera;
+package com.intel.chimera.codec;
 
 import java.security.GeneralSecurityException;
 import java.util.List;
@@ -133,13 +133,13 @@ public abstract class CryptoCodec {
   public abstract CipherSuite getCipherSuite();
 
   /**
-   * Create a {@link com.intel.chimera.Encryptor}. 
+   * Create a {@link com.intel.chimera.codec.Encryptor}. 
    * @return Encryptor the encryptor
    */
   public abstract Encryptor createEncryptor() throws GeneralSecurityException;
   
   /**
-   * Create a {@link com.intel.chimera.Decryptor}.
+   * Create a {@link com.intel.chimera.codec.Decryptor}.
    * @return Decryptor the decryptor
    */
   public abstract Decryptor createDecryptor() throws GeneralSecurityException;

@@ -14,7 +14,7 @@ else
   TAR:= tar
 endif
 
-$(TARGET)/jni-classes/com/intel/chimera/OpensslCipherNative.class : $(SRC)/com/intel/chimera/OpensslCipherNative.java
+$(TARGET)/jni-classes/com/intel/chimera/codec/OpensslCipherNative.class : $(SRC)/com/intel/chimera/codec/OpensslCipherNative.java
 	@mkdir -p $(TARGET)/jni-classes
 	$(JAVAC) -source 1.6 -target 1.6 -d $(TARGET)/jni-classes -sourcepath $(SRC) $<
 
@@ -22,13 +22,13 @@ $(TARGET)/jni-classes/com/intel/chimera/random/OpensslSecureRandomNative.class :
 	@mkdir -p $(TARGET)/jni-classes
 	$(JAVAC) -source 1.6 -target 1.6 -d $(TARGET)/jni-classes -sourcepath $(SRC) $<
 
-$(TARGET)/jni-classes/com/intel/chimera/OpensslCipherNative.h: $(TARGET)/jni-classes/com/intel/chimera/OpensslCipherNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ com.intel.chimera.OpensslCipherNative
+$(TARGET)/jni-classes/com/intel/chimera/codec/OpensslCipherNative.h: $(TARGET)/jni-classes/com/intel/chimera/codec/OpensslCipherNative.class
+	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ com.intel.chimera.codec.OpensslCipherNative
 
 $(TARGET)/jni-classes/com/intel/chimera/random/OpensslSecureRandomNative.h: $(TARGET)/jni-classes/com/intel/chimera/random/OpensslSecureRandomNative.class
 	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ com.intel.chimera.random.OpensslSecureRandomNative
 
-$(CHIMERA_OUT)/OpensslCipherNative.o : $(SRC_NATIVE)/com/intel/chimera/OpensslCipherNative.c $(TARGET)/jni-classes/com/intel/chimera/OpensslCipherNative.h  
+$(CHIMERA_OUT)/OpensslCipherNative.o : $(SRC_NATIVE)/com/intel/chimera/codec/OpensslCipherNative.c $(TARGET)/jni-classes/com/intel/chimera/codec/OpensslCipherNative.h  
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 

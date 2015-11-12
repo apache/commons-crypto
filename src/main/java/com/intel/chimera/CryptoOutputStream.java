@@ -25,6 +25,8 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import com.google.common.base.Preconditions;
+import com.intel.chimera.codec.CryptoCodec;
+import com.intel.chimera.codec.Encryptor;
 import com.intel.chimera.output.ChannelOutput;
 import com.intel.chimera.output.Output;
 import com.intel.chimera.output.StreamOutput;

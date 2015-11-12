@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera;
+package com.intel.chimera.codec;
 
 /**
  * Thrown to indicate that the specific codec is not supported.

@@ -40,9 +40,9 @@ import java.util.Properties;
 import java.util.Random;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.CipherSuite;
-import com.intel.chimera.CryptoCodec;
-import com.intel.chimera.UnsupportedCodecException;
+import com.intel.chimera.codec.CipherSuite;
+import com.intel.chimera.codec.CryptoCodec;
+import com.intel.chimera.codec.UnsupportedCodecException;
 import com.intel.chimera.random.OsSecureRandom;
 
 public class Utils {

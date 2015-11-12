@@ -31,6 +31,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.intel.chimera.codec.CryptoCodec;
 import com.intel.chimera.utils.ReflectionUtils;
 
 public class CryptoStreamTest {
@@ -43,9 +44,9 @@ public class CryptoStreamTest {
   private byte[] iv = new byte[16];
 
   private final String jceCodecClass = 
-      "com.intel.chimera.JceAesCtrCryptoCodec";
+      "com.intel.chimera.codec.JceAesCtrCryptoCodec";
   private final String opensslCodecClass = 
-      "com.intel.chimera.OpensslAesCtrCryptoCodec";
+      "com.intel.chimera.codec.OpensslAesCtrCryptoCodec";
 
   @Before
   public void setUp() throws IOException {
