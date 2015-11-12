@@ -22,7 +22,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
@@ -35,13 +37,17 @@ import com.intel.chimera.codec.CryptoCodec;
 import com.intel.chimera.utils.ReflectionUtils;
 
 public class CryptoStreamTest {
-  private final int dataLen = 10000;
+  private final int dataLen = 20000;
   private byte[] data = new byte[dataLen];
   private byte[] encData;
-  private final int bufferSize = 4096;
   private Properties props;
   private byte[] key = new byte[16];
   private byte[] iv = new byte[16];
+
+  private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+  protected static int defaultBufferSize = 8192;
+  protected static int smallBufferSize = 1024;
 
   private final String jceCodecClass = 
       "com.intel.chimera.codec.JceAesCtrCryptoCodec";
@@ -58,18 +64,41 @@ public class CryptoStreamTest {
   }
 
   /** Test skip. */
-  @Test
+  @Test(timeout=120000)
   public void testSkip() throws Exception {
     prepareData();
 
-    doSkipTest(getCryptoInputStream(jceCodecClass));
-    doSkipTest(getCryptoInputStream(opensslCodecClass));
+    doSkipTest(jceCodecClass, false);
+    doSkipTest(opensslCodecClass, false);
 
-    doSkipTest(getCryptoInputStreamForChannel(jceCodecClass));
-    doSkipTest(getCryptoInputStreamForChannel(opensslCodecClass));
+    doSkipTest(jceCodecClass, true);
+    doSkipTest(opensslCodecClass, true);
   }
 
-  private void doSkipTest(InputStream in) throws IOException {
+  /** Test byte buffer read with different buffer size. */
+  @Test(timeout=120000)
+  public void testByteBufferRead() throws Exception {
+    prepareData();
+
+    doByteBufferRead(jceCodecClass, false);
+    doByteBufferRead(opensslCodecClass, false);
+
+    doByteBufferRead(jceCodecClass, true);
+    doByteBufferRead(opensslCodecClass, true);
+  }
+
+  /** Test byte buffer write. */
+  @Test(timeout=120000)
+  public void testByteBufferWrite() throws Exception {
+    doByteBufferWrite(jceCodecClass, false);
+    doByteBufferWrite(opensslCodecClass, false);
+
+    doByteBufferWrite(jceCodecClass, true);
+    doByteBufferWrite(opensslCodecClass, true);
+  }
+
+  private void doSkipTest(String codecClass, boolean withChannel) throws IOException {
+    InputStream in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
     byte[] result = new byte[dataLen];
     int n1 = readAll(in, result, 0, dataLen / 3);
 
@@ -97,6 +126,98 @@ public class CryptoStreamTest {
     in.close();
   }
 
+  private void doByteBufferRead(String codecClass, boolean withChannel) throws Exception {
+    // Default buffer size, initial buffer position is 0
+    InputStream in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    ByteBuffer buf = ByteBuffer.allocate(dataLen + 100);
+    byteBufferReadCheck(in, buf, 0);
+    in.close();
+
+    // Default buffer size, initial buffer position is not 0
+    in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    buf.clear();
+    byteBufferReadCheck(in, buf, 11);
+    in.close();
+
+    // Small buffer size, initial buffer position is 0
+    in = getCryptoInputStream(codecClass, smallBufferSize, withChannel);
+    buf.clear();
+    byteBufferReadCheck(in, buf, 0);
+    in.close();
+
+    // Small buffer size, initial buffer position is not 0
+    in = getCryptoInputStream(codecClass, smallBufferSize, withChannel);
+    buf.clear();
+    byteBufferReadCheck(in, buf, 11);
+    in.close();
+
+    // Direct buffer, default buffer size, initial buffer position is 0
+    in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    buf = ByteBuffer.allocateDirect(dataLen + 100);
+    byteBufferReadCheck(in, buf, 0);
+    in.close();
+
+    // Direct buffer, default buffer size, initial buffer position is not 0
+    in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    buf.clear();
+    byteBufferReadCheck(in, buf, 11);
+    in.close();
+
+    // Direct buffer, small buffer size, initial buffer position is 0
+    in = getCryptoInputStream(codecClass, smallBufferSize, withChannel);
+    buf.clear();
+    byteBufferReadCheck(in, buf, 0);
+    in.close();
+
+    // Direct buffer, small buffer size, initial buffer position is not 0
+    in = getCryptoInputStream(codecClass, smallBufferSize, withChannel);
+    buf.clear();
+    byteBufferReadCheck(in, buf, 11);
+    in.close();
+  }
+
+  private void doByteBufferWrite(String codecClass, boolean withChannel) throws Exception {
+    CryptoOutputStream out = getCryptoOutputStream(codecClass, defaultBufferSize, withChannel);
+    ByteBuffer buf = ByteBuffer.allocateDirect(dataLen / 2);
+    buf.put(data, 0, dataLen / 2);
+    buf.flip();
+    int n1 = out.write(buf);
+
+    buf.clear();
+    buf.put(data, n1, dataLen / 3);
+    buf.flip();
+    int n2 = out.write(buf);
+
+    buf.clear();
+    buf.put(data, n1 + n2, dataLen - n1 - n2);
+    buf.flip();
+    int n3 = out.write(buf);
+
+    Assert.assertEquals(dataLen, n1 + n2 + n3);
+
+    out.flush();
+    encData = baos.toByteArray();
+
+    InputStream in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    buf = ByteBuffer.allocate(dataLen + 100);
+    byteBufferReadCheck(in, buf, 0);
+    in.close();
+  }
+
+  private void byteBufferReadCheck(InputStream in, ByteBuffer buf,
+      int bufPos) throws Exception {
+    buf.position(bufPos);
+    int n = ((ReadableByteChannel) in).read(buf);
+    Assert.assertEquals(bufPos + n, buf.position());
+    byte[] readData = new byte[n];
+    buf.rewind();
+    buf.position(bufPos);
+    buf.get(readData);
+    byte[] expectedData = new byte[n];
+    System.arraycopy(data, 0, expectedData, 0, n);
+    Assert.assertArrayEquals(readData, expectedData);
+  }
+
   private void prepareData() throws IOException {
     CryptoCodec codec = null;
     try {
@@ -107,13 +228,14 @@ public class CryptoStreamTest {
     }
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    OutputStream out = new CryptoOutputStream(baos, codec, bufferSize, key, iv);
+    OutputStream out = new CryptoOutputStream(baos, codec, defaultBufferSize, key, iv);
     out.write(data);
     out.flush();
     encData = baos.toByteArray();
   }
 
-  private InputStream getCryptoInputStream(String codecClass) throws IOException {
+  private CryptoInputStream getCryptoInputStream(String codecClass, int bufferSize, boolean withChannel)
+      throws IOException {
     CryptoCodec codec = null;
     try {
       codec = (CryptoCodec)ReflectionUtils.newInstance(
@@ -122,10 +244,15 @@ public class CryptoStreamTest {
       throw new IOException("Illegal crypto codec!");
     }
 
-    return new CryptoInputStream(new ByteArrayInputStream(encData), codec, bufferSize, key, iv);
+    if (withChannel) {
+      return new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(encData)), codec, bufferSize, key, iv);
+    } else {
+      return new CryptoInputStream(new ByteArrayInputStream(encData), codec, bufferSize, key, iv);
+    }
   }
 
-  private InputStream getCryptoInputStreamForChannel(String codecClass) throws IOException {
+  private CryptoOutputStream getCryptoOutputStream(String codecClass, int bufferSize, boolean withChannel)
+      throws IOException {
     CryptoCodec codec = null;
     try {
       codec = (CryptoCodec)ReflectionUtils.newInstance(
@@ -134,7 +261,12 @@ public class CryptoStreamTest {
       throw new IOException("Illegal crypto codec!");
     }
 
-    return new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(encData)), codec, bufferSize, key, iv);
+    baos.reset();
+    if (withChannel) {
+      return new CryptoOutputStream(Channels.newChannel(baos), codec, bufferSize, key, iv);
+    } else {
+      return new CryptoOutputStream(baos, codec, bufferSize, key, iv);
+    }
   }
 
   private int readAll(InputStream in, byte[] b, int off, int len) 
