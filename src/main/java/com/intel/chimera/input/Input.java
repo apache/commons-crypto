@@ -15,34 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera;
+package com.intel.chimera.input;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
 
-public class ChannelStreamInput extends StreamInput {
-  private ReadableByteChannel channel;
-  boolean isChannelReadSupported = true;
+public interface Input {
+  int read(ByteBuffer dst) throws IOException;
 
-  public ChannelStreamInput(
-      InputStream inputStream,
-      int bufferSize) {
-    super(inputStream, bufferSize);
-    this.channel = (ReadableByteChannel) inputStream;
-  }
+  long skip(long n) throws IOException;
 
-  public int read(ByteBuffer dst) throws IOException {
-    if (isChannelReadSupported) {
-      try {
-        return channel.read(dst);
-      } catch (UnsupportedOperationException e) {
-        isChannelReadSupported = false;
-        return super.read(dst);
-      }
-    } else {
-      return super.read(dst);
-    }
-  }
+  int available() throws IOException;
+
+  void close() throws IOException;
 }

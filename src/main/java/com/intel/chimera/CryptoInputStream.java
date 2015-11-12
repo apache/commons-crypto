@@ -25,6 +25,9 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import com.google.common.base.Preconditions;
+import com.intel.chimera.input.ChannelInput;
+import com.intel.chimera.input.Input;
+import com.intel.chimera.input.StreamInput;
 import com.intel.chimera.utils.Utils;
 
 /**

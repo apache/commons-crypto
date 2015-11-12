@@ -15,57 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera;
+package com.intel.chimera.input;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
-public class ChannelInput implements Input {
-  private static final int MAX_SKIP_BUFFER_SIZE = 2048;
-
+public class ChannelStreamInput extends StreamInput {
   private ReadableByteChannel channel;
+  boolean isChannelReadSupported = true;
 
-  public ChannelInput(
-      ReadableByteChannel channel) {
-    this.channel = channel;
+  public ChannelStreamInput(
+      InputStream inputStream,
+      int bufferSize) {
+    super(inputStream, bufferSize);
+    this.channel = (ReadableByteChannel) inputStream;
   }
 
   public int read(ByteBuffer dst) throws IOException {
-    return channel.read(dst);
-  }
-
-  @Override
-  public long skip(long n) throws IOException {
-    long remaining = n;
-    int nr;
-
-    if (n <= 0) {
-      return 0;
-    }
-
-    int size = (int)Math.min(MAX_SKIP_BUFFER_SIZE, remaining);
-    ByteBuffer skipBuffer = ByteBuffer.allocateDirect(size);
-    while (remaining > 0) {
-      skipBuffer.clear();
-      skipBuffer.limit((int)Math.min(size, remaining));
-      nr = read(skipBuffer);
-      if (nr < 0) {
-        break;
+    if (isChannelReadSupported) {
+      try {
+        return channel.read(dst);
+      } catch (UnsupportedOperationException e) {
+        isChannelReadSupported = false;
+        return super.read(dst);
       }
-      remaining -= nr;
+    } else {
+      return super.read(dst);
     }
-
-    return n - remaining;
-  }
-
-  @Override
-  public int available() throws IOException {
-    return 0;
-  }
-
-  @Override
-  public void close() throws IOException {
-    channel.close();
   }
 }
