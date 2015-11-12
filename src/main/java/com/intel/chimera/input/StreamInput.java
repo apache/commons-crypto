@@ -34,7 +34,6 @@ public class StreamInput implements Input {
   public int read(ByteBuffer dst) throws IOException {
     final int remaining = dst.remaining();
     final byte[] tmp = getBuf();
-    int pos = dst.position();
     int total = 0;
     while (remaining > total) {
       final int n = in.read(tmp, 0, Math.min(remaining, bufferSize));
@@ -44,8 +43,7 @@ public class StreamInput implements Input {
         }
         break;
       } else if (n > 0) {
-        dst.put(tmp, pos, n);
-        pos += n;
+        dst.put(tmp, 0, n);
         total += n;
       }
     }
