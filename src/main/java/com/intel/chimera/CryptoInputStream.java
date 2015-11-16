@@ -154,8 +154,8 @@ public class CryptoInputStream extends InputStream implements
       }
       
       streamOffset += n; // Read n bytes
-      decrypt(decryptor, inBuffer, outBuffer, padding);
-      padding = afterDecryption(decryptor, inBuffer, streamOffset, iv);
+      decrypt();
+      padding = afterDecryption(streamOffset);
       n = Math.min(len, outBuffer.remaining());
       outBuffer.get(b, off, n);
       return n;
@@ -277,8 +277,7 @@ public class CryptoInputStream extends InputStream implements
    * Upon return, inBuffer is cleared; the decrypted data starts at 
    * outBuffer.position() and ends at outBuffer.limit();
    */
-  private void decrypt(Decryptor decryptor, ByteBuffer inBuffer, 
-      ByteBuffer outBuffer, byte padding) throws IOException {
+  private void decrypt() throws IOException {
     Preconditions.checkState(inBuffer.position() >= padding);
     if(inBuffer.position() == padding) {
       // There is no real data in inBuffer.
@@ -302,8 +301,7 @@ public class CryptoInputStream extends InputStream implements
    * This method is executed immediately after decryption. Check whether 
    * decryptor should be updated and recalculate padding if needed. 
    */
-  private byte afterDecryption(Decryptor decryptor, ByteBuffer inBuffer, 
-      long position, byte[] iv) throws IOException {
+  private byte afterDecryption(long position) throws IOException {
     byte padding = 0;
     if (decryptor.isContextReset()) {
       /*
@@ -312,7 +310,7 @@ public class CryptoInputStream extends InputStream implements
        * some implementations can't maintain context so a re-init is necessary 
        * after each decryption call.
        */
-      updateDecryptor(decryptor, position, iv);
+      updateDecryptor(position);
       padding = getPadding(position);
       inBuffer.position(padding);
     }
@@ -328,7 +326,7 @@ public class CryptoInputStream extends InputStream implements
   }
   
   /** Calculate the counter and iv, update the decryptor. */
-  private void updateDecryptor(Decryptor decryptor, long position, byte[] iv) 
+  private void updateDecryptor(long position) 
       throws IOException {
     final long counter = getCounter(position);
     codec.calculateIV(initIV, counter, iv);
@@ -345,7 +343,7 @@ public class CryptoInputStream extends InputStream implements
     inBuffer.clear();
     outBuffer.clear();
     outBuffer.limit(0);
-    updateDecryptor(decryptor, offset, iv);
+    updateDecryptor(offset);
     padding = getPadding(offset);
     inBuffer.position(padding); // Set proper position for input data.
   }
@@ -366,13 +364,13 @@ public class CryptoInputStream extends InputStream implements
       inBuffer.put(buf);
       // Do decryption
       try {
-        decrypt(decryptor, inBuffer, outBuffer, padding);
+        decrypt();
         buf.position(offset + n);
         buf.limit(limit);
         n += outBuffer.remaining();
         buf.put(outBuffer);
       } finally {
-        padding = afterDecryption(decryptor, inBuffer, streamOffset - (len - n), iv);
+        padding = afterDecryption(streamOffset - (len - n));
       }
     }
     buf.position(pos);
