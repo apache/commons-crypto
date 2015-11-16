@@ -248,10 +248,19 @@ public class CryptoInputStream extends InputStream implements
       }
 
       streamOffset += n; // Read n bytes
-      decrypt();
-      padding = afterDecryption(streamOffset);
+      if (buf.isDirect() && buf.remaining() >= inBuffer.position() && padding == 0) {
+        // Use buf as the output buffer directly
+        decryptInPlace(buf);
+        padding = afterDecryption(streamOffset);
+        return n;
+      } else {
+        // Use outBuffer as the output buffer
+        decrypt();
+        padding = afterDecryption(streamOffset);
+      }
     }
 
+    // Copy decrypted data from outBuffer to buf
     unread = outBuffer.remaining();
     final int toRead = buf.remaining();
     if (toRead <= unread) {
@@ -265,7 +274,7 @@ public class CryptoInputStream extends InputStream implements
       return unread;
     }
   }
-  
+
   /**
    * Do the decryption using inBuffer as input and outBuffer as output.
    * Upon return, inBuffer is cleared; the decrypted data starts at 
@@ -290,6 +299,29 @@ public class CryptoInputStream extends InputStream implements
       outBuffer.position(padding);
     }
   }
+
+  /**
+   * Do the decryption using inBuffer as input and buf as output.
+   * Upon return, inBuffer is cleared; the buf's position will be equal to
+   * <i>p</i>&nbsp;<tt>+</tt>&nbsp;<i>n</i> where <i>p</i> is the position before
+   * decryption, <i>n</i> is the number of bytes decrypted.
+   * The buf's limit will not have changed.
+   */
+  private void decryptInPlace(ByteBuffer buf) throws IOException {
+    Preconditions.checkState(inBuffer.position() >= padding);
+    Preconditions.checkState(buf.isDirect());
+    Preconditions.checkState(buf.remaining() >= inBuffer.position());
+    Preconditions.checkState(padding == 0);
+
+    if(inBuffer.position() == padding) {
+      // There is no real data in inBuffer.
+      return;
+    }
+    inBuffer.flip();
+    decryptor.decrypt(inBuffer, buf);
+    inBuffer.clear();
+  }
+
   
   /**
    * This method is executed immediately after decryption. Check whether 
@@ -320,7 +352,7 @@ public class CryptoInputStream extends InputStream implements
   }
   
   /** Calculate the counter and iv, update the decryptor. */
-  private void updateDecryptor(long position) 
+  private void updateDecryptor(long position)
       throws IOException {
     final long counter = getCounter(position);
     codec.calculateIV(initIV, counter, iv);
