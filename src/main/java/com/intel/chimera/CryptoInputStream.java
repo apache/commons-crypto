@@ -240,35 +240,29 @@ public class CryptoInputStream extends InputStream implements
   @Override
   public int read(ByteBuffer buf) throws IOException {
     checkStream();
-    final int unread = outBuffer.remaining();
-    if (unread > 0) { // Have unread decrypted data in buffer.
-      int toRead = buf.remaining();
-      if (toRead <= unread) {
-        final int limit = outBuffer.limit();
-        outBuffer.limit(outBuffer.position() + toRead);
-        buf.put(outBuffer);
-        outBuffer.limit(limit);
-        return toRead;
-      } else {
-        buf.put(outBuffer);
+    int unread = outBuffer.remaining();
+    if (unread <= 0) { // Fill the unread decrypted data buffer firstly
+      final int n = input.read(inBuffer);
+      if (n <= 0) {
+        return n;
       }
-    }
 
-    final int pos = buf.position();
-    final int n = input.read(buf);
-    if (n > 0) {
       streamOffset += n; // Read n bytes
-      decrypt(buf, pos, n);
+      decrypt();
+      padding = afterDecryption(streamOffset);
     }
 
-    if (n >= 0) {
-      return unread + n;
+    unread = outBuffer.remaining();
+    final int toRead = buf.remaining();
+    if (toRead <= unread) {
+      final int limit = outBuffer.limit();
+      outBuffer.limit(outBuffer.position() + toRead);
+      buf.put(outBuffer);
+      outBuffer.limit(limit);
+      return toRead;
     } else {
-      if (unread == 0) {
-        return -1;
-      } else {
-        return unread;
-      }
+      buf.put(outBuffer);
+      return unread;
     }
   }
   
@@ -348,34 +342,6 @@ public class CryptoInputStream extends InputStream implements
     inBuffer.position(padding); // Set proper position for input data.
   }
 
-  /**
-   * Decrypt all data in buf: total n bytes from given start position.
-   * Output is also buf and same start position.
-   * buf.position() and buf.limit() should be unchanged after decryption.
-   */
-  private void decrypt(ByteBuffer buf, int offset, int len) 
-      throws IOException {
-    final int pos = buf.position();
-    final int limit = buf.limit();
-    int n = 0;
-    while (n < len) {
-      buf.position(offset + n);
-      buf.limit(offset + n + Math.min(len - n, inBuffer.remaining()));
-      inBuffer.put(buf);
-      // Do decryption
-      try {
-        decrypt();
-        buf.position(offset + n);
-        buf.limit(limit);
-        n += outBuffer.remaining();
-        buf.put(outBuffer);
-      } finally {
-        padding = afterDecryption(streamOffset - (len - n));
-      }
-    }
-    buf.position(pos);
-  }
-  
   private void checkStream() throws IOException {
     if (closed) {
       throw new IOException("Stream closed");
