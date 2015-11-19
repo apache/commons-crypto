@@ -108,8 +108,8 @@ public class Utils {
   }
 
   public static String getCodecString(Properties props, CipherSuite cipherSuite) {
-    String configName = CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX
-        + cipherSuite.getConfigSuffix();
+    String configName =
+        CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX + CipherSuite.getConfigSuffix(cipherSuite.name());
     return props.getProperty(configName) != null ?
         props.getProperty(configName) : System.getProperty(configName);
   }

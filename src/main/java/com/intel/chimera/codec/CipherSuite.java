@@ -89,13 +89,13 @@ public enum CipherSuite {
    * Returns suffix of cipher suite configuration.
    * @return String configuration suffix
    */
-  public String getConfigSuffix() {
+  public static String getConfigSuffix(String name) {
     String[] parts = name.split("/");
     StringBuilder suffix = new StringBuilder();
     for (String part : parts) {
       suffix.append(".").append(part.toLowerCase());
     }
-    
+
     return suffix.toString();
   }
 }
