@@ -36,6 +36,7 @@ import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.security.SecureRandom;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Random;
@@ -143,14 +144,22 @@ public class Utils {
     return randomAlg;
   }
 
-  public static Class<? extends Random> getSecureRandomClass(Properties props) {
+  public static Random getSecureRandom(Properties props) {
     String secureRandomImpl = props.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
     if (secureRandomImpl == null) {
       secureRandomImpl = System.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
     }
-    return ReflectionUtils.getClass(
-        secureRandomImpl, OsSecureRandom.class,
-        Random.class);
+    final Class<? extends Random> klass = ReflectionUtils.getClass(
+        secureRandomImpl, OsSecureRandom.class, Random.class);
+
+    Random random;
+    try {
+      random = ReflectionUtils.newInstance(klass, props);
+    } catch (Exception e) {
+      random = new SecureRandom();
+    }
+
+    return random;
   }
 
   public static String getRandomDevPath(Properties props) {

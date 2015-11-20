@@ -21,40 +21,25 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.google.common.base.Preconditions;
 import com.intel.chimera.utils.Utils;
-import com.intel.chimera.utils.ReflectionUtils;
 
 /**
  * Implement the AES-CTR crypto codec using JNI into OpenSSL.
  */
 public class OpensslAesCtrCryptoCodec extends AesCtrCryptoCodec {
-  private static final Log LOG =
-      LogFactory.getLog(OpensslAesCtrCryptoCodec.class.getName());
-
   private Random random;
-  
+
   public OpensslAesCtrCryptoCodec(Properties props) {
     String loadingFailureReason = OpensslCipher.getLoadingFailureReason();
     if (loadingFailureReason != null) {
       throw new RuntimeException(loadingFailureReason);
     }
 
-    final Class<? extends Random> klass = Utils.getSecureRandomClass(props);
-    try {
-      random = ReflectionUtils.newInstance(klass, props);
-    } catch (Exception e) {
-      LOG.info("Unable to use " + klass.getName() + ".  Falling back to " +
-          "Java SecureRandom.", e);
-      this.random = new SecureRandom();
-    }
+    random = Utils.getSecureRandom(props);
   }
 
   @Override
