@@ -58,6 +58,7 @@ public abstract class CryptoCodec {
             if (codec == null) {
               LOG.debug("Using crypto codec {}.", klass.getName());
               codec = c;
+              break;
             }
           } else {
             LOG.debug(
