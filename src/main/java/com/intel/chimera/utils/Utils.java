@@ -111,7 +111,7 @@ public class Utils {
 
   public static String getCodecString(Properties props, CipherSuite cipherSuite) {
     String configName =
-        CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX + CipherSuite.getConfigSuffix(cipherSuite.name());
+        CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX + CipherSuite.getConfigSuffix(cipherSuite.getName());
     String defaultCodecStr = null;
     if (cipherSuite.equals(CipherSuite.AES_CTR_NOPADDING)) {
       defaultCodecStr = DEFAULT_CHIMERA_CRYPTO_CODEC_CLASSES_AES_CTR_NOPADDING_VALUE;
