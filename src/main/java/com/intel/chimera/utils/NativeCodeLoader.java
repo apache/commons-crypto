@@ -142,18 +142,18 @@ public class NativeCodeLoader {
     // Attach UUID to the native library file to ensure multiple class loaders
     // can read the libchimera multiple times.
     String uuid = UUID.randomUUID().toString();
-    String extractedLibFileName = String.format("chimera-%s-%s-%s",
-        getVersion(), uuid, libraryFileName);
+    String extractedLibFileName = String.format("chimera-%s-%s-%s", getVersion(), uuid,
+        libraryFileName);
     File extractedLibFile = new File(targetFolder, extractedLibFileName);
 
+    InputStream reader = null;
     try {
       // Extract a native library file into the target directory
-      InputStream reader = NativeCodeLoader.class
-          .getResourceAsStream(nativeLibraryFilePath);
+      reader = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath);
       FileOutputStream writer = new FileOutputStream(extractedLibFile);
       try {
         byte[] buffer = new byte[8192];
-        int bytesRead = 0;
+        int bytesRead;
         while ((bytesRead = reader.read(buffer)) != -1) {
           writer.write(buffer, 0, bytesRead);
         }
@@ -161,10 +161,14 @@ public class NativeCodeLoader {
         // Delete the extracted lib file on JVM exit.
         extractedLibFile.deleteOnExit();
 
-        if (writer != null)
+        if (writer != null){
           writer.close();
-        if (reader != null)
+        }
+
+        if (reader != null) {
           reader.close();
+          reader = null;
+        }
       }
 
       // Set executable (x) flag to enable Java to load the native library
@@ -194,6 +198,14 @@ public class NativeCodeLoader {
     } catch (IOException e) {
       e.printStackTrace(System.err);
       return null;
+    } finally{
+      if(reader != null){
+        try {
+          reader.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 

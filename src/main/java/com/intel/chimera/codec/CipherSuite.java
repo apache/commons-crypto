@@ -35,14 +35,6 @@ public enum CipherSuite {
     this.algoBlockSize = algoBlockSize;
   }
 
-  public void setUnknownValue(int unknown) {
-    this.unknownValue = unknown;
-  }
-
-  public int getUnknownValue() {
-    return unknownValue;
-  }
-
   /**
    * @return name of cipher suite, as in {@link javax.crypto.Cipher}
    */

@@ -33,7 +33,7 @@ import com.intel.chimera.utils.ReflectionUtils;
  * Crypto codec class, encapsulates encryptor/decryptor pair.
  */
 public abstract class CryptoCodec {
-  public static Logger LOG = LoggerFactory.getLogger(CryptoCodec.class);
+  public final static Logger LOG = LoggerFactory.getLogger(CryptoCodec.class);
 
   /**
    * Get crypto codec for specified algorithm/mode/padding.
