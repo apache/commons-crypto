@@ -1,4 +1,4 @@
-Chimera is a project which strips code related to CryptoInputStream/CryptoOutputStream from Hadoop to facilitate AES-NI based data encryption in other projects.
+Chimera [![Build Status](https://travis-ci.org/sundapeng/chimera.svg?branch=master)](https://travis-ci.org/sundapeng/chimera) is a project which strips code related to CryptoInputStream/CryptoOutputStream from Hadoop to facilitate AES-NI based data encryption in other projects.
 
 ## Features
   * Fast encryption/decryption
