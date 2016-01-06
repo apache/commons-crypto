@@ -20,38 +20,39 @@ package com.intel.chimera;
 import com.intel.chimera.crypto.JceCipher;
 
 public class ConfigurationKeys {
+	public static final String CONF_PREFIX = "chimera";
   public static final String CHIMERA_SYSTEM_PROPERTIES_FILE =
-      "chimera.properties";
+      CONF_PREFIX + ".properties";
 
   public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_KEY =
-      "chimera.crypto.cipher.classes";
+      CONF_PREFIX + ".crypto.cipher.classes";
+  public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT =
+      JceCipher.class.getName();
   public static final String CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY =
-      "chimera.crypto.cipher.transformation";
+      CONF_PREFIX + ".crypto.cipher.transformation";
   public static final String CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT =
       "AES/CTR/NoPadding";
-  public static final String DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE =
-      JceCipher.class.getName();
 
   public static final String CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY =
-      "chimera.random.device.file.path";
+      CONF_PREFIX + ".random.device.file.path";
   public static final String CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT =
       "/dev/urandom";
 
   public static final String CHIMERA_CRYPTO_JCE_PROVIDER_KEY =
-      "chimera.crypto.jce.provider";
+      CONF_PREFIX + ".crypto.jce.provider";
   public static final String CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY =
-      "chimera.java.secure.random.algorithm";
+      CONF_PREFIX + ".java.secure.random.algorithm";
   public static final String CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT =
       "SHA1PRNG";
 
   public static final String CHIMERA_SECURE_RANDOM_IMPL_KEY =
-      "chimera.secure.random.impl";
+      CONF_PREFIX + ".secure.random.impl";
 
   public static final int CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT = 8192;
   public static final String CHIMERA_CRYPTO_BUFFER_SIZE_KEY =
-      "chimera.crypto.buffer.size";
+      CONF_PREFIX + ".crypto.buffer.size";
 
-  public static final String CHIMERA_LIB_PATH_KEY = "chimera.lib.path";
-  public static final String CHIMERA_LIB_NAME_KEY = "chimera.lib.name";
-  public static final String CHIMERA_TEMPDIR_KEY = "chimera.tempdir";
+  public static final String CHIMERA_LIB_PATH_KEY = CONF_PREFIX + ".lib.path";
+  public static final String CHIMERA_LIB_NAME_KEY = CONF_PREFIX + ".lib.name";
+  public static final String CHIMERA_TEMPDIR_KEY = CONF_PREFIX + ".tempdir";
 }

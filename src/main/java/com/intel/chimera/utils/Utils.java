@@ -46,7 +46,7 @@ import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PAT
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
-import static com.intel.chimera.ConfigurationKeys.DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
 
 public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
@@ -122,7 +122,7 @@ public class Utils {
                                             CipherTransformation transformation) {
     final String configName = CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
     return props.getProperty(configName) != null ? props.getProperty(configName) : System
-        .getProperty(configName, DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE);
+        .getProperty(configName, CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT);
   }
 
   public static CipherTransformation getCripherTransformation(Properties props) {
