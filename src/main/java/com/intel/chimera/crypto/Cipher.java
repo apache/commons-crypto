@@ -41,14 +41,14 @@ public abstract class Cipher {
   public static final int DECRYPT_MODE = 0;
   
   /**
-   * Get crypto codec for specified algorithm/mode/padding.
+   * Get a cipher instance for specified algorithm/mode/padding.
    * 
    * @param props
    *          the configuration properties
-   * @param cipherSuite
+   * @param transformation
    *          algorithm/mode/padding
-   * @return CryptoCodec the codec object. Null value will be returned if no
-   *         crypto codec classes with cipher suite configured.
+   * @return Cipher the cipher. Null value will be returned if no
+   *         cipher classes with transformation configured.
    */
   public static Cipher getInstance(Properties props,
       CipherTransformation transformation) throws GeneralSecurityException  {
@@ -70,46 +70,40 @@ public abstract class Cipher {
       }
     }
     
-    if (cipher == null) {
-      // use JceCipher as the default
-      cipher = new JceCipher(props, transformation);
-    }
-
-    return cipher;
+    return (cipher == null)?new JceCipher(props, transformation):cipher;
   }
 
   /**
-   * Get crypto codec for algorithm/mode/padding in config value
-   * chimera.crypto.cipher.suite
+   * Get a cipher for algorithm/mode/padding in config value
+   * chimera.crypto.cipher.transformation
    * 
-   * @return CryptoCodec the codec object Null value will be returned if no
-   *         crypto codec classes with cipher suite configured.
+   * @return Cipher the cipher object Null value will be returned if no
+   *         cipher classes with transformation configured.
    */
   public static Cipher getInstance() throws GeneralSecurityException {
     return getInstance(new Properties());
   }
 
   /**
-   * Get crypto codec for algorithm/mode/padding in config value
-   * chimera.crypto.cipher.suite
+   * Get a cipher for algorithm/mode/padding in config value
+   * chimera.crypto.cipher.transformation
    *
    * @param props the properties which contain the configurations
-   *         of the crypto codec
-   * @return CryptoCodec the codec object Null value will be returned if no
-   *         crypto codec classes with cipher suite configured.
+   *         of the crypto cipher
+   * @return Cipher the cipher object Null value will be returned if no
+   *         cipher classes with transformation configured.
    */
   public static Cipher getInstance(Properties props)
   		throws GeneralSecurityException {
-    return getInstance(props, Utils.getCripherSuite(props));
+    return getInstance(props, Utils.getCripherTransformation(props));
   }
 
   private static List<Class<? extends Cipher>> getCipherClasses(
-      Properties props, CipherTransformation cipherSuite) {
+      Properties props, CipherTransformation transformation) {
     List<Class<? extends Cipher>> result = Lists.newArrayList();
-    String cipherClassString = Utils.getCipherClassString(props, cipherSuite);
+    String cipherClassString = Utils.getCipherClassString(props, transformation);
     if (cipherClassString == null) {
-      LOG.debug(
-          "No cipher classes with cipher suite configured.");
+      LOG.debug("No cipher classes with cipher transformation configured.");
       return null;
     }
     for (String c : Splitter.on(',').trimResults().omitEmptyStrings().
@@ -118,9 +112,9 @@ public abstract class Cipher {
         Class<?> cls = ReflectionUtils.getClassByName(c);
         result.add(cls.asSubclass(Cipher.class));
       } catch (ClassCastException e) {
-        LOG.debug("Class {} is not a Cipher.", c);
+        LOG.error("Class {} is not a Cipher.", c);
       } catch (ClassNotFoundException e) {
-        LOG.debug("Cipher {} not found.", c);
+        LOG.error("Cipher {} not found.", c);
       }
     }
     

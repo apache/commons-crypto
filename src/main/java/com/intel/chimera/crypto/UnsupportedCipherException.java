@@ -27,7 +27,7 @@ public class UnsupportedCipherException extends RuntimeException {
   }
 
   /**
-   * Constructs an UnsupportedCodecException with the specified
+   * Constructs an UnsupportedCipherException with the specified
    * detail message.
    * 
    * @param message the detail message

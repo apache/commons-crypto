@@ -36,78 +36,78 @@ import com.intel.chimera.utils.Utils;
  * Implement the Cipher using JCE provider.
  */
 public class JceCipher extends Cipher {
-	private static final Log LOG =
-			LogFactory.getLog(JceCipher.class.getName());
+  private static final Log LOG =
+      LogFactory.getLog(JceCipher.class.getName());
 
-	private final String provider;
-	private final CipherTransformation transformation;
-	private final javax.crypto.Cipher cipher;
-	private SecureRandom random;
+  private final String provider;
+  private final CipherTransformation transformation;
+  private final javax.crypto.Cipher cipher;
+  private SecureRandom random;
 
-	public JceCipher(Properties props, CipherTransformation transformation)
-			throws GeneralSecurityException {
-		this.provider = Utils.getJCEProvider(props);
-		this.transformation = transformation;
-		
-		final String secureRandomAlg = Utils.getSecureRandomAlg(props);
-		try {
-			random = (provider != null) ? 
-					SecureRandom.getInstance(secureRandomAlg, provider) : 
-						SecureRandom.getInstance(secureRandomAlg);
-		} catch (GeneralSecurityException e) {
-			LOG.warn(e.getMessage());
-			random = new SecureRandom();
-		}
-		
-		if (provider == null || provider.isEmpty()) {
-			cipher = javax.crypto.Cipher.getInstance(transformation.getName());
-		} else {
-			cipher = javax.crypto.Cipher.getInstance(transformation.getName(), provider);
-		}
-	}
+  public JceCipher(Properties props, CipherTransformation transformation)
+      throws GeneralSecurityException {
+    this.provider = Utils.getJCEProvider(props);
+    this.transformation = transformation;
 
-	@Override
-	public CipherTransformation getTransformation() {
-		return transformation;
-	}
+    final String secureRandomAlg = Utils.getSecureRandomAlg(props);
+    try {
+      random = (provider != null) ?
+          SecureRandom.getInstance(secureRandomAlg, provider) :
+            SecureRandom.getInstance(secureRandomAlg);
+    } catch (GeneralSecurityException e) {
+      LOG.warn(e.getMessage());
+      random = new SecureRandom();
+    }
 
-	@Override
-	public void init(int mode, byte[] key, byte[] iv) throws IOException {
-		Preconditions.checkNotNull(key);
-		Preconditions.checkNotNull(iv);
-		
-		int cipherMode = javax.crypto.Cipher.DECRYPT_MODE;
-		if(mode == ENCRYPT_MODE)
-			cipherMode = javax.crypto.Cipher.ENCRYPT_MODE;
-		
-		try {
-			cipher.init(cipherMode, new SecretKeySpec(key, "AES"), 
-					new IvParameterSpec(iv));
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
-	}
+    if (provider == null || provider.isEmpty()) {
+      cipher = javax.crypto.Cipher.getInstance(transformation.getName());
+    } else {
+      cipher = javax.crypto.Cipher.getInstance(transformation.getName(), provider);
+    }
+  }
 
-	@Override
-	public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
-		try {
-			return cipher.update(inBuffer, outBuffer);
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
-	}
+  @Override
+  public CipherTransformation getTransformation() {
+    return transformation;
+  }
 
-	@Override
-	public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
-		try {
-			return cipher.doFinal(inBuffer, outBuffer);
-		} catch(Exception e) {
-			throw new IOException(e);
-		}
-	}
-	
-	@Override
-	public void generateSecureRandom(byte[] bytes) {
-		random.nextBytes(bytes);
-	}
+  @Override
+  public void init(int mode, byte[] key, byte[] iv) throws IOException {
+    Preconditions.checkNotNull(key);
+    Preconditions.checkNotNull(iv);
+
+    int cipherMode = javax.crypto.Cipher.DECRYPT_MODE;
+    if(mode == ENCRYPT_MODE)
+      cipherMode = javax.crypto.Cipher.ENCRYPT_MODE;
+
+    try {
+      cipher.init(cipherMode, new SecretKeySpec(key, "AES"),
+          new IvParameterSpec(iv));
+    } catch (Exception e) {
+      throw new IOException(e);
+    }
+  }
+
+  @Override
+  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
+    try {
+      return cipher.update(inBuffer, outBuffer);
+    } catch (Exception e) {
+      throw new IOException(e);
+    }
+  }
+
+  @Override
+  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
+    try {
+      return cipher.doFinal(inBuffer, outBuffer);
+    } catch(Exception e) {
+      throw new IOException(e);
+    }
+  }
+
+  @Override
+  public void generateSecureRandom(byte[] bytes) {
+    random.nextBytes(bytes);
+  }
 }

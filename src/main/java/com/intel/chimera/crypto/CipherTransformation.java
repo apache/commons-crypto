@@ -34,7 +34,7 @@ public enum CipherTransformation {
   }
 
   /**
-   * @return name of cipher suite, as in {@link javax.crypto.Cipher}
+   * @return name of cipher transformation, as in {@link javax.crypto.Cipher}
    */
   public String getName() {
     return name;
@@ -55,25 +55,26 @@ public enum CipherTransformation {
     builder.append("}");
     return builder.toString();
   }
-  
+
   /**
-   * Convert to CipherSuite from name, {@link #algoBlockSize} is fixed for
-   * certain cipher suite, just need to compare the name.
-   * @param name cipher suite name
-   * @return CipherSuite cipher suite
+   * Convert to CipherTransformation from name, {@link #algoBlockSize} is fixed
+   * for certain cipher transformation, just need to compare the name.
+   *
+   * @param name cipher transformation name
+   * @return CipherTransformation cipher transformation
    */
   public static CipherTransformation convert(String name) {
-    CipherTransformation[] suites = CipherTransformation.values();
-    for (CipherTransformation suite : suites) {
-      if (suite.getName().equals(name)) {
-        return suite;
+    CipherTransformation[] transformations = CipherTransformation.values();
+    for (CipherTransformation transformation : transformations) {
+      if (transformation.getName().equals(name)) {
+        return transformation;
       }
     }
     throw new IllegalArgumentException("Invalid cipher name: " + name);
   }
   
   /**
-   * Returns suffix of cipher suite configuration.
+   * Returns suffix of cipher transformation configuration.
    * @return String configuration suffix
    */
   public static String getConfigSuffix(String name) {

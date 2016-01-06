@@ -17,23 +17,6 @@
  */
 package com.intel.chimera.utils;
 
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
-import static com.intel.chimera.ConfigurationKeys.DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_SUITE_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_SUITE_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_JCE_PROVIDER_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -48,17 +31,33 @@ import com.intel.chimera.crypto.Cipher;
 import com.intel.chimera.crypto.CipherTransformation;
 import com.intel.chimera.crypto.UnsupportedCipherException;
 import com.intel.chimera.random.OsSecureRandom;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_JCE_PROVIDER_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
+import static com.intel.chimera.ConfigurationKeys.DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE;
 
 public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
   
-  protected static final CipherTransformation AES_CTR_NOPADDING_SUITE = CipherTransformation.AES_CTR_NOPADDING;
+  protected static final CipherTransformation AES_CTR_NOPADDING = CipherTransformation.AES_CTR_NOPADDING;
 
   /**
    * For AES, the algorithm block is fixed size of 128 bits.
    * @see http://en.wikipedia.org/wiki/Advanced_Encryption_Standard
    */
-  private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING_SUITE.getAlgorithmBlockSize();
+  private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING.getAlgorithmBlockSize();
   
   static {
     loadSnappySystemProperties();
@@ -119,17 +118,18 @@ public class Utils {
     }
   }
 
-  public static String getCipherClassString(Properties props, CipherTransformation cipherSuite) {
+  public static String getCipherClassString(Properties props,
+                                            CipherTransformation transformation) {
     final String configName = CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
     return props.getProperty(configName) != null ? props.getProperty(configName) : System
         .getProperty(configName, DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE);
   }
 
-  public static CipherTransformation getCripherSuite(Properties props) {
-    String name = props.getProperty(CHIMERA_CRYPTO_CIPHER_SUITE_KEY);
+  public static CipherTransformation getCripherTransformation(Properties props) {
+    String name = props.getProperty(CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY);
     if (name == null) {
-      name = System.getProperty(CHIMERA_CRYPTO_CIPHER_SUITE_KEY,
-          CHIMERA_CRYPTO_CIPHER_SUITE_DEFAULT);
+      name = System.getProperty(CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY,
+          CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT);
     }
     return CipherTransformation.convert(name);
   }
@@ -198,10 +198,10 @@ public class Utils {
   }
 
   /** Check and floor buffer size */
-  public static int checkBufferSize(Cipher codec, int bufferSize) {
+  public static int checkBufferSize(Cipher cipher, int bufferSize) {
     Preconditions.checkArgument(bufferSize >= MIN_BUFFER_SIZE, 
         "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
-    return bufferSize - bufferSize % codec.getTransformation()
+    return bufferSize - bufferSize % cipher.getTransformation()
         .getAlgorithmBlockSize();
   }
   

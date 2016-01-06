@@ -361,8 +361,7 @@ public class CryptoInputStream extends InputStream implements
   
   /**
    * Reset the underlying stream offset; clear {@link #inBuffer} and 
-   * {@link #outBuffer}. This Typically happens during {@link #seek(long)} 
-   * or {@link #skip(long)}.
+   * {@link #outBuffer}. This Typically happens during {@link #skip(long)}.
    */
   private void resetStreamOffset(long offset) throws IOException {
     streamOffset = offset;

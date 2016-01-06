@@ -25,9 +25,9 @@ public class ConfigurationKeys {
 
   public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_KEY = 
       "chimera.crypto.cipher.classes";
-  public static final String CHIMERA_CRYPTO_CIPHER_SUITE_KEY =
-      "chimera.crypto.cipher.suite";
-  public static final String CHIMERA_CRYPTO_CIPHER_SUITE_DEFAULT = 
+  public static final String CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY =
+      "chimera.crypto.cipher.transformation";
+  public static final String CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT =
       "AES/CTR/NoPadding";
   public static final String DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE =
       JceCipher.class.getName();

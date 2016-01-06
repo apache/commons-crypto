@@ -42,7 +42,7 @@ public final class Openssl {
       LogFactory.getLog(Openssl.class.getName());
   public static final int ENCRYPT_MODE = 1;
   public static final int DECRYPT_MODE = 0;
-  
+
   /** Currently only support AES/CTR/NoPadding. */
   private static enum AlgMode {
     AES_CTR;
