@@ -32,7 +32,8 @@ import com.intel.chimera.utils.Utils;
 import com.intel.chimera.utils.ReflectionUtils;
 
 /**
- * Abstract Cipher class
+ * This class provides the functionality of a cryptographic cipher for
+ * encryption and decryption.
  */
 public abstract class Cipher {
   public final static Logger LOG = LoggerFactory.getLogger(Cipher.class);
@@ -126,17 +127,42 @@ public abstract class Cipher {
    */
   public abstract CipherTransformation getTransformation();
 
+  /**
+   * Initializes the cipher with mode, key and iv.
+   * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+   * @param key crypto key for the cipher
+   * @param iv Initialization vector for the cipher
+   * @throws IOException if cipher initialize fails
+   */
   public abstract void init(int mode, byte[] key, byte[] iv)
       throws IOException;
 
+  /**
+   * Continues a multiple-part encryption/decryption operation. The data
+   * is encrypted or decrypted, depending on how this cipher was initialized.
+   * @param inBuffer the input ByteBuffer
+   * @param outBuffer the output ByteBuffer
+   * @return int number of bytes stored in <code>output</code>
+   * @throws IOException if cipher failed to update, for example, there is
+   * * insufficient space in the output buffer
+   */
   public abstract int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
       throws IOException;
 
+  /**
+   * Encrypts or decrypts data in a single-part operation, or finishes a
+   * multiple-part operation.
+   * @param inBuffer the input ByteBuffer
+   * @param outBuffer the output ByteBuffer
+   * @return int number of bytes stored in <code>output</code>
+   * @throws IOException if cipher failed to update, for example, there is
+   * * insufficient space in the output buffer
+   */
   public abstract int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
         throws IOException;
 
   /**
-   * Generate a number of secure, random bytes suitable for cryptographic use.
+   * Generates a number of secure, random bytes suitable for cryptographic use.
    * This method needs to be thread-safe.
    *
    * @param bytes byte array to populate with random data

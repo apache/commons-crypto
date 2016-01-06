@@ -35,6 +35,12 @@ public class OpensslCipher extends Cipher {
   private final Openssl cipher;
   private final Random random;
 
+  /**
+   * Constructs a {@link com.intel.chimera.crypto.Cipher} using JNI into OpenSSL
+   * @param props properties for OpenSSL cipher
+   * @param transformation transformation for OpenSSL cipher
+   * @throws GeneralSecurityException if OpenSSL cipher initialize failed
+   */
   public OpensslCipher(Properties props, CipherTransformation transformation)
       throws GeneralSecurityException {
     this.transformation = transformation;
@@ -63,6 +69,13 @@ public class OpensslCipher extends Cipher {
     return transformation;
   }
 
+  /**
+   * Initializes the cipher with mode, key and iv.
+   * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+   * @param key crypto key for the cipher
+   * @param iv Initialization vector for the cipher
+   * @throws IOException if cipher initialize fails
+   */
   @Override
   public void init(int mode, byte[] key, byte[] iv) throws IOException {
     Preconditions.checkNotNull(key);
@@ -75,6 +88,15 @@ public class OpensslCipher extends Cipher {
     cipher.init(cipherMode, key, iv);
   }
 
+  /**
+   * Continues a multiple-part encryption/decryption operation. The data
+   * is encrypted or decrypted, depending on how this cipher was initialized.
+   * @param inBuffer the input ByteBuffer
+   * @param outBuffer the output ByteBuffer
+   * @return int number of bytes stored in <code>output</code>
+   * @throws IOException if cipher failed to update, for example, there is
+   * insufficient space in the output buffer
+   */
   @Override
   public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
     try {
@@ -84,6 +106,16 @@ public class OpensslCipher extends Cipher {
     }
   }
 
+  /**
+   * Encrypts or decrypts data in a single-part operation, or finishes a
+   * multiple-part operation. The data is encrypted or decrypted, depending
+   * on how this cipher was initialized.
+   * @param inBuffer the input ByteBuffer
+   * @param outBuffer the output ByteBuffer
+   * @return int number of bytes stored in <code>output</code>
+   * @throws IOException if cipher failed to update, for example, there is
+   * insufficient space in the output buffer
+   */
   @Override
   public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
     try {
@@ -94,6 +126,12 @@ public class OpensslCipher extends Cipher {
     }
   }
 
+  /**
+   * Generates a number of secure, random bytes suitable for cryptographic use.
+   * This method needs to be thread-safe.
+   *
+   * @param bytes byte array to populate with random data
+   */
   @Override
   public void generateSecureRandom(byte[] bytes) {
     random.nextBytes(bytes);

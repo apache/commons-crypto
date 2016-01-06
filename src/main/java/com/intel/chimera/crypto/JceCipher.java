@@ -33,7 +33,7 @@ import com.google.common.base.Preconditions;
 import com.intel.chimera.utils.Utils;
 
 /**
- * Implement the Cipher using JCE provider.
+ * Implement the {@link com.intel.chimera.crypto.Cipher} using JCE provider.
  */
 public class JceCipher extends Cipher {
   private static final Log LOG =
@@ -44,6 +44,13 @@ public class JceCipher extends Cipher {
   private final javax.crypto.Cipher cipher;
   private SecureRandom random;
 
+  /**
+   * Constructs a {@link com.intel.chimera.crypto.Cipher} based on JCE
+   * Cipher {@link javax.crypto.Cipher}.
+   * @param props properties for JCE cipher
+   * @param transformation transformation for JCE cipher
+   * @throws GeneralSecurityException if JCE cipher initialize failed
+   */
   public JceCipher(Properties props, CipherTransformation transformation)
       throws GeneralSecurityException {
     this.provider = Utils.getJCEProvider(props);
@@ -71,6 +78,13 @@ public class JceCipher extends Cipher {
     return transformation;
   }
 
+  /**
+   * Initializes the cipher with mode, key and iv.
+   * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+   * @param key crypto key for the cipher
+   * @param iv Initialization vector for the cipher
+   * @throws IOException if cipher initialize fails
+   */
   @Override
   public void init(int mode, byte[] key, byte[] iv) throws IOException {
     Preconditions.checkNotNull(key);
@@ -88,6 +102,15 @@ public class JceCipher extends Cipher {
     }
   }
 
+  /**
+   * Continues a multiple-part encryption/decryption operation. The data
+   * is encrypted or decrypted, depending on how this cipher was initialized.
+   * @param inBuffer the input ByteBuffer
+   * @param outBuffer the output ByteBuffer
+   * @return int number of bytes stored in <code>output</code>
+   * @throws IOException if cipher failed to update, for example, there is
+   * insufficient space in the output buffer
+   */
   @Override
   public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
     try {
@@ -97,6 +120,16 @@ public class JceCipher extends Cipher {
     }
   }
 
+  /**
+   * Encrypts or decrypts data in a single-part operation, or finishes a
+   * multiple-part operation. The data is encrypted or decrypted, depending
+   * on how this cipher was initialized.
+   * @param inBuffer the input ByteBuffer
+   * @param outBuffer the output ByteBuffer
+   * @return int number of bytes stored in <code>output</code>
+   * @throws IOException if cipher failed to update, for example, there is
+   * insufficient space in the output buffer
+   */
   @Override
   public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
     try {
@@ -106,6 +139,12 @@ public class JceCipher extends Cipher {
     }
   }
 
+  /**
+   * Generates a number of secure, random bytes suitable for cryptographic use.
+   * This method needs to be thread-safe.
+   *
+   * @param bytes byte array to populate with random data
+   */
   @Override
   public void generateSecureRandom(byte[] bytes) {
     random.nextBytes(bytes);
