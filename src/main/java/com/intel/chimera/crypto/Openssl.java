@@ -33,24 +33,26 @@ import com.google.common.base.Preconditions;
 import com.intel.chimera.utils.NativeCodeLoader;
 
 /**
- * OpenSSL cipher using JNI.
+ * OpenSSL cryptographic wrapper using JNI.
  * Currently only AES-CTR is supported. It's flexible to add
  * other crypto algorithms/modes.
  */
 public final class Openssl {
   private static final Log LOG =
       LogFactory.getLog(Openssl.class.getName());
+  
+  // Mode constant defined by Openssl JNI
   public static final int ENCRYPT_MODE = 1;
   public static final int DECRYPT_MODE = 0;
 
   /** Currently only support AES/CTR/NoPadding. */
-  private static enum AlgMode {
+  private static enum AlgorithmMode {
     AES_CTR;
 
     static int get(String algorithm, String mode)
         throws NoSuchAlgorithmException {
       try {
-        return AlgMode.valueOf(algorithm + "_" + mode).ordinal();
+        return AlgorithmMode.valueOf(algorithm + "_" + mode).ordinal();
       } catch (Exception e) {
         throw new NoSuchAlgorithmException("Doesn't support algorithm: " +
             algorithm + " and mode: " + mode);
@@ -71,7 +73,7 @@ public final class Openssl {
   }
 
   private long context = 0;
-  private final int alg;
+  private final int algorithm;
   private final int padding;
 
   private static final String loadingFailureReason;
@@ -94,9 +96,9 @@ public final class Openssl {
     return loadingFailureReason;
   }
 
-  private Openssl(long context, int alg, int padding) {
+  private Openssl(long context, int algorithm, int padding) {
     this.context = context;
-    this.alg = alg;
+    this.algorithm = algorithm;
     this.padding = padding;
   }
 
@@ -116,20 +118,20 @@ public final class Openssl {
   public static final Openssl getInstance(String transformation)
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     Transform transform = tokenizeTransformation(transformation);
-    int algMode = AlgMode.get(transform.alg, transform.mode);
+    int algorithmMode = AlgorithmMode.get(transform.algorithm, transform.mode);
     int padding = Padding.get(transform.padding);
-    long context = OpensslNative.initContext(algMode, padding);
-    return new Openssl(context, algMode, padding);
+    long context = OpensslNative.initContext(algorithmMode, padding);
+    return new Openssl(context, algorithmMode, padding);
   }
 
   /** Nested class for algorithm, mode and padding. */
   private static class Transform {
-    final String alg;
+    final String algorithm;
     final String mode;
     final String padding;
 
-    public Transform(String alg, String mode, String padding) {
-      this.alg = alg;
+    public Transform(String algorithm, String mode, String padding) {
+      this.algorithm = algorithm;
       this.mode = mode;
       this.padding = padding;
     }
@@ -169,7 +171,7 @@ public final class Openssl {
    * @param iv crypto iv
    */
   public void init(int mode, byte[] key, byte[] iv) {
-    context = OpensslNative.init(context, mode, alg, padding, key, iv);
+    context = OpensslNative.init(context, mode, algorithm, padding, key, iv);
   }
 
   /**

@@ -26,11 +26,11 @@ public enum CipherTransformation {
   AES_CTR_NOPADDING("AES/CTR/NoPadding", 16);
 
   private final String name;
-  private final int algoBlockSize;
+  private final int algorithmBlockSize;
 
-  CipherTransformation(String name, int algoBlockSize) {
+  CipherTransformation(String name, int algorithmBlockSize) {
     this.name = name;
-    this.algoBlockSize = algoBlockSize;
+    this.algorithmBlockSize = algorithmBlockSize;
   }
 
   /**
@@ -44,20 +44,20 @@ public enum CipherTransformation {
    * @return size of an algorithm block in bytes
    */
   public int getAlgorithmBlockSize() {
-    return algoBlockSize;
+    return algorithmBlockSize;
   }
 
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder("{");
     builder.append("name: " + name);
-    builder.append(", algorithmBlockSize: " + algoBlockSize);
+    builder.append(", algorithmBlockSize: " + algorithmBlockSize);
     builder.append("}");
     return builder.toString();
   }
 
   /**
-   * Convert to CipherTransformation from name, {@link #algoBlockSize} is fixed
+   * Convert to CipherTransformation from name, {@link #algorithmBlockSize} is fixed
    * for certain cipher transformation, just need to compare the name.
    *
    * @param name cipher transformation name
@@ -70,7 +70,7 @@ public enum CipherTransformation {
         return transformation;
       }
     }
-    throw new IllegalArgumentException("Invalid cipher name: " + name);
+    throw new IllegalArgumentException("Invalid transformation name: " + name);
   }
 
   /**

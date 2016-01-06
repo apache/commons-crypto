@@ -96,7 +96,7 @@ public class Utils {
   }
 
   /** Forcibly free the direct buffer. */
-  public static void freeDB(ByteBuffer buffer) {
+  public static void freeDirectBuffer(ByteBuffer buffer) {
     if (buffer instanceof sun.nio.ch.DirectBuffer) {
       final sun.misc.Cleaner bufferCleaner =
           ((sun.nio.ch.DirectBuffer) buffer).cleaner();
@@ -118,8 +118,7 @@ public class Utils {
     }
   }
 
-  public static String getCipherClassString(Properties props,
-                                            CipherTransformation transformation) {
+  public static String getCipherClassString(Properties props) {
     final String configName = CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
     return props.getProperty(configName) != null ? props.getProperty(configName) : System
         .getProperty(configName, CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT);
@@ -177,15 +176,15 @@ public class Utils {
     return devPath;
   }
 
-  public static String getChimeraLibPath() {
+  public static String getLibPath() {
     return System.getProperty(CHIMERA_LIB_PATH_KEY);
   }
 
-  public static String getChimeraLibName() {
+  public static String getLibName() {
     return System.getProperty(CHIMERA_LIB_NAME_KEY);
   }
 
-  public static String getChimeraTmpDir() {
+  public static String getTmpDir() {
     return System.getProperty(CHIMERA_TEMPDIR_KEY,
         System.getProperty("java.io.tmpdir"));
   }

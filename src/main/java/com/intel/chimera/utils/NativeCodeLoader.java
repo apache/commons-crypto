@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 
 
 /**
- * A helper to load the native chimera code i.e. libchimera.so.
+ * A helper to load the native code i.e. libchimera.so.
  * This handles the fallback to either the bundled libchimera-Linux-i386-32.so
  * or the default java implementations where appropriate.
  */
@@ -44,7 +44,7 @@ public class NativeCodeLoader {
   private static boolean nativeCodeLoaded = false;
   
   static {
-    // Try to load native chimera library and set fallback flag appropriately
+    // Try to load native library and set fallback flag appropriately
     if(LOG.isDebugEnabled()) {
       LOG.debug("Trying to load the custom-built native-chimera library...");
     }
@@ -52,58 +52,58 @@ public class NativeCodeLoader {
     try {
       File nativeLibFile = findNativeLibrary();
       if (nativeLibFile != null) {
-        // Load extracted or specified chimera native library.
+        // Load extracted or specified native library.
         System.load(nativeLibFile.getAbsolutePath());
       } else {
-        // Load preinstalled chimera (in the path -Djava.library.path)
+        // Load preinstalled library (in the path -Djava.library.path)
         System.loadLibrary("chimera");
       }
-      LOG.debug("Loaded the native-chimera library");
+      LOG.debug("Loaded the native library");
       nativeCodeLoaded = true;
     } catch (Throwable t) {
       // Ignore failure to load
       if(LOG.isDebugEnabled()) {
-        LOG.debug("Failed to load native-chimera with error: " + t);
+        LOG.debug("Failed to load native library with error: " + t);
         LOG.debug("java.library.path=" +
             System.getProperty("java.library.path"));
       }
     }
 
     if (!nativeCodeLoaded) {
-      LOG.warn("Unable to load native-chimera library for your platform... " +
+      LOG.warn("Unable to load native library for the platform... " +
                "using builtin-java classes where applicable");
     }
   }
 
   static File findNativeLibrary() {
     // Try to load the library in chimera.lib.path */
-    String chimeraNativeLibraryPath = Utils
-        .getChimeraLibPath();
-    String chimeraNativeLibraryName = Utils
-        .getChimeraLibName();
+    String nativeLibraryPath = Utils
+        .getLibPath();
+    String nativeLibraryName = Utils
+        .getLibName();
 
     // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
-    if (chimeraNativeLibraryName == null)
-      chimeraNativeLibraryName = System.mapLibraryName("chimera");
+    if (nativeLibraryName == null)
+      nativeLibraryName = System.mapLibraryName("chimera");
 
-    if (chimeraNativeLibraryPath != null) {
-      File nativeLib = new File(chimeraNativeLibraryPath,
-          chimeraNativeLibraryName);
+    if (nativeLibraryPath != null) {
+      File nativeLib = new File(nativeLibraryPath,
+          nativeLibraryName);
       if (nativeLib.exists())
         return nativeLib;
     }
 
     // Load an OS-dependent native library inside a jar file
-    chimeraNativeLibraryPath = "/com/intel/chimera/native/"
+    nativeLibraryPath = "/com/intel/chimera/native/"
         + OSInfo.getNativeLibFolderPathForCurrentOS();
-    boolean hasNativeLib = hasResource(chimeraNativeLibraryPath + "/"
-        + chimeraNativeLibraryName);
+    boolean hasNativeLib = hasResource(nativeLibraryPath + "/"
+        + nativeLibraryName);
     if(!hasNativeLib) {
       if (OSInfo.getOSName().equals("Mac")) {
         // Fix for openjdk7 for Mac
         String altName = "libchimera.jnilib";
-        if (hasResource(chimeraNativeLibraryPath + "/" + altName)) {
-          chimeraNativeLibraryName = altName;
+        if (hasResource(nativeLibraryPath + "/" + altName)) {
+          nativeLibraryName = altName;
           hasNativeLib = true;
         }
       }
@@ -118,12 +118,12 @@ public class NativeCodeLoader {
 
     // Temporary folder for the native lib. Use the value of
     // chimera.tempdir or java.io.tmpdir
-    String tempFolder = new File(Utils.getChimeraTmpDir())
+    String tempFolder = new File(Utils.getTmpDir())
         .getAbsolutePath();
 
     // Extract and load a native library inside the jar file
-    return extractLibraryFile(chimeraNativeLibraryPath,
-        chimeraNativeLibraryName, tempFolder);
+    return extractLibraryFile(nativeLibraryPath,
+        nativeLibraryName, tempFolder);
   }
 
   /**
@@ -210,7 +210,7 @@ public class NativeCodeLoader {
   }
 
   /**
-   * Get the chimera version by reading pom.properties embedded in jar.
+   * Get the version by reading pom.properties embedded in jar.
    * This version data is used as a suffix of a dll file extracted from the
    * jar.
    * 
@@ -264,9 +264,9 @@ public class NativeCodeLoader {
   }
 
   /**
-   * Check if native-chimera code is loaded for this platform.
+   * Check if native code is loaded for this platform.
    * 
-   * @return <code>true</code> if native-chimera is loaded, 
+   * @return <code>true</code> if native is loaded, 
    *         else <code>false</code>
    */
   public static boolean isNativeCodeLoaded() {

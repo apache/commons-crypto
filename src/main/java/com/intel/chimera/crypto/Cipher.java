@@ -38,6 +38,7 @@ import com.intel.chimera.utils.ReflectionUtils;
 public abstract class Cipher {
   public final static Logger LOG = LoggerFactory.getLogger(Cipher.class);
 
+  // The mode constant to be used when calling init method of the Cipher
   public static final int ENCRYPT_MODE = 1;
   public static final int DECRYPT_MODE = 0;
 
@@ -102,9 +103,9 @@ public abstract class Cipher {
   private static List<Class<? extends Cipher>> getCipherClasses(
       Properties props, CipherTransformation transformation) {
     List<Class<? extends Cipher>> result = Lists.newArrayList();
-    String cipherClassString = Utils.getCipherClassString(props, transformation);
+    String cipherClassString = Utils.getCipherClassString(props);
     if (cipherClassString == null) {
-      LOG.debug("No cipher classes with cipher transformation configured.");
+      LOG.debug("No cipher classes configured.");
       return null;
     }
     for (String c : Splitter.on(',').trimResults().omitEmptyStrings().

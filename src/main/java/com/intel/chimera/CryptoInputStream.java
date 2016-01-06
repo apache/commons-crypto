@@ -396,7 +396,7 @@ public class CryptoInputStream extends InputStream implements
 
   /** Forcibly free the direct buffers. */
   private void freeBuffers() {
-    Utils.freeDB(inBuffer);
-    Utils.freeDB(outBuffer);
+    Utils.freeDirectBuffer(inBuffer);
+    Utils.freeDirectBuffer(outBuffer);
   }
 }
