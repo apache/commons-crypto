@@ -1,8 +1,10 @@
-Chimera [![Build Status](https://travis-ci.org/sundapeng/chimera.svg?branch=master)](https://travis-ci.org/sundapeng/chimera) is a project which strips code related to CryptoInputStream/CryptoOutputStream from Hadoop to facilitate AES-NI based data encryption in other projects.
+Chimera [![Build Status](https://travis-ci.org/sundapeng/chimera.svg?branch=master)](https://travis-ci.org/sundapeng/chimera) is a cryptograhpic library optimized with AES-NI (Advanced Encryption Standard New Instructions). It provides Java API for both cipher level and Java stream level. Developers can use it to implement high performance AES encryption/decryption with the minimum code and effort. 
 
 ## Features
-  * Fast encryption/decryption
-  * JNI-based implementation to achieve comparable performance to the native C++ version based on Openssl
+  * Cipher API for low level cryptograhpic operations.
+  * Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encyrption/decryption.
+  * Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
+  * JNI-based implementation to achieve comparable performance to the native C++ version based on Openssl.
   * Portable across various operating systems (currently only Linux); Chimera loads the library according to your machine environment (It looks system properties, `os.name` and `os.arch`). 
   * Simple usage. Add the chimera-(version).jar file to your classpath.
   * [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). Free for both commercial and non-commercial use.
