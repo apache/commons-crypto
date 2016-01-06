@@ -29,12 +29,12 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
+import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.CipherTransformation;
+import com.intel.chimera.utils.ReflectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.intel.chimera.crypto.Cipher;
-import com.intel.chimera.utils.ReflectionUtils;
 
 public class CryptoStreamTest {
   private final int dataLen = 20000;
@@ -49,10 +49,12 @@ public class CryptoStreamTest {
   protected static int defaultBufferSize = 8192;
   protected static int smallBufferSize = 1024;
 
-  private final String jceCodecClass = 
-      "com.intel.chimera.codec.JceAesCtrCryptoCodec";
+  private final String jceCodecClass =
+      "com.intel.chimera.crypto.JceCipher";
   private final String opensslCodecClass = 
-      "com.intel.chimera.codec.OpensslAesCtrCryptoCodec";
+      "com.intel.chimera.crypto.OpensslCipher";
+  private final CipherTransformation transformation = CipherTransformation
+      .AES_CTR_NOPADDING;
 
   @Before
   public void setUp() throws IOException {
@@ -222,7 +224,7 @@ public class CryptoStreamTest {
     Cipher codec = null;
     try {
       codec = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(jceCodecClass), props);
+          ReflectionUtils.getClassByName(jceCodecClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }
@@ -234,12 +236,12 @@ public class CryptoStreamTest {
     encData = baos.toByteArray();
   }
 
-  private CryptoInputStream getCryptoInputStream(String codecClass, int bufferSize, boolean withChannel)
+  private CryptoInputStream getCryptoInputStream(String cipherClass, int bufferSize, boolean withChannel)
       throws IOException {
     Cipher codec = null;
     try {
       codec = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(codecClass), props);
+          ReflectionUtils.getClassByName(cipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }
@@ -256,7 +258,7 @@ public class CryptoStreamTest {
     Cipher codec = null;
     try {
       codec = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(codecClass), props);
+          ReflectionUtils.getClassByName(codecClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }

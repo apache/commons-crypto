@@ -27,6 +27,7 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
+import com.intel.chimera.crypto.CipherTransformation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
@@ -47,11 +48,13 @@ public class CryptoCodecTest {
   private int count = 10000;
 
   private final String jceCodecClass = 
-      "com.intel.chimera.codec.JceAesCtrCryptoCodec";
+      "com.intel.chimera.crypto.JceCipher";
   private final String opensslCodecClass = 
-      "com.intel.chimera.codec.OpensslAesCtrCryptoCodec";
+      "com.intel.chimera.crypto.OpensslCipher";
 
   private Properties props;
+  private CipherTransformation transformation = CipherTransformation
+      .AES_CTR_NOPADDING;
 
   @Before
   public void setUp() throws IOException {
@@ -100,7 +103,7 @@ public class CryptoCodecTest {
     Cipher encCodec = null;
     try {
       encCodec = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(encCodecClass), props);
+          ReflectionUtils.getClassByName(encCodecClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }
@@ -125,7 +128,7 @@ public class CryptoCodecTest {
     Cipher decCodec = null;
     try {
       decCodec = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(decCodecClass), props);
+          ReflectionUtils.getClassByName(decCodecClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }
@@ -170,7 +173,7 @@ public class CryptoCodecTest {
     Cipher encCodec = null;
     try {
       encCodec = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(encCodecClass), props);
+          ReflectionUtils.getClassByName(encCodecClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }
@@ -195,7 +198,7 @@ public class CryptoCodecTest {
     Cipher decCodec = null;
     try {
       decCodec = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(decCodecClass), props);
+          ReflectionUtils.getClassByName(decCodecClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
     }
