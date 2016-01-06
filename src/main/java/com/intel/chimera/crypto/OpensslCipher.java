@@ -31,19 +31,19 @@ import com.intel.chimera.utils.Utils;
  * Implement the Cipher using JNI into OpenSSL.
  */
 public class OpensslCipher extends Cipher {
-	private final CipherTransformation transformation;
+  private final CipherTransformation transformation;
   private final Openssl cipher;
   private final Random random;
-  
+
   public OpensslCipher(Properties props, CipherTransformation transformation)
-  		throws GeneralSecurityException {
-  	this.transformation = transformation;
-  	
+      throws GeneralSecurityException {
+    this.transformation = transformation;
+
     String loadingFailureReason = Openssl.getLoadingFailureReason();
     if (loadingFailureReason != null) {
       throw new RuntimeException(loadingFailureReason);
     }
-    
+
     cipher = Openssl.getInstance(transformation.getName());
     random = Utils.getSecureRandom(props);
   }
@@ -58,45 +58,45 @@ public class OpensslCipher extends Cipher {
     super.finalize();
   }
 
-	@Override
-	public CipherTransformation getTransformation() {
-		return transformation;
-	}
+  @Override
+  public CipherTransformation getTransformation() {
+    return transformation;
+  }
 
-	@Override
-	public void init(int mode, byte[] key, byte[] iv) throws IOException {
-		Preconditions.checkNotNull(key);
+  @Override
+  public void init(int mode, byte[] key, byte[] iv) throws IOException {
+    Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(iv);
-		
-		int cipherMode = Openssl.DECRYPT_MODE;
-		if(mode == ENCRYPT_MODE)
-			cipherMode = Openssl.ENCRYPT_MODE;
-		
-    cipher.init(cipherMode, key, iv);
-	}
 
-	@Override
-	public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
-		try {
+    int cipherMode = Openssl.DECRYPT_MODE;
+    if(mode == ENCRYPT_MODE)
+      cipherMode = Openssl.ENCRYPT_MODE;
+
+    cipher.init(cipherMode, key, iv);
+  }
+
+  @Override
+  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
+    try {
       return cipher.update(inBuffer, outBuffer);
     } catch (Exception e) {
       throw new IOException(e);
     }
-	}
+  }
 
-	@Override
-	public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
-		try {
-			int n = cipher.update(inBuffer, outBuffer);
+  @Override
+  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
+    try {
+      int n = cipher.update(inBuffer, outBuffer);
       return n + cipher.doFinal(outBuffer);
     } catch (Exception e) {
       throw new IOException(e);
     }
-	}
-  
+  }
+
   @Override
   public void generateSecureRandom(byte[] bytes) {
     random.nextBytes(bytes);
   }
-  
+
 }

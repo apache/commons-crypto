@@ -30,9 +30,9 @@ import org.junit.Test;
 import com.intel.chimera.crypto.Openssl;
 
 public class OpensslCipherTest {
-  private static final byte[] key = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 
+  private static final byte[] key = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
     0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16};
-  private static final byte[] iv = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 
+  private static final byte[] iv = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
     0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
 
   @Test(timeout=120000)
@@ -75,7 +75,7 @@ public class OpensslCipherTest {
       Assert.assertTrue(e.getMessage().contains("Direct buffers are required"));
     }
 
-    // Output buffer length should be sufficient to store output data 
+    // Output buffer length should be sufficient to store output data
     input = ByteBuffer.allocateDirect(1024);
     output = ByteBuffer.allocateDirect(1000);
     try {

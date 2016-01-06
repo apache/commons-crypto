@@ -28,7 +28,7 @@ $(TARGET)/jni-classes/com/intel/chimera/crypto/OpensslNative.h: $(TARGET)/jni-cl
 $(TARGET)/jni-classes/com/intel/chimera/random/OpensslSecureRandomNative.h: $(TARGET)/jni-classes/com/intel/chimera/random/OpensslSecureRandomNative.class
 	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ com.intel.chimera.random.OpensslSecureRandomNative
 
-$(CHIMERA_OUT)/OpensslNative.o : $(SRC_NATIVE)/com/intel/chimera/crypto/OpensslNative.c $(TARGET)/jni-classes/com/intel/chimera/crypto/OpensslNative.h  
+$(CHIMERA_OUT)/OpensslNative.o : $(SRC_NATIVE)/com/intel/chimera/crypto/OpensslNative.c $(TARGET)/jni-classes/com/intel/chimera/crypto/OpensslNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -37,7 +37,7 @@ $(CHIMERA_OUT)/OpensslSecureRandom.o : $(SRC_NATIVE)/com/intel/chimera/random/Op
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(CHIMERA_OUT)/$(LIBNAME): $(CHIMERA_OBJ)
-	$(CXX) $(CXXFLAGS) -o $@ $+ $(LINKFLAGS) 
+	$(CXX) $(CXXFLAGS) -o $@ $+ $(LINKFLAGS)
 	$(STRIP) $@
 
 clean:
@@ -54,7 +54,7 @@ native: $(NATIVE_DLL)
 
 chimera: native $(TARGET)/$(chimera-jar-version).jar
 
-$(NATIVE_DLL): $(CHIMERA_OUT)/$(LIBNAME) 
+$(NATIVE_DLL): $(CHIMERA_OUT)/$(LIBNAME)
 	@mkdir -p $(@D)
 	cp $< $@
 	@mkdir -p $(NATIVE_TARGET_DIR)
@@ -63,20 +63,20 @@ $(NATIVE_DLL): $(CHIMERA_OUT)/$(LIBNAME)
 
 package: $(TARGET)/$(chimera-jar-version).jar
 
-$(TARGET)/$(chimera-jar-version).jar: 
-	$(SBT) package 
+$(TARGET)/$(chimera-jar-version).jar:
+	$(SBT) package
 
 test: $(NATIVE_DLL)
 	$(SBT) test
 
-win32: 
+win32:
 	$(MAKE) native CROSS_PREFIX=i686-w64-mingw32- OS_NAME=Windows OS_ARCH=x86
 
 # for cross-compilation on Ubuntu, install the g++-mingw-w64-x86-64 package
 win64:
 	$(MAKE) native CROSS_PREFIX=x86_64-w64-mingw32- OS_NAME=Windows OS_ARCH=x86_64
 
-mac32: 
+mac32:
 	$(MAKE) native OS_NAME=Mac OS_ARCH=x86
 
 linux32:

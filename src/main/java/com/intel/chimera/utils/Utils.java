@@ -50,7 +50,7 @@ import static com.intel.chimera.ConfigurationKeys.DEFAULT_CHIMERA_CRYPTO_CIPHER_
 
 public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
-  
+
   protected static final CipherTransformation AES_CTR_NOPADDING = CipherTransformation.AES_CTR_NOPADDING;
 
   /**
@@ -58,7 +58,7 @@ public class Utils {
    * @see http://en.wikipedia.org/wiki/Advanced_Encryption_Standard
    */
   private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING.getAlgorithmBlockSize();
-  
+
   static {
     loadSnappySystemProperties();
   }
@@ -199,28 +199,28 @@ public class Utils {
 
   /** Check and floor buffer size */
   public static int checkBufferSize(Cipher cipher, int bufferSize) {
-    Preconditions.checkArgument(bufferSize >= MIN_BUFFER_SIZE, 
+    Preconditions.checkArgument(bufferSize >= MIN_BUFFER_SIZE,
         "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
     return bufferSize - bufferSize % cipher.getTransformation()
         .getAlgorithmBlockSize();
   }
-  
+
   /**
-   * This method is only for Counter (CTR) mode. Generally the Cipher calculates the IV and maintain encryption context internally. 
-   * For example a {@link javax.crypto.Cipher} will maintain its encryption 
-   * context internally when we do encryption/decryption using the 
-   * Cipher#update interface. 
+   * This method is only for Counter (CTR) mode. Generally the Cipher calculates the IV and maintain encryption context internally.
+   * For example a {@link javax.crypto.Cipher} will maintain its encryption
+   * context internally when we do encryption/decryption using the
+   * Cipher#update interface.
    * <p/>
    * Encryption/Decryption is not always on the entire file. For example,
    * in Hadoop, a node may only decrypt a portion of a file (i.e. a split).
    * In these situations, the counter is derived from the file position.
    * <p/>
-   * The IV can be calculated by combining the initial IV and the counter with 
+   * The IV can be calculated by combining the initial IV and the counter with
    * a lossless operation (concatenation, addition, or XOR).
    * @see http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29
-   * 
+   *
    * @param initIV initial IV
-   * @param counter counter for input stream position 
+   * @param counter counter for input stream position
    * @param IV the IV for input stream position
    */
   public static void calculateIV(byte[] initIV, long counter, byte[] IV) {
@@ -240,16 +240,16 @@ public class Utils {
       IV[i] = (byte) sum;
     }
   }
-  
+
   /**
    * Helper method to create a Cipher instance and throws only IOException
    */
   public static Cipher getCipherInstance(Properties props)
-  	throws IOException {
-  	try {
-  		return Cipher.getInstance(props);
-  	} catch(GeneralSecurityException e) {
-  		throw new IOException(e);
-  	}
+    throws IOException {
+    try {
+      return Cipher.getInstance(props);
+    } catch(GeneralSecurityException e) {
+      throw new IOException(e);
+    }
   }
 }

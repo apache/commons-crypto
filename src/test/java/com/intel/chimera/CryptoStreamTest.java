@@ -271,7 +271,7 @@ public class CryptoStreamTest {
     }
   }
 
-  private int readAll(InputStream in, byte[] b, int off, int len) 
+  private int readAll(InputStream in, byte[] b, int off, int len)
       throws IOException {
     int n = 0;
     int total = 0;
@@ -282,7 +282,7 @@ public class CryptoStreamTest {
       }
       n = in.read(b, off + total, len - total);
     }
-    
+
     return total;
   }
 }

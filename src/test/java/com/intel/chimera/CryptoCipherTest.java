@@ -70,7 +70,7 @@ public class CryptoCipherTest {
     cryptoCipherTest(0, jceCipherClass, jceCipherClass, iv);
     cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
     cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
-    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff 
+    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
     for(int i = 0; i < 8; i++) {
       iv[8 + i] = (byte) 0xff;
     }
@@ -84,7 +84,7 @@ public class CryptoCipherTest {
     cryptoCipherTest(0, opensslCipherClass, opensslCipherClass, iv);
     cryptoCipherTest(count, opensslCipherClass, opensslCipherClass, iv);
     cryptoCipherTest(count, opensslCipherClass, jceCipherClass, iv);
-    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff 
+    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
     for(int i = 0; i < 8; i++) {
       iv[8 + i] = (byte) 0xff;
     }
@@ -119,7 +119,7 @@ public class CryptoCipherTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out = new CryptoOutputStream(encryptedData, 
+    CryptoOutputStream out = new CryptoOutputStream(encryptedData,
         encCipher, bufferSize, key, iv);
     out.write(originalData, 0, originalData.length);
     out.flush();
@@ -191,7 +191,7 @@ public class CryptoCipherTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out = new CryptoOutputStream(Channels.newChannel(encryptedData), 
+    CryptoOutputStream out = new CryptoOutputStream(Channels.newChannel(encryptedData),
         encCipher, bufferSize, key, iv);
     out.write(originalData, 0, originalData.length);
     out.flush();

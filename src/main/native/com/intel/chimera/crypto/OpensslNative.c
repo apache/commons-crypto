@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "com_intel_chimera.h"
 
 #include <stdio.h>
@@ -128,7 +128,7 @@ JNIEXPORT void JNICALL Java_com_intel_chimera_crypto_OpensslNative_initIDs
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_free, dlsym_EVP_CIPHER_CTX_free,  \
                       env, openssl, "EVP_CIPHER_CTX_free");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_cleanup,  \
-                      dlsym_EVP_CIPHER_CTX_cleanup, env, 
+                      dlsym_EVP_CIPHER_CTX_cleanup, env,
                       openssl, "EVP_CIPHER_CTX_cleanup");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_init, dlsym_EVP_CIPHER_CTX_init,  \
                       env, openssl, "EVP_CIPHER_CTX_init");
@@ -164,20 +164,20 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_initContext
     THROW(env, "javax/crypto/NoSuchPaddingException", NULL);
     return (jlong)0;
   }
-  
+
   if (dlsym_EVP_aes_256_ctr == NULL || dlsym_EVP_aes_128_ctr == NULL) {
     THROW(env, "java/security/NoSuchAlgorithmException",  \
         "Doesn't support AES CTR.");
     return (jlong)0;
   }
-  
+
   // Create and initialize a EVP_CIPHER_CTX
   EVP_CIPHER_CTX *context = dlsym_EVP_CIPHER_CTX_new();
   if (!context) {
     THROW(env, "java/lang/OutOfMemoryError", NULL);
     return (jlong)0;
   }
-   
+
   return JLONG(context);
 }
 
@@ -209,7 +209,7 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_init
     THROW(env, "java/lang/IllegalArgumentException", "Invalid iv length.");
     return (jlong)0;
   }
-  
+
   EVP_CIPHER_CTX *context = CONTEXT(ctx);
   if (context == 0) {
     // Create and initialize a EVP_CIPHER_CTX
@@ -219,7 +219,7 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_init
       return (jlong)0;
     }
   }
-  
+
   jbyte *jKey = (*env)->GetByteArrayElements(env, key, NULL);
   if (jKey == NULL) {
     THROW(env, "java/lang/InternalError", "Cannot get bytes array for key.");
@@ -231,7 +231,7 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_init
     THROW(env, "java/lang/InternalError", "Cannot get bytes array for iv.");
     return (jlong)0;
   }
-  
+
   int rc = dlsym_EVP_CipherInit_ex(context, getEvpCipher(alg, jKeyLen),  \
       NULL, (unsigned char *)jKey, (unsigned char *)jIv, mode == ENCRYPT_MODE);
   (*env)->ReleaseByteArrayElements(env, key, jKey, 0);
@@ -241,16 +241,16 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_init
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherInit_ex.");
     return (jlong)0;
   }
-  
+
   if (padding == NOPADDING) {
     dlsym_EVP_CIPHER_CTX_set_padding(context, 0);
   }
-  
+
   return JLONG(context);
 }
 
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
-static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len, 
+static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
     int max_output_len)
 {
   if (context->flags & EVP_CIPH_NO_PADDING) {
@@ -269,7 +269,7 @@ static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
         return 1;
       }
     }
-    
+
     return 0;
   }
 }
@@ -292,7 +292,7 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_crypto_OpensslNative_update
   }
   input_bytes = input_bytes + input_offset;
   output_bytes = output_bytes + output_offset;
-  
+
   int output_len = 0;
   if (!dlsym_EVP_CipherUpdate(context, output_bytes, &output_len,  \
       input_bytes, input_len)) {
@@ -304,7 +304,7 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_crypto_OpensslNative_update
 }
 
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
-static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context, 
+static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
     int max_output_len)
 {
   if (context->flags & EVP_CIPH_NO_PADDING) {
@@ -314,7 +314,7 @@ static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
     if (max_output_len >= b) {
       return 1;
     }
-    
+
     return 0;
   }
 }
@@ -335,7 +335,7 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_crypto_OpensslNative_doFinal
     return 0;
   }
   output_bytes = output_bytes + offset;
-  
+
   int output_len = 0;
   if (!dlsym_EVP_CipherFinal_ex(context, output_bytes, &output_len)) {
     dlsym_EVP_CIPHER_CTX_cleanup(context);

@@ -39,10 +39,10 @@ public abstract class Cipher {
 
   public static final int ENCRYPT_MODE = 1;
   public static final int DECRYPT_MODE = 0;
-  
+
   /**
    * Get a cipher instance for specified algorithm/mode/padding.
-   * 
+   *
    * @param props
    *          the configuration properties
    * @param transformation
@@ -58,25 +58,25 @@ public abstract class Cipher {
     if (klasses != null) {
       for (Class<? extends Cipher> klass : klasses) {
         try {
-        	cipher = ReflectionUtils.newInstance(klass, props, transformation);
-        	if(cipher != null) {
-        		LOG.debug("Using cipher {} for transformation {}.", klass.getName(), transformation.getName());
-        		break;
-        	}
+          cipher = ReflectionUtils.newInstance(klass, props, transformation);
+          if(cipher != null) {
+            LOG.debug("Using cipher {} for transformation {}.", klass.getName(), transformation.getName());
+            break;
+          }
         } catch (Exception e) {
           LOG.debug("Cipher {} is not available or transformation {} is not supported.",
               klass.getName(), transformation.getName());
         }
       }
     }
-    
+
     return (cipher == null)?new JceCipher(props, transformation):cipher;
   }
 
   /**
    * Get a cipher for algorithm/mode/padding in config value
    * chimera.crypto.cipher.transformation
-   * 
+   *
    * @return Cipher the cipher object Null value will be returned if no
    *         cipher classes with transformation configured.
    */
@@ -94,7 +94,7 @@ public abstract class Cipher {
    *         cipher classes with transformation configured.
    */
   public static Cipher getInstance(Properties props)
-  		throws GeneralSecurityException {
+      throws GeneralSecurityException {
     return getInstance(props, Utils.getCripherTransformation(props));
   }
 
@@ -117,24 +117,24 @@ public abstract class Cipher {
         LOG.error("Cipher {} not found.", c);
       }
     }
-    
+
     return result;
   }
-  
+
   /**
    * @return the CipherTransformation for this cipher.
    */
   public abstract CipherTransformation getTransformation();
 
-  public abstract void init(int mode, byte[] key, byte[] iv) 
-  		throws IOException;
-  
-  public abstract int update(ByteBuffer inBuffer, ByteBuffer outBuffer) 
+  public abstract void init(int mode, byte[] key, byte[] iv)
       throws IOException;
-  
-  public abstract int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) 
-	      throws IOException;
-  
+
+  public abstract int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
+      throws IOException;
+
+  public abstract int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
+        throws IOException;
+
   /**
    * Generate a number of secure, random bytes suitable for cryptographic use.
    * This method needs to be thread-safe.

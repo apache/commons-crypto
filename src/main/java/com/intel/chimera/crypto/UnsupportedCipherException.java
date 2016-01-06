@@ -29,7 +29,7 @@ public class UnsupportedCipherException extends RuntimeException {
   /**
    * Constructs an UnsupportedCipherException with the specified
    * detail message.
-   * 
+   *
    * @param message the detail message
    */
   public UnsupportedCipherException(String message) {
@@ -39,7 +39,7 @@ public class UnsupportedCipherException extends RuntimeException {
   /**
    * Constructs a new exception with the specified detail message and
    * cause.
-   * 
+   *
    * @param message the detail message
    * @param cause the cause
    */
@@ -49,7 +49,7 @@ public class UnsupportedCipherException extends RuntimeException {
 
   /**
    * Constructs a new exception with the specified cause.
-   * 
+   *
    * @param cause the cause
    */
   public UnsupportedCipherException(Throwable cause) {

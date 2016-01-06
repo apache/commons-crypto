@@ -36,8 +36,8 @@ import com.intel.chimera.utils.Utils;
  * mapping. The decryption is buffer based. The key points of the decryption
  * are (1) calculating the counter and (2) padding through stream position:
  * <p/>
- * counter = base + pos/(algorithm blocksize); 
- * padding = pos%(algorithm blocksize); 
+ * counter = base + pos/(algorithm blocksize);
+ * padding = pos%(algorithm blocksize);
  * <p/>
  * The underlying stream offset is maintained as state.
  */
@@ -46,36 +46,36 @@ public class CryptoInputStream extends InputStream implements
   private Input input;
   private final Cipher cipher;
   private final int bufferSize;
-  
+
   private final byte[] key;
   private final byte[] initIV;
   private byte[] iv;
-  
+
   private long streamOffset = 0; // Underlying stream offset.
   private boolean cipherReset = false;
-  
+
   private final byte[] oneByteBuf = new byte[1];
-  
+
   /**
-   * Input data buffer. The data starts at inBuffer.position() and ends at 
+   * Input data buffer. The data starts at inBuffer.position() and ends at
    * to inBuffer.limit().
    */
   private ByteBuffer inBuffer;
-  
+
   /**
-   * The decrypted data buffer. The data starts at outBuffer.position() and 
+   * The decrypted data buffer. The data starts at outBuffer.position() and
    * ends at outBuffer.limit();
    */
   private ByteBuffer outBuffer;
-  
+
   /**
-   * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer} 
-   * before any other data goes in. The purpose of padding is to put the input 
+   * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer}
+   * before any other data goes in. The purpose of padding is to put the input
    * data at proper position.
    */
   private byte padding;
   private boolean closed;
-  
+
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
     this(in, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
@@ -86,12 +86,12 @@ public class CryptoInputStream extends InputStream implements
     this(in,  Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoInputStream(InputStream in, Cipher cipher, 
+  public CryptoInputStream(InputStream in, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv);
   }
 
-  public CryptoInputStream(ReadableByteChannel in, Cipher cipher, 
+  public CryptoInputStream(ReadableByteChannel in, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(new ChannelInput(in), cipher, bufferSize, key, iv);
   }
@@ -103,7 +103,7 @@ public class CryptoInputStream extends InputStream implements
       byte[] key,
       byte[] iv) throws IOException {
     Utils.checkStreamCipher(cipher);
-    
+
     this.input = input;
     this.cipher = cipher;
     this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
@@ -120,7 +120,7 @@ public class CryptoInputStream extends InputStream implements
   /**
    * Decryption is buffer based.
    * If there is data in {@link #outBuffer}, then read it out of this buffer.
-   * If there is no data in {@link #outBuffer}, then read more from the 
+   * If there is no data in {@link #outBuffer}, then read more from the
    * underlying stream and do the decryption.
    * @param b the buffer into which the decrypted data is read.
    * @param off the buffer offset.
@@ -138,7 +138,7 @@ public class CryptoInputStream extends InputStream implements
     } else if (len == 0) {
       return 0;
     }
-    
+
     final int remaining = outBuffer.remaining();
     if (remaining > 0) {
       int n = Math.min(len, remaining);
@@ -149,7 +149,7 @@ public class CryptoInputStream extends InputStream implements
       if (n <= 0) {
         return n;
       }
-      
+
       streamOffset += n; // Read n bytes
       decrypt();
       padding = postDecryption(streamOffset);
@@ -158,13 +158,13 @@ public class CryptoInputStream extends InputStream implements
       return n;
     }
   }
-  
+
   @Override
   public void close() throws IOException {
     if (closed) {
       return;
     }
-    
+
     input.close();
     freeBuffers();
     super.close();
@@ -176,7 +176,7 @@ public class CryptoInputStream extends InputStream implements
   public long skip(long n) throws IOException {
     Preconditions.checkArgument(n >= 0, "Negative skip length.");
     checkStream();
-    
+
     if (n == 0) {
       return 0;
     } else if (n <= outBuffer.remaining()) {
@@ -185,9 +185,9 @@ public class CryptoInputStream extends InputStream implements
       return n;
     } else {
       /*
-       * Subtract outBuffer.remaining() to see how many bytes we need to 
-       * skip in the underlying stream. Add outBuffer.remaining() to the 
-       * actual number of skipped bytes in the underlying stream to get the 
+       * Subtract outBuffer.remaining() to see how many bytes we need to
+       * skip in the underlying stream. Add outBuffer.remaining() to the
+       * actual number of skipped bytes in the underlying stream to get the
        * number of skipped bytes from the user's point of view.
        */
       n -= outBuffer.remaining();
@@ -201,11 +201,11 @@ public class CryptoInputStream extends InputStream implements
       return skipped;
     }
   }
-  
+
   @Override
   public int available() throws IOException {
     checkStream();
-    
+
     return input.available() + outBuffer.remaining();
   }
 
@@ -213,11 +213,11 @@ public class CryptoInputStream extends InputStream implements
   public boolean markSupported() {
     return false;
   }
-  
+
   @Override
   public void mark(int readLimit) {
   }
-  
+
   @Override
   public void reset() throws IOException {
     throw new IOException("Mark/reset not supported");
@@ -227,12 +227,12 @@ public class CryptoInputStream extends InputStream implements
   public int read() throws IOException {
     return (read(oneByteBuf, 0, 1) == -1) ? -1 : (oneByteBuf[0] & 0xff);
   }
-  
+
   @Override
   public boolean isOpen() {
     return !closed;
   }
-  
+
   /** ByteBuffer read. */
   @Override
   public int read(ByteBuffer buf) throws IOException {
@@ -274,7 +274,7 @@ public class CryptoInputStream extends InputStream implements
 
   /**
    * Do the decryption using inBuffer as input and outBuffer as output.
-   * Upon return, inBuffer is cleared; the decrypted data starts at 
+   * Upon return, inBuffer is cleared; the decrypted data starts at
    * outBuffer.position() and ends at outBuffer.limit();
    */
   private void decrypt() throws IOException {
@@ -283,16 +283,16 @@ public class CryptoInputStream extends InputStream implements
       // There is no real data in inBuffer.
       return;
     }
-    
+
     inBuffer.flip();
     outBuffer.clear();
     decryptBuffer(outBuffer);
     inBuffer.clear();
     outBuffer.flip();
-    
+
     if (padding > 0) {
       /*
-       * The plain text and cipher text have a 1:1 mapping, they start at the 
+       * The plain text and cipher text have a 1:1 mapping, they start at the
        * same position.
        */
       outBuffer.position(padding);
@@ -321,18 +321,18 @@ public class CryptoInputStream extends InputStream implements
     inBuffer.clear();
   }
 
-  
+
   /**
-   * This method is executed immediately after decryption. Check whether 
-   * cipher should be updated and recalculate padding if needed. 
+   * This method is executed immediately after decryption. Check whether
+   * cipher should be updated and recalculate padding if needed.
    */
   private byte postDecryption(long position) throws IOException {
     byte padding = 0;
     if (cipherReset) {
       /*
-       * This code is generally not executed since the cipher usually 
-       * maintains cipher context (e.g. the counter) internally. However, 
-       * some implementations can't maintain context so a re-init is necessary 
+       * This code is generally not executed since the cipher usually
+       * maintains cipher context (e.g. the counter) internally. However,
+       * some implementations can't maintain context so a re-init is necessary
        * after each decryption call.
        */
       resetCipher(position);
@@ -341,15 +341,15 @@ public class CryptoInputStream extends InputStream implements
     }
     return padding;
   }
-  
+
   private long getCounter(long position) {
     return position / cipher.getTransformation().getAlgorithmBlockSize();
   }
-  
+
   private byte getPadding(long position) {
     return (byte)(position % cipher.getTransformation().getAlgorithmBlockSize());
   }
-  
+
   /** Calculate the counter and iv, reset the cipher. */
   private void resetCipher(long position)
       throws IOException {
@@ -358,9 +358,9 @@ public class CryptoInputStream extends InputStream implements
     cipher.init(Cipher.DECRYPT_MODE, key, iv);
     cipherReset = false;
   }
-  
+
   /**
-   * Reset the underlying stream offset; clear {@link #inBuffer} and 
+   * Reset the underlying stream offset; clear {@link #inBuffer} and
    * {@link #outBuffer}. This Typically happens during {@link #skip(long)}.
    */
   private void resetStreamOffset(long offset) throws IOException {
@@ -372,20 +372,20 @@ public class CryptoInputStream extends InputStream implements
     padding = getPadding(offset);
     inBuffer.position(padding); // Set proper position for input data.
   }
-  
+
   private void decryptBuffer(ByteBuffer out)
-  		throws IOException {
-  	int inputSize = inBuffer.remaining();
-  	int n = cipher.update(inBuffer, out);
-  	if (n < inputSize) {
-			/**
-			 * Typically code will not get here. Cipher#update will consume all 
-			 * input data and put result in outBuffer. 
-			 * Cipher#doFinal will reset the cipher context.
-			 */
-			cipher.doFinal(inBuffer, outBuffer);
-			cipherReset = true;
-		}
+      throws IOException {
+    int inputSize = inBuffer.remaining();
+    int n = cipher.update(inBuffer, out);
+    if (n < inputSize) {
+      /**
+       * Typically code will not get here. Cipher#update will consume all
+       * input data and put result in outBuffer.
+       * Cipher#doFinal will reset the cipher context.
+       */
+      cipher.doFinal(inBuffer, outBuffer);
+      cipherReset = true;
+    }
   }
 
   private void checkStream() throws IOException {
@@ -400,4 +400,3 @@ public class CryptoInputStream extends InputStream implements
     Utils.freeDB(outBuffer);
   }
 }
-

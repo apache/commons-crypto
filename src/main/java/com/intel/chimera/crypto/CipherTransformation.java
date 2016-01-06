@@ -72,7 +72,7 @@ public enum CipherTransformation {
     }
     throw new IllegalArgumentException("Invalid cipher name: " + name);
   }
-  
+
   /**
    * Returns suffix of cipher transformation configuration.
    * @return String configuration suffix

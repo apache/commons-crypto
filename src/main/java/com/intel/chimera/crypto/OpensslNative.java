@@ -21,17 +21,17 @@ import java.nio.ByteBuffer;
 
 public class OpensslNative {
   public native static void initIDs();
-  
+
   public native static long initContext(int alg, int padding);
-  
-  public native static long init(long context, int mode, int alg, int padding, 
+
+  public native static long init(long context, int mode, int alg, int padding,
       byte[] key, byte[] iv);
-  
-  public native static int update(long context, ByteBuffer input, int inputOffset, 
+
+  public native static int update(long context, ByteBuffer input, int inputOffset,
       int inputLength, ByteBuffer output, int outputOffset, int maxOutputLength);
-  
-  public native static int doFinal(long context, ByteBuffer output, int offset, 
+
+  public native static int doFinal(long context, ByteBuffer output, int offset,
       int maxOutputLength);
-  
+
   public native static void clean(long context);
 }
