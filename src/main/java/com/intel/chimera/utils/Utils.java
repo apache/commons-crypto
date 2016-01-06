@@ -19,14 +19,14 @@ package com.intel.chimera.utils;
 
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
-import static com.intel.chimera.ConfigurationKeys.DEFAULT_CHIMERA_CRYPTO_CODEC_CLASSES_AES_CTR_NOPADDING_VALUE;
+import static com.intel.chimera.ConfigurationKeys.DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_SUITE_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_SUITE_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_JCE_PROVIDER_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY;
@@ -34,21 +34,31 @@ import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PAT
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Random;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.codec.CipherSuite;
-import com.intel.chimera.codec.CryptoCodec;
-import com.intel.chimera.codec.UnsupportedCodecException;
+import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.CipherTransformation;
+import com.intel.chimera.crypto.UnsupportedCipherException;
 import com.intel.chimera.random.OsSecureRandom;
 
 public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
+  
+  protected static final CipherTransformation AES_CTR_NOPADDING_SUITE = CipherTransformation.AES_CTR_NOPADDING;
+
+  /**
+   * For AES, the algorithm block is fixed size of 128 bits.
+   * @see http://en.wikipedia.org/wiki/Advanced_Encryption_Standard
+   */
+  private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING_SUITE.getAlgorithmBlockSize();
   
   static {
     loadSnappySystemProperties();
@@ -109,24 +119,19 @@ public class Utils {
     }
   }
 
-  public static String getCodecString(Properties props, CipherSuite cipherSuite) {
-    String configName =
-        CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX + CipherSuite.getConfigSuffix(cipherSuite.getName());
-    String defaultCodecStr = null;
-    if (cipherSuite.equals(CipherSuite.AES_CTR_NOPADDING)) {
-      defaultCodecStr = DEFAULT_CHIMERA_CRYPTO_CODEC_CLASSES_AES_CTR_NOPADDING_VALUE;
-    }
+  public static String getCipherClassString(Properties props, CipherTransformation cipherSuite) {
+    final String configName = CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
     return props.getProperty(configName) != null ? props.getProperty(configName) : System
-        .getProperty(configName, defaultCodecStr);
+        .getProperty(configName, DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE);
   }
 
-  public static CipherSuite getCryptoSuite(Properties props) {
+  public static CipherTransformation getCripherSuite(Properties props) {
     String name = props.getProperty(CHIMERA_CRYPTO_CIPHER_SUITE_KEY);
     if (name == null) {
       name = System.getProperty(CHIMERA_CRYPTO_CIPHER_SUITE_KEY,
           CHIMERA_CRYPTO_CIPHER_SUITE_DEFAULT);
     }
-    return CipherSuite.convert(name);
+    return CipherTransformation.convert(name);
   }
 
   public static String getJCEProvider(Properties props) {
@@ -186,17 +191,65 @@ public class Utils {
   }
 
   /** AES/CTR/NoPadding is required */
-  public static void checkCodec(CryptoCodec codec) {
-    if (codec.getCipherSuite() != CipherSuite.AES_CTR_NOPADDING) {
-      throw new UnsupportedCodecException("AES/CTR/NoPadding is required");
+  public static void checkStreamCipher(Cipher cipher) {
+    if (cipher.getTransformation() != CipherTransformation.AES_CTR_NOPADDING) {
+      throw new UnsupportedCipherException("AES/CTR/NoPadding is required");
     }
   }
 
   /** Check and floor buffer size */
-  public static int checkBufferSize(CryptoCodec codec, int bufferSize) {
+  public static int checkBufferSize(Cipher codec, int bufferSize) {
     Preconditions.checkArgument(bufferSize >= MIN_BUFFER_SIZE, 
         "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
-    return bufferSize - bufferSize % codec.getCipherSuite()
+    return bufferSize - bufferSize % codec.getTransformation()
         .getAlgorithmBlockSize();
+  }
+  
+  /**
+   * This method is only for Counter (CTR) mode. Generally the Cipher calculates the IV and maintain encryption context internally. 
+   * For example a {@link javax.crypto.Cipher} will maintain its encryption 
+   * context internally when we do encryption/decryption using the 
+   * Cipher#update interface. 
+   * <p/>
+   * Encryption/Decryption is not always on the entire file. For example,
+   * in Hadoop, a node may only decrypt a portion of a file (i.e. a split).
+   * In these situations, the counter is derived from the file position.
+   * <p/>
+   * The IV can be calculated by combining the initial IV and the counter with 
+   * a lossless operation (concatenation, addition, or XOR).
+   * @see http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29
+   * 
+   * @param initIV initial IV
+   * @param counter counter for input stream position 
+   * @param IV the IV for input stream position
+   */
+  public static void calculateIV(byte[] initIV, long counter, byte[] IV) {
+    Preconditions.checkArgument(initIV.length == AES_BLOCK_SIZE);
+    Preconditions.checkArgument(IV.length == AES_BLOCK_SIZE);
+
+    int i = IV.length; // IV length
+    int j = 0; // counter bytes index
+    int sum = 0;
+    while (i-- > 0) {
+      // (sum >>> Byte.SIZE) is the carry for addition
+      sum = (initIV[i] & 0xff) + (sum >>> Byte.SIZE);
+      if (j++ < 8) { // Big-endian, and long is 8 bytes length
+        sum += (byte) counter & 0xff;
+        counter >>>= 8;
+      }
+      IV[i] = (byte) sum;
+    }
+  }
+  
+  /**
+   * Helper method to create a Cipher instance and throws only IOException
+   */
+  public static Cipher getCipherInstance(Properties props)
+  	throws IOException {
+  	try {
+  		return Cipher.getInstance(props);
+  	} catch(GeneralSecurityException e) {
+  		throw new IOException(e);
+  	}
   }
 }

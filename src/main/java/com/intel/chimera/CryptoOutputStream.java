@@ -21,12 +21,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
-import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.codec.CryptoCodec;
-import com.intel.chimera.codec.Encryptor;
+import com.intel.chimera.crypto.Cipher;
 import com.intel.chimera.output.ChannelOutput;
 import com.intel.chimera.output.Output;
 import com.intel.chimera.output.StreamOutput;
@@ -46,7 +44,7 @@ import com.intel.chimera.utils.Utils;
 public class CryptoOutputStream extends OutputStream implements
     WritableByteChannel {
   private Output output;
-  private final CryptoCodec codec;
+  private final Cipher cipher;
   private final int bufferSize;
   
   private final byte[] key;
@@ -54,10 +52,9 @@ public class CryptoOutputStream extends OutputStream implements
   private byte[] iv;
   
   private long streamOffset = 0; // Underlying stream offset.
- 
-  
+  private boolean cipherReset = false;
+   
   private final byte[] oneByteBuf = new byte[1];
-  private final Encryptor encryptor;
   
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at 
@@ -81,43 +78,40 @@ public class CryptoOutputStream extends OutputStream implements
 
   public CryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv) throws IOException {
-    this(out, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
+    this(out, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
   }
   
   public CryptoOutputStream(Properties props, WritableByteChannel out,
       byte[] key, byte[] iv) throws IOException {
-    this(out, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
+    this(out, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoOutputStream(OutputStream out, CryptoCodec codec, 
+  public CryptoOutputStream(OutputStream out, Cipher cipher, 
       int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(new StreamOutput(out, bufferSize), codec, bufferSize, key, iv, 0);
+    this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, iv);
   }
 
-  public CryptoOutputStream(WritableByteChannel channel, CryptoCodec codec, 
+  public CryptoOutputStream(WritableByteChannel channel, Cipher cipher, 
       int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(new ChannelOutput(channel), codec, bufferSize, key, iv, 0);
+    this(new ChannelOutput(channel), cipher, bufferSize, key, iv);
   }
 
-  public CryptoOutputStream(Output output, CryptoCodec codec, 
-      int bufferSize, byte[] key, byte[] iv, long streamOffset) 
+  public CryptoOutputStream(Output output, Cipher cipher, 
+      int bufferSize, byte[] key, byte[] iv) 
       throws IOException {
-    Utils.checkCodec(codec);
+    Utils.checkStreamCipher(cipher);
+    
     this.output = output;
-    this.bufferSize = Utils.checkBufferSize(codec, bufferSize);
-    this.codec = codec;
+    this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
+    this.cipher = cipher;
     this.key = key.clone();
     this.initIV = iv.clone();
     this.iv = iv.clone();
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-    this.streamOffset = streamOffset;
-    try {
-      encryptor = codec.createEncryptor();
-    } catch (GeneralSecurityException e) {
-      throw new IOException(e);
-    }
-    updateEncryptor();
+    this.streamOffset = 0;
+    
+    resetCipher();
   }
   
   /**
@@ -231,11 +225,13 @@ public class CryptoOutputStream extends OutputStream implements
       // There is no real data in the inBuffer.
       return;
     }
+    
     inBuffer.flip();
     outBuffer.clear();
-    encryptor.encrypt(inBuffer, outBuffer);
+    encryptBuffer(outBuffer);
     inBuffer.clear();
     outBuffer.flip();
+    
     if (padding > 0) {
       /*
        * The plain text and cipher text have a 1:1 mapping, they start at the 
@@ -247,26 +243,43 @@ public class CryptoOutputStream extends OutputStream implements
     
     final int len = output.write(outBuffer);
     streamOffset += len;
-    if (encryptor.isContextReset()) {
+    if (cipherReset) {
       /*
        * This code is generally not executed since the encryptor usually
        * maintains encryption context (e.g. the counter) internally. However,
        * some implementations can't maintain context so a re-init is necessary
        * after each encryption call.
        */
-      updateEncryptor();
+      resetCipher();
     }
   }
   
-  /** Update the {@link #encryptor}: calculate counter and {@link #padding}. */
-  private void updateEncryptor() throws IOException {
+  /** Reset the {@link #Cipher}: calculate counter and {@link #padding}. */
+  private void resetCipher() throws IOException {
     final long counter =
-        streamOffset / codec.getCipherSuite().getAlgorithmBlockSize();
+        streamOffset / cipher.getTransformation().getAlgorithmBlockSize();
     padding =
-        (byte)(streamOffset % codec.getCipherSuite().getAlgorithmBlockSize());
+        (byte)(streamOffset % cipher.getTransformation().getAlgorithmBlockSize());
     inBuffer.position(padding); // Set proper position for input data.
-    codec.calculateIV(initIV, counter, iv);
-    encryptor.init(key, iv);
+    
+    Utils.calculateIV(initIV, counter, iv);
+    cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+    cipherReset = false;
+  }
+  
+  private void encryptBuffer(ByteBuffer out)
+  		throws IOException {
+  	int inputSize = inBuffer.remaining();
+  	int n = cipher.update(inBuffer, out);
+  	if (n < inputSize) {
+			/**
+			 * Typically code will not get here. Cipher#update will consume all 
+			 * input data and put result in outBuffer. 
+			 * Cipher#doFinal will reset the cipher context.
+			 */
+			cipher.doFinal(inBuffer, outBuffer);
+			cipherReset = true;
+		}
   }
 
   private void checkStream() throws IOException {

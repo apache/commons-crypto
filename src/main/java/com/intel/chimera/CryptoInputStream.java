@@ -21,12 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
-import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.codec.CryptoCodec;
-import com.intel.chimera.codec.Decryptor;
+import com.intel.chimera.crypto.Cipher;
 import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;
@@ -46,7 +44,7 @@ import com.intel.chimera.utils.Utils;
 public class CryptoInputStream extends InputStream implements
     ReadableByteChannel {
   private Input input;
-  private final CryptoCodec codec;
+  private final Cipher cipher;
   private final int bufferSize;
   
   private final byte[] key;
@@ -54,9 +52,10 @@ public class CryptoInputStream extends InputStream implements
   private byte[] iv;
   
   private long streamOffset = 0; // Underlying stream offset.
+  private boolean cipherReset = false;
   
   private final byte[] oneByteBuf = new byte[1];
-  private final Decryptor decryptor;
+  
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at 
    * to inBuffer.limit().
@@ -79,44 +78,42 @@ public class CryptoInputStream extends InputStream implements
   
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
-    this(in, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
+    this(in, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
   public CryptoInputStream(Properties props, ReadableByteChannel in,
       byte[] key, byte[] iv) throws IOException {
-    this(in, CryptoCodec.getInstance(props), Utils.getBufferSize(props), key, iv);
+    this(in,  Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoInputStream(InputStream in, CryptoCodec codec, 
+  public CryptoInputStream(InputStream in, Cipher cipher, 
       int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(new StreamInput(in, bufferSize), codec, bufferSize, key, iv, 0);
+    this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv);
   }
 
-  public CryptoInputStream(ReadableByteChannel in, CryptoCodec codec, 
+  public CryptoInputStream(ReadableByteChannel in, Cipher cipher, 
       int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(new ChannelInput(in), codec, bufferSize, key, iv, 0);
+    this(new ChannelInput(in), cipher, bufferSize, key, iv);
   }
 
   public CryptoInputStream(
       Input input,
-      CryptoCodec codec,
+      Cipher cipher,
       int bufferSize,
       byte[] key,
-      byte[] iv,
-      long streamOffset) throws IOException {
-    Utils.checkCodec(codec);
-
+      byte[] iv) throws IOException {
+    Utils.checkStreamCipher(cipher);
+    
     this.input = input;
-    this.codec = codec;
-    this.bufferSize = Utils.checkBufferSize(codec, bufferSize);
+    this.cipher = cipher;
+    this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
     this.key = key.clone();
     this.initIV = iv.clone();
     this.iv = iv.clone();
-    this.streamOffset = streamOffset;
+    this.streamOffset = 0;
 
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-    decryptor = getDecryptor();
     resetStreamOffset(streamOffset);
   }
 
@@ -155,7 +152,7 @@ public class CryptoInputStream extends InputStream implements
       
       streamOffset += n; // Read n bytes
       decrypt();
-      padding = afterDecryption(streamOffset);
+      padding = postDecryption(streamOffset);
       n = Math.min(len, outBuffer.remaining());
       outBuffer.get(b, off, n);
       return n;
@@ -251,12 +248,12 @@ public class CryptoInputStream extends InputStream implements
       if (buf.isDirect() && buf.remaining() >= inBuffer.position() && padding == 0) {
         // Use buf as the output buffer directly
         decryptInPlace(buf);
-        padding = afterDecryption(streamOffset);
+        padding = postDecryption(streamOffset);
         return n;
       } else {
         // Use outBuffer as the output buffer
         decrypt();
-        padding = afterDecryption(streamOffset);
+        padding = postDecryption(streamOffset);
       }
     }
 
@@ -286,11 +283,13 @@ public class CryptoInputStream extends InputStream implements
       // There is no real data in inBuffer.
       return;
     }
+    
     inBuffer.flip();
     outBuffer.clear();
-    decryptor.decrypt(inBuffer, outBuffer);
+    decryptBuffer(outBuffer);
     inBuffer.clear();
     outBuffer.flip();
+    
     if (padding > 0) {
       /*
        * The plain text and cipher text have a 1:1 mapping, they start at the 
@@ -318,25 +317,25 @@ public class CryptoInputStream extends InputStream implements
       return;
     }
     inBuffer.flip();
-    decryptor.decrypt(inBuffer, buf);
+    decryptBuffer(buf);
     inBuffer.clear();
   }
 
   
   /**
    * This method is executed immediately after decryption. Check whether 
-   * decryptor should be updated and recalculate padding if needed. 
+   * cipher should be updated and recalculate padding if needed. 
    */
-  private byte afterDecryption(long position) throws IOException {
+  private byte postDecryption(long position) throws IOException {
     byte padding = 0;
-    if (decryptor.isContextReset()) {
+    if (cipherReset) {
       /*
-       * This code is generally not executed since the decryptor usually 
-       * maintains decryption context (e.g. the counter) internally. However, 
+       * This code is generally not executed since the cipher usually 
+       * maintains cipher context (e.g. the counter) internally. However, 
        * some implementations can't maintain context so a re-init is necessary 
        * after each decryption call.
        */
-      updateDecryptor(position);
+      resetCipher(position);
       padding = getPadding(position);
       inBuffer.position(padding);
     }
@@ -344,19 +343,20 @@ public class CryptoInputStream extends InputStream implements
   }
   
   private long getCounter(long position) {
-    return position / codec.getCipherSuite().getAlgorithmBlockSize();
+    return position / cipher.getTransformation().getAlgorithmBlockSize();
   }
   
   private byte getPadding(long position) {
-    return (byte)(position % codec.getCipherSuite().getAlgorithmBlockSize());
+    return (byte)(position % cipher.getTransformation().getAlgorithmBlockSize());
   }
   
-  /** Calculate the counter and iv, update the decryptor. */
-  private void updateDecryptor(long position)
+  /** Calculate the counter and iv, reset the cipher. */
+  private void resetCipher(long position)
       throws IOException {
     final long counter = getCounter(position);
-    codec.calculateIV(initIV, counter, iv);
-    decryptor.init(key, iv);
+    Utils.calculateIV(initIV, counter, iv);
+    cipher.init(Cipher.DECRYPT_MODE, key, iv);
+    cipherReset = false;
   }
   
   /**
@@ -369,9 +369,24 @@ public class CryptoInputStream extends InputStream implements
     inBuffer.clear();
     outBuffer.clear();
     outBuffer.limit(0);
-    updateDecryptor(offset);
+    resetCipher(offset);
     padding = getPadding(offset);
     inBuffer.position(padding); // Set proper position for input data.
+  }
+  
+  private void decryptBuffer(ByteBuffer out)
+  		throws IOException {
+  	int inputSize = inBuffer.remaining();
+  	int n = cipher.update(inBuffer, out);
+  	if (n < inputSize) {
+			/**
+			 * Typically code will not get here. Cipher#update will consume all 
+			 * input data and put result in outBuffer. 
+			 * Cipher#doFinal will reset the cipher context.
+			 */
+			cipher.doFinal(inBuffer, outBuffer);
+			cipherReset = true;
+		}
   }
 
   private void checkStream() throws IOException {
@@ -384,15 +399,6 @@ public class CryptoInputStream extends InputStream implements
   private void freeBuffers() {
     Utils.freeDB(inBuffer);
     Utils.freeDB(outBuffer);
-  }
-
-  /** Get decryptor from pool */
-  private Decryptor getDecryptor() throws IOException {
-    try {
-      return codec.createDecryptor();
-    } catch (GeneralSecurityException e) {
-      throw new IOException(e);
-    }
   }
 }
 

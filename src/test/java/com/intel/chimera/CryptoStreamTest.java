@@ -33,7 +33,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.intel.chimera.codec.CryptoCodec;
+import com.intel.chimera.crypto.Cipher;
 import com.intel.chimera.utils.ReflectionUtils;
 
 public class CryptoStreamTest {
@@ -219,9 +219,9 @@ public class CryptoStreamTest {
   }
 
   private void prepareData() throws IOException {
-    CryptoCodec codec = null;
+    Cipher codec = null;
     try {
-      codec = (CryptoCodec)ReflectionUtils.newInstance(
+      codec = (Cipher)ReflectionUtils.newInstance(
           ReflectionUtils.getClassByName(jceCodecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
@@ -236,9 +236,9 @@ public class CryptoStreamTest {
 
   private CryptoInputStream getCryptoInputStream(String codecClass, int bufferSize, boolean withChannel)
       throws IOException {
-    CryptoCodec codec = null;
+    Cipher codec = null;
     try {
-      codec = (CryptoCodec)ReflectionUtils.newInstance(
+      codec = (Cipher)ReflectionUtils.newInstance(
           ReflectionUtils.getClassByName(codecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
@@ -253,9 +253,9 @@ public class CryptoStreamTest {
 
   private CryptoOutputStream getCryptoOutputStream(String codecClass, int bufferSize, boolean withChannel)
       throws IOException {
-    CryptoCodec codec = null;
+    Cipher codec = null;
     try {
-      codec = (CryptoCodec)ReflectionUtils.newInstance(
+      codec = (Cipher)ReflectionUtils.newInstance(
           ReflectionUtils.getClassByName(codecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");

@@ -15,22 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.codec;
+package com.intel.chimera.crypto;
 
 /**
- * Defines properties of a CipherSuite. Modeled after the ciphers in
+ * Defines properties of a CipherTransformation. Modeled after the ciphers in
  * {@link javax.crypto.Cipher}.
  */
-public enum CipherSuite {
+public enum CipherTransformation {
   UNKNOWN("Unknown", 0),
   AES_CTR_NOPADDING("AES/CTR/NoPadding", 16);
 
   private final String name;
   private final int algoBlockSize;
 
-  private Integer unknownValue = null;
-
-  CipherSuite(String name, int algoBlockSize) {
+  CipherTransformation(String name, int algoBlockSize) {
     this.name = name;
     this.algoBlockSize = algoBlockSize;
   }
@@ -54,9 +52,6 @@ public enum CipherSuite {
     StringBuilder builder = new StringBuilder("{");
     builder.append("name: " + name);
     builder.append(", algorithmBlockSize: " + algoBlockSize);
-    if (unknownValue != null) {
-      builder.append(", unknownValue: " + unknownValue);
-    }
     builder.append("}");
     return builder.toString();
   }
@@ -67,14 +62,14 @@ public enum CipherSuite {
    * @param name cipher suite name
    * @return CipherSuite cipher suite
    */
-  public static CipherSuite convert(String name) {
-    CipherSuite[] suites = CipherSuite.values();
-    for (CipherSuite suite : suites) {
+  public static CipherTransformation convert(String name) {
+    CipherTransformation[] suites = CipherTransformation.values();
+    for (CipherTransformation suite : suites) {
       if (suite.getName().equals(name)) {
         return suite;
       }
     }
-    throw new IllegalArgumentException("Invalid cipher suite name: " + name);
+    throw new IllegalArgumentException("Invalid cipher name: " + name);
   }
   
   /**

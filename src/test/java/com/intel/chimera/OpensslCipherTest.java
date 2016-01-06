@@ -27,7 +27,7 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-import com.intel.chimera.codec.OpensslCipher;
+import com.intel.chimera.crypto.Openssl;
 
 public class OpensslCipherTest {
   private static final byte[] key = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 
@@ -37,19 +37,19 @@ public class OpensslCipherTest {
 
   @Test(timeout=120000)
   public void testGetInstance() throws Exception {
-    Assume.assumeTrue(OpensslCipher.getLoadingFailureReason() == null);
-    OpensslCipher cipher = OpensslCipher.getInstance("AES/CTR/NoPadding");
+    Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
+    Openssl cipher = Openssl.getInstance("AES/CTR/NoPadding");
     Assert.assertTrue(cipher != null);
 
     try {
-      cipher = OpensslCipher.getInstance("AES2/CTR/NoPadding");
+      cipher = Openssl.getInstance("AES2/CTR/NoPadding");
       Assert.fail("Should specify correct algorithm.");
     } catch (NoSuchAlgorithmException e) {
       // Expect NoSuchAlgorithmException
     }
 
     try {
-      cipher = OpensslCipher.getInstance("AES/CTR/NoPadding2");
+      cipher = Openssl.getInstance("AES/CTR/NoPadding2");
       Assert.fail("Should specify correct padding.");
     } catch (NoSuchPaddingException e) {
       // Expect NoSuchPaddingException
@@ -58,11 +58,11 @@ public class OpensslCipherTest {
 
   @Test(timeout=120000)
   public void testUpdateArguments() throws Exception {
-    Assume.assumeTrue(OpensslCipher.getLoadingFailureReason() == null);
-    OpensslCipher cipher = OpensslCipher.getInstance("AES/CTR/NoPadding");
+    Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
+    Openssl cipher = Openssl.getInstance("AES/CTR/NoPadding");
     Assert.assertTrue(cipher != null);
 
-    cipher.init(OpensslCipher.ENCRYPT_MODE, key, iv);
+    cipher.init(Openssl.ENCRYPT_MODE, key, iv);
 
     // Require direct buffers
     ByteBuffer input = ByteBuffer.allocate(1024);
@@ -89,11 +89,11 @@ public class OpensslCipherTest {
 
   @Test(timeout=120000)
   public void testDoFinalArguments() throws Exception {
-    Assume.assumeTrue(OpensslCipher.getLoadingFailureReason() == null);
-    OpensslCipher cipher = OpensslCipher.getInstance("AES/CTR/NoPadding");
+    Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
+    Openssl cipher = Openssl.getInstance("AES/CTR/NoPadding");
     Assert.assertTrue(cipher != null);
 
-    cipher.init(OpensslCipher.ENCRYPT_MODE, key, iv);
+    cipher.init(Openssl.ENCRYPT_MODE, key, iv);
 
     // Require direct buffer
     ByteBuffer output = ByteBuffer.allocate(1024);

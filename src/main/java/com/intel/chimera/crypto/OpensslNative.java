@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.codec;
+package com.intel.chimera.crypto;
 
 import java.nio.ByteBuffer;
 
-public class OpensslCipherNative {
+public class OpensslNative {
   public native static void initIDs();
   
   public native static long initContext(int alg, int padding);

@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.codec;
+package com.intel.chimera.crypto;
 
 /**
- * Thrown to indicate that the specific codec is not supported.
+ * Thrown to indicate that the specific cipher is not supported.
  */
-public class UnsupportedCodecException extends RuntimeException {
+public class UnsupportedCipherException extends RuntimeException {
 
   /** Default constructor */
-  public UnsupportedCodecException() {
+  public UnsupportedCipherException() {
   }
 
   /**
@@ -32,7 +32,7 @@ public class UnsupportedCodecException extends RuntimeException {
    * 
    * @param message the detail message
    */
-  public UnsupportedCodecException(String message) {
+  public UnsupportedCipherException(String message) {
     super(message);
   }
 
@@ -43,7 +43,7 @@ public class UnsupportedCodecException extends RuntimeException {
    * @param message the detail message
    * @param cause the cause
    */
-  public UnsupportedCodecException(String message, Throwable cause) {
+  public UnsupportedCipherException(String message, Throwable cause) {
     super(message, cause);
   }
 
@@ -52,7 +52,7 @@ public class UnsupportedCodecException extends RuntimeException {
    * 
    * @param cause the cause
    */
-  public UnsupportedCodecException(Throwable cause) {
+  public UnsupportedCipherException(Throwable cause) {
     super(cause);
   }
 

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.codec;
+package com.intel.chimera.crypto;
 
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
@@ -37,9 +37,9 @@ import com.intel.chimera.utils.NativeCodeLoader;
  * Currently only AES-CTR is supported. It's flexible to add 
  * other crypto algorithms/modes.
  */
-public final class OpensslCipher {
+public final class Openssl {
   private static final Log LOG =
-      LogFactory.getLog(OpensslCipher.class.getName());
+      LogFactory.getLog(Openssl.class.getName());
   public static final int ENCRYPT_MODE = 1;
   public static final int DECRYPT_MODE = 0;
   
@@ -80,7 +80,7 @@ public final class OpensslCipher {
     String loadingFailure = null;
     try {
       if (NativeCodeLoader.isNativeCodeLoaded()) {
-        OpensslCipherNative.initIDs();
+        OpensslNative.initIDs();
       }
     } catch (Throwable t) {
       loadingFailure = t.getMessage();
@@ -94,7 +94,7 @@ public final class OpensslCipher {
     return loadingFailureReason;
   }
   
-  private OpensslCipher(long context, int alg, int padding) {
+  private Openssl(long context, int alg, int padding) {
     this.context = context;
     this.alg = alg;
     this.padding = padding;
@@ -113,13 +113,13 @@ public final class OpensslCipher {
    * @throws NoSuchPaddingException if <code>transformation</code> contains 
    * a padding scheme that is not available.
    */
-  public static final OpensslCipher getInstance(String transformation) 
+  public static final Openssl getInstance(String transformation) 
       throws NoSuchAlgorithmException, NoSuchPaddingException {
     Transform transform = tokenizeTransformation(transformation);
     int algMode = AlgMode.get(transform.alg, transform.mode);
     int padding = Padding.get(transform.padding);
-    long context = OpensslCipherNative.initContext(algMode, padding);
-    return new OpensslCipher(context, algMode, padding);
+    long context = OpensslNative.initContext(algMode, padding);
+    return new Openssl(context, algMode, padding);
   }
   
   /** Nested class for algorithm, mode and padding. */
@@ -169,7 +169,7 @@ public final class OpensslCipher {
    * @param iv crypto iv
    */
   public void init(int mode, byte[] key, byte[] iv) {
-    context = OpensslCipherNative.init(context, mode, alg, padding, key, iv);
+    context = OpensslNative.init(context, mode, alg, padding, key, iv);
   }
   
   /**
@@ -202,7 +202,7 @@ public final class OpensslCipher {
     checkState();
     Preconditions.checkArgument(input.isDirect() && output.isDirect(), 
         "Direct buffers are required.");
-    int len = OpensslCipherNative.update(context, input, input.position(), input.remaining(),
+    int len = OpensslNative.update(context, input, input.position(), input.remaining(),
         output, output.position(), output.remaining());
     input.position(input.limit());
     output.position(output.position() + len);
@@ -241,7 +241,7 @@ public final class OpensslCipher {
       IllegalBlockSizeException, BadPaddingException {
     checkState();
     Preconditions.checkArgument(output.isDirect(), "Direct buffer is required.");
-    int len = OpensslCipherNative.doFinal(context, output, output.position(), output.remaining());
+    int len = OpensslNative.doFinal(context, output, output.position(), output.remaining());
     output.position(output.position() + len);
     return len;
   }
@@ -249,7 +249,7 @@ public final class OpensslCipher {
   /** Forcibly clean the context. */
   public void clean() {
     if (context != 0) {
-      OpensslCipherNative.clean(context);
+      OpensslNative.clean(context);
       context = 0;
     }
   }

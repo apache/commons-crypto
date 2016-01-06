@@ -33,8 +33,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.intel.chimera.codec.CryptoCodec;
-import com.intel.chimera.codec.OpensslCipher;
+import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.Openssl;
 import com.intel.chimera.utils.ReflectionUtils;
 
 public class CryptoCodecTest {
@@ -63,7 +63,7 @@ public class CryptoCodecTest {
 
   @Test
   public void testJceAesCtrCryptoCodec() throws Exception {
-    Assert.assertEquals(null, OpensslCipher.getLoadingFailureReason());
+    Assert.assertEquals(null, Openssl.getLoadingFailureReason());
     cryptoCodecTest(0, jceCodecClass, jceCodecClass, iv);
     cryptoCodecTest(count, jceCodecClass, jceCodecClass, iv);
     cryptoCodecTest(count, jceCodecClass, opensslCodecClass, iv);
@@ -77,7 +77,7 @@ public class CryptoCodecTest {
 
   @Test
   public void testOpensslAesCtrCryptoCodec() throws Exception {
-    Assert.assertEquals(null, OpensslCipher.getLoadingFailureReason());
+    Assert.assertEquals(null, Openssl.getLoadingFailureReason());
     cryptoCodecTest(0, opensslCodecClass, opensslCodecClass, iv);
     cryptoCodecTest(count, opensslCodecClass, opensslCodecClass, iv);
     cryptoCodecTest(count, opensslCodecClass, jceCodecClass, iv);
@@ -97,9 +97,9 @@ public class CryptoCodecTest {
 
   private void cryptoCodecTestForInputStream(int count, String encCodecClass,
       String decCodecClass, byte[] iv) throws IOException {
-    CryptoCodec encCodec = null;
+    Cipher encCodec = null;
     try {
-      encCodec = (CryptoCodec)ReflectionUtils.newInstance(
+      encCodec = (Cipher)ReflectionUtils.newInstance(
           ReflectionUtils.getClassByName(encCodecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
@@ -122,9 +122,9 @@ public class CryptoCodecTest {
     out.close();
     LOG.info("Finished encrypting data");
 
-    CryptoCodec decCodec = null;
+    Cipher decCodec = null;
     try {
-      decCodec = (CryptoCodec)ReflectionUtils.newInstance(
+      decCodec = (Cipher)ReflectionUtils.newInstance(
           ReflectionUtils.getClassByName(decCodecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
@@ -167,9 +167,9 @@ public class CryptoCodecTest {
 
   private void cryptoCodecTestForReadableByteChannel(int count, String encCodecClass,
       String decCodecClass, byte[] iv) throws IOException {
-    CryptoCodec encCodec = null;
+    Cipher encCodec = null;
     try {
-      encCodec = (CryptoCodec)ReflectionUtils.newInstance(
+      encCodec = (Cipher)ReflectionUtils.newInstance(
           ReflectionUtils.getClassByName(encCodecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");
@@ -192,9 +192,9 @@ public class CryptoCodecTest {
     out.close();
     LOG.info("Finished encrypting data");
 
-    CryptoCodec decCodec = null;
+    Cipher decCodec = null;
     try {
-      decCodec = (CryptoCodec)ReflectionUtils.newInstance(
+      decCodec = (Cipher)ReflectionUtils.newInstance(
           ReflectionUtils.getClassByName(decCodecClass), props);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto codec!");

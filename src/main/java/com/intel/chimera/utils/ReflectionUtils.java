@@ -26,7 +26,7 @@ import java.util.WeakHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.intel.chimera.codec.CryptoCodec;
+import com.intel.chimera.crypto.Cipher;
 
 public class ReflectionUtils {
   public static Logger LOG = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -38,7 +38,7 @@ public class ReflectionUtils {
   static {
     classLoader = Thread.currentThread().getContextClassLoader();
     if (classLoader == null) {
-      classLoader = CryptoCodec.class.getClassLoader();
+      classLoader = Cipher.class.getClassLoader();
     }
   }
 
@@ -50,7 +50,7 @@ public class ReflectionUtils {
 
   /**
    * A unique class which is used as a sentinel value in the caching
-   * for getClassByName. {@link CryptoCodec#getClassByNameOrNull(String)}
+   * for getClassByName. {@link Cipher#getClassByNameOrNull(String)}
    */
   private static abstract class NegativeCacheSentinel {}
 

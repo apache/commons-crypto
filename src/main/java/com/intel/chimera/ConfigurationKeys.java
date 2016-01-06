@@ -17,20 +17,20 @@
  */
 package com.intel.chimera;
 
-import com.intel.chimera.codec.JceAesCtrCryptoCodec;
+import com.intel.chimera.crypto.JceCipher;
 
 public class ConfigurationKeys {
   public static final String CHIMERA_SYSTEM_PROPERTIES_FILE =
       "chimera.properties";
 
-  public static final String CHIMERA_CRYPTO_CODEC_CLASSES_KEY_PREFIX = 
-      "chimera.crypto.codec.classes";
+  public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_KEY = 
+      "chimera.crypto.cipher.classes";
   public static final String CHIMERA_CRYPTO_CIPHER_SUITE_KEY =
       "chimera.crypto.cipher.suite";
   public static final String CHIMERA_CRYPTO_CIPHER_SUITE_DEFAULT = 
       "AES/CTR/NoPadding";
-  public static final String DEFAULT_CHIMERA_CRYPTO_CODEC_CLASSES_AES_CTR_NOPADDING_VALUE =
-      JceAesCtrCryptoCodec.class.getName();
+  public static final String DEFAULT_CHIMERA_CRYPTO_CIPHER_CLASSES_VALUE =
+      JceCipher.class.getName();
 
   public static final String CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY = 
       "chimera.random.device.file.path";
