@@ -15,44 +15,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.codec;
+package com.intel.chimera.crypto;
 
 /**
- * Thrown to indicate that the specific codec is not supported.
+ * Thrown to indicate that the specific cipher is not supported.
  */
-public class UnsupportedCodecException extends RuntimeException {
+public class UnsupportedCipherException extends RuntimeException {
 
   /** Default constructor */
-  public UnsupportedCodecException() {
+  public UnsupportedCipherException() {
   }
 
   /**
-   * Constructs an UnsupportedCodecException with the specified
+   * Constructs an UnsupportedCipherException with the specified
    * detail message.
-   * 
+   *
    * @param message the detail message
    */
-  public UnsupportedCodecException(String message) {
+  public UnsupportedCipherException(String message) {
     super(message);
   }
 
   /**
    * Constructs a new exception with the specified detail message and
    * cause.
-   * 
+   *
    * @param message the detail message
    * @param cause the cause
    */
-  public UnsupportedCodecException(String message, Throwable cause) {
+  public UnsupportedCipherException(String message, Throwable cause) {
     super(message, cause);
   }
 
   /**
    * Constructs a new exception with the specified cause.
-   * 
+   *
    * @param cause the cause
    */
-  public UnsupportedCodecException(Throwable cause) {
+  public UnsupportedCipherException(Throwable cause) {
     super(cause);
   }
 

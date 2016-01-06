@@ -29,12 +29,12 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
+import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.CipherTransformation;
+import com.intel.chimera.utils.ReflectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.intel.chimera.codec.CryptoCodec;
-import com.intel.chimera.utils.ReflectionUtils;
 
 public class CryptoStreamTest {
   private final int dataLen = 20000;
@@ -49,10 +49,12 @@ public class CryptoStreamTest {
   protected static int defaultBufferSize = 8192;
   protected static int smallBufferSize = 1024;
 
-  private final String jceCodecClass = 
-      "com.intel.chimera.codec.JceAesCtrCryptoCodec";
-  private final String opensslCodecClass = 
-      "com.intel.chimera.codec.OpensslAesCtrCryptoCodec";
+  private final String jceCipherClass =
+      "com.intel.chimera.crypto.JceCipher";
+  private final String opensslCipherClass =
+      "com.intel.chimera.crypto.OpensslCipher";
+  private final CipherTransformation transformation = CipherTransformation
+      .AES_CTR_NOPADDING;
 
   @Before
   public void setUp() throws IOException {
@@ -68,11 +70,11 @@ public class CryptoStreamTest {
   public void testSkip() throws Exception {
     prepareData();
 
-    doSkipTest(jceCodecClass, false);
-    doSkipTest(opensslCodecClass, false);
+    doSkipTest(jceCipherClass, false);
+    doSkipTest(opensslCipherClass, false);
 
-    doSkipTest(jceCodecClass, true);
-    doSkipTest(opensslCodecClass, true);
+    doSkipTest(jceCipherClass, true);
+    doSkipTest(opensslCipherClass, true);
   }
 
   /** Test byte buffer read with different buffer size. */
@@ -80,25 +82,25 @@ public class CryptoStreamTest {
   public void testByteBufferRead() throws Exception {
     prepareData();
 
-    doByteBufferRead(jceCodecClass, false);
-    doByteBufferRead(opensslCodecClass, false);
+    doByteBufferRead(jceCipherClass, false);
+    doByteBufferRead(opensslCipherClass, false);
 
-    doByteBufferRead(jceCodecClass, true);
-    doByteBufferRead(opensslCodecClass, true);
+    doByteBufferRead(jceCipherClass, true);
+    doByteBufferRead(opensslCipherClass, true);
   }
 
   /** Test byte buffer write. */
   @Test(timeout=120000)
   public void testByteBufferWrite() throws Exception {
-    doByteBufferWrite(jceCodecClass, false);
-    doByteBufferWrite(opensslCodecClass, false);
+    doByteBufferWrite(jceCipherClass, false);
+    doByteBufferWrite(opensslCipherClass, false);
 
-    doByteBufferWrite(jceCodecClass, true);
-    doByteBufferWrite(opensslCodecClass, true);
+    doByteBufferWrite(jceCipherClass, true);
+    doByteBufferWrite(opensslCipherClass, true);
   }
 
-  private void doSkipTest(String codecClass, boolean withChannel) throws IOException {
-    InputStream in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+  private void doSkipTest(String cipherClass, boolean withChannel) throws IOException {
+    InputStream in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
     byte[] result = new byte[dataLen];
     int n1 = readAll(in, result, 0, dataLen / 3);
 
@@ -126,58 +128,58 @@ public class CryptoStreamTest {
     in.close();
   }
 
-  private void doByteBufferRead(String codecClass, boolean withChannel) throws Exception {
+  private void doByteBufferRead(String cipherClass, boolean withChannel) throws Exception {
     // Default buffer size, initial buffer position is 0
-    InputStream in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    InputStream in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
     ByteBuffer buf = ByteBuffer.allocate(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Default buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Small buffer size, initial buffer position is 0
-    in = getCryptoInputStream(codecClass, smallBufferSize, withChannel);
+    in = getCryptoInputStream(cipherClass, smallBufferSize, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Small buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(codecClass, smallBufferSize, withChannel);
+    in = getCryptoInputStream(cipherClass, smallBufferSize, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Direct buffer, default buffer size, initial buffer position is 0
-    in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
     buf = ByteBuffer.allocateDirect(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Direct buffer, default buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Direct buffer, small buffer size, initial buffer position is 0
-    in = getCryptoInputStream(codecClass, smallBufferSize, withChannel);
+    in = getCryptoInputStream(cipherClass, smallBufferSize, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Direct buffer, small buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(codecClass, smallBufferSize, withChannel);
+    in = getCryptoInputStream(cipherClass, smallBufferSize, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
   }
 
-  private void doByteBufferWrite(String codecClass, boolean withChannel) throws Exception {
-    CryptoOutputStream out = getCryptoOutputStream(codecClass, defaultBufferSize, withChannel);
+  private void doByteBufferWrite(String cipherClass, boolean withChannel) throws Exception {
+    CryptoOutputStream out = getCryptoOutputStream(cipherClass, defaultBufferSize, withChannel);
     ByteBuffer buf = ByteBuffer.allocateDirect(dataLen / 2);
     buf.put(data, 0, dataLen / 2);
     buf.flip();
@@ -198,7 +200,7 @@ public class CryptoStreamTest {
     out.flush();
     encData = baos.toByteArray();
 
-    InputStream in = getCryptoInputStream(codecClass, defaultBufferSize, withChannel);
+    InputStream in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
     buf = ByteBuffer.allocate(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
     in.close();
@@ -219,57 +221,57 @@ public class CryptoStreamTest {
   }
 
   private void prepareData() throws IOException {
-    CryptoCodec codec = null;
+    Cipher cipher = null;
     try {
-      codec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(jceCodecClass), props);
+      cipher = (Cipher)ReflectionUtils.newInstance(
+          ReflectionUtils.getClassByName(jceCipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto codec!");
+      throw new IOException("Illegal crypto cipher!");
     }
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    OutputStream out = new CryptoOutputStream(baos, codec, defaultBufferSize, key, iv);
+    OutputStream out = new CryptoOutputStream(baos, cipher, defaultBufferSize, key, iv);
     out.write(data);
     out.flush();
     encData = baos.toByteArray();
   }
 
-  private CryptoInputStream getCryptoInputStream(String codecClass, int bufferSize, boolean withChannel)
+  private CryptoInputStream getCryptoInputStream(String cipherClass, int bufferSize, boolean withChannel)
       throws IOException {
-    CryptoCodec codec = null;
+    Cipher cipher = null;
     try {
-      codec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(codecClass), props);
+      cipher = (Cipher)ReflectionUtils.newInstance(
+          ReflectionUtils.getClassByName(cipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto codec!");
+      throw new IOException("Illegal crypto cipher!");
     }
 
     if (withChannel) {
-      return new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(encData)), codec, bufferSize, key, iv);
+      return new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(encData)), cipher, bufferSize, key, iv);
     } else {
-      return new CryptoInputStream(new ByteArrayInputStream(encData), codec, bufferSize, key, iv);
+      return new CryptoInputStream(new ByteArrayInputStream(encData), cipher, bufferSize, key, iv);
     }
   }
 
-  private CryptoOutputStream getCryptoOutputStream(String codecClass, int bufferSize, boolean withChannel)
+  private CryptoOutputStream getCryptoOutputStream(String cipherClass, int bufferSize, boolean withChannel)
       throws IOException {
-    CryptoCodec codec = null;
+    Cipher cipher = null;
     try {
-      codec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(codecClass), props);
+      cipher = (Cipher)ReflectionUtils.newInstance(
+          ReflectionUtils.getClassByName(cipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto codec!");
+      throw new IOException("Illegal crypto cipher!");
     }
 
     baos.reset();
     if (withChannel) {
-      return new CryptoOutputStream(Channels.newChannel(baos), codec, bufferSize, key, iv);
+      return new CryptoOutputStream(Channels.newChannel(baos), cipher, bufferSize, key, iv);
     } else {
-      return new CryptoOutputStream(baos, codec, bufferSize, key, iv);
+      return new CryptoOutputStream(baos, cipher, bufferSize, key, iv);
     }
   }
 
-  private int readAll(InputStream in, byte[] b, int off, int len) 
+  private int readAll(InputStream in, byte[] b, int off, int len)
       throws IOException {
     int n = 0;
     int total = 0;
@@ -280,7 +282,7 @@ public class CryptoStreamTest {
       }
       n = in.read(b, off + total, len - total);
     }
-    
+
     return total;
   }
 }

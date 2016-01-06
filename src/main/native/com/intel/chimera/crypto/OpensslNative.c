@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "com_intel_chimera.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "OpensslCipherNative.h"
+#include "OpensslNative.h"
 
 #ifdef UNIX
 static EVP_CIPHER_CTX * (*dlsym_EVP_CIPHER_CTX_new)(void);
@@ -83,7 +83,7 @@ static void loadAesCtr(JNIEnv *env)
 #endif
 }
 
-JNIEXPORT void JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_initIDs
+JNIEXPORT void JNICALL Java_com_intel_chimera_crypto_OpensslNative_initIDs
     (JNIEnv *env, jclass clazz)
 {
   char msg[1000];
@@ -128,7 +128,7 @@ JNIEXPORT void JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_initIDs
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_free, dlsym_EVP_CIPHER_CTX_free,  \
                       env, openssl, "EVP_CIPHER_CTX_free");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_cleanup,  \
-                      dlsym_EVP_CIPHER_CTX_cleanup, env, 
+                      dlsym_EVP_CIPHER_CTX_cleanup, env,
                       openssl, "EVP_CIPHER_CTX_cleanup");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_init, dlsym_EVP_CIPHER_CTX_init,  \
                       env, openssl, "EVP_CIPHER_CTX_init");
@@ -153,7 +153,7 @@ JNIEXPORT void JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_initIDs
   }
 }
 
-JNIEXPORT jlong JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_initContext
+JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_initContext
     (JNIEnv *env, jclass clazz, jint alg, jint padding)
 {
   if (alg != AES_CTR) {
@@ -164,20 +164,20 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_initCon
     THROW(env, "javax/crypto/NoSuchPaddingException", NULL);
     return (jlong)0;
   }
-  
+
   if (dlsym_EVP_aes_256_ctr == NULL || dlsym_EVP_aes_128_ctr == NULL) {
     THROW(env, "java/security/NoSuchAlgorithmException",  \
         "Doesn't support AES CTR.");
     return (jlong)0;
   }
-  
+
   // Create and initialize a EVP_CIPHER_CTX
   EVP_CIPHER_CTX *context = dlsym_EVP_CIPHER_CTX_new();
   if (!context) {
     THROW(env, "java/lang/OutOfMemoryError", NULL);
     return (jlong)0;
   }
-   
+
   return JLONG(context);
 }
 
@@ -195,7 +195,7 @@ static EVP_CIPHER * getEvpCipher(int alg, int keyLen)
   return cipher;
 }
 
-JNIEXPORT jlong JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_init
+JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_init
     (JNIEnv *env, jclass clazz, jlong ctx, jint mode, jint alg, jint padding,
     jbyteArray key, jbyteArray iv)
 {
@@ -209,7 +209,7 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_init
     THROW(env, "java/lang/IllegalArgumentException", "Invalid iv length.");
     return (jlong)0;
   }
-  
+
   EVP_CIPHER_CTX *context = CONTEXT(ctx);
   if (context == 0) {
     // Create and initialize a EVP_CIPHER_CTX
@@ -219,7 +219,7 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_init
       return (jlong)0;
     }
   }
-  
+
   jbyte *jKey = (*env)->GetByteArrayElements(env, key, NULL);
   if (jKey == NULL) {
     THROW(env, "java/lang/InternalError", "Cannot get bytes array for key.");
@@ -231,7 +231,7 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_init
     THROW(env, "java/lang/InternalError", "Cannot get bytes array for iv.");
     return (jlong)0;
   }
-  
+
   int rc = dlsym_EVP_CipherInit_ex(context, getEvpCipher(alg, jKeyLen),  \
       NULL, (unsigned char *)jKey, (unsigned char *)jIv, mode == ENCRYPT_MODE);
   (*env)->ReleaseByteArrayElements(env, key, jKey, 0);
@@ -241,16 +241,16 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_init
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherInit_ex.");
     return (jlong)0;
   }
-  
+
   if (padding == NOPADDING) {
     dlsym_EVP_CIPHER_CTX_set_padding(context, 0);
   }
-  
+
   return JLONG(context);
 }
 
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
-static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len, 
+static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
     int max_output_len)
 {
   if (context->flags & EVP_CIPH_NO_PADDING) {
@@ -269,12 +269,12 @@ static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
         return 1;
       }
     }
-    
+
     return 0;
   }
 }
 
-JNIEXPORT jint JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_update
+JNIEXPORT jint JNICALL Java_com_intel_chimera_crypto_OpensslNative_update
     (JNIEnv *env, jclass clazz, jlong ctx, jobject input, jint input_offset,
     jint input_len, jobject output, jint output_offset, jint max_output_len)
 {
@@ -292,7 +292,7 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_update
   }
   input_bytes = input_bytes + input_offset;
   output_bytes = output_bytes + output_offset;
-  
+
   int output_len = 0;
   if (!dlsym_EVP_CipherUpdate(context, output_bytes, &output_len,  \
       input_bytes, input_len)) {
@@ -304,7 +304,7 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_update
 }
 
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
-static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context, 
+static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
     int max_output_len)
 {
   if (context->flags & EVP_CIPH_NO_PADDING) {
@@ -314,12 +314,12 @@ static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
     if (max_output_len >= b) {
       return 1;
     }
-    
+
     return 0;
   }
 }
 
-JNIEXPORT jint JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_doFinal
+JNIEXPORT jint JNICALL Java_com_intel_chimera_crypto_OpensslNative_doFinal
     (JNIEnv *env, jclass clazz, jlong ctx, jobject output, jint offset,
     jint max_output_len)
 {
@@ -335,7 +335,7 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_doFinal
     return 0;
   }
   output_bytes = output_bytes + offset;
-  
+
   int output_len = 0;
   if (!dlsym_EVP_CipherFinal_ex(context, output_bytes, &output_len)) {
     dlsym_EVP_CIPHER_CTX_cleanup(context);
@@ -345,7 +345,7 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_doFinal
   return output_len;
 }
 
-JNIEXPORT void JNICALL Java_com_intel_chimera_codec_OpensslCipherNative_clean
+JNIEXPORT void JNICALL Java_com_intel_chimera_crypto_OpensslNative_clean
     (JNIEnv *env, jclass clazz, jlong ctx)
 {
   EVP_CIPHER_CTX *context = CONTEXT(ctx);

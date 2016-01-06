@@ -27,18 +27,19 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
+import com.intel.chimera.crypto.CipherTransformation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.intel.chimera.codec.CryptoCodec;
-import com.intel.chimera.codec.OpensslCipher;
+import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.Openssl;
 import com.intel.chimera.utils.ReflectionUtils;
 
-public class CryptoCodecTest {
-  private static final Log LOG= LogFactory.getLog(CryptoCodecTest.class);
+public class CryptoCipherTest {
+  private static final Log LOG= LogFactory.getLog(CryptoCipherTest.class);
 
   private static final int bufferSize = 4096;
 
@@ -46,12 +47,14 @@ public class CryptoCodecTest {
   private byte[] iv = new byte[16];
   private int count = 10000;
 
-  private final String jceCodecClass = 
-      "com.intel.chimera.codec.JceAesCtrCryptoCodec";
-  private final String opensslCodecClass = 
-      "com.intel.chimera.codec.OpensslAesCtrCryptoCodec";
+  private final String jceCipherClass =
+      "com.intel.chimera.crypto.JceCipher";
+  private final String opensslCipherClass =
+      "com.intel.chimera.crypto.OpensslCipher";
 
   private Properties props;
+  private CipherTransformation transformation = CipherTransformation
+      .AES_CTR_NOPADDING;
 
   @Before
   public void setUp() throws IOException {
@@ -62,49 +65,50 @@ public class CryptoCodecTest {
   }
 
   @Test
-  public void testJceAesCtrCryptoCodec() throws Exception {
-    Assert.assertEquals(null, OpensslCipher.getLoadingFailureReason());
-    cryptoCodecTest(0, jceCodecClass, jceCodecClass, iv);
-    cryptoCodecTest(count, jceCodecClass, jceCodecClass, iv);
-    cryptoCodecTest(count, jceCodecClass, opensslCodecClass, iv);
-    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff 
+  public void testJceAesCtrCryptoCipher() throws Exception {
+    Assert.assertEquals(null, Openssl.getLoadingFailureReason());
+    cryptoCipherTest(0, jceCipherClass, jceCipherClass, iv);
+    cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
+    cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
+    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
     for(int i = 0; i < 8; i++) {
       iv[8 + i] = (byte) 0xff;
     }
-    cryptoCodecTest(count, jceCodecClass, jceCodecClass, iv);
-    cryptoCodecTest(count, jceCodecClass, opensslCodecClass, iv);
+    cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
+    cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
   }
 
   @Test
-  public void testOpensslAesCtrCryptoCodec() throws Exception {
-    Assert.assertEquals(null, OpensslCipher.getLoadingFailureReason());
-    cryptoCodecTest(0, opensslCodecClass, opensslCodecClass, iv);
-    cryptoCodecTest(count, opensslCodecClass, opensslCodecClass, iv);
-    cryptoCodecTest(count, opensslCodecClass, jceCodecClass, iv);
-    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff 
+  public void testOpensslAesCtrCryptoCipher() throws Exception {
+    Assert.assertEquals(null, Openssl.getLoadingFailureReason());
+    cryptoCipherTest(0, opensslCipherClass, opensslCipherClass, iv);
+    cryptoCipherTest(count, opensslCipherClass, opensslCipherClass, iv);
+    cryptoCipherTest(count, opensslCipherClass, jceCipherClass, iv);
+    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
     for(int i = 0; i < 8; i++) {
       iv[8 + i] = (byte) 0xff;
     }
-    cryptoCodecTest(count, opensslCodecClass, opensslCodecClass, iv);
-    cryptoCodecTest(count, opensslCodecClass, jceCodecClass, iv);
+    cryptoCipherTest(count, opensslCipherClass, opensslCipherClass, iv);
+    cryptoCipherTest(count, opensslCipherClass, jceCipherClass, iv);
   }
 
-  private void cryptoCodecTest(int count, String encCodecClass,
-      String decCodecClass, byte[] iv) throws IOException {
-    cryptoCodecTestForInputStream(count, encCodecClass, decCodecClass, iv);
-    cryptoCodecTestForReadableByteChannel(count, encCodecClass, decCodecClass, iv);
+  private void cryptoCipherTest(int count, String encCipherClass,
+                                String decCipherClass, byte[] iv) throws IOException {
+    cryptoCipherTestForInputStream(count, encCipherClass, decCipherClass, iv);
+    cryptoCipherTestForReadableByteChannel(count, encCipherClass,
+        decCipherClass, iv);
   }
 
-  private void cryptoCodecTestForInputStream(int count, String encCodecClass,
-      String decCodecClass, byte[] iv) throws IOException {
-    CryptoCodec encCodec = null;
+  private void cryptoCipherTestForInputStream(int count, String encCipherClass,
+                                              String decCipherClass, byte[] iv) throws IOException {
+    Cipher encCipher = null;
     try {
-      encCodec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(encCodecClass), props);
+      encCipher = (Cipher)ReflectionUtils.newInstance(
+          ReflectionUtils.getClassByName(encCipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto codec!");
+      throw new IOException("Illegal crypto cipher!");
     }
-    LOG.info("Created a Codec object of type: " + encCodecClass);
+    LOG.info("Created a cipher object of type: " + encCipherClass);
 
     // Generate data
     SecureRandom random = new SecureRandom();
@@ -115,25 +119,25 @@ public class CryptoCodecTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out = new CryptoOutputStream(encryptedData, 
-        encCodec, bufferSize, key, iv);
+    CryptoOutputStream out = new CryptoOutputStream(encryptedData,
+        encCipher, bufferSize, key, iv);
     out.write(originalData, 0, originalData.length);
     out.flush();
     out.close();
     LOG.info("Finished encrypting data");
 
-    CryptoCodec decCodec = null;
+    Cipher decCipher = null;
     try {
-      decCodec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(decCodecClass), props);
+      decCipher = (Cipher)ReflectionUtils.newInstance(
+          ReflectionUtils.getClassByName(decCipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto codec!");
+      throw new IOException("Illegal crypto cipher!");
     }
-    LOG.info("Created a Codec object of type: " + decCodecClass);
+    LOG.info("Created a cipher object of type: " + decCipherClass);
 
     // Decrypt data
     CryptoInputStream in = new CryptoInputStream(new ByteArrayInputStream(
-        encryptedData.toByteArray()), decCodec, bufferSize, key, iv);
+        encryptedData.toByteArray()), decCipher, bufferSize, key, iv);
 
     // Check
     int remainingToRead = count;
@@ -151,7 +155,7 @@ public class CryptoCodecTest {
 
     // Decrypt data byte-at-a-time
     in = new CryptoInputStream(new ByteArrayInputStream(
-        encryptedData.toByteArray()), decCodec, bufferSize, key, iv);
+        encryptedData.toByteArray()), decCipher, bufferSize, key, iv);
 
     // Check
     DataInputStream originalIn = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(originalData)));
@@ -165,16 +169,18 @@ public class CryptoCodecTest {
     LOG.info("SUCCESS! Completed checking " + count + " records");
   }
 
-  private void cryptoCodecTestForReadableByteChannel(int count, String encCodecClass,
-      String decCodecClass, byte[] iv) throws IOException {
-    CryptoCodec encCodec = null;
+  private void cryptoCipherTestForReadableByteChannel(int count,
+                                                      String encCipherClass,
+                                                      String decCipherClass,
+                                                      byte[] iv) throws IOException {
+    Cipher encCipher = null;
     try {
-      encCodec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(encCodecClass), props);
+      encCipher = (Cipher)ReflectionUtils.newInstance(
+          ReflectionUtils.getClassByName(encCipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto codec!");
+      throw new IOException("Illegal crypto cipher!");
     }
-    LOG.info("Created a Codec object of type: " + encCodecClass);
+    LOG.info("Created a cipher object of type: " + encCipherClass);
 
     // Generate data
     SecureRandom random = new SecureRandom();
@@ -185,25 +191,25 @@ public class CryptoCodecTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out = new CryptoOutputStream(Channels.newChannel(encryptedData), 
-        encCodec, bufferSize, key, iv);
+    CryptoOutputStream out = new CryptoOutputStream(Channels.newChannel(encryptedData),
+        encCipher, bufferSize, key, iv);
     out.write(originalData, 0, originalData.length);
     out.flush();
     out.close();
     LOG.info("Finished encrypting data");
 
-    CryptoCodec decCodec = null;
+    Cipher decCipher = null;
     try {
-      decCodec = (CryptoCodec)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(decCodecClass), props);
+      decCipher = (Cipher)ReflectionUtils.newInstance(
+          ReflectionUtils.getClassByName(decCipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto codec!");
+      throw new IOException("Illegal crypto cipher!");
     }
-    LOG.info("Created a Codec object of type: " + decCodecClass);
+    LOG.info("Created a cipher object of type: " + decCipherClass);
 
     // Decrypt data
     CryptoInputStream in = new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(
-        encryptedData.toByteArray())), decCodec, bufferSize, key, iv);
+        encryptedData.toByteArray())), decCipher, bufferSize, key, iv);
 
     // Check
     int remainingToRead = count;
@@ -221,7 +227,7 @@ public class CryptoCodecTest {
 
     // Decrypt data byte-at-a-time
     in = new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(
-        encryptedData.toByteArray())), decCodec, bufferSize, key, iv);
+        encryptedData.toByteArray())), decCipher, bufferSize, key, iv);
 
     // Check
     DataInputStream originalIn = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(originalData)));

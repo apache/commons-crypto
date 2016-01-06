@@ -15,28 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.codec;
+package com.intel.chimera.crypto;
 
 /**
- * Defines properties of a CipherSuite. Modeled after the ciphers in
+ * Defines properties of a CipherTransformation. Modeled after the ciphers in
  * {@link javax.crypto.Cipher}.
  */
-public enum CipherSuite {
+public enum CipherTransformation {
   UNKNOWN("Unknown", 0),
   AES_CTR_NOPADDING("AES/CTR/NoPadding", 16);
 
   private final String name;
   private final int algoBlockSize;
 
-  private Integer unknownValue = null;
-
-  CipherSuite(String name, int algoBlockSize) {
+  CipherTransformation(String name, int algoBlockSize) {
     this.name = name;
     this.algoBlockSize = algoBlockSize;
   }
 
   /**
-   * @return name of cipher suite, as in {@link javax.crypto.Cipher}
+   * @return name of cipher transformation, as in {@link javax.crypto.Cipher}
    */
   public String getName() {
     return name;
@@ -54,31 +52,29 @@ public enum CipherSuite {
     StringBuilder builder = new StringBuilder("{");
     builder.append("name: " + name);
     builder.append(", algorithmBlockSize: " + algoBlockSize);
-    if (unknownValue != null) {
-      builder.append(", unknownValue: " + unknownValue);
-    }
     builder.append("}");
     return builder.toString();
   }
-  
+
   /**
-   * Convert to CipherSuite from name, {@link #algoBlockSize} is fixed for
-   * certain cipher suite, just need to compare the name.
-   * @param name cipher suite name
-   * @return CipherSuite cipher suite
+   * Convert to CipherTransformation from name, {@link #algoBlockSize} is fixed
+   * for certain cipher transformation, just need to compare the name.
+   *
+   * @param name cipher transformation name
+   * @return CipherTransformation cipher transformation
    */
-  public static CipherSuite convert(String name) {
-    CipherSuite[] suites = CipherSuite.values();
-    for (CipherSuite suite : suites) {
-      if (suite.getName().equals(name)) {
-        return suite;
+  public static CipherTransformation convert(String name) {
+    CipherTransformation[] transformations = CipherTransformation.values();
+    for (CipherTransformation transformation : transformations) {
+      if (transformation.getName().equals(name)) {
+        return transformation;
       }
     }
-    throw new IllegalArgumentException("Invalid cipher suite name: " + name);
+    throw new IllegalArgumentException("Invalid cipher name: " + name);
   }
-  
+
   /**
-   * Returns suffix of cipher suite configuration.
+   * Returns suffix of cipher transformation configuration.
    * @return String configuration suffix
    */
   public static String getConfigSuffix(String name) {
