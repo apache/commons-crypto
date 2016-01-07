@@ -38,8 +38,7 @@ import com.intel.chimera.utils.NativeCodeLoader;
  * other crypto algorithms/modes.
  */
 public final class Openssl {
-  private static final Log LOG =
-      LogFactory.getLog(Openssl.class.getName());
+  private static final Log LOG = LogFactory.getLog(Openssl.class.getName());
   
   // Mode constant defined by Openssl JNI
   public static final int ENCRYPT_MODE = 1;

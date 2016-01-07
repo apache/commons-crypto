@@ -32,20 +32,17 @@ import com.intel.chimera.utils.Utils;
 import com.intel.chimera.utils.ReflectionUtils;
 
 /**
- * This class provides the functionality of a cryptographic cipher for
- * encryption and decryption.
+ * This interface of a cryptographic cipher for encryption and decryption.
  */
-public abstract class Cipher {
-  public final static Logger LOG = LoggerFactory.getLogger(Cipher.class);
-
+public interface Cipher {
   // The mode constant to be used when calling init method of the Cipher
-  public static final int ENCRYPT_MODE = 1;
-  public static final int DECRYPT_MODE = 0;
+  int ENCRYPT_MODE = 1;
+  int DECRYPT_MODE = 0;
 
   /**
    * @return the CipherTransformation for this cipher.
    */
-  public abstract CipherTransformation getTransformation();
+  CipherTransformation getTransformation();
 
   /**
    * Initializes the cipher with mode, key and iv.
@@ -54,8 +51,7 @@ public abstract class Cipher {
    * @param iv Initialization vector for the cipher
    * @throws IOException if cipher initialize fails
    */
-  public abstract void init(int mode, byte[] key, byte[] iv)
-      throws IOException;
+  void init(int mode, byte[] key, byte[] iv) throws IOException;
 
   /**
    * Continues a multiple-part encryption/decryption operation. The data
@@ -66,8 +62,7 @@ public abstract class Cipher {
    * @throws IOException if cipher failed to update, for example, there is
    * * insufficient space in the output buffer
    */
-  public abstract int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
-      throws IOException;
+  int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException;
 
   /**
    * Encrypts or decrypts data in a single-part operation, or finishes a
@@ -78,8 +73,7 @@ public abstract class Cipher {
    * @throws IOException if cipher failed to update, for example, there is
    * * insufficient space in the output buffer
    */
-  public abstract int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
-        throws IOException;
+  int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException;
 
   /**
    * Generates a number of secure, random bytes suitable for cryptographic use.
@@ -87,5 +81,5 @@ public abstract class Cipher {
    *
    * @param bytes byte array to populate with random data
    */
-  public abstract void generateSecureRandom(byte[] bytes);
+  void generateSecureRandom(byte[] bytes);
 }

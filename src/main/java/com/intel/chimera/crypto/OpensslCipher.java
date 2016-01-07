@@ -30,7 +30,7 @@ import com.intel.chimera.utils.Utils;
 /**
  * Implement the Cipher using JNI into OpenSSL.
  */
-public class OpensslCipher extends Cipher {
+public class OpensslCipher implements Cipher {
   private final CipherTransformation transformation;
   private final Openssl cipher;
   private final Random random;
@@ -64,7 +64,6 @@ public class OpensslCipher extends Cipher {
     super.finalize();
   }
 
-  @Override
   public CipherTransformation getTransformation() {
     return transformation;
   }
@@ -76,7 +75,6 @@ public class OpensslCipher extends Cipher {
    * @param iv Initialization vector for the cipher
    * @throws IOException if cipher initialize fails
    */
-  @Override
   public void init(int mode, byte[] key, byte[] iv) throws IOException {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(iv);
@@ -97,7 +95,6 @@ public class OpensslCipher extends Cipher {
    * @throws IOException if cipher failed to update, for example, there is
    * insufficient space in the output buffer
    */
-  @Override
   public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
     try {
       return cipher.update(inBuffer, outBuffer);
@@ -116,7 +113,6 @@ public class OpensslCipher extends Cipher {
    * @throws IOException if cipher failed to update, for example, there is
    * insufficient space in the output buffer
    */
-  @Override
   public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
     try {
       int n = cipher.update(inBuffer, outBuffer);
@@ -132,7 +128,6 @@ public class OpensslCipher extends Cipher {
    *
    * @param bytes byte array to populate with random data
    */
-  @Override
   public void generateSecureRandom(byte[] bytes) {
     random.nextBytes(bytes);
   }

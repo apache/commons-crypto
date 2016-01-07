@@ -35,9 +35,8 @@ import com.intel.chimera.utils.Utils;
 /**
  * Implement the {@link com.intel.chimera.crypto.Cipher} using JCE provider.
  */
-public class JceCipher extends Cipher {
-  private static final Log LOG =
-      LogFactory.getLog(JceCipher.class.getName());
+public class JceCipher implements Cipher {
+  private static final Log LOG = LogFactory.getLog(JceCipher.class.getName());
 
   private final String provider;
   private final CipherTransformation transformation;
@@ -73,7 +72,6 @@ public class JceCipher extends Cipher {
     }
   }
 
-  @Override
   public CipherTransformation getTransformation() {
     return transformation;
   }
@@ -85,7 +83,6 @@ public class JceCipher extends Cipher {
    * @param iv Initialization vector for the cipher
    * @throws IOException if cipher initialize fails
    */
-  @Override
   public void init(int mode, byte[] key, byte[] iv) throws IOException {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(iv);
@@ -111,7 +108,6 @@ public class JceCipher extends Cipher {
    * @throws IOException if cipher failed to update, for example, there is
    * insufficient space in the output buffer
    */
-  @Override
   public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
     try {
       return cipher.update(inBuffer, outBuffer);
@@ -130,7 +126,6 @@ public class JceCipher extends Cipher {
    * @throws IOException if cipher failed to update, for example, there is
    * insufficient space in the output buffer
    */
-  @Override
   public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
     try {
       return cipher.doFinal(inBuffer, outBuffer);
@@ -145,7 +140,6 @@ public class JceCipher extends Cipher {
    *
    * @param bytes byte array to populate with random data
    */
-  @Override
   public void generateSecureRandom(byte[] bytes) {
     random.nextBytes(bytes);
   }
