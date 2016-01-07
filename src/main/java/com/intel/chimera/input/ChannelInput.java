@@ -50,7 +50,7 @@ public class ChannelInput implements Input {
     }
 
     int size = (int)Math.min(MAX_SKIP_BUFFER_SIZE, remaining);
-    ByteBuffer skipBuffer = ByteBuffer.allocateDirect(size);
+    ByteBuffer skipBuffer = ByteBuffer.allocate(size);
     while (remaining > 0) {
       skipBuffer.clear();
       skipBuffer.limit((int)Math.min(size, remaining));
