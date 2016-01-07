@@ -26,7 +26,7 @@ import java.nio.channels.ReadableByteChannel;
  * wraps it as <code>Input</code> object acceptable by <code>CryptoInputStream</code>.
  */
 public class ChannelInput implements Input {
-  private static final int MAX_SKIP_BUFFER_SIZE = 2048;
+  private static final int SKIP_BUFFER_SIZE = 2048;
 
   private ByteBuffer buf;
   private ReadableByteChannel channel;
@@ -50,7 +50,7 @@ public class ChannelInput implements Input {
       return 0;
     }
 
-    int size = (int)Math.min(MAX_SKIP_BUFFER_SIZE, remaining);
+    int size = (int)Math.min(SKIP_BUFFER_SIZE, remaining);
     ByteBuffer skipBuffer = getSkipBuf();
     while (remaining > 0) {
       skipBuffer.clear();
@@ -77,7 +77,7 @@ public class ChannelInput implements Input {
 
   private ByteBuffer getSkipBuf() {
     if (buf == null) {
-      buf = ByteBuffer.allocate(MAX_SKIP_BUFFER_SIZE);
+      buf = ByteBuffer.allocate(SKIP_BUFFER_SIZE);
     }
     return buf;
   }
