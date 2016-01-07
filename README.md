@@ -35,7 +35,12 @@ libraryDependencies += "com.intel.chimera" % "chimera" % "0.9.0"
 ## Usage 
 
 ```java
-CryptoCodec codec = CryptoCodec.getInstance();
+
+Properties properties = new Properties();
+properties.setProperty("chimera.crypto.cipher.transformation", "AES/CTR/NoPadding");
+properties.setProperty("chimera.crypto.cipher.classes", "com.intel.chimera.crypto.OpensslCipher");
+
+Cipher cipher = Utils.getCipherInstance(properties);
 byte[] key = new byte[16];
 byte[] iv = new byte[16];
 int bufferSize = 4096;
@@ -43,21 +48,22 @@ String input = "hello world!";
 byte[] decryptedData = new byte[1024];
 // Encrypt
 ByteArrayOutputStream os = new ByteArrayOutputStream();
-CryptoOutputStream cos = new CryptoOutputStream(os, codec, bufferSize, key, iv);
+CryptoOutputStream cos = new CryptoOutputStream(os, cipher, bufferSize, key, iv);
 cos.write(input.getBytes("UTF-8"));
 cos.flush();
 cos.close();
 
 // Decrypt
-CryptoInputStream cis = new CryptoInputStream(new ByteArrayInputStream(os.toByteArray()), codec, bufferSize, key, iv);
+CryptoInputStream cis = new CryptoInputStream(new ByteArrayInputStream(os.toByteArray()), cipher, bufferSize, key, iv);
 int decryptedLen = cis.read(decryptedData, 0, 1024);
+
 ```
 
 ### Configuration
-Currently, two crypto codec are supported: JceAesCtrCryptoCodec and OpensslAesCtrCryptoCodec, you can configure which codec to use as follows:
+Currently, two ciphers are supported: JceCipher and OpensslCipher, you can configure which cipher to use as follows:
 
-    $ java -Dchimera.crypto.codec.classes.aes.ctr.nopadding=com.intel.chimera.OpensslAesCtrCryptoCodec Sample
-    $ java -Dchimera.crypto.codec.classes.aes.ctr.nopadding=com.intel.chimera.JceAesCtrCryptoCodec Sample
+    $ java -Dchimera.crypto.cipher.classes=com.intel.chimera.crypto.OpensslCipher Sample
+    $ java -Dchimera.crypto.cipher.classes=com.intel.chimera.crypto.JceCipher Sample
 
 ## Building from the source code 
 Building from the source code is an option when your OS platform and CPU architecture is not supported. To build chimera, you need Git, JDK (1.6 or higher), g++ compiler (mingw in Windows) etc.
