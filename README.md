@@ -35,8 +35,10 @@ libraryDependencies += "com.intel.chimera" % "chimera" % "0.9.0"
 ## Usage 
 
 ```java
+
 Properties properties = new Properties();
 properties.setProperty("chimera.crypto.cipher.transformation", "AES/CTR/NoPadding");
+properties.setProperty("chimera.crypto.cipher.classes", "com.intel.chimera.crypto.OpensslCipher");
 
 Cipher cipher = Utils.getCipherInstance(properties);
 byte[] key = new byte[16];
@@ -54,13 +56,14 @@ cos.close();
 // Decrypt
 CryptoInputStream cis = new CryptoInputStream(new ByteArrayInputStream(os.toByteArray()), cipher, bufferSize, key, iv);
 int decryptedLen = cis.read(decryptedData, 0, 1024);
+
 ```
 
 ### Configuration
-Currently, two crypto codec are supported: JceAesCtrCryptoCodec and OpensslAesCtrCryptoCodec, you can configure which codec to use as follows:
+Currently, two ciphers are supported: JceCipher and OpensslCipher, you can configure which cipher to use as follows:
 
-    $ java -Dchimera.crypto.codec.classes.aes.ctr.nopadding=com.intel.chimera.OpensslAesCtrCryptoCodec Sample
-    $ java -Dchimera.crypto.codec.classes.aes.ctr.nopadding=com.intel.chimera.JceAesCtrCryptoCodec Sample
+    $ java -Dchimera.crypto.cipher.classes=com.intel.chimera.crypto.OpensslCipher Sample
+    $ java -Dchimera.crypto.cipher.classes=com.intel.chimera.crypto.JceCipher Sample
 
 ## Building from the source code 
 Building from the source code is an option when your OS platform and CPU architecture is not supported. To build chimera, you need Git, JDK (1.6 or higher), g++ compiler (mingw in Windows) etc.
