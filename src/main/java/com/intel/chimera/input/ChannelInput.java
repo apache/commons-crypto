@@ -28,6 +28,7 @@ import java.nio.channels.ReadableByteChannel;
 public class ChannelInput implements Input {
   private static final int MAX_SKIP_BUFFER_SIZE = 2048;
 
+  private ByteBuffer buf;
   private ReadableByteChannel channel;
 
   public ChannelInput(
@@ -50,7 +51,7 @@ public class ChannelInput implements Input {
     }
 
     int size = (int)Math.min(MAX_SKIP_BUFFER_SIZE, remaining);
-    ByteBuffer skipBuffer = ByteBuffer.allocate(size);
+    ByteBuffer skipBuffer = getSkipBuf();
     while (remaining > 0) {
       skipBuffer.clear();
       skipBuffer.limit((int)Math.min(size, remaining));
@@ -72,5 +73,12 @@ public class ChannelInput implements Input {
   @Override
   public void close() throws IOException {
     channel.close();
+  }
+
+  private ByteBuffer getSkipBuf() {
+    if (buf == null) {
+      buf = ByteBuffer.allocate(MAX_SKIP_BUFFER_SIZE);
+    }
+    return buf;
   }
 }
