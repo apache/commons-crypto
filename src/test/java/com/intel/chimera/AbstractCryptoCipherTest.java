@@ -38,10 +38,12 @@ import com.intel.chimera.crypto.Cipher;
 import com.intel.chimera.crypto.Openssl;
 import com.intel.chimera.utils.ReflectionUtils;
 
-public class CryptoCipherTest {
-  private static final Log LOG= LogFactory.getLog(CryptoCipherTest.class);
+public abstract class AbstractCryptoCipherTest {
+
+  private static final Log LOG= LogFactory.getLog(AbstractCryptoCipherTest.class);
 
   private static final int bufferSize = 4096;
+  
 
   private byte[] key = new byte[16];
   private byte[] iv = new byte[16];
@@ -53,8 +55,8 @@ public class CryptoCipherTest {
       "com.intel.chimera.crypto.OpensslCipher";
 
   private Properties props;
-  private CipherTransformation transformation = CipherTransformation
-      .AES_CTR_NOPADDING;
+  protected CipherTransformation transformation;
+  protected boolean isPadding = false;
 
   @Before
   public void setUp() throws IOException {

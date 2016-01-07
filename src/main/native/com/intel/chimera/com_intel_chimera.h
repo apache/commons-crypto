@@ -218,8 +218,9 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
 
 /** Currently only support AES/CTR/NoPadding. */
 #define AES_CTR 0
+#define AES_CBC 1
 #define NOPADDING 0
-#define PKCSPADDING 1
+#define PKCS5PADDING 1
 
 #endif
 
