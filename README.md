@@ -35,7 +35,10 @@ libraryDependencies += "com.intel.chimera" % "chimera" % "0.9.0"
 ## Usage 
 
 ```java
-CryptoCodec codec = CryptoCodec.getInstance();
+Properties properties = new Properties();
+properties.setProperty("chimera.crypto.cipher.transformation", "AES/CTR/NoPadding");
+
+Cipher cipher = Utils.getCipherInstance(properties);
 byte[] key = new byte[16];
 byte[] iv = new byte[16];
 int bufferSize = 4096;
@@ -43,13 +46,13 @@ String input = "hello world!";
 byte[] decryptedData = new byte[1024];
 // Encrypt
 ByteArrayOutputStream os = new ByteArrayOutputStream();
-CryptoOutputStream cos = new CryptoOutputStream(os, codec, bufferSize, key, iv);
+CryptoOutputStream cos = new CryptoOutputStream(os, cipher, bufferSize, key, iv);
 cos.write(input.getBytes("UTF-8"));
 cos.flush();
 cos.close();
 
 // Decrypt
-CryptoInputStream cis = new CryptoInputStream(new ByteArrayInputStream(os.toByteArray()), codec, bufferSize, key, iv);
+CryptoInputStream cis = new CryptoInputStream(new ByteArrayInputStream(os.toByteArray()), cipher, bufferSize, key, iv);
 int decryptedLen = cis.read(decryptedData, 0, 1024);
 ```
 
