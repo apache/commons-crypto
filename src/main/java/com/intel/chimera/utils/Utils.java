@@ -192,10 +192,7 @@ public class Utils {
 
   /** AES/CTR/NoPadding is required */
   public static void checkStreamCipher(Cipher cipher) {
-    if (cipher.getTransformation() != CipherTransformation.AES_CTR_NOPADDING
-        && cipher.getTransformation() != CipherTransformation.AES_CBC_NOPADDING
-        && cipher.getTransformation() != CipherTransformation
-        .AES_CBC_PKCS5PADDING) {
+    if (cipher.getTransformation() != CipherTransformation.AES_CTR_NOPADDING) {
       throw new UnsupportedCipherException("AES/CTR/NoPadding is required");
     }
   }
