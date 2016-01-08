@@ -19,20 +19,9 @@ package com.intel.chimera.crypto;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import com.intel.chimera.utils.Utils;
-import com.intel.chimera.utils.ReflectionUtils;
 
 /**
- * This interface of a cryptographic cipher for encryption and decryption.
+ * The interface of cryptographic cipher for encryption and decryption.
  */
 public interface Cipher {
   // The mode constant to be used when calling init method of the Cipher
