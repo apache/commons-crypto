@@ -17,15 +17,12 @@
  */
 package com.intel.chimera.crypto;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
-import java.util.Random;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.utils.Utils;
 
 /**
  * Implement the Cipher using JNI into OpenSSL.
@@ -33,7 +30,6 @@ import com.intel.chimera.utils.Utils;
 public class OpensslCipher implements Cipher {
   private final CipherTransformation transformation;
   private final Openssl cipher;
-  private final Random random;
 
   /**
    * Constructs a {@link com.intel.chimera.crypto.Cipher} using JNI into OpenSSL
@@ -51,17 +47,6 @@ public class OpensslCipher implements Cipher {
     }
 
     cipher = Openssl.getInstance(transformation.getName());
-    random = Utils.getSecureRandom(props);
-  }
-
-  @Override
-  protected void finalize() throws Throwable {
-    try {
-      Closeable r = (Closeable) this.random;
-      r.close();
-    } catch (ClassCastException e) {
-    }
-    super.finalize();
   }
 
   @Override
@@ -125,16 +110,4 @@ public class OpensslCipher implements Cipher {
       throw new IOException(e);
     }
   }
-
-  /**
-   * Generates a number of secure, random bytes suitable for cryptographic use.
-   * This method needs to be thread-safe.
-   *
-   * @param bytes byte array to populate with random data
-   */
-  @Override
-  public void generateSecureRandom(byte[] bytes) {
-    random.nextBytes(bytes);
-  }
-
 }

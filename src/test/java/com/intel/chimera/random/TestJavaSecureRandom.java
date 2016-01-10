@@ -20,10 +20,21 @@ package com.intel.chimera.random;
 import java.io.IOException;
 import java.util.Properties;
 
-public class TestOsSecureRandom extends AbstractRandomTest{
+import com.intel.chimera.ConfigurationKeys;
+import static junit.framework.Assert.fail;
+
+public class TestJavaSecureRandom extends AbstractRandomTest {
 
   @Override
   public SecureRandom getSecureRandom() throws IOException {
-    return new OsSecureRandom(new Properties());
+    Properties props = new Properties();
+    props.setProperty(ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY,
+        JavaSecureRandom.class.getName());
+    SecureRandom random = SecureRandomFactory.getSecureRandom(props);
+    if ( !(random instanceof JavaSecureRandom)) {
+      fail("The SecureRandom should be: " + JavaSecureRandom.class.getName());
+    }
+    return random;
   }
+
 }

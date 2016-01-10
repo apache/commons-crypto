@@ -17,13 +17,14 @@
  */
 package com.intel.chimera.random;
 
-import java.io.IOException;
-import java.util.Properties;
-
-public class TestOsSecureRandom extends AbstractRandomTest{
+/**
+ * A SecureRandom of Java implementation
+ */
+public class JavaSecureRandom extends java.security.SecureRandom
+    implements SecureRandom {
 
   @Override
-  public SecureRandom getSecureRandom() throws IOException {
-    return new OsSecureRandom(new Properties());
+  public void close() {
+    // do nothing
   }
 }
