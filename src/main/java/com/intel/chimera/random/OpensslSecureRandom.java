@@ -46,7 +46,7 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
       LogFactory.getLog(OpensslSecureRandom.class.getName());
   
   /** If native SecureRandom unavailable, use java SecureRandom */
-  private SecureRandom fallback = null;
+  private JavaSecureRandom fallback = null;
   private static boolean nativeEnabled = false;
   static {
     if (NativeCodeLoader.isNativeCodeLoaded()) {

@@ -32,40 +32,4 @@ public interface SecureRandom extends Closeable {
    */
   void nextBytes(byte[] bytes);
 
-  /**
-   * Returns a random int value.
-   *
-   * @return a random int value
-   */
-  int nextInt();
-
-  /**
-   * Returns a random long value.
-   *
-   * @return a random long value
-   */
-  long nextLong();
-
-  /**
-   * Returns a random float value.
-   *
-   * @return a random float value
-   */
-  float nextFloat();
-
-  /**
-   * Returns a random double value.
-   *
-   * @return a random double value
-   */
-  double nextDouble();
-
-  /**
-   * Sets the seed of this random number generator using a single
-   * {@code long} seed.
-   *
-   * @param seed the seed for random number generator
-   */
-  void setSeed(long seed);
-
 }
