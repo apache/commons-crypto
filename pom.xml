@@ -120,6 +120,24 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.11</version>
+        <configuration>
+          <excludes>
+            <exclude>*.cache</exclude>
+            <exclude>.travis.yml</exclude>
+            <exclude>lib/</exclude>
+            <exclude>Makefile</exclude>
+            <exclude>Makefile.common</exclude>
+            <exclude>project/project/target/config-classes/*</exclude>
+            <exclude>project/target/</exclude>
+            <exclude>src/main/java/com/intel/chimera/VERSION</exclude>
+            <exclude>version.sbt</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   
