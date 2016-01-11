@@ -111,5 +111,5 @@ chimera uses sbt (simple build tool for Scala) as a build tool. Here is a simple
     > package          # create jar file
 
 ### Discussion
-For development related discussion, please go to [dev google group](https://groups.google.com/forum/#!managemembers/chimera-dev).
+For development related discussion, please go to [dev google group](https://groups.google.com/forum/#!forum/chimera-dev).
 For issues or bugs, please file tickets through [github](https://github.com/intel-hadoop/chimera/issues).
