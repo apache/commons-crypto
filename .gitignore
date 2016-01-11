@@ -16,7 +16,6 @@ cache
 .generated-mima*
 out/
 .DS_Store
-
 target/
 target/*
 reports/
