@@ -29,6 +29,8 @@ import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;
 import com.intel.chimera.utils.Utils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * CryptoInputStream decrypts data. It is not thread-safe. AES CTR mode is
@@ -43,6 +45,8 @@ import com.intel.chimera.utils.Utils;
  */
 public class CryptoInputStream extends InputStream implements
     ReadableByteChannel {
+  public static final Log LOG = LogFactory.getLog(CryptoInputStream.class);
+
   private Input input;
   private final Cipher cipher;
   private final int bufferSize;
@@ -167,6 +171,7 @@ public class CryptoInputStream extends InputStream implements
 
     input.close();
     freeBuffers();
+    cipher.close();
     super.close();
     closed = true;
   }

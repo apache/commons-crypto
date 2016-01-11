@@ -123,4 +123,12 @@ public class JceCipher implements Cipher {
       throw new IOException(e);
     }
   }
+
+  /**
+   * Closes Jce cipher.
+   */
+  @Override
+  public void close() {
+    // Do nothing
+  }
 }

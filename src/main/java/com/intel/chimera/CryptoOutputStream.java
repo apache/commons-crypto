@@ -157,6 +157,7 @@ public class CryptoOutputStream extends OutputStream implements
       encrypt();
       output.close();
       freeBuffers();
+      cipher.close();
       super.close();
     } finally {
       closed = true;

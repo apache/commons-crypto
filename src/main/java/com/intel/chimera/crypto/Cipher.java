@@ -17,13 +17,14 @@
  */
 package com.intel.chimera.crypto;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
  * The interface of cryptographic cipher for encryption and decryption.
  */
-public interface Cipher {
+public interface Cipher extends Closeable {
   // The mode constant to be used when calling init method of the Cipher
   int ENCRYPT_MODE = 1;
   int DECRYPT_MODE = 0;

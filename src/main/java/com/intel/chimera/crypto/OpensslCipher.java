@@ -110,4 +110,12 @@ public class OpensslCipher implements Cipher {
       throw new IOException(e);
     }
   }
+
+  /**
+   * Closes the OpenSSL cipher. Clean the Openssl native context.
+   */
+  @Override
+  public void close() {
+    cipher.clean();
+  }
 }
