@@ -185,7 +185,7 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_initContext
     return (jlong)0;
   }
   if (!(alg == AES_CTR && padding == NOPADDING)
-      && !(alg = AES_CBC && (padding == NOPADDING|| padding == PKCS5PADDING))) {
+      && !(alg == AES_CBC && (padding == NOPADDING|| padding == PKCS5PADDING))) {
     THROW(env, "javax/crypto/NoSuchPaddingException", NULL);
     return (jlong)0;
   }
