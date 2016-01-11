@@ -70,7 +70,7 @@ More detailed information about the configurations are as follows.
 | Property Name | Default | Meaning         |
 | --------------|---------|-------------------------|
 | chimera.crypto.cipher.transformation | AES/CTR/NoPadding | The value is identical to the transformations described in the Cipher section of the Java Cryptography Architecture Standard Algorithm Name Documentation. Currently only "AES/CTR/NoPadding" algorithm is supported.|
-| chimera.crypto.cipher.classes | com.intel.chimera.crypto.OpensslCipher,com.intel.chimera.crypto.JceCipher | Comma-separated list of cipher classes which implement cipher algorithm of "AES/CTR/NoPadding". A cipher implementation encapsulates the encryption and decryption details. The first  available implementation appearing in this list will be used. |
+| chimera.crypto.cipher.classes | com.intel.chimera.crypto.OpensslCipher, com.intel.chimera.crypto.JceCipher | Comma-separated list of cipher classes which implement cipher algorithm of "AES/CTR/NoPadding". A cipher implementation encapsulates the encryption and decryption details. The first  available implementation appearing in this list will be used. |
 
 ## Building from the source code 
 Building from the source code is an option when your OS platform and CPU architecture is not supported. To build chimera, you need Git, JDK (1.6 or higher), g++ compiler (mingw in Windows) etc.
