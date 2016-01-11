@@ -30,131 +30,42 @@ public interface SecureRandom extends Closeable {
    * the length of the byte array.
    * @param bytes the byte array to fill with random bytes
    */
-  public void nextBytes(byte[] bytes);
+  void nextBytes(byte[] bytes);
 
   /**
-   * Returns the next pseudorandom, uniformly distributed {@code int}
-   * value from this random number generator's sequence. The general
-   * contract of {@code nextInt} is that one {@code int} value is
-   * pseudorandomly generated and returned. All 2<font size="-1"><sup>32
-   * </sup></font> possible {@code int} values are produced with
-   * (approximately) equal probability.
+   * Returns a random int value.
    *
-   * <p>The method {@code nextInt} is implemented by class {@code Random}
-   * as if by:
-   *  <pre> {@code
-   * public int nextInt() {
-   *   return next(32);
-   * }}</pre>
-   *
-   * @return the next pseudorandom, uniformly distributed {@code int}
-   *         value from this random number generator's sequence
+   * @return a random int value
    */
-  public int nextInt();
+  int nextInt();
 
   /**
-   * Returns the next pseudorandom, uniformly distributed {@code long}
-   * value from this random number generator's sequence. The general
-   * contract of {@code nextLong} is that one {@code long} value is
-   * pseudorandomly generated and returned.
+   * Returns a random long value.
    *
-   * <p>The method {@code nextLong} is implemented by class {@code Random}
-   * as if by:
-   *  <pre> {@code
-   * public long nextLong() {
-   *   return ((long)next(32) << 32) + next(32);
-   * }}</pre>
-   *
-   * Because class {@code Random} uses a seed with only 48 bits,
-   * this algorithm will not return all possible {@code long} values.
-   *
-   * @return the next pseudorandom, uniformly distributed {@code long}
-   *         value from this random number generator's sequence
+   * @return a random long value
    */
-  public long nextLong();
+  long nextLong();
 
   /**
-   * Returns the next pseudorandom, uniformly distributed {@code float}
-   * value between {@code 0.0} and {@code 1.0} from this random
-   * number generator's sequence.
+   * Returns a random float value.
    *
-   * <p>The general contract of {@code nextFloat} is that one
-   * {@code float} value, chosen (approximately) uniformly from the
-   * range {@code 0.0f} (inclusive) to {@code 1.0f} (exclusive), is
-   * pseudorandomly generated and returned. All 2<font
-   * size="-1"><sup>24</sup></font> possible {@code float} values
-   * of the form <i>m&nbsp;x&nbsp</i>2<font
-   * size="-1"><sup>-24</sup></font>, where <i>m</i> is a positive
-   * integer less than 2<font size="-1"><sup>24</sup> </font>, are
-   * produced with (approximately) equal probability.
-   *
-   * <p>The method {@code nextFloat} is implemented by class {@code Random}
-   * as if by:
-   *  <pre> {@code
-   * public float nextFloat() {
-   *   return next(24) / ((float)(1 << 24));
-   * }}</pre>
-   *
-   * <p>The hedge "approximately" is used in the foregoing description only
-   * because the next method is only approximately an unbiased source of
-   * independently chosen bits. If it were a perfect source of randomly
-   * chosen bits, then the algorithm shown would choose {@code float}
-   * values from the stated range with perfect uniformity.<p>
-   * [In early versions of Java, the result was incorrectly calculated as:
-   *  <pre> {@code
-   *   return next(30) / ((float)(1 << 30));}</pre>
-   * This might seem to be equivalent, if not better, but in fact it
-   * introduced a slight nonuniformity because of the bias in the rounding
-   * of floating-point numbers: it was slightly more likely that the
-   * low-order bit of the significand would be 0 than that it would be 1.]
-   *
-   * @return the next pseudorandom, uniformly distributed {@code float}
-   *         value between {@code 0.0} and {@code 1.0} from this
-   *         random number generator's sequence
+   * @return a random float value
    */
-  public float nextFloat();
+  float nextFloat();
+
   /**
-   * Returns the next pseudorandom, uniformly distributed
-   * {@code double} value between {@code 0.0} and
-   * {@code 1.0} from this random number generator's sequence.
+   * Returns a random double value.
    *
-   * <p>The general contract of {@code nextDouble} is that one
-   * {@code double} value, chosen (approximately) uniformly from the
-   * range {@code 0.0d} (inclusive) to {@code 1.0d} (exclusive), is
-   * pseudorandomly generated and returned.
-   *
-   * <p>The method {@code nextDouble} is implemented by class {@code Random}
-   * as if by:
-   *  <pre> {@code
-   * public double nextDouble() {
-   *   return (((long)next(26) << 27) + next(27))
-   *     / (double)(1L << 53);
-   * }}</pre>
-   *
-   * <p>The hedge "approximately" is used in the foregoing description only
-   * because the {@code next} method is only approximately an unbiased
-   * source of independently chosen bits. If it were a perfect source of
-   * randomly chosen bits, then the algorithm shown would choose
-   * {@code double} values from the stated range with perfect uniformity.
-   * <p>[In early versions of Java, the result was incorrectly calculated as:
-   *  <pre> {@code
-   *   return (((long)next(27) << 27) + next(27))
-   *     / (double)(1L << 54);}</pre>
-   * This might seem to be equivalent, if not better, but in fact it
-   * introduced a large nonuniformity because of the bias in the rounding
-   * of floating-point numbers: it was three times as likely that the
-   * low-order bit of the significand would be 0 than that it would be 1!
-   * This nonuniformity probably doesn't matter much in practice, but we
-   * strive for perfection.]
-   *
-   * @return the next pseudorandom, uniformly distributed {@code double}
-   *         value between {@code 0.0} and {@code 1.0} from this
-   *         random number generator's sequence
-   * @see Math#random
+   * @return a random double value
    */
-  public double nextDouble();
+  double nextDouble();
+
   /**
-   * Closes the SecureRandom
+   * Sets the seed of this random number generator using a single
+   * {@code long} seed.
+   *
+   * @param seed the seed for random number generator
    */
-  public void close();
+  void setSeed(long seed);
+
 }
