@@ -30,7 +30,7 @@ import com.intel.chimera.utils.Utils;
 /**
  * Implement the Cipher using JNI into OpenSSL.
  */
-public class OpensslCipher extends Cipher {
+public class OpensslCipher implements Cipher {
   private final CipherTransformation transformation;
   private final Openssl cipher;
   private final Random random;

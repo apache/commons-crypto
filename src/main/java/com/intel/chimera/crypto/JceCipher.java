@@ -35,9 +35,8 @@ import com.intel.chimera.utils.Utils;
 /**
  * Implement the {@link com.intel.chimera.crypto.Cipher} using JCE provider.
  */
-public class JceCipher extends Cipher {
-  private static final Log LOG =
-      LogFactory.getLog(JceCipher.class.getName());
+public class JceCipher implements Cipher {
+  private static final Log LOG = LogFactory.getLog(JceCipher.class.getName());
 
   private final String provider;
   private final CipherTransformation transformation;

@@ -28,6 +28,7 @@ import java.util.Random;
 
 import com.google.common.base.Preconditions;
 import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.CipherFactory;
 import com.intel.chimera.crypto.CipherTransformation;
 import com.intel.chimera.crypto.UnsupportedCipherException;
 import com.intel.chimera.random.OsSecureRandom;
@@ -243,10 +244,9 @@ public class Utils {
   /**
    * Helper method to create a Cipher instance and throws only IOException
    */
-  public static Cipher getCipherInstance(Properties props)
-    throws IOException {
+  public static Cipher getCipherInstance(Properties props) throws IOException {
     try {
-      return Cipher.getInstance(props);
+      return CipherFactory.getInstance(props);
     } catch(GeneralSecurityException e) {
       throw new IOException(e);
     }

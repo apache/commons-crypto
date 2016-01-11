@@ -22,7 +22,6 @@ package com.intel.chimera.crypto;
  * {@link javax.crypto.Cipher}.
  */
 public enum CipherTransformation {
-  UNKNOWN("Unknown", 0),
   AES_CTR_NOPADDING("AES/CTR/NoPadding", 16);
 
   private final String name;
