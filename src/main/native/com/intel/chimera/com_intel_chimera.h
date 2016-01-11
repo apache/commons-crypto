@@ -210,6 +210,7 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
 #define JLONG(context) ((jlong)((ptrdiff_t)(context)))
 
 #define KEY_LENGTH_128 16
+#define KEY_LENGTH_192 24
 #define KEY_LENGTH_256 32
 #define IV_LENGTH 16
 
@@ -218,8 +219,9 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
 
 /** Currently only support AES/CTR/NoPadding. */
 #define AES_CTR 0
+#define AES_CBC 1
 #define NOPADDING 0
-#define PKCSPADDING 1
+#define PKCS5PADDING 1
 
 #endif
 

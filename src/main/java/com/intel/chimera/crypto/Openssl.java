@@ -46,7 +46,8 @@ public final class Openssl {
 
   /** Currently only support AES/CTR/NoPadding. */
   private static enum AlgorithmMode {
-    AES_CTR;
+    AES_CTR,
+    AES_CBC;
 
     static int get(String algorithm, String mode)
         throws NoSuchAlgorithmException {

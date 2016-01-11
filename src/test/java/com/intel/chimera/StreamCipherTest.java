@@ -38,8 +38,8 @@ import com.intel.chimera.crypto.Cipher;
 import com.intel.chimera.crypto.Openssl;
 import com.intel.chimera.utils.ReflectionUtils;
 
-public class CryptoCipherTest {
-  private static final Log LOG= LogFactory.getLog(CryptoCipherTest.class);
+public class StreamCipherTest {
+  private static final Log LOG= LogFactory.getLog(StreamCipherTest.class);
 
   private static final int bufferSize = 4096;
 

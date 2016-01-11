@@ -36,7 +36,11 @@ static int (*dlsym_EVP_CipherUpdate)(EVP_CIPHER_CTX *, unsigned char *,  \
            int *, const unsigned char *, int);
 static int (*dlsym_EVP_CipherFinal_ex)(EVP_CIPHER_CTX *, unsigned char *, int *);
 static EVP_CIPHER * (*dlsym_EVP_aes_256_ctr)(void);
+static EVP_CIPHER * (*dlsym_EVP_aes_192_ctr)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_128_ctr)(void);
+static EVP_CIPHER * (*dlsym_EVP_aes_256_cbc)(void);
+static EVP_CIPHER * (*dlsym_EVP_aes_192_cbc)(void);
+static EVP_CIPHER * (*dlsym_EVP_aes_128_cbc)(void);
 static void *openssl;
 #endif
 
@@ -54,7 +58,11 @@ typedef int (__cdecl *__dlsym_EVP_CipherUpdate)(EVP_CIPHER_CTX *,  \
 typedef int (__cdecl *__dlsym_EVP_CipherFinal_ex)(EVP_CIPHER_CTX *,  \
              unsigned char *, int *);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_256_ctr)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_192_ctr)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_ctr)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_256_cbc)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_192_cbc)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_cbc)(void);
 static __dlsym_EVP_CIPHER_CTX_new dlsym_EVP_CIPHER_CTX_new;
 static __dlsym_EVP_CIPHER_CTX_free dlsym_EVP_CIPHER_CTX_free;
 static __dlsym_EVP_CIPHER_CTX_cleanup dlsym_EVP_CIPHER_CTX_cleanup;
@@ -64,7 +72,11 @@ static __dlsym_EVP_CipherInit_ex dlsym_EVP_CipherInit_ex;
 static __dlsym_EVP_CipherUpdate dlsym_EVP_CipherUpdate;
 static __dlsym_EVP_CipherFinal_ex dlsym_EVP_CipherFinal_ex;
 static __dlsym_EVP_aes_256_ctr dlsym_EVP_aes_256_ctr;
+static __dlsym_EVP_aes_192_ctr dlsym_EVP_aes_192_ctr;
 static __dlsym_EVP_aes_128_ctr dlsym_EVP_aes_128_ctr;
+static __dlsym_EVP_aes_256_cbc dlsym_EVP_aes_256_cbc;
+static __dlsym_EVP_aes_192_cbc dlsym_EVP_aes_192_cbc;
+static __dlsym_EVP_aes_128_cbc dlsym_EVP_aes_128_cbc;
 static HMODULE openssl;
 #endif
 
@@ -72,14 +84,26 @@ static void loadAesCtr(JNIEnv *env)
 {
 #ifdef UNIX
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_ctr, env, openssl, "EVP_aes_256_ctr");
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_192_ctr, env, openssl, "EVP_aes_192_ctr");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_128_ctr, env, openssl, "EVP_aes_128_ctr");
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_cbc, env, openssl, "EVP_aes_256_cbc");
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_192_cbc, env, openssl, "EVP_aes_192_cbc");
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_128_cbc, env, openssl, "EVP_aes_128_cbc");
 #endif
 
 #ifdef WINDOWS
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_256_ctr, dlsym_EVP_aes_256_ctr,  \
                       env, openssl, "EVP_aes_256_ctr");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_192_ctr, dlsym_EVP_aes_192_ctr,  \
+                      env, openssl, "EVP_aes_192_ctr");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_128_ctr, dlsym_EVP_aes_128_ctr,  \
                       env, openssl, "EVP_aes_128_ctr");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_256_cbc, dlsym_EVP_aes_256_cbc,  \
+                      env, openssl, "EVP_aes_256_cbc");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_192_cbc, dlsym_EVP_aes_192_cbc,  \
+                      env, openssl, "EVP_aes_192_cbc");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_128_cbc, dlsym_EVP_aes_128_cbc,  \
+                      env, openssl, "EVP_aes_128_cbc");
 #endif
 }
 
@@ -156,18 +180,27 @@ JNIEXPORT void JNICALL Java_com_intel_chimera_crypto_OpensslNative_initIDs
 JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_initContext
     (JNIEnv *env, jclass clazz, jint alg, jint padding)
 {
-  if (alg != AES_CTR) {
+  if (alg != AES_CTR && alg != AES_CBC) {
     THROW(env, "java/security/NoSuchAlgorithmException", NULL);
     return (jlong)0;
   }
-  if (padding != NOPADDING) {
+  if (!(alg == AES_CTR && padding == NOPADDING)
+      && !(alg = AES_CBC && (padding == NOPADDING|| padding == PKCS5PADDING))) {
     THROW(env, "javax/crypto/NoSuchPaddingException", NULL);
     return (jlong)0;
   }
 
-  if (dlsym_EVP_aes_256_ctr == NULL || dlsym_EVP_aes_128_ctr == NULL) {
+  if (dlsym_EVP_aes_256_ctr == NULL ||
+        dlsym_EVP_aes_192_ctr == NULL || dlsym_EVP_aes_128_ctr == NULL) {
     THROW(env, "java/security/NoSuchAlgorithmException",  \
         "Doesn't support AES CTR.");
+    return (jlong)0;
+  }
+
+  if (dlsym_EVP_aes_256_cbc == NULL ||
+        dlsym_EVP_aes_192_cbc == NULL || dlsym_EVP_aes_128_cbc == NULL) {
+    THROW(env, "java/security/NoSuchAlgorithmException",  \
+        "Doesn't support AES CBC.");
     return (jlong)0;
   }
 
@@ -181,15 +214,25 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_initContext
   return JLONG(context);
 }
 
-// Only supports AES-CTR currently
+// Only supports AES-CTR and AES-CBC currently
 static EVP_CIPHER * getEvpCipher(int alg, int keyLen)
 {
   EVP_CIPHER *cipher = NULL;
   if (alg == AES_CTR) {
     if (keyLen == KEY_LENGTH_256) {
       cipher = dlsym_EVP_aes_256_ctr();
+    } else if (keyLen == KEY_LENGTH_192) {
+      cipher = dlsym_EVP_aes_192_ctr();
     } else if (keyLen == KEY_LENGTH_128) {
       cipher = dlsym_EVP_aes_128_ctr();
+    }
+  } else if (alg == AES_CBC) {
+    if (keyLen == KEY_LENGTH_256) {
+      cipher = dlsym_EVP_aes_256_cbc();
+    } else if (keyLen == KEY_LENGTH_192) {
+      cipher = dlsym_EVP_aes_192_cbc();
+    } else if (keyLen == KEY_LENGTH_128) {
+      cipher = dlsym_EVP_aes_128_cbc();
     }
   }
   return cipher;
@@ -201,7 +244,8 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_init
 {
   int jKeyLen = (*env)->GetArrayLength(env, key);
   int jIvLen = (*env)->GetArrayLength(env, iv);
-  if (jKeyLen != KEY_LENGTH_128 && jKeyLen != KEY_LENGTH_256) {
+  if (jKeyLen != KEY_LENGTH_128 && jKeyLen != KEY_LENGTH_192
+        && jKeyLen != KEY_LENGTH_256) {
     THROW(env, "java/lang/IllegalArgumentException", "Invalid key length.");
     return (jlong)0;
   }
