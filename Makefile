@@ -1,9 +1,6 @@
 include Makefile.common
 
 MVN:=mvn
-SBT:=./sbt
-
-all: chimera
 
 CHIMERA_OUT:=$(TARGET)/$(chimera)-$(os_arch)
 CHIMERA_OBJ:=$(addprefix $(CHIMERA_OUT)/,OpensslSecureRandom.o OpensslNative.o)
@@ -13,6 +10,11 @@ ifeq ($(OS_NAME),SunOS)
 else
   TAR:= tar
 endif
+
+NATIVE_TARGET_DIR:=$(TARGET)/classes/com/intel/chimera/native/$(OS_NAME)/$(OS_ARCH)
+NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
+
+all: $(NATIVE_DLL)
 
 $(TARGET)/jni-classes/com/intel/chimera/crypto/OpensslNative.class : $(SRC)/com/intel/chimera/crypto/OpensslNative.java
 	@mkdir -p $(TARGET)/jni-classes
@@ -44,30 +46,13 @@ clean:
 	rm -rf $(TARGET)
 	rm -rf $(CHIMERA_OUT)
 
-NATIVE_DIR:=src/main/resources/com/intel/chimera/native/$(OS_NAME)/$(OS_ARCH)
-NATIVE_TARGET_DIR:=$(TARGET)/classes/com/intel/chimera/native/$(OS_NAME)/$(OS_ARCH)
-NATIVE_DLL:=$(NATIVE_DIR)/$(LIBNAME)
-
-chimera-jar-version:=chimera-$(shell perl -npe "s/version in ThisBuild\s+:=\s+\"(.*)\"/\1/" version.sbt | sed -e "/^$$/d")
-
 native: $(NATIVE_DLL)
-
-chimera: native $(TARGET)/$(chimera-jar-version).jar
 
 $(NATIVE_DLL): $(CHIMERA_OUT)/$(LIBNAME)
 	@mkdir -p $(@D)
 	cp $< $@
 	@mkdir -p $(NATIVE_TARGET_DIR)
 	cp $< $(NATIVE_TARGET_DIR)/$(LIBNAME)
-
-
-package: $(TARGET)/$(chimera-jar-version).jar
-
-$(TARGET)/$(chimera-jar-version).jar:
-	$(SBT) package
-
-test: $(NATIVE_DLL)
-	$(SBT) test
 
 win32:
 	$(MAKE) native CROSS_PREFIX=i686-w64-mingw32- OS_NAME=Windows OS_ARCH=x86
@@ -102,19 +87,3 @@ clean-native-linux32:
 
 clean-native-win32:
 	$(MAKE) clean-native OS_NAME=Windows OS_ARCH=x86
-
-javadoc:
-	$(SBT) packageDoc
-
-packageSource:
-	$(SBT) packageSrc
-
-publishSigned:
-	$(SBT) publishSigned
-
-sonatypeRelease:
-	$(SBT) sonatypeRelease
-
-install-m2:
-	$(SBT) publishM2
-
