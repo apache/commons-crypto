@@ -172,9 +172,10 @@ public class NativeCodeLoader {
       }
 
       // Set executable (x) flag to enable Java to load the native library
-      extractedLibFile.setReadable(true);
-      extractedLibFile.setWritable(true, true);
-      extractedLibFile.setExecutable(true);
+      if (!extractedLibFile.setReadable(true) || !extractedLibFile.setExecutable(true)
+          || !extractedLibFile.setWritable(true, true)) {
+        throw new RuntimeException("Invalid path for library path");
+      }
 
       // Check whether the contents are properly copied from the resource folder
       {
