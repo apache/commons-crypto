@@ -27,6 +27,7 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.common.base.Preconditions;
 import com.intel.chimera.ConfigurationKeys;
 import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.CipherFactory;
 import com.intel.chimera.crypto.CipherTransformation;
 import org.junit.Assert;
 import org.junit.Before;
@@ -84,8 +85,8 @@ public abstract class AbstractCipherTest {
     ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
     Cipher enc, dec;
 
-    enc = Cipher.getInstance(props, transformation);
-    dec = Cipher.getInstance(props, transformation);
+    enc = CipherFactory.getInstance(props, transformation);
+    dec = CipherFactory.getInstance(props, transformation);
 
     try {
       enc.init(Cipher.ENCRYPT_MODE, key, iv);
