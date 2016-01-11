@@ -77,7 +77,7 @@ Building from the source code is an option when your OS platform and CPU archite
 
     $ git clone https://github.com/intel-hadoop/chimera.git
     $ cd chimera
-    $ make
+    $ mvn clean install
 
 A file `target/chimera-$(version).jar` is the product additionally containing the native library built for your platform.
 
