@@ -167,6 +167,7 @@ public class CryptoInputStream extends InputStream implements
 
     input.close();
     freeBuffers();
+    cipher.close();
     super.close();
     closed = true;
   }
