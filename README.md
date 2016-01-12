@@ -81,46 +81,6 @@ Building from the source code is an option when your OS platform and CPU archite
 
 A file `target/chimera-$(version).jar` is the product additionally containing the native library built for your platform.
 
-## For developers
-
-### Make a release
-#### Prepare GPG keys
-```
-$ gpg --gen-key                                                 # generate gpg public/private key pair
-$ gpg --list-keys                                               # list available public/private key pairs
-$ gpg --keyserver hkp://pgp.mit.edu --send-keys [public key]    # we use mit pgp server, you can also choose others
-```
-
-#### Configure the credential
-Set Sonatype account information (user name and password) in your Maven settings.xml file:
-```
-<settings>
-  <servers>
-    <server>
-      <id>ossrh</id>
-      <username>your-sonatype-account</username>
-      <password>your-sonatype-password</password>
-    </server>
-  </servers>
-</settings>
-```
-
-#### Publish the release
-Publish your GPG-signed artifact to staging repository of [Nexus](https://oss.sonatype.org):
-```
-$ mvn clean deploy -Prelease;
-```
-
-You can manually inspect the staging repository in Nexus and trigger a release of the staging repository later with command:
-```
-$ mvn nexus-staging:release -Prelease;
-```
-
-If you find something went wrong you can drop the staging repository with command:
-```
-$ mvn nexus-staging:drop -Prelease;
-```
-
-### Discussion
+## Discussion
 For development related discussion, please go to [dev google group](https://groups.google.com/forum/#!forum/chimera-dev).
 For issues or bugs, please file tickets through [github](https://github.com/intel-hadoop/chimera/issues).

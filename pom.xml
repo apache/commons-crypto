@@ -80,6 +80,10 @@
     <maven-source-plugin.version>2.3</maven-source-plugin.version>
     <apache-rat-plugin.version>0.11</apache-rat-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.3</nexus-staging-maven-plugin.version>
+    <junit.version>4.8.2</junit.version>
+    <guava.version>11.0.2</guava.version>
+    <commons-logging.version>1.1.3</commons-logging.version>
+    <slf4j-api.version>1.7.10</slf4j-api.version>
   </properties>
 
   <build>
@@ -251,24 +255,24 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.2</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <scope>compile</scope>
-      <version>11.0.2</version>
+      <version>${guava.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.1.3</version>
+      <version>${commons-logging.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.10</version>
+      <version>${slf4j-api.version}</version>
      </dependency>
   </dependencies>
 </project>
