@@ -141,10 +141,6 @@ public class Utils {
         System.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY);
   }
 
-  public static SecureRandom getSecureRandom(Properties props) {
-    return SecureRandomFactory.getSecureRandom(props);
-  }
-
   public static String getRandomDevPath(Properties props) {
     String devPath = props.getProperty(CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY);
     if (devPath == null) {
