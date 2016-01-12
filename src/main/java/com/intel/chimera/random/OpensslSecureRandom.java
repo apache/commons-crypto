@@ -40,13 +40,13 @@ import com.intel.chimera.utils.NativeCodeLoader;
  * @see https://wiki.openssl.org/index.php/Random_Numbers
  * @see http://en.wikipedia.org/wiki/RdRand
  */
-public class OpensslSecureRandom extends Random {
+public class OpensslSecureRandom extends Random implements SecureRandom {
   private static final long serialVersionUID = -7828193502768789584L;
   private static final Log LOG =
       LogFactory.getLog(OpensslSecureRandom.class.getName());
   
   /** If native SecureRandom unavailable, use java SecureRandom */
-  private java.security.SecureRandom fallback = null;
+  private JavaSecureRandom fallback = null;
   private static boolean nativeEnabled = false;
   static {
     if (NativeCodeLoader.isNativeCodeLoaded()) {
@@ -65,7 +65,7 @@ public class OpensslSecureRandom extends Random {
   
   public OpensslSecureRandom(Properties props) {
     if (!nativeEnabled) {
-      fallback = new java.security.SecureRandom();
+      fallback = new JavaSecureRandom();
     }
   }
   
@@ -111,6 +111,11 @@ public class OpensslSecureRandom extends Random {
     
     return next >>> (numBytes * 8 - numBits);
   }
-  
-  
+
+  @Override
+  public void close() {
+    if (!nativeEnabled && fallback !=null) {
+      fallback.close();
+    }
+  }
 }

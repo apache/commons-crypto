@@ -17,24 +17,22 @@
  */
 package com.intel.chimera.random;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
 
+import com.intel.chimera.utils.IOUtils;
+import com.intel.chimera.utils.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.intel.chimera.utils.Utils;
-import com.intel.chimera.utils.IOUtils;
 
 /**
  * A Random implementation that uses random bytes sourced from the
  * operating system.
  */
-public class OsSecureRandom extends Random implements Closeable {
+public class OsSecureRandom extends Random implements SecureRandom {
   public static final Log LOG = LogFactory.getLog(OsSecureRandom.class);
   
   private static final long serialVersionUID = 6391500337172057900L;

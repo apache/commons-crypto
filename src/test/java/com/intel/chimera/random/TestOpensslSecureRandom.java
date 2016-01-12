@@ -17,99 +17,24 @@
  */
 package com.intel.chimera.random;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.Properties;
 
-import org.junit.Test;
+import com.intel.chimera.ConfigurationKeys;
+import static junit.framework.Assert.fail;
 
-public class TestOpensslSecureRandom {
-  
-  @Test(timeout=120000)
-  public void testRandomBytes() throws Exception {
-    OpensslSecureRandom random = new OpensslSecureRandom(new Properties());
-    
-    // len = 16
-    checkRandomBytes(random, 16);
-    // len = 32
-    checkRandomBytes(random, 32);
-    // len = 128
-    checkRandomBytes(random, 128);
-    // len = 256
-    checkRandomBytes(random, 256);
-  }
-  
-  /**
-   * Test will timeout if secure random implementation always returns a 
-   * constant value.
-   */
-  private void checkRandomBytes(OpensslSecureRandom random, int len) {
-    byte[] bytes = new byte[len];
-    byte[] bytes1 = new byte[len];
-    random.nextBytes(bytes);
-    random.nextBytes(bytes1);
-    
-    while (Arrays.equals(bytes, bytes1)) {
-      random.nextBytes(bytes1);
+public class TestOpensslSecureRandom extends AbstractRandomTest {
+
+  @Override
+  public SecureRandom getSecureRandom() throws IOException {
+    Properties props = new Properties();
+    props.setProperty(ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY,
+        OpensslSecureRandom.class.getName());
+    SecureRandom random = SecureRandomFactory.getSecureRandom(props);
+    if ( !(random instanceof OpensslSecureRandom)) {
+      fail("The SecureRandom should be: " + OpensslSecureRandom.class.getName());
     }
+    return random;
   }
-  
-  /**
-   * Test will timeout if secure random implementation always returns a 
-   * constant value.
-   */
-  @Test(timeout=120000)
-  public void testRandomInt() throws Exception {
-    OpensslSecureRandom random = new OpensslSecureRandom(new Properties());
-    
-    int rand1 = random.nextInt();
-    int rand2 = random.nextInt();
-    while (rand1 == rand2) {
-      rand2 = random.nextInt();
-    }
-  }
-  
-  /**
-   * Test will timeout if secure random implementation always returns a 
-   * constant value.
-   */
-  @Test(timeout=120000)
-  public void testRandomLong() throws Exception {
-    OpensslSecureRandom random = new OpensslSecureRandom(new Properties());
-    
-    long rand1 = random.nextLong();
-    long rand2 = random.nextLong();
-    while (rand1 == rand2) {
-      rand2 = random.nextLong();
-    }
-  }
-  
-  /**
-   * Test will timeout if secure random implementation always returns a 
-   * constant value.
-   */
-  @Test(timeout=120000)
-  public void testRandomFloat() throws Exception {
-    OpensslSecureRandom random = new OpensslSecureRandom(new Properties());
-    
-    float rand1 = random.nextFloat();
-    float rand2 = random.nextFloat();
-    while (rand1 == rand2) {
-      rand2 = random.nextFloat();
-    }
-  }
-  
-  /**
-   * Test will timeout if secure random implementation always returns a 
-   * constant value.
-   */
-  @Test(timeout=120000)
-  public void testRandomDouble() throws Exception {
-    OpensslSecureRandom random = new OpensslSecureRandom(new Properties());
-    
-    double rand1 = random.nextDouble();
-    double rand2 = random.nextDouble();
-    while (rand1 == rand2) {
-      rand2 = random.nextDouble();
-    }
-  }
+
 }

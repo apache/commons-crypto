@@ -20,17 +20,14 @@ package com.intel.chimera.crypto;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
 import java.util.Properties;
-
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.google.common.base.Preconditions;
 import com.intel.chimera.utils.Utils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Implement the {@link com.intel.chimera.crypto.Cipher} using JCE provider.
@@ -41,7 +38,6 @@ public class JceCipher implements Cipher {
   private final String provider;
   private final CipherTransformation transformation;
   private final javax.crypto.Cipher cipher;
-  private SecureRandom random;
 
   /**
    * Constructs a {@link com.intel.chimera.crypto.Cipher} based on JCE
@@ -54,16 +50,6 @@ public class JceCipher implements Cipher {
       throws GeneralSecurityException {
     this.provider = Utils.getJCEProvider(props);
     this.transformation = transformation;
-
-    final String secureRandomAlg = Utils.getSecureRandomAlg(props);
-    try {
-      random = (provider != null) ?
-          SecureRandom.getInstance(secureRandomAlg, provider) :
-            SecureRandom.getInstance(secureRandomAlg);
-    } catch (GeneralSecurityException e) {
-      LOG.warn(e.getMessage());
-      random = new SecureRandom();
-    }
 
     if (provider == null || provider.isEmpty()) {
       cipher = javax.crypto.Cipher.getInstance(transformation.getName());
@@ -136,16 +122,5 @@ public class JceCipher implements Cipher {
     } catch(Exception e) {
       throw new IOException(e);
     }
-  }
-
-  /**
-   * Generates a number of secure, random bytes suitable for cryptographic use.
-   * This method needs to be thread-safe.
-   *
-   * @param bytes byte array to populate with random data
-   */
-  @Override
-  public void generateSecureRandom(byte[] bytes) {
-    random.nextBytes(bytes);
   }
 }

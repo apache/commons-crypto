@@ -64,11 +64,4 @@ public interface Cipher {
    */
   int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException;
 
-  /**
-   * Generates a number of secure, random bytes suitable for cryptographic use.
-   * This method needs to be thread-safe.
-   *
-   * @param bytes byte array to populate with random data
-   */
-  void generateSecureRandom(byte[] bytes);
 }

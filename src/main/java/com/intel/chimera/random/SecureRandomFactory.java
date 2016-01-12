@@ -17,13 +17,31 @@
  */
 package com.intel.chimera.random;
 
-import java.io.IOException;
 import java.util.Properties;
 
-public class TestOsSecureRandom extends AbstractRandomTest{
+import com.intel.chimera.utils.ReflectionUtils;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
 
-  @Override
-  public SecureRandom getSecureRandom() throws IOException {
-    return new OsSecureRandom(new Properties());
+/**
+ * The Factory for SecureRandom.
+ */
+public class SecureRandomFactory {
+
+  public static SecureRandom getSecureRandom(Properties props) {
+    String secureRandomImpl = props.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
+    if (secureRandomImpl == null) {
+      secureRandomImpl = System.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
+    }
+    final Class<? extends SecureRandom> klass = ReflectionUtils
+        .getClass(secureRandomImpl, OsSecureRandom.class, SecureRandom.class);
+
+    SecureRandom random;
+    try {
+      random = ReflectionUtils.newInstance(klass, props);
+    } catch (Exception e) {
+      random = new JavaSecureRandom();
+    }
+
+    return random;
   }
 }

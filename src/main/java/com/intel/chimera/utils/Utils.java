@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Random;
@@ -32,8 +31,11 @@ import com.intel.chimera.crypto.CipherFactory;
 import com.intel.chimera.crypto.CipherTransformation;
 import com.intel.chimera.crypto.UnsupportedCipherException;
 import com.intel.chimera.random.OsSecureRandom;
+import com.intel.chimera.random.SecureRandom;
+import com.intel.chimera.random.SecureRandomFactory;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
+import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY;
@@ -47,7 +49,6 @@ import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PAT
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
 
 public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
@@ -138,33 +139,6 @@ public class Utils {
     return props.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY) != null ?
         props.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY) :
         System.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY);
-  }
-
-  public static String getSecureRandomAlg(Properties props) {
-    String randomAlg = props.getProperty(CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY);
-    if (randomAlg == null) {
-      randomAlg = System.getProperty(CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY,
-          CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT);
-    }
-    return randomAlg;
-  }
-
-  public static Random getSecureRandom(Properties props) {
-    String secureRandomImpl = props.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
-    if (secureRandomImpl == null) {
-      secureRandomImpl = System.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
-    }
-    final Class<? extends Random> klass = ReflectionUtils.getClass(
-        secureRandomImpl, OsSecureRandom.class, Random.class);
-
-    Random random;
-    try {
-      random = ReflectionUtils.newInstance(klass, props);
-    } catch (Exception e) {
-      random = new SecureRandom();
-    }
-
-    return random;
   }
 
   public static String getRandomDevPath(Properties props) {
