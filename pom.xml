@@ -163,7 +163,6 @@
             <exclude>project/project/target/config-classes/*</exclude>
             <exclude>project/target/</exclude>
             <exclude>src/main/java/com/intel/chimera/VERSION</exclude>
-            <exclude>version.sbt</exclude>
           </excludes>
         </configuration>
       </plugin>
