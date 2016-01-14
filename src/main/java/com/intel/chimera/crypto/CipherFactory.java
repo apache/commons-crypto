@@ -60,7 +60,7 @@ public class CipherFactory {
               break;
             }
           } catch (Exception e) {
-            LOG.debug("Cipher {} is not available or transformation {} is not supported.",
+            LOG.error("Cipher {} is not available or transformation {} is not supported.",
                 klass.getName(), transformation.getName());
           }
         }
