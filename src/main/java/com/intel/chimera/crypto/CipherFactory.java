@@ -20,7 +20,7 @@ package com.intel.chimera.crypto;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.intel.chimera.utils.ReflectionUtils;
-import com.intel.chimera.utils.Utils;
+import com.intel.chimera.utils.ChimeraUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,12 +89,12 @@ public class CipherFactory {
    */
   public static Cipher getInstance(Properties props)
       throws GeneralSecurityException {
-    return getInstance(props, Utils.getCripherTransformation(props));
+    return getInstance(props, ChimeraUtils.getCripherTransformation(props));
   }
 
   private static List<Class<? extends Cipher>> getCipherClasses(Properties props) {
     List<Class<? extends Cipher>> result = Lists.newArrayList();
-    String cipherClassString = Utils.getCipherClassString(props);
+    String cipherClassString = ChimeraUtils.getCipherClassString(props);
     if (cipherClassString == null) {
       LOG.debug("No cipher classes configured.");
       return null;

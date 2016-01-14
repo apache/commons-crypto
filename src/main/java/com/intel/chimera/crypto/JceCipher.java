@@ -25,7 +25,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.utils.Utils;
+import com.intel.chimera.utils.ChimeraUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -48,7 +48,7 @@ public class JceCipher implements Cipher {
    */
   public JceCipher(Properties props, CipherTransformation transformation)
       throws GeneralSecurityException {
-    this.provider = Utils.getJCEProvider(props);
+    this.provider = ChimeraUtils.getJCEProvider(props);
     this.transformation = transformation;
 
     if (provider == null || provider.isEmpty()) {

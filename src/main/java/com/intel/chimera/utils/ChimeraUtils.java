@@ -23,16 +23,12 @@ import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Random;
 
 import com.google.common.base.Preconditions;
 import com.intel.chimera.crypto.Cipher;
 import com.intel.chimera.crypto.CipherFactory;
 import com.intel.chimera.crypto.CipherTransformation;
 import com.intel.chimera.crypto.UnsupportedCipherException;
-import com.intel.chimera.random.OsSecureRandom;
-import com.intel.chimera.random.SecureRandom;
-import com.intel.chimera.random.SecureRandomFactory;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
@@ -40,17 +36,14 @@ import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_JCE_PROVIDER_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
 
-public class Utils {
+public class ChimeraUtils {
   private static final int MIN_BUFFER_SIZE = 512;
 
   protected static final CipherTransformation AES_CTR_NOPADDING = CipherTransformation.AES_CTR_NOPADDING;
@@ -221,6 +214,18 @@ public class Utils {
   public static Cipher getCipherInstance(Properties props) throws IOException {
     try {
       return CipherFactory.getInstance(props);
+    } catch(GeneralSecurityException e) {
+      throw new IOException(e);
+    }
+  }
+
+  /**
+   * Helper method to create a Cipher instance and throws only IOException
+   */
+  public static Cipher getCipherInstance(Properties props,
+      CipherTransformation transformation) throws IOException {
+    try {
+      return CipherFactory.getInstance(props, transformation);
     } catch(GeneralSecurityException e) {
       throw new IOException(e);
     }
