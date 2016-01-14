@@ -52,22 +52,9 @@ public class CryptoInputStream extends InputStream implements
   private final byte[] initIV;
   private byte[] iv;
 
-  private long streamOffset = 0; // Underlying stream offset.
   private boolean cipherReset = false;
 
   private final byte[] oneByteBuf = new byte[1];
-
-  /**
-   * Input data buffer. The data starts at inBuffer.position() and ends at
-   * to inBuffer.limit().
-   */
-  private ByteBuffer inBuffer;
-
-  /**
-   * The decrypted data buffer. The data starts at outBuffer.position() and
-   * ends at outBuffer.limit();
-   */
-  private ByteBuffer outBuffer;
 
   /**
    * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer}
@@ -76,6 +63,20 @@ public class CryptoInputStream extends InputStream implements
    */
   private byte padding;
   private boolean closed;
+
+  protected long streamOffset = 0; // Underlying stream offset.
+
+  /**
+   * Input data buffer. The data starts at inBuffer.position() and ends at
+   * to inBuffer.limit().
+   */
+  protected ByteBuffer inBuffer;
+
+  /**
+   * The decrypted data buffer. The data starts at outBuffer.position() and
+   * ends at outBuffer.limit();
+   */
+  protected ByteBuffer outBuffer;
 
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
@@ -103,6 +104,16 @@ public class CryptoInputStream extends InputStream implements
       int bufferSize,
       byte[] key,
       byte[] iv) throws IOException {
+    this(input, cipher, bufferSize, key, iv, 0);
+  }
+
+  protected CryptoInputStream(
+      Input input,
+      Cipher cipher,
+      int bufferSize,
+      byte[] key,
+      byte[] iv,
+      long streamOffset) throws IOException {
     Utils.checkStreamCipher(cipher);
 
     this.input = input;
@@ -111,7 +122,7 @@ public class CryptoInputStream extends InputStream implements
     this.key = key.clone();
     this.initIV = iv.clone();
     this.iv = iv.clone();
-    this.streamOffset = 0;
+    this.streamOffset = streamOffset;
 
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize);
@@ -274,12 +285,44 @@ public class CryptoInputStream extends InputStream implements
     }
   }
 
+  protected long getStreamOffset() {
+    return streamOffset;
+  }
+
+  /**
+   * Get the buffer size
+   */
+  protected int getBufferSize() {
+    return bufferSize;
+  }
+
+  /**
+   * Get the key
+   */
+  protected byte[] getKey() {
+    return key;
+  }
+
+  /**
+   * Get the initialization vector
+   */
+  protected byte[] getInitIV() {
+    return initIV;
+  }
+
+  /**
+   * Get the internal Cipher
+   */
+  protected Cipher getCipher() {
+    return cipher;
+  }
+
   /**
    * Do the decryption using inBuffer as input and outBuffer as output.
    * Upon return, inBuffer is cleared; the decrypted data starts at
    * outBuffer.position() and ends at outBuffer.limit();
    */
-  private void decrypt() throws IOException {
+  protected void decrypt() throws IOException {
     Preconditions.checkState(inBuffer.position() >= padding);
     if(inBuffer.position() == padding) {
       // There is no real data in inBuffer.
@@ -308,7 +351,7 @@ public class CryptoInputStream extends InputStream implements
    * decryption, <i>n</i> is the number of bytes decrypted.
    * The buf's limit will not have changed.
    */
-  private void decryptInPlace(ByteBuffer buf) throws IOException {
+  protected void decryptInPlace(ByteBuffer buf) throws IOException {
     Preconditions.checkState(inBuffer.position() >= padding);
     Preconditions.checkState(buf.isDirect());
     Preconditions.checkState(buf.remaining() >= inBuffer.position());
@@ -323,12 +366,39 @@ public class CryptoInputStream extends InputStream implements
     inBuffer.clear();
   }
 
+  /**
+   * Decrypt all data in buf: total n bytes from given start position.
+   * Output is also buf and same start position.
+   * buf.position() and buf.limit() should be unchanged after decryption.
+   */
+  protected void decrypt(ByteBuffer buf, int offset, int len)
+      throws IOException {
+    final int pos = buf.position();
+    final int limit = buf.limit();
+    int n = 0;
+    while (n < len) {
+      buf.position(offset + n);
+      buf.limit(offset + n + Math.min(len - n, inBuffer.remaining()));
+      inBuffer.put(buf);
+      // Do decryption
+      try {
+        decrypt();
+        buf.position(offset + n);
+        buf.limit(limit);
+        n += outBuffer.remaining();
+        buf.put(outBuffer);
+      } finally {
+        padding = postDecryption(streamOffset - (len - n));
+      }
+    }
+    buf.position(pos);
+  }
 
   /**
    * This method is executed immediately after decryption. Check whether
    * cipher should be updated and recalculate padding if needed.
    */
-  private byte postDecryption(long position) throws IOException {
+  protected byte postDecryption(long position) throws IOException {
     byte padding = 0;
     if (cipherReset) {
       /*
@@ -344,16 +414,16 @@ public class CryptoInputStream extends InputStream implements
     return padding;
   }
 
-  private long getCounter(long position) {
+  protected long getCounter(long position) {
     return position / cipher.getTransformation().getAlgorithmBlockSize();
   }
 
-  private byte getPadding(long position) {
+  protected byte getPadding(long position) {
     return (byte)(position % cipher.getTransformation().getAlgorithmBlockSize());
   }
 
   /** Calculate the counter and iv, reset the cipher. */
-  private void resetCipher(long position)
+  protected void resetCipher(long position)
       throws IOException {
     final long counter = getCounter(position);
     Utils.calculateIV(initIV, counter, iv);
@@ -365,7 +435,7 @@ public class CryptoInputStream extends InputStream implements
    * Reset the underlying stream offset; clear {@link #inBuffer} and
    * {@link #outBuffer}. This Typically happens during {@link #skip(long)}.
    */
-  private void resetStreamOffset(long offset) throws IOException {
+  protected void resetStreamOffset(long offset) throws IOException {
     streamOffset = offset;
     inBuffer.clear();
     outBuffer.clear();
@@ -375,7 +445,7 @@ public class CryptoInputStream extends InputStream implements
     inBuffer.position(padding); // Set proper position for input data.
   }
 
-  private void decryptBuffer(ByteBuffer out)
+  protected void decryptBuffer(ByteBuffer out)
       throws IOException {
     int inputSize = inBuffer.remaining();
     int n = cipher.update(inBuffer, out);
@@ -390,7 +460,7 @@ public class CryptoInputStream extends InputStream implements
     }
   }
 
-  private void checkStream() throws IOException {
+  protected void checkStream() throws IOException {
     if (closed) {
       throw new IOException("Stream closed");
     }

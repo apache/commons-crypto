@@ -28,6 +28,7 @@ import com.google.common.base.Preconditions;
  * Implement the Cipher using JNI into OpenSSL.
  */
 public class OpensslCipher implements Cipher {
+  private final Properties props;
   private final CipherTransformation transformation;
   private final Openssl cipher;
 
@@ -39,6 +40,7 @@ public class OpensslCipher implements Cipher {
    */
   public OpensslCipher(Properties props, CipherTransformation transformation)
       throws GeneralSecurityException {
+    this.props = props;
     this.transformation = transformation;
 
     String loadingFailureReason = Openssl.getLoadingFailureReason();
@@ -52,6 +54,11 @@ public class OpensslCipher implements Cipher {
   @Override
   public CipherTransformation getTransformation() {
     return transformation;
+  }
+
+  @Override
+  public Properties getProperties() {
+    return props;
   }
 
   /**

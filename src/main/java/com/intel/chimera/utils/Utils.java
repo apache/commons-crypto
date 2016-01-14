@@ -161,6 +161,13 @@ public class Utils {
     }
   }
 
+  /** AES/CTR/NoPadding is required */
+  public static void checkPositionedStreamCipher(Cipher cipher) {
+    if (cipher.getTransformation() != CipherTransformation.AES_CTR_NOPADDING) {
+      throw new UnsupportedCipherException("AES/CTR/NoPadding is required");
+    }
+  }
+
   /** Check and floor buffer size */
   public static int checkBufferSize(Cipher cipher, int bufferSize) {
     Preconditions.checkArgument(bufferSize >= MIN_BUFFER_SIZE,
