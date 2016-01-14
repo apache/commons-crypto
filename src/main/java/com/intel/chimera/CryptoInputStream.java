@@ -25,10 +25,11 @@ import java.util.Properties;
 
 import com.google.common.base.Preconditions;
 import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.CipherFactory;
 import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;
-import com.intel.chimera.utils.ChimeraUtils;
+import com.intel.chimera.utils.Utils;
 
 /**
  * CryptoInputStream decrypts data. It is not thread-safe. AES CTR mode is
@@ -78,12 +79,12 @@ public class CryptoInputStream extends InputStream implements
 
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
-    this(in, ChimeraUtils.getCipherInstance(props), ChimeraUtils.getBufferSize(props), key, iv);
+    this(in, CipherFactory.getInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
   public CryptoInputStream(Properties props, ReadableByteChannel in,
       byte[] key, byte[] iv) throws IOException {
-    this(in,  ChimeraUtils.getCipherInstance(props), ChimeraUtils.getBufferSize(props), key, iv);
+    this(in, CipherFactory.getInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
   public CryptoInputStream(InputStream in, Cipher cipher,
@@ -102,11 +103,11 @@ public class CryptoInputStream extends InputStream implements
       int bufferSize,
       byte[] key,
       byte[] iv) throws IOException {
-    ChimeraUtils.checkStreamCipher(cipher);
+    Utils.checkStreamCipher(cipher);
 
     this.input = input;
     this.cipher = cipher;
-    this.bufferSize = ChimeraUtils.checkBufferSize(cipher, bufferSize);
+    this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
     this.key = key.clone();
     this.initIV = iv.clone();
     this.iv = iv.clone();
@@ -355,7 +356,7 @@ public class CryptoInputStream extends InputStream implements
   private void resetCipher(long position)
       throws IOException {
     final long counter = getCounter(position);
-    ChimeraUtils.calculateIV(initIV, counter, iv);
+    Utils.calculateIV(initIV, counter, iv);
     cipher.init(Cipher.DECRYPT_MODE, key, iv);
     cipherReset = false;
   }
@@ -397,7 +398,7 @@ public class CryptoInputStream extends InputStream implements
 
   /** Forcibly free the direct buffers. */
   private void freeBuffers() {
-    ChimeraUtils.freeDirectBuffer(inBuffer);
-    ChimeraUtils.freeDirectBuffer(outBuffer);
+    Utils.freeDirectBuffer(inBuffer);
+    Utils.freeDirectBuffer(outBuffer);
   }
 }

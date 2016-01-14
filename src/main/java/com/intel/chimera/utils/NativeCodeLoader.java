@@ -77,9 +77,9 @@ public class NativeCodeLoader {
 
   static File findNativeLibrary() {
     // Try to load the library in chimera.lib.path */
-    String nativeLibraryPath = ChimeraUtils
+    String nativeLibraryPath = Utils
         .getLibPath();
-    String nativeLibraryName = ChimeraUtils
+    String nativeLibraryName = Utils
         .getLibName();
 
     // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
@@ -118,7 +118,7 @@ public class NativeCodeLoader {
 
     // Temporary folder for the native lib. Use the value of
     // chimera.tempdir or java.io.tmpdir
-    String tempFolder = new File(ChimeraUtils.getTmpDir())
+    String tempFolder = new File(Utils.getTmpDir())
         .getAbsolutePath();
 
     // Extract and load a native library inside the jar file

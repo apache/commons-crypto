@@ -17,16 +17,13 @@
  */
 package com.intel.chimera.utils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Properties;
 
 import com.google.common.base.Preconditions;
 import com.intel.chimera.crypto.Cipher;
-import com.intel.chimera.crypto.CipherFactory;
 import com.intel.chimera.crypto.CipherTransformation;
 import com.intel.chimera.crypto.UnsupportedCipherException;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
@@ -43,7 +40,7 @@ import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PAT
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
 import static com.intel.chimera.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
 
-public class ChimeraUtils {
+public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
 
   protected static final CipherTransformation AES_CTR_NOPADDING = CipherTransformation.AES_CTR_NOPADDING;
@@ -55,14 +52,14 @@ public class ChimeraUtils {
   private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING.getAlgorithmBlockSize();
 
   static {
-    loadSnappySystemProperties();
+    loadChimeraSystemProperties();
   }
 
   /**
    * load system properties when configuration file of the name
    * {@link #CHIMERA_SYSTEM_PROPERTIES_FILE} is found
    */
-  private static void loadSnappySystemProperties() {
+  private static void loadChimeraSystemProperties() {
     try {
       InputStream is = Thread.currentThread().getContextClassLoader()
           .getResourceAsStream(CHIMERA_SYSTEM_PROPERTIES_FILE);
@@ -205,29 +202,6 @@ public class ChimeraUtils {
         counter >>>= 8;
       }
       IV[i] = (byte) sum;
-    }
-  }
-
-  /**
-   * Helper method to create a Cipher instance and throws only IOException
-   */
-  public static Cipher getCipherInstance(Properties props) throws IOException {
-    try {
-      return CipherFactory.getInstance(props);
-    } catch(GeneralSecurityException e) {
-      throw new IOException(e);
-    }
-  }
-
-  /**
-   * Helper method to create a Cipher instance and throws only IOException
-   */
-  public static Cipher getCipherInstance(Properties props,
-      CipherTransformation transformation) throws IOException {
-    try {
-      return CipherFactory.getInstance(props, transformation);
-    } catch(GeneralSecurityException e) {
-      throw new IOException(e);
     }
   }
 }
