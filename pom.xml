@@ -60,19 +60,6 @@
     <url>git@github.com:intel-hadoop/chimera.git</url>
   </scm>
 
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.3</version>
-        <configuration>
-          <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
-
   <properties>
     <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
@@ -174,6 +161,43 @@
   </build>
 
   <profiles>
+    <!-- FindBugs -->
+    <profile>
+      <id>findbugs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <version>3.0.2</version>
+            <configuration>
+              <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+              <!--
+                  Enables analysis which takes more memory but finds more bugs.
+                  If you run out of memory, changes the value of the effort element
+                  to 'Low'.
+                -->
+              <effort>Max</effort>
+              <failOnError>true</failOnError>
+              <threshold>Low</threshold>
+              <findbugsXmlOutput>true</findbugsXmlOutput>
+              <xmlOutput>true</xmlOutput>
+            </configuration>
+            <executions>
+              <execution>
+              <phase>compile</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>release</id>
       <build>

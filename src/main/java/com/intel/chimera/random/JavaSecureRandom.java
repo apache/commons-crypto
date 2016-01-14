@@ -23,6 +23,8 @@ package com.intel.chimera.random;
 public class JavaSecureRandom extends java.security.SecureRandom
     implements SecureRandom {
 
+  private static final long serialVersionUID = 2228348093570988751L;
+
   @Override
   public void close() {
     // do nothing

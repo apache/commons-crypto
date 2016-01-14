@@ -2,6 +2,6 @@ language: java
 jdk:
   - oraclejdk7
 script:
-  - make
-  - mvn clean test
+  - mvn apache-rat:check
+  - mvn clean test -Pfindbugs
 

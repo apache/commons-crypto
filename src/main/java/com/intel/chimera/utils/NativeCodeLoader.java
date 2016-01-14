@@ -179,10 +179,12 @@ public class NativeCodeLoader {
 
       // Check whether the contents are properly copied from the resource folder
       {
-        InputStream nativeIn = NativeCodeLoader.class
-            .getResourceAsStream(nativeLibraryFilePath);
-        InputStream extractedLibIn = new FileInputStream(extractedLibFile);
+        InputStream nativeIn = null;
+        InputStream extractedLibIn = null;
         try {
+          nativeIn =
+              NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath);
+          extractedLibIn = new FileInputStream(extractedLibFile);
           if (!contentsEquals(nativeIn, extractedLibIn))
             throw new RuntimeException(String.format(
                     "Failed to write a native library file at %s",

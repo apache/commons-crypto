@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import com.intel.chimera.crypto.Cipher;
 
 public class ReflectionUtils {
-  public static Logger LOG = LoggerFactory.getLogger(ReflectionUtils.class);
 
   private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>>
     CACHE_CLASSES = new WeakHashMap<ClassLoader, Map<String, WeakReference<Class<?>>>>();
