@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import com.google.common.base.Preconditions;
 import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.crypto.CipherFactory;
 import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;
@@ -78,12 +79,12 @@ public class CryptoInputStream extends InputStream implements
 
   public CryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv) throws IOException {
-    this(in, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
+    this(in, CipherFactory.getInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
   public CryptoInputStream(Properties props, ReadableByteChannel in,
       byte[] key, byte[] iv) throws IOException {
-    this(in,  Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
+    this(in, CipherFactory.getInstance(props), Utils.getBufferSize(props), key, iv);
   }
 
   public CryptoInputStream(InputStream in, Cipher cipher,
