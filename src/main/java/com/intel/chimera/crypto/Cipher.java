@@ -20,6 +20,7 @@ package com.intel.chimera.crypto;
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Properties;
 
 /**
  * The interface of cryptographic cipher for encryption and decryption.
@@ -33,6 +34,11 @@ public interface Cipher extends Closeable {
    * @return the CipherTransformation for this cipher.
    */
   CipherTransformation getTransformation();
+
+  /**
+   * Get the properties for this cipher.
+   */
+  Properties getProperties();
 
   /**
    * Initializes the cipher with mode, key and iv.

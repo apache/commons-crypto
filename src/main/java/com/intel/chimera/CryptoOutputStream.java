@@ -100,6 +100,12 @@ public class CryptoOutputStream extends OutputStream implements
   public CryptoOutputStream(Output output, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv)
       throws IOException {
+    this(output, cipher, bufferSize, key, iv, 0);
+  }
+
+  protected CryptoOutputStream(Output output, Cipher cipher,
+      int bufferSize, byte[] key, byte[] iv, long streamOffset)
+      throws IOException {
     Utils.checkStreamCipher(cipher);
 
     this.output = output;
@@ -110,7 +116,7 @@ public class CryptoOutputStream extends OutputStream implements
     this.iv = iv.clone();
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-    this.streamOffset = 0;
+    this.streamOffset = streamOffset;
 
     resetCipher();
   }

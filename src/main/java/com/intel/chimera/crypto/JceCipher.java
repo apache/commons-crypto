@@ -26,16 +26,12 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.google.common.base.Preconditions;
 import com.intel.chimera.utils.Utils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Implement the {@link com.intel.chimera.crypto.Cipher} using JCE provider.
  */
 public class JceCipher implements Cipher {
-  private static final Log LOG = LogFactory.getLog(JceCipher.class.getName());
-
-  private final String provider;
+  private final Properties props;
   private final CipherTransformation transformation;
   private final javax.crypto.Cipher cipher;
 
@@ -48,9 +44,10 @@ public class JceCipher implements Cipher {
    */
   public JceCipher(Properties props, CipherTransformation transformation)
       throws GeneralSecurityException {
-    this.provider = Utils.getJCEProvider(props);
+    this.props = props;
     this.transformation = transformation;
 
+    String provider = Utils.getJCEProvider(props);
     if (provider == null || provider.isEmpty()) {
       cipher = javax.crypto.Cipher.getInstance(transformation.getName());
     } else {
@@ -61,6 +58,11 @@ public class JceCipher implements Cipher {
   @Override
   public CipherTransformation getTransformation() {
     return transformation;
+  }
+
+  @Override
+  public Properties getProperties() {
+    return props;
   }
 
   /**
