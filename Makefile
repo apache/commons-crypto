@@ -67,6 +67,9 @@ mac32:
 linux32:
 	$(MAKE) native OS_NAME=Linux OS_ARCH=x86
 
+linux64:
+	$(MAKE) native OS_NAME=Linux OS_ARCH=x86_64
+
 freebsd64:
 	$(MAKE) native OS_NAME=FreeBSD OS_ARCH=x86_64
 

@@ -25,6 +25,177 @@
   <name>chimera</name>
   <url>https://github.com/intel-hadoop/chimera</url>
 
+  <properties>
+    <!-- The property "target.name" is used to specify the ant target, The All target will use
+    OSInfo.java to detect the OS info and arch to generate the native binary for detected platform.
+    User is able to specify the platform by maven profiles.-->
+    <target.name>all</target.name>
+    <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+    <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
+    <maven-source-plugin.version>2.3</maven-source-plugin.version>
+    <findbugs-maven-plugin.version>3.0.2</findbugs-maven-plugin.version>
+    <apache-rat-plugin.version>0.11</apache-rat-plugin.version>
+    <nexus-staging-maven-plugin.version>1.6.3</nexus-staging-maven-plugin.version>
+    <junit.version>4.8.2</junit.version>
+    <guava.version>11.0.2</guava.version>
+    <commons-logging.version>1.1.3</commons-logging.version>
+    <slf4j-api.version>1.7.10</slf4j-api.version>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>win32</id>
+      <properties>
+        <target.name>win32</target.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>win64</id>
+      <properties>
+        <target.name>win64</target.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>mac32</id>
+      <properties>
+        <target.name>mac32</target.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux32</id>
+      <properties>
+        <target.name>linux32</target.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux64</id>
+      <properties>
+        <target.name>linux64</target.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux-arm</id>
+      <properties>
+        <target.name>linux-arm</target.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux-armhf</id>
+      <properties>
+        <target.name>linux-armhf</target.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux-aarch64</id>
+      <properties>
+        <target.name>linux-aarch64</target.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <quiet>true</quiet>
+              <nonavbar>true</nonavbar>
+              <notree>true</notree>
+              <nocomment>true</nocomment>
+              <nohelp>true</nohelp>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- FindBugs -->
+    <profile>
+      <id>findbugs</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <version>${findbugs-maven-plugin.version}</version>
+            <configuration>
+              <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+              <!--
+                  Enables analysis which takes more memory but finds more bugs.
+                  If you run out of memory, changes the value of the effort element
+                  to 'Low'.
+                -->
+              <effort>Max</effort>
+              <failOnError>true</failOnError>
+              <threshold>Low</threshold>
+              <findbugsXmlOutput>true</findbugsXmlOutput>
+              <xmlOutput>true</xmlOutput>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>compile</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -59,19 +230,6 @@
     <developerConnection>scm:git:git@github.com:intel-hadoop/chimera.git</developerConnection>
     <url>git@github.com:intel-hadoop/chimera.git</url>
   </scm>
-
-  <properties>
-    <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-    <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
-    <maven-source-plugin.version>2.3</maven-source-plugin.version>
-    <apache-rat-plugin.version>0.11</apache-rat-plugin.version>
-    <nexus-staging-maven-plugin.version>1.6.3</nexus-staging-maven-plugin.version>
-    <junit.version>4.8.2</junit.version>
-    <guava.version>11.0.2</guava.version>
-    <commons-logging.version>1.1.3</commons-logging.version>
-    <slf4j-api.version>1.7.10</slf4j-api.version>
-  </properties>
 
   <build>
     <pluginManagement>
@@ -134,7 +292,9 @@
               <target name="make">
                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                          classpathref="maven.plugin.classpath"/>
-                <exec executable="make" failonerror="true" dir="${project.basedir}"/>
+                <exec executable="make" failonerror="true" dir="${project.basedir}">
+                  <arg value="${target.name}"/>
+                </exec>
               </target>
             </configuration>
           </execution>
@@ -159,110 +319,6 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <!-- FindBugs -->
-    <profile>
-      <id>findbugs</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <version>3.0.2</version>
-            <configuration>
-              <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
-              <!--
-                  Enables analysis which takes more memory but finds more bugs.
-                  If you run out of memory, changes the value of the effort element
-                  to 'Low'.
-                -->
-              <effort>Max</effort>
-              <failOnError>true</failOnError>
-              <threshold>Low</threshold>
-              <findbugsXmlOutput>true</findbugsXmlOutput>
-              <xmlOutput>true</xmlOutput>
-            </configuration>
-            <executions>
-              <execution>
-              <phase>compile</phase>
-              <goals>
-                <goal>check</goal>
-              </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <quiet>true</quiet>
-              <nonavbar>true</nonavbar>
-              <notree>true</notree>
-              <nocomment>true</nocomment>
-              <nohelp>true</nohelp>
-            </configuration>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>false</autoReleaseAfterClose>
-            </configuration>
-           </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 
   <distributionManagement>
     <snapshotRepository>
