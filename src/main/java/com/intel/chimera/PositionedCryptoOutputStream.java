@@ -23,7 +23,6 @@ import java.nio.channels.WritableByteChannel;
 import java.util.Properties;
 
 import com.intel.chimera.crypto.Cipher;
-import com.intel.chimera.crypto.CipherFactory;
 import com.intel.chimera.output.ChannelOutput;
 import com.intel.chimera.output.Output;
 import com.intel.chimera.output.StreamOutput;
@@ -37,12 +36,12 @@ import com.intel.chimera.utils.Utils;
 public class PositionedCryptoOutputStream extends CryptoOutputStream {
   public PositionedCryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
-    this(out, CipherFactory.getInstance(props), Utils.getBufferSize(props), key, iv, streamOffset);
+    this(out, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   public PositionedCryptoOutputStream(Properties props, WritableByteChannel out,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
-    this(out, CipherFactory.getInstance(props), Utils.getBufferSize(props), key, iv, streamOffset);
+    this(out, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   public PositionedCryptoOutputStream(OutputStream out, Cipher cipher,
@@ -59,6 +58,6 @@ public class PositionedCryptoOutputStream extends CryptoOutputStream {
       int bufferSize, byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     super(output, cipher, bufferSize, key, iv, streamOffset);
-    Utils.checkPositionedStreamCipher(cipher);
+    Utils.checkStreamCipher(cipher);
   }
 }

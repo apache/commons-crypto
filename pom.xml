@@ -34,6 +34,7 @@
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
     <maven-source-plugin.version>2.3</maven-source-plugin.version>
+    <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <findbugs-maven-plugin.version>3.0.2</findbugs-maven-plugin.version>
     <apache-rat-plugin.version>0.11</apache-rat-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.3</nexus-staging-maven-plugin.version>
@@ -41,6 +42,7 @@
     <guava.version>11.0.2</guava.version>
     <commons-logging.version>1.1.3</commons-logging.version>
     <slf4j-api.version>1.7.10</slf4j-api.version>
+    <javac.version>1.7</javac.version>
   </properties>
 
   <profiles>
@@ -276,6 +278,15 @@
           <artifactId>nexus-staging-maven-plugin</artifactId>
           <version>${nexus-staging-maven-plugin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <source>${javac.version}</source>
+            <target>${javac.version}</target>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -316,6 +327,10 @@
             <exclude>src/main/java/com/intel/chimera/VERSION</exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

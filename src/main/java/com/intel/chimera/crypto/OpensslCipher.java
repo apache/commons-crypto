@@ -22,6 +22,10 @@ import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
+
 import com.google.common.base.Preconditions;
 
 /**
@@ -69,7 +73,7 @@ public class OpensslCipher implements Cipher {
    * @throws IOException if cipher initialize fails
    */
   @Override
-  public void init(int mode, byte[] key, byte[] iv) throws IOException {
+  public void init(int mode, byte[] key, byte[] iv) {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(iv);
 
@@ -86,16 +90,12 @@ public class OpensslCipher implements Cipher {
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
-   * @throws IOException if cipher failed to update, for example, there is
-   * insufficient space in the output buffer
+   * @throws ShortBufferException if there is insufficient space
+   * in the output buffer
    */
   @Override
-  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
-    try {
+  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws ShortBufferException {
       return cipher.update(inBuffer, outBuffer);
-    } catch (Exception e) {
-      throw new IOException(e);
-    }
   }
 
   /**
@@ -105,17 +105,23 @@ public class OpensslCipher implements Cipher {
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
-   * @throws IOException if cipher failed to update, for example, there is
-   * insufficient space in the output buffer
+   * @throws BadPaddingException if this cipher is in decryption mode,
+   * and (un)padding has been requested, but the decrypted data is not
+   * bounded by the appropriate padding bytes
+   * @throws IllegalBlockSizeException if this cipher is a block cipher,
+   * no padding has been requested (only in encryption mode), and the total
+   * input length of the data processed by this cipher is not a multiple of
+   * block size; or if this encryption algorithm is unable to
+   * process the input data provided.
+   * @throws ShortBufferException if the given output buffer is too small
+   * to hold the result
    */
   @Override
-  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
-    try {
+  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
+      throws ShortBufferException, IllegalBlockSizeException,
+      BadPaddingException {
       int n = cipher.update(inBuffer, outBuffer);
       return n + cipher.doFinal(outBuffer);
-    } catch (Exception e) {
-      throw new IOException(e);
-    }
   }
 
   /**

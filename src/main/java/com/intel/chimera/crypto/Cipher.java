@@ -18,9 +18,14 @@
 package com.intel.chimera.crypto;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.util.Properties;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
 
 /**
  * The interface of cryptographic cipher for encryption and decryption.
@@ -45,9 +50,18 @@ public interface Cipher extends Closeable {
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param iv Initialization vector for the cipher
-   * @throws IOException if cipher initialize fails
+   * @throws InvalidKeyException if the given key is inappropriate for
+   * initializing this cipher, or its keysize exceeds the maximum allowable
+   * keysize (as determined from the configured jurisdiction policy files).
+   * @throws InvalidAlgorithmParameterException if the given algorithm
+   * parameters are inappropriate for this cipher, or this cipher requires
+   * algorithm parameters and <code>params</code> is null, or the given
+   * algorithm parameters imply a cryptographic strength that would exceed
+   * the legal limits (as determined from the configured jurisdiction
+   * policy files).
    */
-  void init(int mode, byte[] key, byte[] iv) throws IOException;
+  void init(int mode, byte[] key, byte[] iv) throws InvalidKeyException,
+      InvalidAlgorithmParameterException;
 
   /**
    * Continues a multiple-part encryption/decryption operation. The data
@@ -55,10 +69,11 @@ public interface Cipher extends Closeable {
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
-   * @throws IOException if cipher failed to update, for example, there is
-   * * insufficient space in the output buffer
+   * @throws ShortBufferException if there is insufficient space
+   * in the output buffer
    */
-  int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException;
+  int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
+      throws ShortBufferException;
 
   /**
    * Encrypts or decrypts data in a single-part operation, or finishes a
@@ -66,9 +81,19 @@ public interface Cipher extends Closeable {
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
-   * @throws IOException if cipher failed to update, for example, there is
-   * * insufficient space in the output buffer
+   * @throws BadPaddingException if this cipher is in decryption mode,
+   * and (un)padding has been requested, but the decrypted data is not
+   * bounded by the appropriate padding bytes
+   * @throws IllegalBlockSizeException if this cipher is a block cipher,
+   * no padding has been requested (only in encryption mode), and the total
+   * input length of the data processed by this cipher is not a multiple of
+   * block size; or if this encryption algorithm is unable to
+   * process the input data provided.
+   * @throws ShortBufferException if the given output buffer is too small
+   * to hold the result
    */
-  int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException;
+  int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
+      throws ShortBufferException, IllegalBlockSizeException,
+      BadPaddingException;
 
 }

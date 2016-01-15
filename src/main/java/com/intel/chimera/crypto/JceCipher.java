@@ -17,10 +17,15 @@
  */
 package com.intel.chimera.crypto;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.util.Properties;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -70,10 +75,16 @@ public class JceCipher implements Cipher {
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param iv Initialization vector for the cipher
-   * @throws IOException if cipher initialize fails
+   * @throws InvalidAlgorithmParameterException if the given algorithm
+   * parameters are inappropriate for this cipher, or this cipher requires
+   * algorithm parameters and <code>params</code> is null, or the given
+   * algorithm parameters imply a cryptographic strength that would exceed
+   * the legal limits (as determined from the configured jurisdiction
+   * policy files).
    */
   @Override
-  public void init(int mode, byte[] key, byte[] iv) throws IOException {
+  public void init(int mode, byte[] key, byte[] iv) throws InvalidKeyException,
+      InvalidAlgorithmParameterException {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(iv);
 
@@ -81,12 +92,8 @@ public class JceCipher implements Cipher {
     if(mode == ENCRYPT_MODE)
       cipherMode = javax.crypto.Cipher.ENCRYPT_MODE;
 
-    try {
-      cipher.init(cipherMode, new SecretKeySpec(key, "AES"),
-          new IvParameterSpec(iv));
-    } catch (Exception e) {
-      throw new IOException(e);
-    }
+    cipher.init(cipherMode, new SecretKeySpec(key, "AES"),
+        new IvParameterSpec(iv));
   }
 
   /**
@@ -95,16 +102,13 @@ public class JceCipher implements Cipher {
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
-   * @throws IOException if cipher failed to update, for example, there is
-   * insufficient space in the output buffer
+   * @throws ShortBufferException if there is insufficient space
+   * in the output buffer
    */
   @Override
-  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
-    try {
-      return cipher.update(inBuffer, outBuffer);
-    } catch (Exception e) {
-      throw new IOException(e);
-    }
+  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
+      throws ShortBufferException {
+    return cipher.update(inBuffer, outBuffer);
   }
 
   /**
@@ -114,16 +118,22 @@ public class JceCipher implements Cipher {
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
-   * @throws IOException if cipher failed to update, for example, there is
-   * insufficient space in the output buffer
+   * @throws BadPaddingException if this cipher is in decryption mode,
+   * and (un)padding has been requested, but the decrypted data is not
+   * bounded by the appropriate padding bytes
+   * @throws IllegalBlockSizeException if this cipher is a block cipher,
+   * no padding has been requested (only in encryption mode), and the total
+   * input length of the data processed by this cipher is not a multiple of
+   * block size; or if this encryption algorithm is unable to
+   * process the input data provided.
+   * @throws ShortBufferException if the given output buffer is too small
+   * to hold the result
    */
   @Override
-  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws IOException {
-    try {
+  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
+      throws ShortBufferException, IllegalBlockSizeException,
+      BadPaddingException {
       return cipher.doFinal(inBuffer, outBuffer);
-    } catch(Exception e) {
-      throw new IOException(e);
-    }
   }
 
   /**
