@@ -16,7 +16,7 @@ NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
 
 all: $(NATIVE_DLL)
 
-$(TARGET)/jni-classes/com/intel/chimera/crypto/OpensslNative.class : $(SRC)/com/intel/chimera/crypto/OpensslNative.java
+$(TARGET)/jni-classes/com/intel/chimera/cipher/OpensslNative.class : $(SRC)/com/intel/chimera/cipher/OpensslNative.java
 	@mkdir -p $(TARGET)/jni-classes
 	$(JAVAC) -source 1.6 -target 1.6 -d $(TARGET)/jni-classes -sourcepath $(SRC) $<
 
@@ -24,13 +24,13 @@ $(TARGET)/jni-classes/com/intel/chimera/random/OpensslSecureRandomNative.class :
 	@mkdir -p $(TARGET)/jni-classes
 	$(JAVAC) -source 1.6 -target 1.6 -d $(TARGET)/jni-classes -sourcepath $(SRC) $<
 
-$(TARGET)/jni-classes/com/intel/chimera/crypto/OpensslNative.h: $(TARGET)/jni-classes/com/intel/chimera/crypto/OpensslNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ com.intel.chimera.crypto.OpensslNative
+$(TARGET)/jni-classes/com/intel/chimera/cipher/OpensslNative.h: $(TARGET)/jni-classes/com/intel/chimera/cipher/OpensslNative.class
+	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ com.intel.chimera.cipher.OpensslNative
 
 $(TARGET)/jni-classes/com/intel/chimera/random/OpensslSecureRandomNative.h: $(TARGET)/jni-classes/com/intel/chimera/random/OpensslSecureRandomNative.class
 	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ com.intel.chimera.random.OpensslSecureRandomNative
 
-$(CHIMERA_OUT)/OpensslNative.o : $(SRC_NATIVE)/com/intel/chimera/crypto/OpensslNative.c $(TARGET)/jni-classes/com/intel/chimera/crypto/OpensslNative.h
+$(CHIMERA_OUT)/OpensslNative.o : $(SRC_NATIVE)/com/intel/chimera/cipher/OpensslNative.c $(TARGET)/jni-classes/com/intel/chimera/cipher/OpensslNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 

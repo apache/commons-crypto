@@ -25,22 +25,22 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.crypto.Cipher;
-import com.intel.chimera.crypto.CipherFactory;
-import com.intel.chimera.crypto.CipherTransformation;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_CRYPTO_JCE_PROVIDER_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
+import com.intel.chimera.cipher.Cipher;
+import com.intel.chimera.cipher.CipherFactory;
+import com.intel.chimera.cipher.CipherTransformation;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_JCE_PROVIDER_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
 
 public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;

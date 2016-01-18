@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera;
+package com.intel.chimera.conf;
 
-import com.intel.chimera.crypto.JceCipher;
+import com.intel.chimera.cipher.JceCipher;
 
 public class ConfigurationKeys {
 	public static final String CONF_PREFIX = "chimera";

@@ -20,7 +20,7 @@ package com.intel.chimera.random;
 import java.util.Properties;
 
 import com.intel.chimera.utils.ReflectionUtils;
-import static com.intel.chimera.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
 
 /**
  * The Factory for SecureRandom.

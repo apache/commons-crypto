@@ -27,7 +27,7 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-import com.intel.chimera.crypto.Openssl;
+import com.intel.chimera.cipher.Openssl;
 
 public class OpensslCipherTest {
   private static final byte[] key = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,

@@ -18,9 +18,6 @@
 
 package com.intel.chimera.cipher;
 
-import com.intel.chimera.crypto.CipherTransformation;
-import com.intel.chimera.crypto.OpensslCipher;
-
 public class OpensslCipherCryptoTest extends AbstractCipherTest {
 
   @Override

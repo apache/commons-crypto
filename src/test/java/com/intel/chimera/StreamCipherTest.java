@@ -27,15 +27,19 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
-import com.intel.chimera.crypto.CipherTransformation;
+import com.intel.chimera.cipher.CipherTransformation;
+import com.intel.chimera.cipher.JceCipher;
+import com.intel.chimera.cipher.OpensslCipher;
+import com.intel.chimera.stream.CryptoInputStream;
+import com.intel.chimera.stream.CryptoOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.intel.chimera.crypto.Cipher;
-import com.intel.chimera.crypto.Openssl;
+import com.intel.chimera.cipher.Cipher;
+import com.intel.chimera.cipher.Openssl;
 import com.intel.chimera.utils.ReflectionUtils;
 
 public class StreamCipherTest {
@@ -47,10 +51,8 @@ public class StreamCipherTest {
   private byte[] iv = new byte[16];
   private int count = 10000;
 
-  private final String jceCipherClass =
-      "com.intel.chimera.crypto.JceCipher";
-  private final String opensslCipherClass =
-      "com.intel.chimera.crypto.OpensslCipher";
+  private final String jceCipherClass = JceCipher.class.getName();
+  private final String opensslCipherClass = OpensslCipher.class.getName();
 
   private Properties props;
   private CipherTransformation transformation = CipherTransformation

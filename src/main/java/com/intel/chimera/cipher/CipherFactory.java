@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.crypto;
+package com.intel.chimera.cipher;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -44,8 +44,7 @@ public class CipherFactory {
    * @return Cipher the cipher. Null value will be returned if no
    *         cipher classes with transformation configured.
    */
-  public static Cipher getInstance(
-      Properties props,
+  public static Cipher getInstance(Properties props,
       CipherTransformation transformation) throws GeneralSecurityException {
     List<Class<? extends Cipher>> klasses = getCipherClasses(props);
     Cipher cipher = null;
@@ -53,13 +52,14 @@ public class CipherFactory {
       for (Class<? extends Cipher> klass : klasses) {
         try {
           cipher = ReflectionUtils.newInstance(klass, props, transformation);
-          if(cipher != null) {
-            LOG.debug("Using cipher {} for transformation {}.", klass.getName(), transformation.getName());
+          if (cipher != null) {
+            LOG.debug("Using cipher {} for transformation {}.", klass.getName(),
+                transformation.getName());
             break;
           }
         } catch (Exception e) {
-          LOG.error("Cipher {} is not available or transformation {} is not supported.",
-              klass.getName(), transformation.getName());
+          LOG.error("Cipher {} is not available or transformation {} is not " +
+            "supported.", klass.getName(), transformation.getName());
         }
       }
     }

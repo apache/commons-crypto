@@ -25,10 +25,7 @@ import java.util.Properties;
 import javax.xml.bind.DatatypeConverter;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.ConfigurationKeys;
-import com.intel.chimera.crypto.Cipher;
-import com.intel.chimera.crypto.CipherFactory;
-import com.intel.chimera.crypto.CipherTransformation;
+import com.intel.chimera.conf.ConfigurationKeys;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

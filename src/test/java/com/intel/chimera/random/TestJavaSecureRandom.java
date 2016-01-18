@@ -20,7 +20,7 @@ package com.intel.chimera.random;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.intel.chimera.ConfigurationKeys;
+import com.intel.chimera.conf.ConfigurationKeys;
 import static junit.framework.Assert.fail;
 
 public class TestJavaSecureRandom extends AbstractRandomTest {

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.crypto;
+package com.intel.chimera.cipher;
 
 import java.nio.ByteBuffer;
 
@@ -27,8 +27,9 @@ public class OpensslNative {
   public native static long init(long context, int mode, int alg, int padding,
       byte[] key, byte[] iv);
 
-  public native static int update(long context, ByteBuffer input, int inputOffset,
-      int inputLength, ByteBuffer output, int outputOffset, int maxOutputLength);
+  public native static int update(long context, ByteBuffer input,
+      int inputOffset, int inputLength, ByteBuffer output, int outputOffset,
+      int maxOutputLength);
 
   public native static int doFinal(long context, ByteBuffer output, int offset,
       int maxOutputLength);

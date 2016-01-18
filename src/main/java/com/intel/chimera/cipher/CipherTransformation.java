@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.crypto;
+package com.intel.chimera.cipher;
 
 /**
  * Defines properties of a CipherTransformation. Modeled after the ciphers in

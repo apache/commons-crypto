@@ -15,49 +15,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.crypto;
+package com.intel.chimera.cipher;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.utils.Utils;
 
 /**
- * Implement the {@link com.intel.chimera.crypto.Cipher} using JCE provider.
+ * Implement the Cipher using JNI into OpenSSL.
  */
-public class JceCipher implements Cipher {
+public class OpensslCipher implements Cipher {
   private final Properties props;
   private final CipherTransformation transformation;
-  private final javax.crypto.Cipher cipher;
+  private final Openssl cipher;
 
   /**
-   * Constructs a {@link com.intel.chimera.crypto.Cipher} based on JCE
-   * Cipher {@link javax.crypto.Cipher}.
-   * @param props properties for JCE cipher
-   * @param transformation transformation for JCE cipher
-   * @throws GeneralSecurityException if JCE cipher initialize failed
+   * Constructs a {@link com.intel.chimera.cipher.Cipher} using JNI into OpenSSL
+   * @param props properties for OpenSSL cipher
+   * @param transformation transformation for OpenSSL cipher
+   * @throws GeneralSecurityException if OpenSSL cipher initialize failed
    */
-  public JceCipher(Properties props, CipherTransformation transformation)
+  public OpensslCipher(Properties props, CipherTransformation transformation)
       throws GeneralSecurityException {
     this.props = props;
     this.transformation = transformation;
 
-    String provider = Utils.getJCEProvider(props);
-    if (provider == null || provider.isEmpty()) {
-      cipher = javax.crypto.Cipher.getInstance(transformation.getName());
-    } else {
-      cipher = javax.crypto.Cipher.getInstance(transformation.getName(), provider);
+    String loadingFailureReason = Openssl.getLoadingFailureReason();
+    if (loadingFailureReason != null) {
+      throw new RuntimeException(loadingFailureReason);
     }
+
+    cipher = Openssl.getInstance(transformation.getName());
   }
 
   @Override
@@ -75,25 +70,18 @@ public class JceCipher implements Cipher {
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param iv Initialization vector for the cipher
-   * @throws InvalidAlgorithmParameterException if the given algorithm
-   * parameters are inappropriate for this cipher, or this cipher requires
-   * algorithm parameters and <code>params</code> is null, or the given
-   * algorithm parameters imply a cryptographic strength that would exceed
-   * the legal limits (as determined from the configured jurisdiction
-   * policy files).
+   * @throws IOException if cipher initialize fails
    */
   @Override
-  public void init(int mode, byte[] key, byte[] iv) throws InvalidKeyException,
-      InvalidAlgorithmParameterException {
+  public void init(int mode, byte[] key, byte[] iv) {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(iv);
 
-    int cipherMode = javax.crypto.Cipher.DECRYPT_MODE;
-    if(mode == ENCRYPT_MODE)
-      cipherMode = javax.crypto.Cipher.ENCRYPT_MODE;
+    int cipherMode = Openssl.DECRYPT_MODE;
+    if (mode == ENCRYPT_MODE)
+      cipherMode = Openssl.ENCRYPT_MODE;
 
-    cipher.init(cipherMode, new SecretKeySpec(key, "AES"),
-        new IvParameterSpec(iv));
+    cipher.init(cipherMode, key, iv);
   }
 
   /**
@@ -133,14 +121,15 @@ public class JceCipher implements Cipher {
   public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
       throws ShortBufferException, IllegalBlockSizeException,
       BadPaddingException {
-      return cipher.doFinal(inBuffer, outBuffer);
+    int n = cipher.update(inBuffer, outBuffer);
+    return n + cipher.doFinal(outBuffer);
   }
 
   /**
-   * Closes Jce cipher.
+   * Closes the OpenSSL cipher. Clean the Openssl native context.
    */
   @Override
   public void close() {
-    // Do nothing
+    cipher.clean();
   }
 }

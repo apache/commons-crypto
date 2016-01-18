@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.crypto;
+package com.intel.chimera.cipher;
 
-import java.io.Closeable;
 import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.util.Properties;
@@ -26,33 +26,55 @@ import java.util.Properties;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import com.google.common.base.Preconditions;
+import com.intel.chimera.utils.Utils;
 
 /**
- * The interface of cryptographic cipher for encryption and decryption.
+ * Implement the {@link com.intel.chimera.cipher.Cipher} using JCE provider.
  */
-public interface Cipher extends Closeable {
-  // The mode constant to be used when calling init method of the Cipher
-  int ENCRYPT_MODE = 1;
-  int DECRYPT_MODE = 0;
+public class JceCipher implements Cipher {
+  private final Properties props;
+  private final CipherTransformation transformation;
+  private final javax.crypto.Cipher cipher;
 
   /**
-   * @return the CipherTransformation for this cipher.
+   * Constructs a {@link com.intel.chimera.cipher.Cipher} based on JCE
+   * Cipher {@link javax.crypto.Cipher}.
+   * @param props properties for JCE cipher
+   * @param transformation transformation for JCE cipher
+   * @throws GeneralSecurityException if JCE cipher initialize failed
    */
-  CipherTransformation getTransformation();
+  public JceCipher(Properties props, CipherTransformation transformation)
+      throws GeneralSecurityException {
+    this.props = props;
+    this.transformation = transformation;
 
-  /**
-   * Get the properties for this cipher.
-   */
-  Properties getProperties();
+    String provider = Utils.getJCEProvider(props);
+    if (provider == null || provider.isEmpty()) {
+      cipher = javax.crypto.Cipher.getInstance(transformation.getName());
+    } else {
+      cipher = javax.crypto.Cipher.getInstance(transformation.getName(), provider);
+    }
+  }
+
+  @Override
+  public CipherTransformation getTransformation() {
+    return transformation;
+  }
+
+  @Override
+  public Properties getProperties() {
+    return props;
+  }
 
   /**
    * Initializes the cipher with mode, key and iv.
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param iv Initialization vector for the cipher
-   * @throws InvalidKeyException if the given key is inappropriate for
-   * initializing this cipher, or its keysize exceeds the maximum allowable
-   * keysize (as determined from the configured jurisdiction policy files).
    * @throws InvalidAlgorithmParameterException if the given algorithm
    * parameters are inappropriate for this cipher, or this cipher requires
    * algorithm parameters and <code>params</code> is null, or the given
@@ -60,8 +82,19 @@ public interface Cipher extends Closeable {
    * the legal limits (as determined from the configured jurisdiction
    * policy files).
    */
-  void init(int mode, byte[] key, byte[] iv) throws InvalidKeyException,
-      InvalidAlgorithmParameterException;
+  @Override
+  public void init(int mode, byte[] key, byte[] iv)
+      throws InvalidKeyException, InvalidAlgorithmParameterException {
+    Preconditions.checkNotNull(key);
+    Preconditions.checkNotNull(iv);
+
+    int cipherMode = javax.crypto.Cipher.DECRYPT_MODE;
+    if (mode == ENCRYPT_MODE)
+      cipherMode = javax.crypto.Cipher.ENCRYPT_MODE;
+
+    cipher.init(cipherMode, new SecretKeySpec(key, "AES"),
+        new IvParameterSpec(iv));
+  }
 
   /**
    * Continues a multiple-part encryption/decryption operation. The data
@@ -72,12 +105,16 @@ public interface Cipher extends Closeable {
    * @throws ShortBufferException if there is insufficient space
    * in the output buffer
    */
-  int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
-      throws ShortBufferException;
+  @Override
+  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
+      throws ShortBufferException {
+    return cipher.update(inBuffer, outBuffer);
+  }
 
   /**
    * Encrypts or decrypts data in a single-part operation, or finishes a
-   * multiple-part operation.
+   * multiple-part operation. The data is encrypted or decrypted, depending
+   * on how this cipher was initialized.
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
@@ -92,8 +129,18 @@ public interface Cipher extends Closeable {
    * @throws ShortBufferException if the given output buffer is too small
    * to hold the result
    */
-  int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
+  @Override
+  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
       throws ShortBufferException, IllegalBlockSizeException,
-      BadPaddingException;
+      BadPaddingException {
+    return cipher.doFinal(inBuffer, outBuffer);
+  }
 
+  /**
+   * Closes Jce cipher.
+   */
+  @Override
+  public void close() {
+    // Do nothing
+  }
 }

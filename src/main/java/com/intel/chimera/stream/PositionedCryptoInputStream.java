@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera;
+package com.intel.chimera.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,8 +33,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
 import com.google.common.base.Preconditions;
-import com.intel.chimera.crypto.Cipher;
-import com.intel.chimera.crypto.CipherFactory;
+import com.intel.chimera.cipher.Cipher;
+import com.intel.chimera.cipher.CipherFactory;
 import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;

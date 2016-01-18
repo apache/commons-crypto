@@ -15,74 +15,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.crypto;
+package com.intel.chimera.cipher;
 
-import java.io.IOException;
+import java.io.Closeable;
 import java.nio.ByteBuffer;
-import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
-import com.google.common.base.Preconditions;
-
 /**
- * Implement the Cipher using JNI into OpenSSL.
+ * The interface of cryptographic cipher for encryption and decryption.
  */
-public class OpensslCipher implements Cipher {
-  private final Properties props;
-  private final CipherTransformation transformation;
-  private final Openssl cipher;
+public interface Cipher extends Closeable {
+  // The mode constant to be used when calling init method of the Cipher
+  int ENCRYPT_MODE = 1;
+  int DECRYPT_MODE = 0;
 
   /**
-   * Constructs a {@link com.intel.chimera.crypto.Cipher} using JNI into OpenSSL
-   * @param props properties for OpenSSL cipher
-   * @param transformation transformation for OpenSSL cipher
-   * @throws GeneralSecurityException if OpenSSL cipher initialize failed
+   * @return the CipherTransformation for this cipher.
    */
-  public OpensslCipher(Properties props, CipherTransformation transformation)
-      throws GeneralSecurityException {
-    this.props = props;
-    this.transformation = transformation;
+  CipherTransformation getTransformation();
 
-    String loadingFailureReason = Openssl.getLoadingFailureReason();
-    if (loadingFailureReason != null) {
-      throw new RuntimeException(loadingFailureReason);
-    }
-
-    cipher = Openssl.getInstance(transformation.getName());
-  }
-
-  @Override
-  public CipherTransformation getTransformation() {
-    return transformation;
-  }
-
-  @Override
-  public Properties getProperties() {
-    return props;
-  }
+  /**
+   * Get the properties for this cipher.
+   */
+  Properties getProperties();
 
   /**
    * Initializes the cipher with mode, key and iv.
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param iv Initialization vector for the cipher
-   * @throws IOException if cipher initialize fails
+   * @throws InvalidKeyException if the given key is inappropriate for
+   * initializing this cipher, or its keysize exceeds the maximum allowable
+   * keysize (as determined from the configured jurisdiction policy files).
+   * @throws InvalidAlgorithmParameterException if the given algorithm
+   * parameters are inappropriate for this cipher, or this cipher requires
+   * algorithm parameters and <code>params</code> is null, or the given
+   * algorithm parameters imply a cryptographic strength that would exceed
+   * the legal limits (as determined from the configured jurisdiction
+   * policy files).
    */
-  @Override
-  public void init(int mode, byte[] key, byte[] iv) {
-    Preconditions.checkNotNull(key);
-    Preconditions.checkNotNull(iv);
-
-    int cipherMode = Openssl.DECRYPT_MODE;
-    if(mode == ENCRYPT_MODE)
-      cipherMode = Openssl.ENCRYPT_MODE;
-
-    cipher.init(cipherMode, key, iv);
-  }
+  void init(int mode, byte[] key, byte[] iv)
+      throws InvalidKeyException, InvalidAlgorithmParameterException;
 
   /**
    * Continues a multiple-part encryption/decryption operation. The data
@@ -93,15 +72,12 @@ public class OpensslCipher implements Cipher {
    * @throws ShortBufferException if there is insufficient space
    * in the output buffer
    */
-  @Override
-  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws ShortBufferException {
-      return cipher.update(inBuffer, outBuffer);
-  }
+  int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
+      throws ShortBufferException;
 
   /**
    * Encrypts or decrypts data in a single-part operation, or finishes a
-   * multiple-part operation. The data is encrypted or decrypted, depending
-   * on how this cipher was initialized.
+   * multiple-part operation.
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
@@ -116,19 +92,8 @@ public class OpensslCipher implements Cipher {
    * @throws ShortBufferException if the given output buffer is too small
    * to hold the result
    */
-  @Override
-  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
+  int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
       throws ShortBufferException, IllegalBlockSizeException,
-      BadPaddingException {
-      int n = cipher.update(inBuffer, outBuffer);
-      return n + cipher.doFinal(outBuffer);
-  }
+      BadPaddingException;
 
-  /**
-   * Closes the OpenSSL cipher. Clean the Openssl native context.
-   */
-  @Override
-  public void close() {
-    cipher.clean();
-  }
 }

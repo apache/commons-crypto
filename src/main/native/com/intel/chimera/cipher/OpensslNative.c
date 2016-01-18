@@ -107,7 +107,7 @@ static void loadAesCtr(JNIEnv *env)
 #endif
 }
 
-JNIEXPORT void JNICALL Java_com_intel_chimera_crypto_OpensslNative_initIDs
+JNIEXPORT void JNICALL Java_com_intel_chimera_cipher_OpensslNative_initIDs
     (JNIEnv *env, jclass clazz)
 {
   char msg[1000];
@@ -177,7 +177,7 @@ JNIEXPORT void JNICALL Java_com_intel_chimera_crypto_OpensslNative_initIDs
   }
 }
 
-JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_initContext
+JNIEXPORT jlong JNICALL Java_com_intel_chimera_cipher_OpensslNative_initContext
     (JNIEnv *env, jclass clazz, jint alg, jint padding)
 {
   if (alg != AES_CTR && alg != AES_CBC) {
@@ -238,7 +238,7 @@ static EVP_CIPHER * getEvpCipher(int alg, int keyLen)
   return cipher;
 }
 
-JNIEXPORT jlong JNICALL Java_com_intel_chimera_crypto_OpensslNative_init
+JNIEXPORT jlong JNICALL Java_com_intel_chimera_cipher_OpensslNative_init
     (JNIEnv *env, jclass clazz, jlong ctx, jint mode, jint alg, jint padding,
     jbyteArray key, jbyteArray iv)
 {
@@ -318,7 +318,7 @@ static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
   }
 }
 
-JNIEXPORT jint JNICALL Java_com_intel_chimera_crypto_OpensslNative_update
+JNIEXPORT jint JNICALL Java_com_intel_chimera_cipher_OpensslNative_update
     (JNIEnv *env, jclass clazz, jlong ctx, jobject input, jint input_offset,
     jint input_len, jobject output, jint output_offset, jint max_output_len)
 {
@@ -363,7 +363,7 @@ static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
   }
 }
 
-JNIEXPORT jint JNICALL Java_com_intel_chimera_crypto_OpensslNative_doFinal
+JNIEXPORT jint JNICALL Java_com_intel_chimera_cipher_OpensslNative_doFinal
     (JNIEnv *env, jclass clazz, jlong ctx, jobject output, jint offset,
     jint max_output_len)
 {
@@ -389,7 +389,7 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_crypto_OpensslNative_doFinal
   return output_len;
 }
 
-JNIEXPORT void JNICALL Java_com_intel_chimera_crypto_OpensslNative_clean
+JNIEXPORT void JNICALL Java_com_intel_chimera_cipher_OpensslNative_clean
     (JNIEnv *env, jclass clazz, jlong ctx)
 {
   EVP_CIPHER_CTX *context = CONTEXT(ctx);

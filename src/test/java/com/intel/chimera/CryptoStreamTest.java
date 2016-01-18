@@ -29,8 +29,12 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
-import com.intel.chimera.crypto.Cipher;
-import com.intel.chimera.crypto.CipherTransformation;
+import com.intel.chimera.cipher.Cipher;
+import com.intel.chimera.cipher.CipherTransformation;
+import com.intel.chimera.cipher.JceCipher;
+import com.intel.chimera.cipher.OpensslCipher;
+import com.intel.chimera.stream.CryptoInputStream;
+import com.intel.chimera.stream.CryptoOutputStream;
 import com.intel.chimera.utils.ReflectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -49,10 +53,8 @@ public class CryptoStreamTest {
   protected static int defaultBufferSize = 8192;
   protected static int smallBufferSize = 1024;
 
-  private final String jceCipherClass =
-      "com.intel.chimera.crypto.JceCipher";
-  private final String opensslCipherClass =
-      "com.intel.chimera.crypto.OpensslCipher";
+  private final String jceCipherClass = JceCipher.class.getName();
+  private final String opensslCipherClass = OpensslCipher.class.getName();
   private final CipherTransformation transformation = CipherTransformation
       .AES_CTR_NOPADDING;
 

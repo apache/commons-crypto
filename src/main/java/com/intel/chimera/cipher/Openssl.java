@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.crypto;
+package com.intel.chimera.cipher;
 
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
@@ -39,7 +39,7 @@ import com.intel.chimera.utils.NativeCodeLoader;
  */
 public final class Openssl {
   private static final Log LOG = LogFactory.getLog(Openssl.class.getName());
-  
+
   // Mode constant defined by Openssl JNI
   public static final int ENCRYPT_MODE = 1;
   public static final int DECRYPT_MODE = 0;
@@ -204,8 +204,8 @@ public final class Openssl {
     checkState();
     Preconditions.checkArgument(input.isDirect() && output.isDirect(),
         "Direct buffers are required.");
-    int len = OpensslNative.update(context, input, input.position(), input.remaining(),
-        output, output.position(), output.remaining());
+    int len = OpensslNative.update(context, input, input.position(),
+        input.remaining(), output, output.position(), output.remaining());
     input.position(input.limit());
     output.position(output.position() + len);
     return len;
@@ -239,8 +239,9 @@ public final class Openssl {
    * @throws IllegalBlockSizeException
    * @throws BadPaddingException
    */
-  public int doFinal(ByteBuffer output) throws ShortBufferException,
-      IllegalBlockSizeException, BadPaddingException {
+  public int doFinal(ByteBuffer output)
+      throws ShortBufferException, IllegalBlockSizeException,
+      BadPaddingException {
     checkState();
     Preconditions.checkArgument(output.isDirect(), "Direct buffer is required.");
     int len = OpensslNative.doFinal(context, output, output.position(), output.remaining());

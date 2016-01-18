@@ -18,9 +18,6 @@
 
 package com.intel.chimera.cipher;
 
-import com.intel.chimera.crypto.CipherTransformation;
-import com.intel.chimera.crypto.JceCipher;
-
 public class JceCipherCryptoTest extends AbstractCipherTest {
 
   @Override

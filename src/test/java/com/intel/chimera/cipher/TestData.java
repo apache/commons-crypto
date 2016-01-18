@@ -20,8 +20,6 @@ package com.intel.chimera.cipher;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.intel.chimera.crypto.CipherTransformation;
-
 public class TestData {
 
   private static String[] CBCNoPaddingTests = {

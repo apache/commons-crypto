@@ -23,10 +23,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.intel.chimera.crypto.Cipher;
+import com.intel.chimera.cipher.Cipher;
 
 public class ReflectionUtils {
 
