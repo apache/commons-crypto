@@ -295,7 +295,7 @@ public class CryptoOutputStream extends OutputStream implements
          * input data and put result in outBuffer.
          * Cipher#doFinal will reset the cipher context.
          */
-        cipher.doFinal(inBuffer, outBuffer);
+        cipher.doFinal(inBuffer, out);
         cipherReset = true;
       }
     } catch (ShortBufferException | BadPaddingException
