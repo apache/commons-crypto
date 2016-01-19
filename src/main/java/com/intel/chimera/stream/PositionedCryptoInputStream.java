@@ -92,6 +92,58 @@ public class PositionedCryptoInputStream extends CryptoInputStream {
   }
 
   /**
+   * Read upto the specified number of bytes from a given position
+   * within a stream and return the number of bytes read. This does not
+   * change the current offset of the stream, and is thread-safe.
+   */
+  public int read(long position, byte[] buffer, int offset, int length)
+      throws IOException {
+    checkStream();
+    final int n = input.read(position, buffer, offset, length);
+    if (n > 0) {
+      // This operation does not change the current offset of the file
+      decrypt(position, buffer, offset, n);
+    }
+    return n;
+  }
+
+  /**
+   * Read the specified number of bytes from a given position within a stream.
+   * This does not change the current offset of the stream and is thread-safe.
+   */
+  public void readFully(long position, byte[] buffer, int offset, int length)
+      throws IOException {
+    checkStream();
+    input.readFully(position, buffer, offset, length);
+    if (length > 0) {
+      // This operation does not change the current offset of the file
+      decrypt(position, buffer, offset, length);
+    }
+  }
+
+  public void readFully(long position, byte[] buffer) throws IOException {
+    readFully(position, buffer, 0, buffer.length);
+  }
+
+  public void seek(long position) throws IOException {
+    Preconditions.checkArgument(position >= 0, "Cannot seek to negative offset.");
+    checkStream();
+    /*
+     * If data of target pos in the underlying stream has already been read
+     * and decrypted in outBuffer, we just need to re-position outBuffer.
+     */
+    if (position <= getStreamOffset() && position >= getPos()) {
+      int forward = (int) (position - getPos());
+      if (forward > 0) {
+        outBuffer.position(outBuffer.position() + forward);
+      }
+    } else {
+      input.seek(position);
+      resetStreamOffset(position);
+    }
+  }
+
+  /**
    * Decrypt length bytes in buffer starting at offset. Output is also put 
    * into buffer starting at offset. It is thread-safe.
    */

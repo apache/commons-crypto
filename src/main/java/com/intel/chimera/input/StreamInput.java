@@ -67,10 +67,30 @@ public class StreamInput implements Input {
   }
 
   @Override
+  public int read(long position, byte[] buffer, int offset, int length)
+      throws IOException {
+    throw new UnsupportedOperationException(
+        "Positioned read is not supported by this implementation");
+  }
+
+  @Override
+  public void readFully(long position, byte[] buffer, int offset, int length)
+      throws IOException {
+    throw new UnsupportedOperationException(
+        "Positioned readFully is not supported by this implementation");
+  }
+
+  @Override
+  public void seek(long pos) throws IOException {
+    throw new UnsupportedOperationException(
+        "Seek is not supported by this implementation");
+  }
+
+  @Override
   public void close() throws IOException {
     in.close();
   }
-  
+
   private byte[] getBuf() {
     if (buf == null) {
       buf = new byte[bufferSize];

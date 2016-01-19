@@ -49,7 +49,6 @@ import com.intel.chimera.utils.Utils;
  */
 public class CryptoInputStream extends InputStream implements
     ReadableByteChannel {
-  private Input input;
   private final Cipher cipher;
   private final int bufferSize;
 
@@ -68,6 +67,8 @@ public class CryptoInputStream extends InputStream implements
    */
   private byte padding;
   private boolean closed;
+
+  protected Input input;
 
   protected long streamOffset = 0; // Underlying stream offset.
 
