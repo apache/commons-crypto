@@ -28,10 +28,6 @@ public class ConfigurationKeys {
       CONF_PREFIX + ".crypto.cipher.classes";
   public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT =
       JceCipher.class.getName();
-  public static final String CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY =
-      CONF_PREFIX + ".crypto.cipher.transformation";
-  public static final String CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT =
-      "AES/CTR/NoPadding";
 
   public static final String CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY =
       CONF_PREFIX + ".random.device.file.path";

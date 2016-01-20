@@ -31,6 +31,7 @@ import javax.crypto.ShortBufferException;
 
 import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
+import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;
@@ -84,18 +85,22 @@ public class CryptoInputStream extends InputStream implements
    */
   protected ByteBuffer outBuffer;
 
-  public CryptoInputStream(Properties props, InputStream in,
-      byte[] key, byte[] iv) throws IOException {
-    this(in, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
+  public CryptoInputStream(CipherTransformation transformation,
+      Properties props, InputStream in, byte[] key, byte[] iv)
+      throws IOException {
+    this(in, Utils.getCipherInstance(transformation, props),
+        Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoInputStream(Properties props, ReadableByteChannel in,
-      byte[] key, byte[] iv) throws IOException {
-    this(in, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
+  public CryptoInputStream(CipherTransformation transformation,
+      Properties props, ReadableByteChannel in, byte[] key, byte[] iv)
+      throws IOException {
+    this(in, Utils.getCipherInstance(transformation, props),
+        Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoInputStream(InputStream in, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+  public CryptoInputStream(InputStream in, Cipher cipher, int bufferSize,
+      byte[] key, byte[] iv) throws IOException {
     this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv);
   }
 

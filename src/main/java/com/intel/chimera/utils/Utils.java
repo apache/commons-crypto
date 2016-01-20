@@ -32,8 +32,6 @@ import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZ
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_JCE_PROVIDER_KEY;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
@@ -116,15 +114,6 @@ public class Utils {
     final String configName = CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
     return props.getProperty(configName) != null ? props.getProperty(configName) : System
         .getProperty(configName, CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT);
-  }
-
-  public static CipherTransformation getCripherTransformation(Properties props) {
-    String name = props.getProperty(CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY);
-    if (name == null) {
-      name = System.getProperty(CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_KEY,
-          CHIMERA_CRYPTO_CIPHER_TRANSFORMATION_DEFAULT);
-    }
-    return CipherTransformation.convert(name);
   }
 
   public static String getJCEProvider(Properties props) {
@@ -210,10 +199,11 @@ public class Utils {
   /**
    * Helper method to create a Cipher instance and throws only IOException
    */
-  public static Cipher getCipherInstance(Properties props) throws IOException {
+  public static Cipher getCipherInstance(CipherTransformation transformation,
+      Properties props) throws IOException {
     try {
-      return CipherFactory.getInstance(props);
-    } catch(GeneralSecurityException e) {
+      return CipherFactory.getInstance(transformation, props);
+    } catch (GeneralSecurityException e) {
       throw new IOException(e);
     }
   }

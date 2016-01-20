@@ -37,10 +37,9 @@ libraryDependencies += "com.intel.chimera" % "chimera" % "0.9.0"
 ```java
 
 Properties properties = new Properties();
-properties.setProperty("chimera.crypto.cipher.transformation", "AES/CTR/NoPadding");
 properties.setProperty("chimera.crypto.cipher.classes", "com.intel.chimera.crypto.OpensslCipher");
 
-Cipher cipher = Utils.getCipherInstance(properties);
+Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);
 byte[] key = new byte[16];
 byte[] iv = new byte[16];
 int bufferSize = 4096;

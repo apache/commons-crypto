@@ -40,6 +40,8 @@ import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;
 import com.intel.chimera.utils.Utils;
 
+import static com.intel.chimera.cipher.CipherTransformation.AES_CTR_NOPADDING;
+
 /**
  * PositionedCryptoInputStream provides the capability to decrypt the stream starting
  * at random position as well as provides the foundation for positioned read for
@@ -48,21 +50,21 @@ import com.intel.chimera.utils.Utils;
 public class PositionedCryptoInputStream extends CryptoInputStream {
 
   /** DirectBuffer pool */
-  private final Queue<ByteBuffer> bufferPool = 
-      new ConcurrentLinkedQueue<ByteBuffer>();
+  private final Queue<ByteBuffer> bufferPool = new ConcurrentLinkedQueue<>();
 
   /** Cipher pool */
-  private final Queue<CipherState> cipherPool = 
-      new ConcurrentLinkedQueue<CipherState>();
+  private final Queue<CipherState> cipherPool = new ConcurrentLinkedQueue<>();
 
   public PositionedCryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
-    this(in, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv, streamOffset);
+    this(in, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
+        Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   public PositionedCryptoInputStream(Properties props, ReadableByteChannel in,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
-    this(in, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv, streamOffset);
+    this(in, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
+        Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   public PositionedCryptoInputStream(InputStream in, Cipher cipher,
@@ -144,10 +146,10 @@ public class PositionedCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Decrypt length bytes in buffer starting at offset. Output is also put 
+   * Decrypt length bytes in buffer starting at offset. Output is also put
    * into buffer starting at offset. It is thread-safe.
    */
-  protected void decrypt(long position, byte[] buffer, int offset, int length) 
+  protected void decrypt(long position, byte[] buffer, int offset, int length)
       throws IOException {
     ByteBuffer inBuffer = getBuffer();
     ByteBuffer outBuffer = getBuffer();
@@ -180,10 +182,10 @@ public class PositionedCryptoInputStream extends CryptoInputStream {
 
   /**
    * Do the decryption using inBuffer as input and outBuffer as output.
-   * Upon return, inBuffer is cleared; the decrypted data starts at 
+   * Upon return, inBuffer is cleared; the decrypted data starts at
    * outBuffer.position() and ends at outBuffer.limit();
    */
-  private void decrypt(CipherState state, ByteBuffer inBuffer, 
+  private void decrypt(CipherState state, ByteBuffer inBuffer,
       ByteBuffer outBuffer, byte padding) throws IOException {
     Preconditions.checkState(inBuffer.position() >= padding);
     if(inBuffer.position() == padding) {
@@ -197,7 +199,7 @@ public class PositionedCryptoInputStream extends CryptoInputStream {
     outBuffer.flip();
     if (padding > 0) {
       /*
-       * The plain text and cipher text have a 1:1 mapping, they start at the 
+       * The plain text and cipher text have a 1:1 mapping, they start at the
        * same position.
        */
       outBuffer.position(padding);
@@ -264,8 +266,8 @@ public class PositionedCryptoInputStream extends CryptoInputStream {
     if (state == null) {
       Cipher cipher;
       try {
-        cipher = CipherFactory.getInstance(getCipher().getProperties(),
-            getCipher().getTransformation());
+        cipher = CipherFactory.getInstance(getCipher().getTransformation(),
+            getCipher().getProperties());
       } catch (GeneralSecurityException e) {
         throw new IOException(e);
       }

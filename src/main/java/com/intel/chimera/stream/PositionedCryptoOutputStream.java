@@ -23,10 +23,13 @@ import java.nio.channels.WritableByteChannel;
 import java.util.Properties;
 
 import com.intel.chimera.cipher.Cipher;
+import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.output.ChannelOutput;
 import com.intel.chimera.output.Output;
 import com.intel.chimera.output.StreamOutput;
 import com.intel.chimera.utils.Utils;
+
+import static com.intel.chimera.cipher.CipherTransformation.AES_CTR_NOPADDING;
 
 /**
  * PositionedCryptoOutputStream provides the capability to append to an
@@ -36,12 +39,15 @@ import com.intel.chimera.utils.Utils;
 public class PositionedCryptoOutputStream extends CryptoOutputStream {
   public PositionedCryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
-    this(out, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv, streamOffset);
+    this(out, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
+        Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   public PositionedCryptoOutputStream(Properties props, WritableByteChannel out,
-      byte[] key, byte[] iv, long streamOffset) throws IOException {
-    this(out, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv, streamOffset);
+      byte[] key, byte[] iv,
+      long streamOffset) throws IOException {
+    this(out, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
+        Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   public PositionedCryptoOutputStream(OutputStream out, Cipher cipher,

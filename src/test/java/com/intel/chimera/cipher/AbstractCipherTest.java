@@ -17,7 +17,6 @@
  */
 package com.intel.chimera.cipher;
 
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
@@ -82,8 +81,8 @@ public abstract class AbstractCipherTest {
     ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
     Cipher enc, dec;
 
-    enc = CipherFactory.getInstance(props, transformation);
-    dec = CipherFactory.getInstance(props, transformation);
+    enc = CipherFactory.getInstance(transformation, props);
+    dec = CipherFactory.getInstance(transformation, props);
 
     try {
       enc.init(Cipher.ENCRYPT_MODE, key, iv);

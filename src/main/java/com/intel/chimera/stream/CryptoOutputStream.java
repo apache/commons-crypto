@@ -31,6 +31,7 @@ import javax.crypto.ShortBufferException;
 
 import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
+import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.output.ChannelOutput;
 import com.intel.chimera.output.Output;
 import com.intel.chimera.output.StreamOutput;
@@ -82,14 +83,18 @@ public class CryptoOutputStream extends OutputStream implements
   private byte padding;
   private boolean closed;
 
-  public CryptoOutputStream(Properties props, OutputStream out,
-      byte[] key, byte[] iv) throws IOException {
-    this(out, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
+  public CryptoOutputStream(CipherTransformation transformation,
+      Properties props, OutputStream out, byte[] key, byte[] iv)
+      throws IOException {
+    this(out, Utils.getCipherInstance(transformation, props),
+        Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoOutputStream(Properties props, WritableByteChannel out,
-      byte[] key, byte[] iv) throws IOException {
-    this(out, Utils.getCipherInstance(props), Utils.getBufferSize(props), key, iv);
+  public CryptoOutputStream(CipherTransformation transformation,
+      Properties props, WritableByteChannel out, byte[] key, byte[] iv)
+      throws IOException {
+    this(out, Utils.getCipherInstance(transformation, props),
+        Utils.getBufferSize(props), key, iv);
   }
 
   public CryptoOutputStream(OutputStream out, Cipher cipher,
@@ -267,7 +272,7 @@ public class CryptoOutputStream extends OutputStream implements
     }
   }
 
-  /** Reset the {@link #Cipher}: calculate counter and {@link #padding}. */
+  /** Reset the {@link #cipher}: calculate counter and {@link #padding}. */
   private void resetCipher() throws IOException {
     final long counter =
         streamOffset / cipher.getTransformation().getAlgorithmBlockSize();

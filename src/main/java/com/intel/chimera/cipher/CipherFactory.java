@@ -44,8 +44,8 @@ public class CipherFactory {
    * @return Cipher the cipher. Null value will be returned if no
    *         cipher classes with transformation configured.
    */
-  public static Cipher getInstance(Properties props,
-      CipherTransformation transformation) throws GeneralSecurityException {
+  public static Cipher getInstance(CipherTransformation transformation,
+      Properties props) throws GeneralSecurityException {
     List<Class<? extends Cipher>> klasses = getCipherClasses(props);
     Cipher cipher = null;
     if (klasses != null) {
@@ -74,22 +74,9 @@ public class CipherFactory {
    * @return Cipher the cipher object Null value will be returned if no
    *         cipher classes with transformation configured.
    */
-  public static Cipher getInstance() throws GeneralSecurityException {
-    return getInstance(new Properties());
-  }
-
-  /**
-   * Get a cipher for algorithm/mode/padding in config value
-   * chimera.crypto.cipher.transformation
-   *
-   * @param props the properties which contain the configurations
-   *         of the crypto cipher
-   * @return Cipher the cipher object Null value will be returned if no
-   *         cipher classes with transformation configured.
-   */
-  public static Cipher getInstance(Properties props)
+  public static Cipher getInstance(CipherTransformation transformation)
       throws GeneralSecurityException {
-    return getInstance(props, Utils.getCripherTransformation(props));
+    return getInstance(transformation, null);
   }
 
   private static List<Class<? extends Cipher>> getCipherClasses(Properties props) {
