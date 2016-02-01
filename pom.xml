@@ -21,7 +21,7 @@
   <artifactId>chimera</artifactId>
   <packaging>jar</packaging>
   <description>chimera: A fast encryption/decryption library</description>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.9.1</version>
   <name>chimera</name>
   <url>https://github.com/intel-hadoop/chimera</url>
 
