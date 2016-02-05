@@ -25,7 +25,7 @@ import com.google.common.base.Splitter;
 
 import com.intel.chimera.utils.ReflectionUtils;
 import static com.intel.chimera.conf.ConfigurationKeys
-    .CHIMERA_SECURE_RANDOM_CLASSES_KEY;
+    .CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
 
 /**
  * The Factory for SecureRandom.
@@ -36,25 +36,27 @@ public class SecureRandomFactory {
 
   public static SecureRandom getSecureRandom(Properties props) {
     String secureRandomClasses = props.getProperty(
-        CHIMERA_SECURE_RANDOM_CLASSES_KEY);
+        CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
     if (secureRandomClasses == null) {
       secureRandomClasses = System.getProperty(
-          CHIMERA_SECURE_RANDOM_CLASSES_KEY);
+          CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
     }
 
     SecureRandom random = null;
-    for (String klassName : Splitter.on(',').trimResults().omitEmptyStrings()
-        .split(secureRandomClasses)) {
-      try {
-        final Class klass = ReflectionUtils.getClassByName(klassName);
-        random = (SecureRandom) ReflectionUtils.newInstance(klass, props);
-        if (random != null) {
-          break;
+    if (secureRandomClasses != null) {
+      for (String klassName : Splitter.on(',').trimResults().omitEmptyStrings()
+          .split(secureRandomClasses)) {
+        try {
+          final Class klass = ReflectionUtils.getClassByName(klassName);
+          random = (SecureRandom) ReflectionUtils.newInstance(klass, props);
+          if (random != null) {
+            break;
+          }
+        } catch (ClassCastException e) {
+          LOG.error("Class {} is not a Cipher.", klassName);
+        } catch (ClassNotFoundException e) {
+          LOG.error("Cipher {} not found.", klassName);
         }
-      } catch (ClassCastException e) {
-        LOG.error("Class {} is not a Cipher.", klassName);
-      } catch (ClassNotFoundException e) {
-        LOG.error("Cipher {} not found.", klassName);
       }
     }
 

@@ -41,8 +41,8 @@ public class ConfigurationKeys {
   public static final String CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT =
       "SHA1PRNG";
 
-  public static final String CHIMERA_SECURE_RANDOM_CLASSES_KEY =
-      CONF_PREFIX + ".secure.random.classes";
+  public static final String CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY =
+      CONF_PREFIX + ".crypto.secure.random.classes";
 
   public static final int CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT = 8192;
   public static final String CHIMERA_CRYPTO_BUFFER_SIZE_KEY =
