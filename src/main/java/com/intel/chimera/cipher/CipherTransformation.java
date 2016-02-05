@@ -56,4 +56,21 @@ public enum CipherTransformation {
     builder.append("}");
     return builder.toString();
   }
+
+  /**
+   * Convert to CipherTransformation from name, {@link #algorithmBlockSize} is fixed
+   * for certain cipher transformation, just need to compare the name.
+   *
+   * @param name cipher transformation name
+   * @return CipherTransformation cipher transformation
+   */
+  public static CipherTransformation fromName(String name) {
+    CipherTransformation[] transformations = CipherTransformation.values();
+    for (CipherTransformation transformation : transformations) {
+      if (transformation.getName().equals(name)) {
+        return transformation;
+      }
+    }
+    throw new IllegalArgumentException("Invalid transformation name: " + name);
+  }
 }
