@@ -17,16 +17,41 @@
  */
 package com.intel.chimera.random;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.intel.chimera.conf.ConfigurationKeys;
+
 /**
  * A SecureRandom of Java implementation
  */
-public class JavaSecureRandom extends java.security.SecureRandom
-    implements SecureRandom {
+public class JavaSecureRandom implements SecureRandom {
+  private static final Log LOG =
+      LogFactory.getLog(JavaSecureRandom.class.getName());
 
-  private static final long serialVersionUID = 2228348093570988751L;
+  private java.security.SecureRandom instance;
+
+  public JavaSecureRandom(Properties properties) {
+    try {
+      instance = java.security.SecureRandom
+          .getInstance(properties.getProperty(
+              ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY,
+              ConfigurationKeys.CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT));
+    } catch (NoSuchAlgorithmException e) {
+      LOG.error("Failed to create java secure random due to error: " + e);
+    }
+  }
 
   @Override
   public void close() {
     // do nothing
+  }
+
+  @Override
+  public void nextBytes(byte[] bytes) {
+    instance.nextBytes(bytes);
   }
 }

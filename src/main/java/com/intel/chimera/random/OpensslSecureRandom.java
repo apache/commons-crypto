@@ -30,8 +30,8 @@ import com.intel.chimera.utils.NativeCodeLoader;
  * OpenSSL secure random using JNI.
  * This implementation is thread-safe.
  * <p/>
- * 
- * If using an Intel chipset with RDRAND, the high-performance hardware 
+ *
+ * If using an Intel chipset with RDRAND, the high-performance hardware
  * random number generator will be used and it's much faster than
  * {@link java.security.SecureRandom}. If RDRAND is unavailable, default
  * OpenSSL secure random generator will be used. It's still faster
@@ -44,7 +44,7 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
   private static final long serialVersionUID = -7828193502768789584L;
   private static final Log LOG =
       LogFactory.getLog(OpensslSecureRandom.class.getName());
-  
+
   /** If native SecureRandom unavailable, use java SecureRandom */
   private JavaSecureRandom fallback = null;
   private static boolean nativeEnabled = false;
@@ -58,21 +58,21 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
       }
     }
   }
-  
+
   public static boolean isNativeCodeLoaded() {
     return nativeEnabled;
   }
-  
+
   public OpensslSecureRandom(Properties props) {
     if (!nativeEnabled) {
-      fallback = new JavaSecureRandom();
+      fallback = new JavaSecureRandom(props);
     }
   }
-  
+
   /**
    * Generates a user-specified number of random bytes.
    * It's thread-safe.
-   * 
+   *
    * @param bytes the array to be filled in with random bytes.
    */
   @Override
@@ -81,12 +81,12 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
       fallback.nextBytes(bytes);
     }
   }
-  
+
   @Override
   public void setSeed(long seed) {
     // Self-seeding.
   }
-  
+
   /**
    * Generates an integer containing the user-specified number of
    * random bits (right justified, with leading zeros).
@@ -103,12 +103,12 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
     int numBytes = (numBits + 7) / 8;
     byte b[] = new byte[numBytes];
     int next = 0;
-    
+
     nextBytes(b);
     for (int i = 0; i < numBytes; i++) {
       next = (next << 8) + (b[i] & 0xFF);
     }
-    
+
     return next >>> (numBytes * 8 - numBits);
   }
 

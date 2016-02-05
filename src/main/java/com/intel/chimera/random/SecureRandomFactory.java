@@ -19,29 +19,45 @@ package com.intel.chimera.random;
 
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.google.common.base.Splitter;
+
 import com.intel.chimera.utils.ReflectionUtils;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_SECURE_RANDOM_IMPL_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys
+    .CHIMERA_SECURE_RANDOM_CLASSES_KEY;
 
 /**
  * The Factory for SecureRandom.
  */
 public class SecureRandomFactory {
+  public final static Logger LOG = LoggerFactory
+      .getLogger(SecureRandomFactory.class);
 
   public static SecureRandom getSecureRandom(Properties props) {
-    String secureRandomImpl = props.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
-    if (secureRandomImpl == null) {
-      secureRandomImpl = System.getProperty(CHIMERA_SECURE_RANDOM_IMPL_KEY);
-    }
-    final Class<? extends SecureRandom> klass = ReflectionUtils
-        .getClass(secureRandomImpl, OsSecureRandom.class, SecureRandom.class);
-
-    SecureRandom random;
-    try {
-      random = ReflectionUtils.newInstance(klass, props);
-    } catch (Exception e) {
-      random = new JavaSecureRandom();
+    String secureRandomClasses = props.getProperty(
+        CHIMERA_SECURE_RANDOM_CLASSES_KEY);
+    if (secureRandomClasses == null) {
+      secureRandomClasses = System.getProperty(
+          CHIMERA_SECURE_RANDOM_CLASSES_KEY);
     }
 
-    return random;
+    SecureRandom random = null;
+    for (String klassName : Splitter.on(',').trimResults().omitEmptyStrings()
+        .split(secureRandomClasses)) {
+      try {
+        final Class klass = ReflectionUtils.getClassByName(klassName);
+        random = (SecureRandom) ReflectionUtils.newInstance(klass, props);
+        if (random != null) {
+          break;
+        }
+      } catch (ClassCastException e) {
+        LOG.error("Class {} is not a Cipher.", klassName);
+      } catch (ClassNotFoundException e) {
+        LOG.error("Cipher {} not found.", klassName);
+      }
+    }
+
+    return (random == null) ? new JavaSecureRandom(props) : random;
   }
 }
