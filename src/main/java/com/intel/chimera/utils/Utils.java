@@ -28,17 +28,17 @@ import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherFactory;
 import com.intel.chimera.cipher.CipherTransformation;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_BUFFER_SIZE_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_JCE_PROVIDER_KEY;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_LIB_NAME_KEY;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_LIB_PATH_KEY;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_LIB_NAME_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_LIB_PATH_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
-import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_TEMPDIR_KEY;
+import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_LIB_TEMPDIR_KEY;
 
 public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
@@ -98,13 +98,14 @@ public class Utils {
 
   /** Read crypto buffer size */
   public static int getBufferSize(Properties props) {
-    String bufferSizeStr = props.getProperty(CHIMERA_CRYPTO_BUFFER_SIZE_KEY);
+    String bufferSizeStr = props.getProperty(
+        CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY);
     if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
       bufferSizeStr = System
-        .getProperty(CHIMERA_CRYPTO_BUFFER_SIZE_KEY);
+        .getProperty(CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY);
     }
     if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
-      return CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT;
+      return CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
     } else {
       return Integer.parseInt(bufferSizeStr);
     }
@@ -117,31 +118,32 @@ public class Utils {
   }
 
   public static String getJCEProvider(Properties props) {
-    return props.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY) != null ?
-        props.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY) :
-        System.getProperty(CHIMERA_CRYPTO_JCE_PROVIDER_KEY);
+    return props.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY) != null ?
+        props.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY) :
+        System.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
   }
 
   public static String getRandomDevPath(Properties props) {
-    String devPath = props.getProperty(CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY);
+    String devPath = props.getProperty(
+        CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
     if (devPath == null) {
       devPath = System.getProperty(
-          CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY,
-          CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT);
+          CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
+          CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
     }
     return devPath;
   }
 
   public static String getLibPath() {
-    return System.getProperty(CHIMERA_LIB_PATH_KEY);
+    return System.getProperty(CHIMERA_CRYPTO_LIB_PATH_KEY);
   }
 
   public static String getLibName() {
-    return System.getProperty(CHIMERA_LIB_NAME_KEY);
+    return System.getProperty(CHIMERA_CRYPTO_LIB_NAME_KEY);
   }
 
   public static String getTmpDir() {
-    return System.getProperty(CHIMERA_TEMPDIR_KEY,
+    return System.getProperty(CHIMERA_CRYPTO_LIB_TEMPDIR_KEY,
         System.getProperty("java.io.tmpdir"));
   }
 

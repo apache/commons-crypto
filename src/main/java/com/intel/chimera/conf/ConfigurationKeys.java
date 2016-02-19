@@ -20,35 +20,42 @@ package com.intel.chimera.conf;
 import com.intel.chimera.cipher.JceCipher;
 
 public class ConfigurationKeys {
-	public static final String CONF_PREFIX = "chimera";
+  public static final String CHIMERA_PREFIX = "chimera.";
   public static final String CHIMERA_SYSTEM_PROPERTIES_FILE =
-      CONF_PREFIX + ".properties";
+      CHIMERA_PREFIX + "properties";
 
+	public static final String CONF_PREFIX = "chimera.crypto.";
+
+  // cipher related configuration keys
   public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_KEY =
-      CONF_PREFIX + ".crypto.cipher.classes";
+      CONF_PREFIX + "cipher.classes";
   public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT =
       JceCipher.class.getName();
+  public static final String CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY =
+      CONF_PREFIX + "cipher.jce.provider";
 
-  public static final String CHIMERA_RANDOM_DEVICE_FILE_PATH_KEY =
-      CONF_PREFIX + ".random.device.file.path";
-  public static final String CHIMERA_RANDOM_DEVICE_FILE_PATH_DEFAULT =
+  // security random related configuration keys
+  public static final String CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY =
+      CONF_PREFIX + "secure.random.device.file.path";
+  public static final String CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT =
       "/dev/urandom";
-
-  public static final String CHIMERA_CRYPTO_JCE_PROVIDER_KEY =
-      CONF_PREFIX + ".crypto.jce.provider";
-  public static final String CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_KEY =
-      CONF_PREFIX + ".java.secure.random.algorithm";
-  public static final String CHIMERA_JAVA_SECURE_RANDOM_ALGORITHM_DEFAULT =
-      "SHA1PRNG";
-
+  public static final String CHIMERA_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY =
+      CONF_PREFIX + "secure.random.java.algorithm";
+  public static final String
+      CHIMERA_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT = "SHA1PRNG";
   public static final String CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY =
-      CONF_PREFIX + ".crypto.secure.random.classes";
+      CONF_PREFIX + "secure.random.classes";
 
-  public static final int CHIMERA_CRYPTO_BUFFER_SIZE_DEFAULT = 8192;
-  public static final String CHIMERA_CRYPTO_BUFFER_SIZE_KEY =
-      CONF_PREFIX + ".crypto.buffer.size";
+  // stream related configuration keys
+  public static final int CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT = 8192;
+  public static final String CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY =
+      CONF_PREFIX + "stream.buffer.size";
 
-  public static final String CHIMERA_LIB_PATH_KEY = CONF_PREFIX + ".lib.path";
-  public static final String CHIMERA_LIB_NAME_KEY = CONF_PREFIX + ".lib.name";
-  public static final String CHIMERA_TEMPDIR_KEY = CONF_PREFIX + ".tempdir";
+  // native lib related configuration keys
+  public static final String CHIMERA_CRYPTO_LIB_PATH_KEY = CONF_PREFIX + "lib" +
+      ".path";
+  public static final String CHIMERA_CRYPTO_LIB_NAME_KEY = CONF_PREFIX + "lib" +
+      ".name";
+  public static final String CHIMERA_CRYPTO_LIB_TEMPDIR_KEY = CONF_PREFIX +
+      "lib.tempdir";
 }
