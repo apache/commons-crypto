@@ -104,7 +104,7 @@ public class CryptoOutputStream extends OutputStream implements
     this.iv = iv.clone();
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize + 
-        2 * cipher.getTransformation().getAlgorithmBlockSize());
+        cipher.getTransformation().getAlgorithmBlockSize());
 
     initCipher();
   }

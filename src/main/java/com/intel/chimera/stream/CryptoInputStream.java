@@ -73,14 +73,14 @@ public class CryptoInputStream extends InputStream implements
 
   public CryptoInputStream(CipherTransformation transformation,
       Properties props, InputStream in, byte[] key, byte[] iv)
-          throws IOException {
+      throws IOException {
     this(in, Utils.getCipherInstance(transformation, props),
         Utils.getBufferSize(props), key, iv);
   }
 
   public CryptoInputStream(CipherTransformation transformation,
       Properties props, ReadableByteChannel in, byte[] key, byte[] iv)
-          throws IOException {
+      throws IOException {
     this(in, Utils.getCipherInstance(transformation, props),
         Utils.getBufferSize(props), key, iv);
   }
@@ -109,8 +109,8 @@ public class CryptoInputStream extends InputStream implements
     this.iv = iv.clone();
 
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-    outBuffer = ByteBuffer.allocateDirect(this.bufferSize + 
-        2 * cipher.getTransformation().getAlgorithmBlockSize());
+    outBuffer = ByteBuffer.allocateDirect(this.bufferSize +
+        cipher.getTransformation().getAlgorithmBlockSize());
     
     initCipher();
   }
@@ -289,7 +289,7 @@ public class CryptoInputStream extends InputStream implements
       throw new IOException(e);
     }
   }
-  
+
   /**
    * Decrypt more data by reading the under layer stream. The decrypted data will
    * be put in the output buffer. If the end of the under stream reached, we will

@@ -36,7 +36,7 @@ import static com.intel.chimera.cipher.CipherTransformation.AES_CTR_NOPADDING;
  * existing crypto stream from a specific start point.
  * This needs a stream cipher mode such as AES CTR mode.
  */
-public class PositionedCryptoOutputStream extends CounterCryptoOutputStream {
+public class PositionedCryptoOutputStream extends CTRCryptoOutputStream {
   public PositionedCryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(out, Utils.getCipherInstance(AES_CTR_NOPADDING, props),

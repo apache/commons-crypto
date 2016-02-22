@@ -48,7 +48,7 @@ import com.intel.chimera.utils.Utils;
  * <p/>
  * The underlying stream offset is maintained as state.
  */
-public class CounterCryptoOutputStream extends CryptoOutputStream {
+public class CTRCryptoOutputStream extends CryptoOutputStream {
   /**
    * Underlying stream offset.
    */
@@ -66,61 +66,61 @@ public class CounterCryptoOutputStream extends CryptoOutputStream {
    */
   private boolean cipherReset = false;
 
-  public CounterCryptoOutputStream(Properties props, OutputStream out,
+  public CTRCryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv)
       throws IOException {
     this(props, out, key, iv, 0);
   }
 
-  public CounterCryptoOutputStream(Properties props, WritableByteChannel out,
+  public CTRCryptoOutputStream(Properties props, WritableByteChannel out,
       byte[] key, byte[] iv)
       throws IOException {
     this(props, out, key, iv, 0);
   }
 
-  public CounterCryptoOutputStream(OutputStream out, Cipher cipher,
+  public CTRCryptoOutputStream(OutputStream out, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(out, cipher, bufferSize, key, iv, 0);
   }
 
-  public CounterCryptoOutputStream(WritableByteChannel channel, Cipher cipher,
+  public CTRCryptoOutputStream(WritableByteChannel channel, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(channel, cipher, bufferSize, key, iv, 0);
   }
 
-  public CounterCryptoOutputStream(Output output, Cipher cipher,
+  public CTRCryptoOutputStream(Output output, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv)
       throws IOException {
     this(output, cipher, bufferSize, key, iv, 0);
   }
   
-  public CounterCryptoOutputStream(Properties props, OutputStream out,
+  public CTRCryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(out, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public CounterCryptoOutputStream(Properties props, WritableByteChannel out,
+  public CTRCryptoOutputStream(Properties props, WritableByteChannel out,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(out, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public CounterCryptoOutputStream(OutputStream out, Cipher cipher,
+  public CTRCryptoOutputStream(OutputStream out, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new StreamOutput(out, bufferSize), cipher,
         bufferSize, key, iv, streamOffset);
   }
 
-  public CounterCryptoOutputStream(WritableByteChannel channel, Cipher cipher,
+  public CTRCryptoOutputStream(WritableByteChannel channel, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new ChannelOutput(channel), cipher,
         bufferSize, key, iv, streamOffset);
   }
 
-  public CounterCryptoOutputStream(Output output, Cipher cipher,
+  public CTRCryptoOutputStream(Output output, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     super(output, cipher, bufferSize, key, iv);
