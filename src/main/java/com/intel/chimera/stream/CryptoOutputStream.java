@@ -39,13 +39,13 @@ import com.intel.chimera.utils.Utils;
 
 /**
  * CryptoOutputStream encrypts data and writes to the under layer output. It supports
- * any mode of operations such as AES CBC/CTR/GCM mode in concept. It is not thread-safe. 
+ * any mode of operations such as AES CBC/CTR/GCM mode in concept. It is not thread-safe.
  */
 
 public class CryptoOutputStream extends OutputStream implements
     WritableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
-  
+
   protected Output output;
   protected final Cipher cipher;
   protected final int bufferSize;
@@ -53,7 +53,7 @@ public class CryptoOutputStream extends OutputStream implements
   protected final byte[] key;
   protected final byte[] initIV;
   protected byte[] iv;
-  
+
   protected boolean closed;
 
   /**
@@ -67,7 +67,7 @@ public class CryptoOutputStream extends OutputStream implements
    * outBuffer.limit();
    */
   protected ByteBuffer outBuffer;
-  
+
   public CryptoOutputStream(CipherTransformation transformation,
       Properties props, OutputStream out, byte[] key, byte[] iv)
       throws IOException {
@@ -103,7 +103,7 @@ public class CryptoOutputStream extends OutputStream implements
     this.initIV = iv.clone();
     this.iv = iv.clone();
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-    outBuffer = ByteBuffer.allocateDirect(this.bufferSize + 
+    outBuffer = ByteBuffer.allocateDirect(this.bufferSize +
         cipher.getTransformation().getAlgorithmBlockSize());
 
     initCipher();
@@ -133,7 +133,7 @@ public class CryptoOutputStream extends OutputStream implements
         len > b.length - off) {
       throw new IndexOutOfBoundsException();
     }
-    
+
     while (len > 0) {
       final int remaining = inBuffer.remaining();
       if (len < remaining) {
@@ -176,7 +176,7 @@ public class CryptoOutputStream extends OutputStream implements
       closed = true;
     }
   }
-  
+
   @Override
   public boolean isOpen() {
     return !closed;
@@ -210,10 +210,10 @@ public class CryptoOutputStream extends OutputStream implements
 
     return len;
   }
-  
+
   /** Initialize the cipher. */
   protected void initCipher()
-      throws IOException {    
+      throws IOException {
     try {
       cipher.init(Cipher.ENCRYPT_MODE, key, iv);
     } catch (InvalidKeyException e) {
@@ -222,36 +222,36 @@ public class CryptoOutputStream extends OutputStream implements
       throw new IOException(e);
     }
   }
-  
+
   /**
    * Do the encryption, input is {@link #inBuffer} and output is
    * {@link #outBuffer}.
    */
   protected void encrypt() throws IOException {
-    
+
     inBuffer.flip();
     outBuffer.clear();
-    
+
     try {
       cipher.update(inBuffer, outBuffer);
     } catch (ShortBufferException e) {
       throw new IOException(e);
     }
-    
+
     inBuffer.clear();
     outBuffer.flip();
 
     // write to output
     output.write(outBuffer);
   }
-  
+
   /**
    * Do final encryption of the last data
    */
   protected void encryptFinal() throws IOException {
     inBuffer.flip();
     outBuffer.clear();
-    
+
     try {
       cipher.doFinal(inBuffer, outBuffer);
     } catch (ShortBufferException e) {
@@ -261,14 +261,14 @@ public class CryptoOutputStream extends OutputStream implements
     } catch( BadPaddingException e) {
       throw new IOException(e);
     }
-    
+
     inBuffer.clear();
     outBuffer.flip();
 
     // write to output
     output.write(outBuffer);
   }
-  
+
   protected void checkStream() throws IOException {
     if (closed) {
       throw new IOException("Stream closed");
@@ -280,5 +280,4 @@ public class CryptoOutputStream extends OutputStream implements
     Utils.freeDirectBuffer(inBuffer);
     Utils.freeDirectBuffer(outBuffer);
   }
-
 }

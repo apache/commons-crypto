@@ -39,14 +39,14 @@ import com.intel.chimera.utils.Utils;
 
 /**
  * CryptoInputStream reads input data and decrypts data in stream manner. It supports
- * any mode of operations such as AES CBC/CTR/GCM mode in concept.It is not thread-safe. 
- * 
+ * any mode of operations such as AES CBC/CTR/GCM mode in concept.It is not thread-safe.
+ *
  */
 
-public class CryptoInputStream extends InputStream implements 
+public class CryptoInputStream extends InputStream implements
     ReadableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
-  
+
   protected final Cipher cipher;
   protected final int bufferSize;
 
@@ -111,7 +111,7 @@ public class CryptoInputStream extends InputStream implements
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize +
         cipher.getTransformation().getAlgorithmBlockSize());
-    
+
     initCipher();
   }
 
@@ -142,7 +142,7 @@ public class CryptoInputStream extends InputStream implements
       int nd = decryptMore();
       if(nd < 0)
         return -1;
-      
+
       int n = Math.min(len, outBuffer.remaining());
       outBuffer.get(b, off, n);
       return n;
@@ -157,7 +157,7 @@ public class CryptoInputStream extends InputStream implements
     if (n == 0) {
       return 0;
     }
-    
+
     long remaining = n;
     int nd;
 
@@ -205,7 +205,6 @@ public class CryptoInputStream extends InputStream implements
 
   @Override
   public void mark(int readlimit) {
-    
   }
 
   @Override
@@ -217,7 +216,7 @@ public class CryptoInputStream extends InputStream implements
   public boolean markSupported() {
     return false;
   }
-  
+
   @Override
   public boolean isOpen() {
     return !closed;
@@ -227,7 +226,7 @@ public class CryptoInputStream extends InputStream implements
   public int read(ByteBuffer dst) throws IOException {
     checkStream();
     int remaining = outBuffer.remaining();
-    if (remaining <= 0) { 
+    if (remaining <= 0) {
       // Decrypt more data
       int nd = decryptMore();
       if(nd < 0) {
@@ -249,7 +248,7 @@ public class CryptoInputStream extends InputStream implements
       return remaining;
     }
   }
-  
+
   /**
    * Get the buffer size
    */
@@ -277,10 +276,10 @@ public class CryptoInputStream extends InputStream implements
   protected Cipher getCipher() {
     return cipher;
   }
-  
+
   /** Initialize the cipher. */
   protected void initCipher()
-      throws IOException {    
+      throws IOException {
     try {
       cipher.init(Cipher.DECRYPT_MODE, key, iv);
     } catch (InvalidKeyException e) {
@@ -293,25 +292,25 @@ public class CryptoInputStream extends InputStream implements
   /**
    * Decrypt more data by reading the under layer stream. The decrypted data will
    * be put in the output buffer. If the end of the under stream reached, we will
-   * do final of the cipher to finish all the decrypting of data. 
-   * 
+   * do final of the cipher to finish all the decrypting of data.
+   *
    * @return The number of decrypted data. -1 if end of the decrypted stream
    */
   protected int decryptMore() throws IOException {
     if(finalDone)
       return -1;
-    
+
     int n = input.read(inBuffer);
     if (n < 0) {
       // The stream is end, finalize the cipher stream
       decryptFinal();
-      
+
       // Satisfy the read with the remaining
       int remaining = outBuffer.remaining();
       if (remaining > 0) {
         return remaining;
       }
-      
+
       // End of the stream
       return -1;
     } else if(n == 0) {
@@ -322,7 +321,7 @@ public class CryptoInputStream extends InputStream implements
       return outBuffer.remaining();
     }
   }
-  
+
   /**
    * Do the decryption using inBuffer as input and outBuffer as output.
    * Upon return, inBuffer is cleared; the decrypted data starts at
@@ -332,18 +331,18 @@ public class CryptoInputStream extends InputStream implements
     // Prepare the input buffer and clear the out buffer
     inBuffer.flip();
     outBuffer.clear();
-    
+
     try {
       cipher.update(inBuffer, outBuffer);
     } catch (ShortBufferException e) {
       throw new IOException(e);
     }
-    
+
     // Clear the input buffer and prepare out buffer
     inBuffer.clear();
     outBuffer.flip();
   }
-  
+
   /**
    * Do final of the cipher to end the decrypting stream
    */
@@ -351,7 +350,7 @@ public class CryptoInputStream extends InputStream implements
     // Prepare the input buffer and clear the out buffer
     inBuffer.flip();
     outBuffer.clear();
-    
+
     try {
       cipher.doFinal(inBuffer, outBuffer);
       finalDone = true;
@@ -362,12 +361,12 @@ public class CryptoInputStream extends InputStream implements
     } catch( BadPaddingException e) {
       throw new IOException(e);
     }
-    
+
     // Clear the input buffer and prepare out buffer
     inBuffer.clear();
     outBuffer.flip();
   }
-  
+
   protected void checkStream() throws IOException {
     if (closed) {
       throw new IOException("Stream closed");
@@ -379,5 +378,4 @@ public class CryptoInputStream extends InputStream implements
     Utils.freeDirectBuffer(inBuffer);
     Utils.freeDirectBuffer(outBuffer);
   }
-  
 }

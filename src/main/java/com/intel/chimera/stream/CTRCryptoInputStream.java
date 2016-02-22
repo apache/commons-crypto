@@ -53,26 +53,26 @@ public class CTRCryptoInputStream extends CryptoInputStream {
    * Underlying stream offset
    */
   protected long streamOffset = 0;
-  
+
   /**
    * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer}
    * before any other data goes in. The purpose of padding is to put the input
    * data at proper position.
    */
   private byte padding;
-  
+
   /**
    * Flag to mark whether the cipher has been reset
    */
   private boolean cipherReset = false;
 
-  public CTRCryptoInputStream(Properties props, InputStream in, 
+  public CTRCryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv)
       throws IOException {
     this(props, in, key, iv, 0);
   }
 
-  public CTRCryptoInputStream(Properties props, ReadableByteChannel in, 
+  public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
       byte[] key, byte[] iv)
       throws IOException {
     this(props, in, key, iv, 0);
@@ -96,15 +96,15 @@ public class CTRCryptoInputStream extends CryptoInputStream {
       byte[] iv) throws IOException {
     this(input, cipher, bufferSize, key, iv, 0);
   }
-  
-  public CTRCryptoInputStream(Properties props, InputStream in, 
+
+  public CTRCryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public CTRCryptoInputStream(Properties props, ReadableByteChannel in, 
+  public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
@@ -129,9 +129,9 @@ public class CTRCryptoInputStream extends CryptoInputStream {
       byte[] iv,
       long streamOffset) throws IOException {
     super(input, cipher, bufferSize, key, iv);
-    
+
     Utils.checkStreamCipher(cipher);
-   
+
     this.streamOffset = streamOffset;
     resetStreamOffset(streamOffset);
   }
@@ -167,7 +167,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
       int nd = decryptMore();
       if(nd <= 0)
         return nd;
-      
+
       int n = Math.min(len, outBuffer.remaining());
       outBuffer.get(b, off, n);
       return n;
@@ -247,11 +247,11 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   protected long getStreamOffset() {
     return streamOffset;
   }
-  
+
   /**
    * Decrypt more data by reading the under layer stream. The decrypted data will
-   * be put in the output buffer. 
-   * 
+   * be put in the output buffer.
+   *
    * @return The number of decrypted data. -1 if end of the decrypted stream
    */
   protected int decryptMore() throws IOException {
@@ -370,7 +370,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   protected byte getPadding(long position) {
     return (byte)(position % cipher.getTransformation().getAlgorithmBlockSize());
   }
-  
+
   /** Initialize the cipher. */
   @Override
   protected void initCipher() {

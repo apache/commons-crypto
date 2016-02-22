@@ -60,7 +60,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
    * at proper position.
    */
   private byte padding;
-  
+
   /**
    * Flag to mark whether the cipher has been reset
    */
@@ -93,7 +93,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
       throws IOException {
     this(output, cipher, bufferSize, key, iv, 0);
   }
-  
+
   public CTRCryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
@@ -124,7 +124,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
       int bufferSize, byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     super(output, cipher, bufferSize, key, iv);
-    
+
     Utils.checkStreamCipher(cipher);
     this.streamOffset = streamOffset;
 
@@ -170,7 +170,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
       resetCipher();
     }
   }
-  
+
   /**
    * Do final encryption of the last data
    */
@@ -179,7 +179,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
     // The same as the normal encryption for Counter mode
     encrypt();
   }
-  
+
   /** Initialize the cipher. */
   @Override
   protected void initCipher() {
