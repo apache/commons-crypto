@@ -69,25 +69,23 @@ public class CounterCryptoInputStream extends CryptoInputStream {
   public CounterCryptoInputStream(Properties props, InputStream in, 
       byte[] key, byte[] iv)
       throws IOException {
-    this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
-        Utils.getBufferSize(props), key, iv);
+    this(props, in, key, iv, 0);
   }
 
   public CounterCryptoInputStream(Properties props, ReadableByteChannel in, 
       byte[] key, byte[] iv)
       throws IOException {
-    this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
-        Utils.getBufferSize(props), key, iv);
+    this(props, in, key, iv, 0);
   }
 
   public CounterCryptoInputStream(InputStream in, Cipher cipher, int bufferSize,
       byte[] key, byte[] iv) throws IOException {
-    this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv);
+    this(in, cipher, bufferSize, key, iv, 0);
   }
 
   public CounterCryptoInputStream(ReadableByteChannel in, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(new ChannelInput(in), cipher, bufferSize, key, iv);
+    this(in, cipher, bufferSize, key, iv, 0);
   }
 
   public CounterCryptoInputStream(
@@ -97,6 +95,30 @@ public class CounterCryptoInputStream extends CryptoInputStream {
       byte[] key,
       byte[] iv) throws IOException {
     this(input, cipher, bufferSize, key, iv, 0);
+  }
+  
+  public CounterCryptoInputStream(Properties props, InputStream in, 
+      byte[] key, byte[] iv, long streamOffset)
+      throws IOException {
+    this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
+        Utils.getBufferSize(props), key, iv, streamOffset);
+  }
+
+  public CounterCryptoInputStream(Properties props, ReadableByteChannel in, 
+      byte[] key, byte[] iv, long streamOffset)
+      throws IOException {
+    this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
+        Utils.getBufferSize(props), key, iv, streamOffset);
+  }
+
+  public CounterCryptoInputStream(InputStream in, Cipher cipher, int bufferSize,
+      byte[] key, byte[] iv, long streamOffset) throws IOException {
+    this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv, streamOffset);
+  }
+
+  public CounterCryptoInputStream(ReadableByteChannel in, Cipher cipher,
+      int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
+    this(new ChannelInput(in), cipher, bufferSize, key, iv, streamOffset);
   }
 
   public CounterCryptoInputStream(
