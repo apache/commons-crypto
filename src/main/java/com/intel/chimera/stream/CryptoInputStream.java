@@ -297,8 +297,9 @@ public class CryptoInputStream extends InputStream implements
    * @return The number of decrypted data. -1 if end of the decrypted stream
    */
   protected int decryptMore() throws IOException {
-    if(finalDone)
+    if(finalDone) {
       return -1;
+    }
 
     int n = input.read(inBuffer);
     if (n < 0) {

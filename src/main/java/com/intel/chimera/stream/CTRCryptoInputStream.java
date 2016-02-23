@@ -38,15 +38,17 @@ import com.intel.chimera.input.StreamInput;
 import com.intel.chimera.utils.Utils;
 
 /**
- * CounterCryptoInputStream decrypts data. It is not thread-safe. AES CTR mode is
- * required in order to ensure that the plain text and cipher text have a 1:1
- * mapping. The decryption is buffer based. The key points of the decryption
- * are (1) calculating the counter and (2) padding through stream position:
+ * CTRCryptoInputStream decrypts data. AES CTR mode is required in order to
+ * ensure that the plain text and cipher text have a 1:1 mapping. CTR crypto
+ * stream has stream characteristic which is useful for implement features
+ * like random seek. The decryption is buffer based. The key points of the
+ * decryption are (1) calculating the counter and (2) padding through stream
+ * position:
  * <p/>
  * counter = base + pos/(algorithm blocksize);
  * padding = pos%(algorithm blocksize);
  * <p/>
- * The underlying stream offset is maintained as state.
+ * The underlying stream offset is maintained as state. It is not thread-safe. 
  */
 public class CTRCryptoInputStream extends CryptoInputStream {
   /**
