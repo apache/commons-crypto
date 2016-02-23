@@ -32,7 +32,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherFactory;
 import com.intel.chimera.input.ChannelInput;
@@ -127,7 +126,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
   }
 
   public void seek(long position) throws IOException {
-    Preconditions.checkArgument(position >= 0, "Cannot seek to negative offset.");
+    Utils.checkArgument(position >= 0, "Cannot seek to negative offset.");
     checkStream();
     /*
      * If data of target pos in the underlying stream has already been read
@@ -186,7 +185,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
    */
   private void decrypt(CipherState state, ByteBuffer inBuffer,
       ByteBuffer outBuffer, byte padding) throws IOException {
-    Preconditions.checkState(inBuffer.position() >= padding);
+    Utils.checkState(inBuffer.position() >= padding);
     if(inBuffer.position() == padding) {
       // There is no real data in inBuffer.
       return;

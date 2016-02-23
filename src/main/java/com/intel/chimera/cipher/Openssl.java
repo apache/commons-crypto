@@ -29,8 +29,8 @@ import javax.crypto.ShortBufferException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.utils.NativeCodeLoader;
+import com.intel.chimera.utils.Utils;
 
 /**
  * OpenSSL cryptographic wrapper using JNI.
@@ -202,7 +202,7 @@ public final class Openssl {
   public int update(ByteBuffer input, ByteBuffer output)
       throws ShortBufferException {
     checkState();
-    Preconditions.checkArgument(input.isDirect() && output.isDirect(),
+    Utils.checkArgument(input.isDirect() && output.isDirect(),
         "Direct buffers are required.");
     int len = OpensslNative.update(context, input, input.position(),
         input.remaining(), output, output.position(), output.remaining());
@@ -243,7 +243,7 @@ public final class Openssl {
       throws ShortBufferException, IllegalBlockSizeException,
       BadPaddingException {
     checkState();
-    Preconditions.checkArgument(output.isDirect(), "Direct buffer is required.");
+    Utils.checkArgument(output.isDirect(), "Direct buffer is required.");
     int len = OpensslNative.doFinal(context, output, output.position(), output.remaining());
     output.position(output.position() + len);
     return len;
@@ -259,7 +259,7 @@ public final class Openssl {
 
   /** Check whether context is initialized. */
   private void checkState() {
-    Preconditions.checkState(context != 0);
+    Utils.checkState(context != 0);
   }
 
   @Override

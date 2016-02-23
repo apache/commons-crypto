@@ -17,13 +17,16 @@
  */
 package com.intel.chimera.random;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.common.base.Splitter;
 
+import com.intel.chimera.utils.Utils;
 import com.intel.chimera.utils.ReflectionUtils;
+
 import static com.intel.chimera.conf.ConfigurationKeys
     .CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
 
@@ -44,8 +47,8 @@ public class SecureRandomFactory {
 
     SecureRandom random = null;
     if (secureRandomClasses != null) {
-      for (String klassName : Splitter.on(',').trimResults().omitEmptyStrings()
-          .split(secureRandomClasses)) {
+      for (String klassName : Utils
+          .splitOmitEmptyLine(secureRandomClasses, ",")) {
         try {
           final Class klass = ReflectionUtils.getClassByName(klassName);
           random = (SecureRandom) ReflectionUtils.newInstance(klass, props);
@@ -61,5 +64,21 @@ public class SecureRandomFactory {
     }
 
     return (random == null) ? new JavaSecureRandom(props) : random;
+  }
+
+  public static List<String> parseSecureRandomClasses(String clazzNames,
+      String separator) {
+    List<String> res = new ArrayList<>();
+    if (clazzNames == null || clazzNames.isEmpty()) {
+      return res;
+    }
+
+    for (String clazzName : clazzNames.split(separator)) {
+      clazzName = clazzName.trim();
+      if (!clazzName.isEmpty()) {
+        res.add(clazzName);
+      }
+    }
+    return res;
   }
 }

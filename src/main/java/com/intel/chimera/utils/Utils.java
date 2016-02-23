@@ -21,13 +21,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherFactory;
 import com.intel.chimera.cipher.CipherTransformation;
+
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
@@ -156,7 +158,7 @@ public class Utils {
 
   /** Check and floor buffer size */
   public static int checkBufferSize(Cipher cipher, int bufferSize) {
-    Preconditions.checkArgument(bufferSize >= MIN_BUFFER_SIZE,
+    checkArgument(bufferSize >= MIN_BUFFER_SIZE,
         "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
     return bufferSize - bufferSize % cipher.getTransformation()
         .getAlgorithmBlockSize();
@@ -181,8 +183,8 @@ public class Utils {
    * @param IV the IV for input stream position
    */
   public static void calculateIV(byte[] initIV, long counter, byte[] IV) {
-    Preconditions.checkArgument(initIV.length == AES_BLOCK_SIZE);
-    Preconditions.checkArgument(IV.length == AES_BLOCK_SIZE);
+    checkArgument(initIV.length == AES_BLOCK_SIZE);
+    checkArgument(IV.length == AES_BLOCK_SIZE);
 
     int i = IV.length; // IV length
     int j = 0; // counter bytes index
@@ -208,5 +210,47 @@ public class Utils {
     } catch (GeneralSecurityException e) {
       throw new IOException(e);
     }
+  }
+
+  public static void checkArgument(boolean expression) {
+    if(!expression) {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  public static void checkArgument(boolean expression, Object errorMessage) {
+    if (!expression) {
+      throw new IllegalArgumentException(String.valueOf(errorMessage));
+    }
+  }
+
+  public static <T> T checkNotNull(T reference) {
+    if(reference == null) {
+      throw new NullPointerException();
+    } else {
+      return reference;
+    }
+  }
+
+  public static void checkState(boolean expression) {
+    if(!expression) {
+      throw new IllegalStateException();
+    }
+  }
+
+  public static List<String> splitOmitEmptyLine(String clazzNames,
+      String separator) {
+    List<String> res = new ArrayList<>();
+    if (clazzNames == null || clazzNames.isEmpty()) {
+      return res;
+    }
+
+    for (String clazzName : clazzNames.split(separator)) {
+      clazzName = clazzName.trim();
+      if (!clazzName.isEmpty()) {
+        res.add(clazzName);
+      }
+    }
+    return res;
   }
 }

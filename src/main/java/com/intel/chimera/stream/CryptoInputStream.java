@@ -29,7 +29,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.input.ChannelInput;
@@ -151,7 +150,7 @@ public class CryptoInputStream extends InputStream implements
 
   @Override
   public long skip(long n) throws IOException {
-    Preconditions.checkArgument(n >= 0, "Negative skip length.");
+    Utils.checkArgument(n >= 0, "Negative skip length.");
     checkStream();
 
     if (n == 0) {

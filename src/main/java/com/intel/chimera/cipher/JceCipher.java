@@ -29,7 +29,6 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.utils.Utils;
 
 /**
@@ -85,8 +84,8 @@ public class JceCipher implements Cipher {
   @Override
   public void init(int mode, byte[] key, byte[] iv)
       throws InvalidKeyException, InvalidAlgorithmParameterException {
-    Preconditions.checkNotNull(key);
-    Preconditions.checkNotNull(iv);
+    Utils.checkNotNull(key);
+    Utils.checkNotNull(iv);
 
     int cipherMode = javax.crypto.Cipher.DECRYPT_MODE;
     if (mode == ENCRYPT_MODE)
