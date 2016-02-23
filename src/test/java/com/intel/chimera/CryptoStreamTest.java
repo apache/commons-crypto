@@ -33,8 +33,8 @@ import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.cipher.JceCipher;
 import com.intel.chimera.cipher.OpensslCipher;
-import com.intel.chimera.stream.CryptoInputStream;
-import com.intel.chimera.stream.CryptoOutputStream;
+import com.intel.chimera.stream.CTRCryptoInputStream;
+import com.intel.chimera.stream.CTRCryptoOutputStream;
 import com.intel.chimera.utils.ReflectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -181,7 +181,7 @@ public class CryptoStreamTest {
   }
 
   private void doByteBufferWrite(String cipherClass, boolean withChannel) throws Exception {
-    CryptoOutputStream out = getCryptoOutputStream(cipherClass, defaultBufferSize, withChannel);
+    CTRCryptoOutputStream out = getCryptoOutputStream(cipherClass, defaultBufferSize, withChannel);
     ByteBuffer buf = ByteBuffer.allocateDirect(dataLen / 2);
     buf.put(data, 0, dataLen / 2);
     buf.flip();
@@ -232,13 +232,13 @@ public class CryptoStreamTest {
     }
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    OutputStream out = new CryptoOutputStream(baos, cipher, defaultBufferSize, key, iv);
+    OutputStream out = new CTRCryptoOutputStream(baos, cipher, defaultBufferSize, key, iv);
     out.write(data);
     out.flush();
     encData = baos.toByteArray();
   }
 
-  private CryptoInputStream getCryptoInputStream(String cipherClass, int bufferSize, boolean withChannel)
+  private CTRCryptoInputStream getCryptoInputStream(String cipherClass, int bufferSize, boolean withChannel)
       throws IOException {
     Cipher cipher = null;
     try {
@@ -249,13 +249,13 @@ public class CryptoStreamTest {
     }
 
     if (withChannel) {
-      return new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(encData)), cipher, bufferSize, key, iv);
+      return new CTRCryptoInputStream(Channels.newChannel(new ByteArrayInputStream(encData)), cipher, bufferSize, key, iv);
     } else {
-      return new CryptoInputStream(new ByteArrayInputStream(encData), cipher, bufferSize, key, iv);
+      return new CTRCryptoInputStream(new ByteArrayInputStream(encData), cipher, bufferSize, key, iv);
     }
   }
 
-  private CryptoOutputStream getCryptoOutputStream(String cipherClass, int bufferSize, boolean withChannel)
+  private CTRCryptoOutputStream getCryptoOutputStream(String cipherClass, int bufferSize, boolean withChannel)
       throws IOException {
     Cipher cipher = null;
     try {
@@ -267,9 +267,9 @@ public class CryptoStreamTest {
 
     baos.reset();
     if (withChannel) {
-      return new CryptoOutputStream(Channels.newChannel(baos), cipher, bufferSize, key, iv);
+      return new CTRCryptoOutputStream(Channels.newChannel(baos), cipher, bufferSize, key, iv);
     } else {
-      return new CryptoOutputStream(baos, cipher, bufferSize, key, iv);
+      return new CTRCryptoOutputStream(baos, cipher, bufferSize, key, iv);
     }
   }
 

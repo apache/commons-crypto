@@ -30,8 +30,8 @@ import java.util.Random;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.cipher.JceCipher;
 import com.intel.chimera.cipher.OpensslCipher;
-import com.intel.chimera.stream.CryptoInputStream;
-import com.intel.chimera.stream.CryptoOutputStream;
+import com.intel.chimera.stream.CTRCryptoInputStream;
+import com.intel.chimera.stream.CTRCryptoOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
@@ -121,7 +121,7 @@ public class StreamCipherTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out = new CryptoOutputStream(encryptedData,
+    CTRCryptoOutputStream out = new CTRCryptoOutputStream(encryptedData,
         encCipher, bufferSize, key, iv);
     out.write(originalData, 0, originalData.length);
     out.flush();
@@ -138,7 +138,7 @@ public class StreamCipherTest {
     LOG.info("Created a cipher object of type: " + decCipherClass);
 
     // Decrypt data
-    CryptoInputStream in = new CryptoInputStream(new ByteArrayInputStream(
+    CTRCryptoInputStream in = new CTRCryptoInputStream(new ByteArrayInputStream(
         encryptedData.toByteArray()), decCipher, bufferSize, key, iv);
 
     // Check
@@ -156,7 +156,7 @@ public class StreamCipherTest {
           originalData, decryptedData);
 
     // Decrypt data byte-at-a-time
-    in = new CryptoInputStream(new ByteArrayInputStream(
+    in = new CTRCryptoInputStream(new ByteArrayInputStream(
         encryptedData.toByteArray()), decCipher, bufferSize, key, iv);
 
     // Check
@@ -193,7 +193,7 @@ public class StreamCipherTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out = new CryptoOutputStream(Channels.newChannel(encryptedData),
+    CTRCryptoOutputStream out = new CTRCryptoOutputStream(Channels.newChannel(encryptedData),
         encCipher, bufferSize, key, iv);
     out.write(originalData, 0, originalData.length);
     out.flush();
@@ -210,7 +210,7 @@ public class StreamCipherTest {
     LOG.info("Created a cipher object of type: " + decCipherClass);
 
     // Decrypt data
-    CryptoInputStream in = new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(
+    CTRCryptoInputStream in = new CTRCryptoInputStream(Channels.newChannel(new ByteArrayInputStream(
         encryptedData.toByteArray())), decCipher, bufferSize, key, iv);
 
     // Check
@@ -228,7 +228,7 @@ public class StreamCipherTest {
           originalData, decryptedData);
 
     // Decrypt data byte-at-a-time
-    in = new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(
+    in = new CTRCryptoInputStream(Channels.newChannel(new ByteArrayInputStream(
         encryptedData.toByteArray())), decCipher, bufferSize, key, iv);
 
     // Check

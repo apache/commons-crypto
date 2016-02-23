@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.intel.chimera.stream;
 
 import java.io.IOException;
@@ -29,7 +30,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.output.ChannelOutput;
@@ -38,50 +38,35 @@ import com.intel.chimera.output.StreamOutput;
 import com.intel.chimera.utils.Utils;
 
 /**
- * CryptoOutputStream encrypts data. It is not thread-safe. AES CTR mode is
- * required in order to ensure that the plain text and cipher text have a 1:1
- * mapping. The encryption is buffer based. The key points of the encryption are
- * (1) calculating counter and (2) padding through stream position.
- * <p/>
- * counter = base + pos/(algorithm blocksize);
- * padding = pos%(algorithm blocksize);
- * <p/>
- * The underlying stream offset is maintained as state.
+ * CryptoOutputStream encrypts data and writes to the under layer output. It supports
+ * any mode of operations such as AES CBC/CTR/GCM mode in concept. It is not thread-safe.
  */
+
 public class CryptoOutputStream extends OutputStream implements
     WritableByteChannel {
-  private Output output;
-  private final Cipher cipher;
-  private final int bufferSize;
-
-  private final byte[] key;
-  private final byte[] initIV;
-  private byte[] iv;
-
-  private long streamOffset = 0; // Underlying stream offset.
-  private boolean cipherReset = false;
-
   private final byte[] oneByteBuf = new byte[1];
+
+  protected Output output;
+  protected final Cipher cipher;
+  protected final int bufferSize;
+
+  protected final byte[] key;
+  protected final byte[] initIV;
+  protected byte[] iv;
+
+  protected boolean closed;
 
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at
    * inBuffer.limit().
    */
-  private ByteBuffer inBuffer;
+  protected ByteBuffer inBuffer;
 
   /**
    * Encrypted data buffer. The data starts at outBuffer.position() and ends at
    * outBuffer.limit();
    */
-  private ByteBuffer outBuffer;
-
-  /**
-   * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer}
-   * before any other data goes in. The purpose of padding is to put input data
-   * at proper position.
-   */
-  private byte padding;
-  private boolean closed;
+  protected ByteBuffer outBuffer;
 
   public CryptoOutputStream(CipherTransformation transformation,
       Properties props, OutputStream out, byte[] key, byte[] iv)
@@ -107,16 +92,9 @@ public class CryptoOutputStream extends OutputStream implements
     this(new ChannelOutput(channel), cipher, bufferSize, key, iv);
   }
 
-  public CryptoOutputStream(Output output, Cipher cipher,
+  protected CryptoOutputStream(Output output, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv)
       throws IOException {
-    this(output, cipher, bufferSize, key, iv, 0);
-  }
-
-  protected CryptoOutputStream(Output output, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv, long streamOffset)
-      throws IOException {
-    Utils.checkStreamCipher(cipher);
 
     this.output = output;
     this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
@@ -125,10 +103,16 @@ public class CryptoOutputStream extends OutputStream implements
     this.initIV = iv.clone();
     this.iv = iv.clone();
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-    outBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-    this.streamOffset = streamOffset;
+    outBuffer = ByteBuffer.allocateDirect(this.bufferSize +
+        cipher.getTransformation().getAlgorithmBlockSize());
 
-    resetCipher();
+    initCipher();
+  }
+
+  @Override
+  public void write(int b) throws IOException {
+    oneByteBuf[0] = (byte)(b & 0xff);
+    write(oneByteBuf, 0, oneByteBuf.length);
   }
 
   /**
@@ -141,7 +125,6 @@ public class CryptoOutputStream extends OutputStream implements
    * @param len the number of bytes to write.
    * @throws IOException
    */
-  @Override
   public void write(byte[] b, int off, int len) throws IOException {
     checkStream();
     if (b == null) {
@@ -150,6 +133,7 @@ public class CryptoOutputStream extends OutputStream implements
         len > b.length - off) {
       throw new IndexOutOfBoundsException();
     }
+
     while (len > 0) {
       final int remaining = inBuffer.remaining();
       if (len < remaining) {
@@ -161,23 +145,6 @@ public class CryptoOutputStream extends OutputStream implements
         len -= remaining;
         encrypt();
       }
-    }
-  }
-
-  @Override
-  public void close() throws IOException {
-    if (closed) {
-      return;
-    }
-
-    try {
-      encrypt();
-      output.close();
-      freeBuffers();
-      cipher.close();
-      super.close();
-    } finally {
-      closed = true;
     }
   }
 
@@ -194,9 +161,20 @@ public class CryptoOutputStream extends OutputStream implements
   }
 
   @Override
-  public void write(int b) throws IOException {
-    oneByteBuf[0] = (byte)(b & 0xff);
-    write(oneByteBuf, 0, oneByteBuf.length);
+  public void close() throws IOException {
+    if (closed) {
+      return;
+    }
+
+    try {
+      encryptFinal();
+      output.close();
+      freeBuffers();
+      cipher.close();
+      super.close();
+    } finally {
+      closed = true;
+    }
   }
 
   @Override
@@ -233,90 +211,72 @@ public class CryptoOutputStream extends OutputStream implements
     return len;
   }
 
+  /** Initialize the cipher. */
+  protected void initCipher()
+      throws IOException {
+    try {
+      cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+    } catch (InvalidKeyException e) {
+      throw new IOException(e);
+    } catch(InvalidAlgorithmParameterException e) {
+      throw new IOException(e);
+    }
+  }
+
   /**
    * Do the encryption, input is {@link #inBuffer} and output is
    * {@link #outBuffer}.
    */
-  private void encrypt() throws IOException {
-    Preconditions.checkState(inBuffer.position() >= padding);
-    if (inBuffer.position() == padding) {
-      // There is no real data in the inBuffer.
-      return;
-    }
+  protected void encrypt() throws IOException {
 
     inBuffer.flip();
     outBuffer.clear();
-    encryptBuffer(outBuffer);
+
+    try {
+      cipher.update(inBuffer, outBuffer);
+    } catch (ShortBufferException e) {
+      throw new IOException(e);
+    }
+
     inBuffer.clear();
     outBuffer.flip();
 
-    if (padding > 0) {
-      /*
-       * The plain text and cipher text have a 1:1 mapping, they start at the
-       * same position.
-       */
-      outBuffer.position(padding);
-      padding = 0;
-    }
-
-    final int len = output.write(outBuffer);
-    streamOffset += len;
-    if (cipherReset) {
-      /*
-       * This code is generally not executed since the encryptor usually
-       * maintains encryption context (e.g. the counter) internally. However,
-       * some implementations can't maintain context so a re-init is necessary
-       * after each encryption call.
-       */
-      resetCipher();
-    }
+    // write to output
+    output.write(outBuffer);
   }
 
-  /** Reset the {@link #cipher}: calculate counter and {@link #padding}. */
-  private void resetCipher() throws IOException {
-    final long counter =
-        streamOffset / cipher.getTransformation().getAlgorithmBlockSize();
-    padding =
-        (byte)(streamOffset % cipher.getTransformation().getAlgorithmBlockSize());
-    inBuffer.position(padding); // Set proper position for input data.
+  /**
+   * Do final encryption of the last data
+   */
+  protected void encryptFinal() throws IOException {
+    inBuffer.flip();
+    outBuffer.clear();
 
-    Utils.calculateIV(initIV, counter, iv);
     try {
-      cipher.init(Cipher.ENCRYPT_MODE, key, iv);
-    } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+      cipher.doFinal(inBuffer, outBuffer);
+    } catch (ShortBufferException e) {
+      throw new IOException(e);
+    } catch (IllegalBlockSizeException e) {
+      throw new IOException(e);
+    } catch( BadPaddingException e) {
       throw new IOException(e);
     }
-    cipherReset = false;
+
+    inBuffer.clear();
+    outBuffer.flip();
+
+    // write to output
+    output.write(outBuffer);
   }
 
-  private void encryptBuffer(ByteBuffer out)
-      throws IOException {
-    int inputSize = inBuffer.remaining();
-    try {
-      int n = cipher.update(inBuffer, out);
-      if (n < inputSize) {
-        /**
-         * Typically code will not get here. Cipher#update will consume all
-         * input data and put result in outBuffer.
-         * Cipher#doFinal will reset the cipher context.
-         */
-        cipher.doFinal(inBuffer, out);
-        cipherReset = true;
-      }
-    } catch (ShortBufferException | BadPaddingException
-        | IllegalBlockSizeException e) {
-      throw new IOException(e);
-    }
-  }
-
-  private void checkStream() throws IOException {
+  protected void checkStream() throws IOException {
     if (closed) {
       throw new IOException("Stream closed");
     }
   }
 
   /** Forcibly free the direct buffers. */
-  private void freeBuffers() {
+  protected void freeBuffers() {
     Utils.freeDirectBuffer(inBuffer);
     Utils.freeDirectBuffer(outBuffer);
   }

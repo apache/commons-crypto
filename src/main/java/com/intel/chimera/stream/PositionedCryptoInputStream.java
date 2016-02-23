@@ -47,7 +47,7 @@ import static com.intel.chimera.cipher.CipherTransformation.AES_CTR_NOPADDING;
  * at random position as well as provides the foundation for positioned read for
  * decrypting. This needs a stream cipher mode such as AES CTR mode.
  */
-public class PositionedCryptoInputStream extends CryptoInputStream {
+public class PositionedCryptoInputStream extends CTRCryptoInputStream {
 
   /** DirectBuffer pool */
   private final Queue<ByteBuffer> bufferPool = new ConcurrentLinkedQueue<>();
@@ -85,7 +85,6 @@ public class PositionedCryptoInputStream extends CryptoInputStream {
       byte[] iv,
       long streamOffset) throws IOException {
     super(input, cipher, bufferSize, key, iv, streamOffset);
-    Utils.checkStreamCipher(cipher);
   }
 
   protected long getPos() throws IOException {
