@@ -112,6 +112,9 @@ public class CryptoInputStream extends InputStream implements
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize +
         cipher.getTransformation().getAlgorithmBlockSize());
 
+    inBuffer.clear();
+    outBuffer.clear();
+    outBuffer.limit(0);
     initCipher();
   }
 
