@@ -85,7 +85,7 @@ public class CipherFactory {
       LOG.debug("No cipher classes configured.");
       return null;
     }
-    for (String c : Utils.splitOmitEmptyLine(cipherClassString, ",")) {
+    for (String c : Utils.splitClassNames(cipherClassString, ",")) {
       try {
         Class<?> cls = ReflectionUtils.getClassByName(c);
         result.add(cls.asSubclass(Cipher.class));

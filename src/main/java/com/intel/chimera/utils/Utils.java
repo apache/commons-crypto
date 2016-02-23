@@ -276,7 +276,7 @@ public class Utils {
    * @param separator  a delimiter for the input string
    * @return a list of entries
    */
-  public static List<String> splitOmitEmptyLine(String clazzNames,
+  public static List<String> splitClassNames(String clazzNames,
       String separator) {
     List<String> res = new ArrayList<>();
     if (clazzNames == null || clazzNames.isEmpty()) {

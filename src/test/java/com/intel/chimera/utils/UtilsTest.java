@@ -27,13 +27,13 @@ public class UtilsTest {
 
   @Test
   public void testSplitOmitEmptyLine() {
-    List<String> clazzNames = Utils.splitOmitEmptyLine("", ",");
+    List<String> clazzNames = Utils.splitClassNames("", ",");
     Arrays.equals(clazzNames.toArray(new String[2]), null);
-    clazzNames = Utils.splitOmitEmptyLine("a,b", ",");
+    clazzNames = Utils.splitClassNames("a,b", ",");
     Arrays.equals(clazzNames.toArray(new String[2]), new String[]{"a", "b"});
-    clazzNames = Utils.splitOmitEmptyLine("a,b,", ",");
+    clazzNames = Utils.splitClassNames("a,b,", ",");
     Arrays.equals(clazzNames.toArray(new String[2]), new String[]{"a", "b"});
-    clazzNames = Utils.splitOmitEmptyLine("a, b,", ",");
+    clazzNames = Utils.splitClassNames("a, b,", ",");
     Arrays.equals(clazzNames.toArray(new String[2]), new String[]{"a", "b"});
   }
 }

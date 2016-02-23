@@ -17,8 +17,6 @@
  */
 package com.intel.chimera.random;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -47,8 +45,7 @@ public class SecureRandomFactory {
 
     SecureRandom random = null;
     if (secureRandomClasses != null) {
-      for (String klassName : Utils
-          .splitOmitEmptyLine(secureRandomClasses, ",")) {
+      for (String klassName : Utils.splitClassNames(secureRandomClasses, ",")) {
         try {
           final Class klass = ReflectionUtils.getClassByName(klassName);
           random = (SecureRandom) ReflectionUtils.newInstance(klass, props);
