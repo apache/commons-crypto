@@ -29,7 +29,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.output.ChannelOutput;
@@ -137,7 +136,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
    */
   @Override
   protected void encrypt() throws IOException {
-    Preconditions.checkState(inBuffer.position() >= padding);
+    Utils.checkState(inBuffer.position() >= padding);
     if (inBuffer.position() == padding) {
       // There is no real data in the inBuffer.
       return;

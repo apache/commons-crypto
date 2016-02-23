@@ -212,18 +212,40 @@ public class Utils {
     }
   }
 
+  /**
+   * Ensures the truth of an expression involving one or more parameters to
+   * the calling method.
+   *
+   * @param expression a boolean expression
+   * @throws IllegalArgumentException if expression is false
+   */
   public static void checkArgument(boolean expression) {
     if(!expression) {
       throw new IllegalArgumentException();
     }
   }
 
+  /**
+   * @param expression   a boolean expression
+   * @param errorMessage the exception message to use if the check fails;
+   *                     will be converted to a string using <code>String
+   *                     .valueOf(Object)</code>
+   * @throws IllegalArgumentException if expression is false
+   */
   public static void checkArgument(boolean expression, Object errorMessage) {
     if (!expression) {
       throw new IllegalArgumentException(String.valueOf(errorMessage));
     }
   }
 
+  /**
+   * Ensures that an object reference passed as a parameter to the calling
+   * method is not null.
+   *
+   * @param reference an object reference
+   * @return the non-null reference that was validated
+   * @throws NullPointerException if reference is null
+   */
   public static <T> T checkNotNull(T reference) {
     if(reference == null) {
       throw new NullPointerException();
@@ -232,12 +254,28 @@ public class Utils {
     }
   }
 
+  /**
+   * Ensures the truth of an expression involving the state of the calling
+   * instance, but not involving any parameters to the calling method.
+   *
+   * @param expression a boolean expression
+   * @throws IllegalStateException if expression is false
+   */
   public static void checkState(boolean expression) {
     if(!expression) {
       throw new IllegalStateException();
     }
   }
 
+  /**
+   * Split class names sequence into substrings, Trim each substring into an
+   * entry,and returns an list of the entries.
+   *
+   * @param clazzNames a string consist of a list of the entries joined by a
+   *                   delimiter
+   * @param separator  a delimiter for the input string
+   * @return a list of entries
+   */
   public static List<String> splitOmitEmptyLine(String clazzNames,
       String separator) {
     List<String> res = new ArrayList<>();

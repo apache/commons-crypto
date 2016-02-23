@@ -65,20 +65,4 @@ public class SecureRandomFactory {
 
     return (random == null) ? new JavaSecureRandom(props) : random;
   }
-
-  public static List<String> parseSecureRandomClasses(String clazzNames,
-      String separator) {
-    List<String> res = new ArrayList<>();
-    if (clazzNames == null || clazzNames.isEmpty()) {
-      return res;
-    }
-
-    for (String clazzName : clazzNames.split(separator)) {
-      clazzName = clazzName.trim();
-      if (!clazzName.isEmpty()) {
-        res.add(clazzName);
-      }
-    }
-    return res;
-  }
 }
