@@ -134,7 +134,6 @@ public class CTRCryptoInputStream extends CryptoInputStream {
 
     Utils.checkStreamCipher(cipher);
 
-    this.streamOffset = streamOffset;
     resetStreamOffset(streamOffset);
   }
 
