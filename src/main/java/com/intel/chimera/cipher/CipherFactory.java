@@ -79,7 +79,7 @@ public class CipherFactory {
   }
 
   private static List<Class<? extends Cipher>> getCipherClasses(Properties props) {
-    List<Class<? extends Cipher>> result = new ArrayList();
+    List<Class<? extends Cipher>> result = new ArrayList<>();
     String cipherClassString = Utils.getCipherClassString(props);
     if (cipherClassString == null) {
       LOG.debug("No cipher classes configured.");
