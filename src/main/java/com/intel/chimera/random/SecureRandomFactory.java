@@ -21,9 +21,10 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.common.base.Splitter;
 
+import com.intel.chimera.utils.Utils;
 import com.intel.chimera.utils.ReflectionUtils;
+
 import static com.intel.chimera.conf.ConfigurationKeys
     .CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
 
@@ -44,8 +45,7 @@ public class SecureRandomFactory {
 
     SecureRandom random = null;
     if (secureRandomClasses != null) {
-      for (String klassName : Splitter.on(',').trimResults().omitEmptyStrings()
-          .split(secureRandomClasses)) {
+      for (String klassName : Utils.splitClassNames(secureRandomClasses, ",")) {
         try {
           final Class klass = ReflectionUtils.getClassByName(klassName);
           random = (SecureRandom) ReflectionUtils.newInstance(klass, props);

@@ -23,8 +23,8 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.utils.NativeCodeLoader;
+import com.intel.chimera.utils.Utils;
 
 /**
  * OpenSSL secure random using JNI.
@@ -99,7 +99,7 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
    */
   @Override
   final protected int next(int numBits) {
-    Preconditions.checkArgument(numBits >= 0 && numBits <= 32);
+    Utils.checkArgument(numBits >= 0 && numBits <= 32);
     int numBytes = (numBits + 7) / 8;
     byte b[] = new byte[numBytes];
     int next = 0;

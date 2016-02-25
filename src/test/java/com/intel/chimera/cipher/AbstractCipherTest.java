@@ -23,8 +23,8 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 import javax.xml.bind.DatatypeConverter;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.conf.ConfigurationKeys;
+import com.intel.chimera.utils.Utils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +41,8 @@ public abstract class AbstractCipherTest {
   @Before
   public void setup() {
     init();
-    Preconditions.checkNotNull(cipherClass);
-    Preconditions.checkNotNull(transformations);
+    Utils.checkNotNull(cipherClass);
+    Utils.checkNotNull(transformations);
     props = new Properties();
     props.setProperty(ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY,
         cipherClass);

@@ -29,7 +29,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
-import com.google.common.base.Preconditions;
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.input.ChannelInput;
@@ -48,7 +47,7 @@ import com.intel.chimera.utils.Utils;
  * counter = base + pos/(algorithm blocksize);
  * padding = pos%(algorithm blocksize);
  * <p/>
- * The underlying stream offset is maintained as state. It is not thread-safe. 
+ * The underlying stream offset is maintained as state. It is not thread-safe.
  */
 public class CTRCryptoInputStream extends CryptoInputStream {
   /**
@@ -178,7 +177,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   /** Skip n bytes */
   @Override
   public long skip(long n) throws IOException {
-    Preconditions.checkArgument(n >= 0, "Negative skip length.");
+    Utils.checkArgument(n >= 0, "Negative skip length.");
     checkStream();
 
     if (n == 0) {
@@ -273,7 +272,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
    * outBuffer.position() and ends at outBuffer.limit();
    */
   protected void decrypt() throws IOException {
-    Preconditions.checkState(inBuffer.position() >= padding);
+    Utils.checkState(inBuffer.position() >= padding);
     if(inBuffer.position() == padding) {
       // There is no real data in inBuffer.
       return;
@@ -302,10 +301,10 @@ public class CTRCryptoInputStream extends CryptoInputStream {
    * The buf's limit will not have changed.
    */
   protected void decryptInPlace(ByteBuffer buf) throws IOException {
-    Preconditions.checkState(inBuffer.position() >= padding);
-    Preconditions.checkState(buf.isDirect());
-    Preconditions.checkState(buf.remaining() >= inBuffer.position());
-    Preconditions.checkState(padding == 0);
+    Utils.checkState(inBuffer.position() >= padding);
+    Utils.checkState(buf.isDirect());
+    Utils.checkState(buf.remaining() >= inBuffer.position());
+    Utils.checkState(padding == 0);
 
     if(inBuffer.position() == padding) {
       // There is no real data in inBuffer.

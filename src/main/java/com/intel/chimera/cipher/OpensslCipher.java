@@ -26,7 +26,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
-import com.google.common.base.Preconditions;
+import com.intel.chimera.utils.Utils;
 
 /**
  * Implement the Cipher using JNI into OpenSSL.
@@ -74,8 +74,8 @@ public class OpensslCipher implements Cipher {
    */
   @Override
   public void init(int mode, byte[] key, byte[] iv) {
-    Preconditions.checkNotNull(key);
-    Preconditions.checkNotNull(iv);
+    Utils.checkNotNull(key);
+    Utils.checkNotNull(iv);
 
     int cipherMode = Openssl.DECRYPT_MODE;
     if (mode == ENCRYPT_MODE)

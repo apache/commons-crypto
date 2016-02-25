@@ -17,14 +17,13 @@
  */
 package com.intel.chimera.cipher;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.intel.chimera.utils.ReflectionUtils;
 import com.intel.chimera.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -80,14 +79,13 @@ public class CipherFactory {
   }
 
   private static List<Class<? extends Cipher>> getCipherClasses(Properties props) {
-    List<Class<? extends Cipher>> result = Lists.newArrayList();
+    List<Class<? extends Cipher>> result = new ArrayList<>();
     String cipherClassString = Utils.getCipherClassString(props);
     if (cipherClassString == null) {
       LOG.debug("No cipher classes configured.");
       return null;
     }
-    for (String c : Splitter.on(',').trimResults().omitEmptyStrings().
-        split(cipherClassString)) {
+    for (String c : Utils.splitClassNames(cipherClassString, ",")) {
       try {
         Class<?> cls = ReflectionUtils.getClassByName(c);
         result.add(cls.asSubclass(Cipher.class));
