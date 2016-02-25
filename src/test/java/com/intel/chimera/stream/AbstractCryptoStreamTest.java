@@ -42,7 +42,7 @@ public abstract class AbstractCryptoStreamTest {
   private final int dataLen = 20000;
   private byte[] data = new byte[dataLen];
   private byte[] encData;
-  private Properties props;
+  private Properties props = new Properties();
   private byte[] key = new byte[16];
   private byte[] iv = new byte[16];
 
@@ -63,15 +63,13 @@ public abstract class AbstractCryptoStreamTest {
     random.nextBytes(data);
     random.nextBytes(key);
     random.nextBytes(iv);
-    props = new Properties();
     setUp();
+    prepareData();
   }
 
   /** Test skip. */
   @Test(timeout=120000)
   public void testSkip() throws Exception {
-    prepareData();
-
     doSkipTest(jceCipherClass, false);
     doSkipTest(opensslCipherClass, false);
 
@@ -82,8 +80,6 @@ public abstract class AbstractCryptoStreamTest {
   /** Test byte buffer read with different buffer size. */
   @Test(timeout=120000)
   public void testByteBufferRead() throws Exception {
-    prepareData();
-
     doByteBufferRead(jceCipherClass, false);
     doByteBufferRead(opensslCipherClass, false);
 
@@ -200,7 +196,6 @@ public abstract class AbstractCryptoStreamTest {
     Assert.assertEquals(dataLen, n1 + n2 + n3);
 
     out.flush();
-    encData = baos.toByteArray();
 
     InputStream in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
     buf = ByteBuffer.allocate(dataLen + 100);
@@ -273,7 +268,7 @@ public abstract class AbstractCryptoStreamTest {
     }
   }
 
-  private int readAll(InputStream in, byte[] b, int off, int len)
+  private int readAll(InputStream in, byte[] b, int offset, int len)
       throws IOException {
     int n = 0;
     int total = 0;
@@ -282,7 +277,7 @@ public abstract class AbstractCryptoStreamTest {
       if (total >= len) {
         break;
       }
-      n = in.read(b, off + total, len - total);
+      n = in.read(b, offset + total, len - total);
     }
 
     return total;
