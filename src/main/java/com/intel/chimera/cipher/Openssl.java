@@ -61,7 +61,8 @@ public final class Openssl {
   }
 
   private static enum Padding {
-    NoPadding;
+    NoPadding,
+    PKCS5Padding;
 
     static int get(String padding) throws NoSuchPaddingException {
       try {

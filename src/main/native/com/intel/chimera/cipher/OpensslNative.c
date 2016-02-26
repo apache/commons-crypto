@@ -80,7 +80,7 @@ static __dlsym_EVP_aes_128_cbc dlsym_EVP_aes_128_cbc;
 static HMODULE openssl;
 #endif
 
-static void loadAesCtr(JNIEnv *env)
+static void loadAes(JNIEnv *env)
 {
 #ifdef UNIX
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_ctr, env, openssl, "EVP_aes_256_ctr");
@@ -167,7 +167,7 @@ JNIEXPORT void JNICALL Java_com_intel_chimera_cipher_OpensslNative_initIDs
                       env, openssl, "EVP_CipherFinal_ex");
 #endif
 
-  loadAesCtr(env);
+  loadAes(env);
   jthrowable jthr = (*env)->ExceptionOccurred(env);
   if (jthr) {
     (*env)->DeleteLocalRef(env, jthr);
@@ -288,6 +288,8 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_cipher_OpensslNative_init
 
   if (padding == NOPADDING) {
     dlsym_EVP_CIPHER_CTX_set_padding(context, 0);
+  } else if (padding == PKCS5PADDING) {
+    dlsym_EVP_CIPHER_CTX_set_padding(context, 1);
   }
 
   return JLONG(context);
