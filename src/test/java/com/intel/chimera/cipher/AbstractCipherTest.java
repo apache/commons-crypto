@@ -24,6 +24,7 @@ import java.util.Properties;
 import javax.xml.bind.DatatypeConverter;
 
 import com.intel.chimera.conf.ConfigurationKeys;
+import com.intel.chimera.utils.ReflectionUtils;
 import com.intel.chimera.utils.Utils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -73,7 +74,7 @@ public abstract class AbstractCipherTest {
     }
   }
 
-  private void byteBufferTest(CipherTransformation transformation,byte[] key,
+  private void byteBufferTest(CipherTransformation transformation, byte[] key,
                               byte[] iv,
                                 ByteBuffer input, ByteBuffer output) throws
       GeneralSecurityException, IOException {
@@ -81,8 +82,8 @@ public abstract class AbstractCipherTest {
     ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
     Cipher enc, dec;
 
-    enc = CipherFactory.getInstance(transformation, props);
-    dec = CipherFactory.getInstance(transformation, props);
+    enc = getCipher(transformation);
+    dec = getCipher(transformation);
 
     try {
       enc.init(Cipher.ENCRYPT_MODE, key, iv);
@@ -126,5 +127,16 @@ public abstract class AbstractCipherTest {
       decResult.get(decResultArray);
       Assert.fail();
     }
+  }
+
+  private Cipher getCipher(CipherTransformation transformation) {
+    try {
+      return (Cipher) ReflectionUtils
+          .newInstance(ReflectionUtils.getClassByName(cipherClass), props,
+              transformation);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+
   }
 }

@@ -24,7 +24,7 @@ package com.intel.chimera.cipher;
 public enum CipherTransformation {
   AES_CTR_NOPADDING("AES/CTR/NoPadding", 16),
   AES_CBC_NOPADDING("AES/CBC/NoPadding", 16),
-  AES_CBC_PKCS5PADDING("AES/CBC/PKCS5PADDING", 16);
+  AES_CBC_PKCS5PADDING("AES/CBC/PKCS5Padding", 16);
 
   private final String name;
   private final int algorithmBlockSize;
