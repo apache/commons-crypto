@@ -48,11 +48,17 @@ import static com.intel.chimera.cipher.CipherTransformation.AES_CTR_NOPADDING;
  */
 public class PositionedCryptoInputStream extends CTRCryptoInputStream {
 
-  /** DirectBuffer pool */
-  private final Queue<ByteBuffer> bufferPool = new ConcurrentLinkedQueue<>();
+  /**
+   * DirectBuffer pool
+   */
+  private final Queue<ByteBuffer> bufferPool = new
+      ConcurrentLinkedQueue<ByteBuffer>();
 
-  /** Cipher pool */
-  private final Queue<CipherState> cipherPool = new ConcurrentLinkedQueue<>();
+  /**
+   * Cipher pool
+   */
+  private final Queue<CipherState> cipherPool = new
+      ConcurrentLinkedQueue<CipherState>();
 
   public PositionedCryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
@@ -218,8 +224,11 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
         state.getCipher().doFinal(inBuffer, outBuffer);
         state.reset(true);
       }
-    } catch (ShortBufferException | IllegalBlockSizeException
-        | BadPaddingException e) {
+    } catch (ShortBufferException e) {
+      throw new IOException(e);
+    } catch (IllegalBlockSizeException e) {
+      throw new IOException(e);
+    } catch (BadPaddingException e) {
       throw new IOException(e);
     }
   }
@@ -252,7 +261,9 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     Utils.calculateIV(getInitIV(), counter, iv);
     try {
       state.getCipher().init(Cipher.DECRYPT_MODE, getKey(), iv);
-    } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+    } catch (InvalidKeyException e) {
+      throw new IOException(e);
+    } catch (InvalidAlgorithmParameterException e) {
       throw new IOException(e);
     }
     state.reset(false);

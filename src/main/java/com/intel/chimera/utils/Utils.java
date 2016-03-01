@@ -278,7 +278,7 @@ public class Utils {
    */
   public static List<String> splitClassNames(String clazzNames,
       String separator) {
-    List<String> res = new ArrayList<>();
+    List<String> res = new ArrayList<String>();
     if (clazzNames == null || clazzNames.isEmpty()) {
       return res;
     }
