@@ -18,7 +18,7 @@
 
 package com.intel.chimera.cipher;
 
-public class OpensslCipherCryptoTest extends AbstractCipherTest {
+public class JceCipherTest extends AbstractCipherTest {
 
   @Override
   public void init() {
@@ -26,6 +26,7 @@ public class OpensslCipherCryptoTest extends AbstractCipherTest {
         CipherTransformation.AES_CBC_NOPADDING,
         CipherTransformation.AES_CBC_PKCS5PADDING,
         CipherTransformation.AES_CTR_NOPADDING};
-    cipherClass = OpensslCipher.class.getName();
+    cipherClass = JceCipher.class.getName();
   }
+
 }
