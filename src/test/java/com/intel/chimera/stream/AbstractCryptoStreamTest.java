@@ -306,30 +306,21 @@ public abstract class AbstractCryptoStreamTest {
   }
 
   @Test
-  public void testJceAesCtrCryptoCipher() throws Exception {
+  public void testByteBufferByMixingCiphers() throws Exception {
     Assert.assertEquals(null, Openssl.getLoadingFailureReason());
     cryptoCipherTest(0, jceCipherClass, jceCipherClass, iv);
-    cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
-    cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
-    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
-    for(int i = 0; i < 8; i++) {
-      iv[8 + i] = (byte) 0xff;
-    }
-    cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
-    cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
-  }
-
-  @Test
-  public void testOpensslAesCtrCryptoCipher() throws Exception {
-    Assert.assertEquals(null, Openssl.getLoadingFailureReason());
     cryptoCipherTest(0, opensslCipherClass, opensslCipherClass, iv);
+    cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
     cryptoCipherTest(count, opensslCipherClass, opensslCipherClass, iv);
+    cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
     cryptoCipherTest(count, opensslCipherClass, jceCipherClass, iv);
     // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
     for(int i = 0; i < 8; i++) {
       iv[8 + i] = (byte) 0xff;
     }
+    cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
     cryptoCipherTest(count, opensslCipherClass, opensslCipherClass, iv);
+    cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
     cryptoCipherTest(count, opensslCipherClass, jceCipherClass, iv);
   }
 

@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import com.intel.chimera.cipher.CipherTransformation;
 
-public class CryptoStreamCBCPKCS5PaddingTest extends AbstractCryptoStreamTest {
+public class CBCPKCS5PaddingCryptoStreamTest extends AbstractCryptoStreamTest {
 
   public void setUp() throws IOException {
     transformation = CipherTransformation
