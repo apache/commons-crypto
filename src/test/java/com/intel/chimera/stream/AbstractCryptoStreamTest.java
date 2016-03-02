@@ -251,6 +251,7 @@ public abstract class AbstractCryptoStreamTest {
     OutputStream out = new CryptoOutputStream(baos, cipher, defaultBufferSize, key, iv);
     out.write(data);
     out.flush();
+    out.close();
     encData = baos.toByteArray();
   }
 
