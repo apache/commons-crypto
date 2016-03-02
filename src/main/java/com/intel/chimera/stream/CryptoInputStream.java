@@ -24,7 +24,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.util.Properties;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
@@ -117,7 +116,15 @@ public class CryptoInputStream extends InputStream implements
 
   @Override
   public int read() throws IOException {
-    return (read(oneByteBuf, 0, 1) == -1) ? -1 : (oneByteBuf[0] & 0xff);
+    int readResult = 0;
+    while (readResult == 0) {
+      readResult = read(oneByteBuf, 0, 1);
+    }
+    if (readResult == -1) {
+      return -1;
+    } else {
+      return oneByteBuf[0] & 0xff;
+    }
   }
 
   @Override
