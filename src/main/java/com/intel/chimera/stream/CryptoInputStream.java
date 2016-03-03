@@ -116,15 +116,9 @@ public class CryptoInputStream extends InputStream implements
 
   @Override
   public int read() throws IOException {
-    int ret = 0;
-    while (ret == 0) {
-      ret = read(oneByteBuf, 0, 1);
-    }
-    if (ret == -1) {
-      return -1;
-    } else {
-      return oneByteBuf[0] & 0xff;
-    }
+    int n;
+    while ((n = read(oneByteBuf, 0, 1)) == 0) ;
+    return (n == -1) ? -1 : oneByteBuf[0] & 0xff;
   }
 
   @Override
