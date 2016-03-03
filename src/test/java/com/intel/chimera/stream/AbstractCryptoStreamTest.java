@@ -306,33 +306,33 @@ public abstract class AbstractCryptoStreamTest {
   }
 
   @Test
-  public void testByteBufferByMixingCiphers() throws Exception {
+  public void testReadWrite() throws Exception {
     Assert.assertEquals(null, Openssl.getLoadingFailureReason());
-    cryptoCipherTest(0, jceCipherClass, jceCipherClass, iv);
-    cryptoCipherTest(0, opensslCipherClass, opensslCipherClass, iv);
-    cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
-    cryptoCipherTest(count, opensslCipherClass, opensslCipherClass, iv);
-    cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
-    cryptoCipherTest(count, opensslCipherClass, jceCipherClass, iv);
+    doReadWriteTest(0, jceCipherClass, jceCipherClass, iv);
+    doReadWriteTest(0, opensslCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, jceCipherClass, jceCipherClass, iv);
+    doReadWriteTest(count, opensslCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, jceCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, opensslCipherClass, jceCipherClass, iv);
     // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
     for(int i = 0; i < 8; i++) {
       iv[8 + i] = (byte) 0xff;
     }
-    cryptoCipherTest(count, jceCipherClass, jceCipherClass, iv);
-    cryptoCipherTest(count, opensslCipherClass, opensslCipherClass, iv);
-    cryptoCipherTest(count, jceCipherClass, opensslCipherClass, iv);
-    cryptoCipherTest(count, opensslCipherClass, jceCipherClass, iv);
+    doReadWriteTest(count, jceCipherClass, jceCipherClass, iv);
+    doReadWriteTest(count, opensslCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, jceCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, opensslCipherClass, jceCipherClass, iv);
   }
 
-  private void cryptoCipherTest(int count, String encCipherClass,
-                                String decCipherClass, byte[] iv) throws IOException {
-    cryptoCipherTestForInputStream(count, encCipherClass, decCipherClass, iv);
-    cryptoCipherTestForReadableByteChannel(count, encCipherClass,
-        decCipherClass, iv);
+  private void doReadWriteTest(int count, String encCipherClass,
+                               String decCipherClass, byte[] iv) throws IOException {
+    doReadWriteTestForInputStream(count, encCipherClass, decCipherClass, iv);
+    doReadWriteTestForReadableByteChannel(count, encCipherClass, decCipherClass,
+        iv);
   }
 
-  private void cryptoCipherTestForInputStream(int count, String encCipherClass,
-                                              String decCipherClass, byte[] iv) throws IOException {
+  private void doReadWriteTestForInputStream(int count, String encCipherClass,
+                                             String decCipherClass, byte[] iv) throws IOException {
     Cipher encCipher = getCipher(encCipherClass);
     LOG.debug("Created a cipher object of type: " + encCipherClass);
 
@@ -392,10 +392,10 @@ public abstract class AbstractCryptoStreamTest {
     LOG.debug("SUCCESS! Completed checking " + count + " records");
   }
 
-  private void cryptoCipherTestForReadableByteChannel(int count,
-                                                      String encCipherClass,
-                                                      String decCipherClass,
-                                                      byte[] iv) throws IOException {
+  private void doReadWriteTestForReadableByteChannel(int count,
+                                                     String encCipherClass,
+                                                     String decCipherClass,
+                                                     byte[] iv) throws IOException {
     Cipher encCipher = getCipher(encCipherClass);
     LOG.debug("Created a cipher object of type: " + encCipherClass);
 
