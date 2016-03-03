@@ -1,7 +1,10 @@
 language: java
 jdk:
+  - openjdk6
   - oraclejdk7
 script:
   - mvn apache-rat:check
-  - mvn clean test -Pfindbugs
+  - mvn clean test
+  - jdk_switcher use oraclejdk7
+  - mvn test -Pfindbugs
 

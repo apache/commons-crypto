@@ -385,7 +385,9 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     Utils.calculateIV(initIV, counter, iv);
     try {
       cipher.init(Cipher.DECRYPT_MODE, key, iv);
-    } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+    } catch (InvalidKeyException e) {
+      throw new IOException(e);
+    } catch (InvalidAlgorithmParameterException e) {
       throw new IOException(e);
     }
     cipherReset = false;
@@ -419,8 +421,11 @@ public class CTRCryptoInputStream extends CryptoInputStream {
         cipher.doFinal(inBuffer, out);
         cipherReset = true;
       }
-    } catch (ShortBufferException | IllegalBlockSizeException
-        | BadPaddingException e) {
+    } catch (ShortBufferException e) {
+      throw new IOException(e);
+    } catch (IllegalBlockSizeException e) {
+      throw new IOException(e);
+    } catch (BadPaddingException e) {
       throw new IOException(e);
     }
   }
