@@ -15,17 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.stream;
 
-import java.io.IOException;
+package com.intel.chimera.cipher;
 
-import com.intel.chimera.cipher.CipherTransformation;
+public class JceCipherTest extends AbstractCipherTest {
 
-public class CBC_NOPADDINGStreamTest extends AbstractCryptoStreamTest {
-
-  public void setUp() throws IOException {
-    transformation = CipherTransformation
-        .AES_CBC_NOPADDING;
+  @Override
+  public void init() {
+    transformations = new CipherTransformation[]{
+        CipherTransformation.AES_CBC_NOPADDING,
+        CipherTransformation.AES_CBC_PKCS5PADDING,
+        CipherTransformation.AES_CTR_NOPADDING};
+    cipherClass = JceCipher.class.getName();
   }
 
 }

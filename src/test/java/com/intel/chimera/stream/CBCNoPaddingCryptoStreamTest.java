@@ -15,17 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intel.chimera.stream;
 
-package com.intel.chimera.cipher;
+import java.io.IOException;
 
-public class OpensslCipherCryptoTest extends AbstractCipherTest {
+import com.intel.chimera.cipher.CipherTransformation;
 
-  @Override
-  public void init() {
-    transformations = new CipherTransformation[]{
-        CipherTransformation.AES_CBC_NOPADDING,
-        CipherTransformation.AES_CBC_PKCS5PADDING,
-        CipherTransformation.AES_CTR_NOPADDING};
-    cipherClass = OpensslCipher.class.getName();
+public class CBCNoPaddingCryptoStreamTest extends AbstractCryptoStreamTest {
+
+  public void setUp() throws IOException {
+    transformation = CipherTransformation
+        .AES_CBC_NOPADDING;
   }
+
 }

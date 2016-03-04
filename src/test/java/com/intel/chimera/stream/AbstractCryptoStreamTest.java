@@ -17,8 +17,10 @@
  */
 package com.intel.chimera.stream;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,22 +34,25 @@ import java.util.Random;
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.cipher.JceCipher;
+import com.intel.chimera.cipher.Openssl;
 import com.intel.chimera.cipher.OpensslCipher;
 import com.intel.chimera.utils.ReflectionUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public abstract class AbstractCryptoStreamTest {
+  private static final Log LOG= LogFactory.getLog(AbstractCryptoStreamTest.class);
+
   private final int dataLen = 20000;
   private byte[] data = new byte[dataLen];
   private byte[] encData;
   private Properties props = new Properties();
-  private byte[] key = new byte[16];
+  protected byte[] key = new byte[16];
   private byte[] iv = new byte[16];
-
-  private ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
+  private int count = 10000;
   protected static int defaultBufferSize = 8192;
   protected static int smallBufferSize = 1024;
 
@@ -90,15 +95,17 @@ public abstract class AbstractCryptoStreamTest {
   /** Test byte buffer write. */
   @Test(timeout=120000)
   public void testByteBufferWrite() throws Exception {
-    doByteBufferWrite(jceCipherClass, false);
-    doByteBufferWrite(opensslCipherClass, false);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    doByteBufferWrite(jceCipherClass, baos, false);
+    doByteBufferWrite(opensslCipherClass, baos, false);
 
-    doByteBufferWrite(jceCipherClass, true);
-    doByteBufferWrite(opensslCipherClass, true);
+    doByteBufferWrite(jceCipherClass, baos, true);
+    doByteBufferWrite(opensslCipherClass, baos, true);
   }
 
   private void doSkipTest(String cipherClass, boolean withChannel) throws IOException {
-    InputStream in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
+    InputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     byte[] result = new byte[dataLen];
     int n1 = readAll(in, result, 0, dataLen / 3);
 
@@ -128,56 +135,69 @@ public abstract class AbstractCryptoStreamTest {
 
   private void doByteBufferRead(String cipherClass, boolean withChannel) throws Exception {
     // Default buffer size, initial buffer position is 0
-    InputStream in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
+    InputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     ByteBuffer buf = ByteBuffer.allocate(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Default buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
+    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Small buffer size, initial buffer position is 0
-    in = getCryptoInputStream(cipherClass, smallBufferSize, withChannel);
+    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), smallBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Small buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(cipherClass, smallBufferSize, withChannel);
+    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), smallBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Direct buffer, default buffer size, initial buffer position is 0
-    in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
+    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     buf = ByteBuffer.allocateDirect(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Direct buffer, default buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
+    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Direct buffer, small buffer size, initial buffer position is 0
-    in = getCryptoInputStream(cipherClass, smallBufferSize, withChannel);
+    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), smallBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Direct buffer, small buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(cipherClass, smallBufferSize, withChannel);
+    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), smallBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
   }
 
-  private void doByteBufferWrite(String cipherClass, boolean withChannel) throws Exception {
-    CryptoOutputStream out = getCryptoOutputStream(cipherClass, defaultBufferSize, withChannel);
+  private void doByteBufferWrite(String cipherClass, ByteArrayOutputStream baos,
+                                 boolean withChannel)
+      throws Exception {
+    baos.reset();
+    CryptoOutputStream out =
+        getCryptoOutputStream(baos, getCipher(cipherClass), defaultBufferSize,
+            iv, withChannel);
     ByteBuffer buf = ByteBuffer.allocateDirect(dataLen / 2);
     buf.put(data, 0, dataLen / 2);
     buf.flip();
@@ -197,7 +217,8 @@ public abstract class AbstractCryptoStreamTest {
 
     out.flush();
 
-    InputStream in = getCryptoInputStream(cipherClass, defaultBufferSize, withChannel);
+    InputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     buf = ByteBuffer.allocate(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
     in.close();
@@ -230,39 +251,31 @@ public abstract class AbstractCryptoStreamTest {
     OutputStream out = new CryptoOutputStream(baos, cipher, defaultBufferSize, key, iv);
     out.write(data);
     out.flush();
+    out.close();
     encData = baos.toByteArray();
   }
 
-  private CryptoInputStream getCryptoInputStream(String cipherClass, int bufferSize, boolean withChannel)
-      throws IOException {
-    Cipher cipher = null;
-    try {
-      cipher = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(cipherClass), props, transformation);
-    } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto cipher!");
-    }
-
+  protected CryptoInputStream getCryptoInputStream(ByteArrayInputStream bais,
+                                                   Cipher cipher,
+                                                   int bufferSize, byte[] iv,
+                                                   boolean withChannel) throws
+      IOException {
     if (withChannel) {
-      return new CryptoInputStream(Channels.newChannel(new ByteArrayInputStream(encData)), cipher, bufferSize, key, iv);
+      return new CryptoInputStream(Channels.newChannel(bais), cipher,
+          bufferSize, key, iv);
     } else {
-      return new CryptoInputStream(new ByteArrayInputStream(encData), cipher, bufferSize, key, iv);
+      return new CryptoInputStream(bais, cipher, bufferSize, key, iv);
     }
   }
 
-  private CryptoOutputStream getCryptoOutputStream(String cipherClass, int bufferSize, boolean withChannel)
-      throws IOException {
-    Cipher cipher = null;
-    try {
-      cipher = (Cipher)ReflectionUtils.newInstance(
-          ReflectionUtils.getClassByName(cipherClass), props, transformation);
-    } catch (ClassNotFoundException cnfe) {
-      throw new IOException("Illegal crypto cipher!");
-    }
-
-    baos.reset();
+  protected CryptoOutputStream getCryptoOutputStream(ByteArrayOutputStream baos,
+                                                   Cipher cipher,
+                                                   int bufferSize, byte[] iv,
+                                                   boolean withChannel) throws
+      IOException {
     if (withChannel) {
-      return new CryptoOutputStream(Channels.newChannel(baos), cipher, bufferSize, key, iv);
+      return new CryptoOutputStream(Channels.newChannel(baos), cipher,
+          bufferSize, key, iv);
     } else {
       return new CryptoOutputStream(baos, cipher, bufferSize, key, iv);
     }
@@ -281,5 +294,163 @@ public abstract class AbstractCryptoStreamTest {
     }
 
     return total;
+  }
+
+  protected Cipher getCipher(String cipherClass) throws IOException {
+    try {
+      return (Cipher)ReflectionUtils.newInstance(
+          ReflectionUtils.getClassByName(cipherClass), props, transformation);
+    } catch (ClassNotFoundException cnfe) {
+      throw new IOException("Illegal crypto cipher!");
+    }
+  }
+
+  @Test
+  public void testReadWrite() throws Exception {
+    Assert.assertEquals(null, Openssl.getLoadingFailureReason());
+    doReadWriteTest(0, jceCipherClass, jceCipherClass, iv);
+    doReadWriteTest(0, opensslCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, jceCipherClass, jceCipherClass, iv);
+    doReadWriteTest(count, opensslCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, jceCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, opensslCipherClass, jceCipherClass, iv);
+    // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
+    for(int i = 0; i < 8; i++) {
+      iv[8 + i] = (byte) 0xff;
+    }
+    doReadWriteTest(count, jceCipherClass, jceCipherClass, iv);
+    doReadWriteTest(count, opensslCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, jceCipherClass, opensslCipherClass, iv);
+    doReadWriteTest(count, opensslCipherClass, jceCipherClass, iv);
+  }
+
+  private void doReadWriteTest(int count, String encCipherClass,
+                               String decCipherClass, byte[] iv) throws IOException {
+    doReadWriteTestForInputStream(count, encCipherClass, decCipherClass, iv);
+    doReadWriteTestForReadableByteChannel(count, encCipherClass, decCipherClass,
+        iv);
+  }
+
+  private void doReadWriteTestForInputStream(int count, String encCipherClass,
+                                             String decCipherClass, byte[] iv) throws IOException {
+    Cipher encCipher = getCipher(encCipherClass);
+    LOG.debug("Created a cipher object of type: " + encCipherClass);
+
+    // Generate data
+    SecureRandom random = new SecureRandom();
+    byte[] originalData = new byte[count];
+    byte[] decryptedData = new byte[count];
+    random.nextBytes(originalData);
+    LOG.debug("Generated " + count + " records");
+
+    // Encrypt data
+    ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
+    CryptoOutputStream out =
+        getCryptoOutputStream(encryptedData, encCipher, defaultBufferSize, iv,
+            false);
+    out.write(originalData, 0, originalData.length);
+    out.flush();
+    out.close();
+    LOG.debug("Finished encrypting data");
+
+    Cipher decCipher = getCipher(decCipherClass);
+    LOG.debug("Created a cipher object of type: " + decCipherClass);
+
+    // Decrypt data
+    CryptoInputStream in = getCryptoInputStream(
+        new ByteArrayInputStream(encryptedData.toByteArray()), decCipher,
+        defaultBufferSize, iv, false);
+
+    // Check
+    int remainingToRead = count;
+    int offset = 0;
+    while (remainingToRead > 0) {
+      int n = in.read(decryptedData, offset, decryptedData.length - offset);
+      if (n >=0) {
+        remainingToRead -= n;
+        offset += n;
+      }
+    }
+
+    Assert.assertArrayEquals("originalData and decryptedData not equal",
+        originalData, decryptedData);
+
+    // Decrypt data byte-at-a-time
+    in = getCryptoInputStream(
+        new ByteArrayInputStream(encryptedData.toByteArray()), decCipher,
+        defaultBufferSize, iv, false);
+
+    // Check
+    DataInputStream originalIn = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(originalData)));
+    int expected;
+    do {
+      expected = originalIn.read();
+      Assert.assertEquals("Decrypted stream read by byte does not match",
+          expected, in.read());
+    } while (expected != -1);
+
+    LOG.debug("SUCCESS! Completed checking " + count + " records");
+  }
+
+  private void doReadWriteTestForReadableByteChannel(int count,
+                                                     String encCipherClass,
+                                                     String decCipherClass,
+                                                     byte[] iv) throws IOException {
+    Cipher encCipher = getCipher(encCipherClass);
+    LOG.debug("Created a cipher object of type: " + encCipherClass);
+
+    // Generate data
+    SecureRandom random = new SecureRandom();
+    byte[] originalData = new byte[count];
+    byte[] decryptedData = new byte[count];
+    random.nextBytes(originalData);
+    LOG.debug("Generated " + count + " records");
+
+    // Encrypt data
+    ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
+    CryptoOutputStream out =
+        getCryptoOutputStream(encryptedData, encCipher, defaultBufferSize, iv,
+            true);
+    out.write(originalData, 0, originalData.length);
+    out.flush();
+    out.close();
+    LOG.debug("Finished encrypting data");
+
+    Cipher decCipher = getCipher(decCipherClass);
+    LOG.debug("Created a cipher object of type: " + decCipherClass);
+
+    // Decrypt data
+    CryptoInputStream in = getCryptoInputStream(
+        new ByteArrayInputStream(encryptedData.toByteArray()), decCipher,
+        defaultBufferSize, iv, true);
+
+    // Check
+    int remainingToRead = count;
+    int offset = 0;
+    while (remainingToRead > 0) {
+      int n = in.read(decryptedData, offset, decryptedData.length - offset);
+      if (n >=0) {
+        remainingToRead -= n;
+        offset += n;
+      }
+    }
+
+    Assert.assertArrayEquals("originalData and decryptedData not equal",
+        originalData, decryptedData);
+
+    // Decrypt data byte-at-a-time
+    in = getCryptoInputStream(new ByteArrayInputStream(
+        encryptedData.toByteArray()),decCipher,defaultBufferSize,iv,true);
+
+    // Check
+    DataInputStream originalIn = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(originalData)));
+    int expected;
+    do {
+      expected = originalIn.read();
+      Assert.assertEquals("Decrypted stream read by byte does not match",
+          expected, in.read());
+    } while (expected != -1);
+
+    LOG.debug("SUCCESS! Completed checking " + count + " records");
   }
 }

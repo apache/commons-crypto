@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera;
+
+package com.intel.chimera.cipher;
 
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 
@@ -27,13 +27,21 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-import com.intel.chimera.cipher.Openssl;
+public class OpensslCipherTest extends AbstractCipherTest {
 
-public class OpensslCipherTest {
+  @Override
+  public void init() {
+    transformations = new CipherTransformation[]{
+        CipherTransformation.AES_CBC_NOPADDING,
+        CipherTransformation.AES_CBC_PKCS5PADDING,
+        CipherTransformation.AES_CTR_NOPADDING};
+    cipherClass = OpensslCipher.class.getName();
+  }
+
   private static final byte[] key = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-    0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16};
+      0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16};
   private static final byte[] iv = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-    0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+      0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
 
   @Test(timeout=120000)
   public void testGetInstance() throws Exception {
