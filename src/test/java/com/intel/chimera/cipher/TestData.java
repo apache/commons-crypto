@@ -32,59 +32,17 @@ public class TestData {
       "6bc1bee22e409f96e93d7e117393172a",
       "7649abac8119b246cee98e9b12e9197d",
 
-      "128",
-      "2b7e151628aed2a6abf7158809cf4f3c",
-      "7649ABAC8119B246CEE98E9B12E9197D",
-      "ae2d8a571e03ac9c9eb76fac45af8e51",
-      "5086cb9b507219ee95db113a917678b2",
-
-      "128",
-      "2b7e151628aed2a6abf7158809cf4f3c",
-      "5086CB9B507219EE95DB113A917678B2",
-      "30c81c46a35ce411e5fbc1191a0a52ef",
-      "73bed6b8e3c1743b7116e69e22229516",
-
-      "128",
-      "2b7e151628aed2a6abf7158809cf4f3c",
-      "73BED6B8E3C1743B7116E69E22229516",
-      "f69f2445df4f9b17ad2b417be66c3710",
-      "3ff1caa1681fac09120eca307586e1a7",
-
       "192",
       "603deb1015ca71be2b73aef0857d77811f352c073b6108d7",
       "9CFC4E967EDB808D679F777BC6702C7D",
       "30c81c46a35ce411e5fbc1191a0a52ef",
       "78C57E3F543A18F472756DAC2F018523",
 
-      "192",
-      "603deb1015ca71be2b73aef0857d77811f352c073b6108d7",
-      "39F23369A9D9BACFA530E26304231461",
-      "f69f2445df4f9b17ad2b417be66c3710",
-      "79ECA9610F0B9AAFB8C7C2D655047A41",
-
       "256",
       "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
       "000102030405060708090a0b0c0d0e0f",
       "6bc1bee22e409f96e93d7e117393172a",
-      "f58c4c04d6e5f1ba779eabfb5f7bfbd6",
-
-      "256",
-      "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
-      "F58C4C04D6E5F1BA779EABFB5F7BFBD6",
-      "ae2d8a571e03ac9c9eb76fac45af8e51",
-      "9cfc4e967edb808d679f777bc6702c7d",
-
-      "256",
-      "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
-      "9CFC4E967EDB808D679F777BC6702C7D",
-      "30c81c46a35ce411e5fbc1191a0a52ef",
-      "39f23369a9d9bacfa530e26304231461",
-
-      "256",
-      "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
-      "39F23369A9D9BACFA530E26304231461",
-      "f69f2445df4f9b17ad2b417be66c3710",
-      "b2eb05e2c39be9fcda6c19078c6a9d1b"
+      "f58c4c04d6e5f1ba779eabfb5f7bfbd6"
   };
 
   private static String[] CBCPKCS5PaddingTests = {
@@ -97,20 +55,6 @@ public class TestData {
       "f013ce1ec901b5b60a85a986b3b72eba",
       "f6cee5ff28fd",
       "e8a846fd9718507371604504d4ca1ac7",
-
-      //Test#0 for input of 7 bytes
-      "128",
-      "24c4328aeffc0ca354a3215a3da23a38",
-      "c43c6269bb8c1dbba3bc22b7ba7e24b1",
-      "76cdfdf52a9753",
-      "009e935f3fe4d57b57fc3127a8873d8c",
-
-      //Test#0 for input of 8 bytes
-      "128",
-      "4035227440a779dbd1ed75c6ae78cef5",
-      "8faff161a5ec06e051066a571d1729d9",
-      "b103c928531d8875",
-      "b3d8df2c3147b0752a7e6bbbcc9d5758",
 
       //Test#0 for input of 15 bytes
       "128",
@@ -150,23 +94,12 @@ public class TestData {
       "6bc1bee22e409f96e93d7e117393172a",
       "874d6191b620e3261bef6864990db6ce",
 
+      //Test for input of 15 bytes
       "128",
       "2b7e151628aed2a6abf7158809cf4f3c",
       "f0f1f2f3f4f5f6f7f8f9fafbfcfdff00",
-      "ae2d8a571e03ac9c9eb76fac45af8e51",
-      "9806f66b7970fdff8617187bb9fffdff",
-
-      "128",
-      "2b7e151628aed2a6abf7158809cf4f3c",
-      "f0f1f2f3f4f5f6f7f8f9fafbfcfdff01",
-      "30c81c46a35ce411e5fbc1191a0a52ef",
-      "5ae4df3edbd5d35e5b4f09020db03eab",
-
-      "128",
-      "2b7e151628aed2a6abf7158809cf4f3c",
-      "f0f1f2f3f4f5f6f7f8f9fafbfcfdff02",
-      "f69f2445df4f9b17ad2b417be66c3710",
-      "1e031dda2fbe03d1792170a0f3009cee",
+      "ae2d8a571e03ac9c9eb76fac45af8e",
+      "9806f66b7970fdff8617187bb9fffd",
 
       "256",
       "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
@@ -174,23 +107,12 @@ public class TestData {
       "6bc1bee22e409f96e93d7e117393172a",
       "601ec313775789a5b7a7f504bbf3d228",
 
+      //Test for input of 15 bytes
       "256",
       "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
       "f0f1f2f3f4f5f6f7f8f9fafbfcfdff00",
-      "ae2d8a571e03ac9c9eb76fac45af8e51",
-      "f443e3ca4d62b59aca84e990cacaf5c5",
-
-      "256",
-      "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
-      "f0f1f2f3f4f5f6f7f8f9fafbfcfdff01",
-      "30c81c46a35ce411e5fbc1191a0a52ef",
-      "2b0930daa23de94ce87017ba2d84988d",
-
-      "256",
-      "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
-      "f0f1f2f3f4f5f6f7f8f9fafbfcfdff02",
-      "f69f2445df4f9b17ad2b417be66c3710",
-      "dfc9c58db67aada613c2dd08457941a6" };
+      "ae2d8a571e03ac9c9eb76fac45af8e",
+      "f443e3ca4d62b59aca84e990cacaf5" };
 
     private static Map<CipherTransformation, String[]> testData =
         new HashMap<CipherTransformation, String[]>();
