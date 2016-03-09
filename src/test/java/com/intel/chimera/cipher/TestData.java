@@ -32,17 +32,35 @@ public class TestData {
       "6bc1bee22e409f96e93d7e117393172a",
       "7649abac8119b246cee98e9b12e9197d",
 
+      "128",
+      "2b7e151628aed2a6abf7158809cf4f3c",
+      "7649ABAC8119B246CEE98E9B12E9197D",
+      "ae2d8a571e03ac9c9eb76fac45af8e51",
+      "5086cb9b507219ee95db113a917678b2",
+
       "192",
       "603deb1015ca71be2b73aef0857d77811f352c073b6108d7",
       "9CFC4E967EDB808D679F777BC6702C7D",
       "30c81c46a35ce411e5fbc1191a0a52ef",
       "78C57E3F543A18F472756DAC2F018523",
 
+      "192",
+      "603deb1015ca71be2b73aef0857d77811f352c073b6108d7",
+      "39F23369A9D9BACFA530E26304231461",
+      "f69f2445df4f9b17ad2b417be66c3710",
+      "79ECA9610F0B9AAFB8C7C2D655047A41",
+
       "256",
       "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
       "000102030405060708090a0b0c0d0e0f",
       "6bc1bee22e409f96e93d7e117393172a",
-      "f58c4c04d6e5f1ba779eabfb5f7bfbd6"
+      "f58c4c04d6e5f1ba779eabfb5f7bfbd6",
+
+      "256",
+      "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+      "F58C4C04D6E5F1BA779EABFB5F7BFBD6",
+      "ae2d8a571e03ac9c9eb76fac45af8e51",
+      "9cfc4e967edb808d679f777bc6702c7d"
   };
 
   private static String[] CBCPKCS5PaddingTests = {
@@ -94,12 +112,18 @@ public class TestData {
       "6bc1bee22e409f96e93d7e117393172a",
       "874d6191b620e3261bef6864990db6ce",
 
-      //Test for input of 15 bytes
       "128",
       "2b7e151628aed2a6abf7158809cf4f3c",
       "f0f1f2f3f4f5f6f7f8f9fafbfcfdff00",
-      "ae2d8a571e03ac9c9eb76fac45af8e",
-      "9806f66b7970fdff8617187bb9fffd",
+      "ae2d8a571e03ac9c9eb76fac45af8e51",
+      "9806f66b7970fdff8617187bb9fffdff",
+
+      //Test for input of 15 bytes
+      "128",
+      "2b7e151628aed2a6abf7158809cf4f3c",
+      "f0f1f2f3f4f5f6f7f8f9fafbfcfdff01",
+      "30c81c46a35ce411e5fbc1191a0a52",
+      "5ae4df3edbd5d35e5b4f09020db03e",
 
       "256",
       "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
@@ -107,12 +131,18 @@ public class TestData {
       "6bc1bee22e409f96e93d7e117393172a",
       "601ec313775789a5b7a7f504bbf3d228",
 
-      //Test for input of 15 bytes
       "256",
       "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
       "f0f1f2f3f4f5f6f7f8f9fafbfcfdff00",
-      "ae2d8a571e03ac9c9eb76fac45af8e",
-      "f443e3ca4d62b59aca84e990cacaf5" };
+      "ae2d8a571e03ac9c9eb76fac45af8e51",
+      "f443e3ca4d62b59aca84e990cacaf5c5",
+
+      //Test for input of 15 bytes
+      "256",
+      "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4",
+      "f0f1f2f3f4f5f6f7f8f9fafbfcfdff01",
+      "30c81c46a35ce411e5fbc1191a0a52",
+      "2b0930daa23de94ce87017ba2d8498" };
 
     private static Map<CipherTransformation, String[]> testData =
         new HashMap<CipherTransformation, String[]>();
