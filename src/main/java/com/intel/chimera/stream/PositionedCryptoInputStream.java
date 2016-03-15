@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SeekableByteChannel;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -36,6 +37,7 @@ import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherFactory;
 import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
+import com.intel.chimera.input.PositionedChannelInput;
 import com.intel.chimera.input.StreamInput;
 import com.intel.chimera.utils.Utils;
 
@@ -66,7 +68,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public PositionedCryptoInputStream(Properties props, ReadableByteChannel in,
+  public PositionedCryptoInputStream(Properties props, SeekableByteChannel in,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(in, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
@@ -77,9 +79,9 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv, streamOffset);
   }
 
-  public PositionedCryptoInputStream(ReadableByteChannel in, Cipher cipher,
+  public PositionedCryptoInputStream(SeekableByteChannel in, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
-    this(new ChannelInput(in), cipher, bufferSize, key, iv, streamOffset);
+    this(new PositionedChannelInput(in), cipher, bufferSize, key, iv, streamOffset);
   }
 
   public PositionedCryptoInputStream(
