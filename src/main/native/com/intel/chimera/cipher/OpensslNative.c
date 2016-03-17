@@ -354,6 +354,38 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_cipher_OpensslNative_update
   return output_len;
 }
 
+JNIEXPORT jint JNICALL Java_com_intel_chimera_cipher_OpensslNative_updateByteArray
+    (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray input, jint input_offset,
+    jint input_len, jbyteArray output, jint output_offset, jint max_output_len)
+{
+  EVP_CIPHER_CTX *context = CONTEXT(ctx);
+  if (!check_update_max_output_len(context, input_len, max_output_len)) {
+    THROW(env, "javax/crypto/ShortBufferException",  \
+        "Output buffer is not sufficient.");
+    return 0;
+  }
+  unsigned char *input_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, input, 0);
+  unsigned char *output_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, output, 0);
+  if (input_bytes == NULL || output_bytes == NULL) {
+    THROW(env, "java/lang/InternalError", "Cannot get buffer address.");
+    return 0;
+  }
+
+  int output_len = 0;
+  int rc = dlsym_EVP_CipherUpdate(context, output_bytes + output_offset, &output_len,  \
+      input_bytes + input_offset, input_len);
+
+  (*env)->ReleaseByteArrayElements(env, input, (jbyte *) input_bytes, 0);
+  (*env)->ReleaseByteArrayElements(env, output, (jbyte *) output_bytes, 0);
+
+  if (rc == 0) {
+    dlsym_EVP_CIPHER_CTX_cleanup(context);
+    THROW(env, "java/lang/InternalError", "Error in EVP_CipherUpdate.");
+    return 0;
+  }
+  return output_len;
+}
+
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
 static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
     int max_output_len)
@@ -389,6 +421,34 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_cipher_OpensslNative_doFinal
 
   int output_len = 0;
   if (!dlsym_EVP_CipherFinal_ex(context, output_bytes, &output_len)) {
+    dlsym_EVP_CIPHER_CTX_cleanup(context);
+    THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
+    return 0;
+  }
+  return output_len;
+}
+
+JNIEXPORT jint JNICALL Java_com_intel_chimera_cipher_OpensslNative_doFinalByteArray
+    (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray output, jint offset, jint max_output_len)
+{
+  EVP_CIPHER_CTX *context = CONTEXT(ctx);
+  if (!check_doFinal_max_output_len(context, max_output_len)) {
+    THROW(env, "javax/crypto/ShortBufferException",  \
+        "Output buffer is not sufficient.");
+    return 0;
+  }
+  unsigned char *output_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, output, 0);
+  if (output_bytes == NULL) {
+    THROW(env, "java/lang/InternalError", "Cannot get buffer address.");
+    return 0;
+  }
+
+  int output_len = 0;
+  int rc = dlsym_EVP_CipherFinal_ex(context, output_bytes + offset, &output_len);
+
+  (*env)->ReleaseByteArrayElements(env, output, (jbyte *) output_bytes, 0);
+
+  if (rc == 0) {
     dlsym_EVP_CIPHER_CTX_cleanup(context);
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
     return 0;

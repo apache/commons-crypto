@@ -31,7 +31,14 @@ public class OpensslNative {
       int inputOffset, int inputLength, ByteBuffer output, int outputOffset,
       int maxOutputLength);
 
+  public native static int updateByteArray(long context, byte[] input,
+      int inputOffset, int inputLength, byte[] output, int outputOffset,
+      int maxOutputLength);
+
   public native static int doFinal(long context, ByteBuffer output, int offset,
+      int maxOutputLength);
+
+  public native static int doFinalByteArray(long context, byte[] output, int offset,
       int maxOutputLength);
 
   public native static void clean(long context);
