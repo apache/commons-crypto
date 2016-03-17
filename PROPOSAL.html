@@ -56,7 +56,7 @@
 
 <p>Providing Java based optimized and high performance cryptographic IO streams for 
 the applications who wants to implement the data encryption. It also provides cipher 
-level API to use. It does provides the openssl API integration and provides the fallback 
+level API to use. It does provide the openssl API integration and provide the fallback 
 mechanism to use JCE when openssl library unavailable.</p>
 
 <p>(Note: Please note that Commons Crypto doesn’t 
@@ -85,17 +85,17 @@ of Openssl library. </p>
 
   
 
-<p><em>IO</em> Commons Crypto relies on standard JDK 6 (or later) APIs for production 
+<p><em>IO</em> Commons Crypto relies on standard JDK 7 (or later) APIs for production 
 
 deployment and on OpenSSL 1.0.1c devl libraries. It utilizes the JUnit unit testing 
 
 framework, but this is of interest only to developers of the component.
 
- Commons Crypto may be a dependency for several existing components in the open source
-
-world that implement data encryption, 
-
-example: Apache Hadoop and Apache Spark.</p>
+ The functionality provided by Commons Crypto is currently in use by Apache Hadoop 
+ 
+ and Apache Spark, and both of those communities have expressed interest in changing 
+ 
+ their dependency to be on the central Commons Crypto package once it exists.</p>
 
    
 
