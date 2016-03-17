@@ -246,11 +246,11 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_cipher_OpensslNative_init
   int jIvLen = (*env)->GetArrayLength(env, iv);
   if (jKeyLen != KEY_LENGTH_128 && jKeyLen != KEY_LENGTH_192
         && jKeyLen != KEY_LENGTH_256) {
-    THROW(env, "java/lang/IllegalArgumentException", "Invalid key length.");
+    THROW(env, "java/security/InvalidKeyException", "Invalid key length.");
     return (jlong)0;
   }
   if (jIvLen != IV_LENGTH) {
-    THROW(env, "java/lang/IllegalArgumentException", "Invalid iv length.");
+    THROW(env, "java/security/InvalidAlgorithmParameterException", "Wrong IV length.");
     return (jlong)0;
   }
 
@@ -273,6 +273,11 @@ JNIEXPORT jlong JNICALL Java_com_intel_chimera_cipher_OpensslNative_init
   if (jIv == NULL) {
     (*env)->ReleaseByteArrayElements(env, key, jKey, 0);
     THROW(env, "java/lang/InternalError", "Cannot get bytes array for iv.");
+    return (jlong)0;
+  }
+
+  if (!(alg == AES_CTR || alg == AES_CBC)) {
+    THROW(env, "java/security/NoSuchAlgorithmException", "The algorithm is not supported.");
     return (jlong)0;
   }
 
