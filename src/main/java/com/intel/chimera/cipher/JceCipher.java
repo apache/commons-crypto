@@ -123,9 +123,11 @@ public class JceCipher implements Cipher {
    * @throws ShortBufferException if there is insufficient space in the output byte array
    */
   @Override
-  public int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+  public int update(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
       throws ShortBufferException {
-    return cipher.update(input, inputOffset, inputLen, output, outputOffset);
+    return cipher.update(input, inputOffset, inputLen,
+                         output, outputOffset);
   }
 
   /**
@@ -175,9 +177,11 @@ public class JceCipher implements Cipher {
    * process the input data provided.
    */
   @Override
-  public int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+  public int doFinal(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
       throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
-    return cipher.doFinal(input, inputOffset, inputLen, output, outputOffset);
+    return cipher.doFinal(input, inputOffset, inputLen,
+                          output, outputOffset);
   }
 
   /**

@@ -112,9 +112,11 @@ public class OpensslCipher implements Cipher {
    * @throws ShortBufferException if there is insufficient space in the output byte array
    */
   @Override
-  public int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+  public int update(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
       throws ShortBufferException {
-    return cipher.update(input, inputOffset, inputLen, output, outputOffset);
+    return cipher.update(input, inputOffset, inputLen,
+                         output, outputOffset);
   }
 
   /**
@@ -165,9 +167,11 @@ public class OpensslCipher implements Cipher {
    * process the input data provided.
    */
   @Override
-  public int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+  public int doFinal(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
       throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
-    int n = cipher.update(input, inputOffset, inputLen, output, outputOffset);
+    int n = cipher.update(input, inputOffset, inputLen,
+                          output, outputOffset);
     return n + cipher.doFinal(output, outputOffset + n);
   }
 

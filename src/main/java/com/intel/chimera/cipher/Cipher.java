@@ -87,7 +87,8 @@ public interface Cipher extends Closeable {
    * @return the number of bytes stored in output
    * @throws ShortBufferException if there is insufficient space in the output byte array
    */
-  int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+  int update(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
       throws ShortBufferException;
 
   /**
@@ -132,6 +133,7 @@ public interface Cipher extends Closeable {
    * block size; or if this encryption algorithm is unable to
    * process the input data provided.
    */
-  int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+  int doFinal(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
       throws ShortBufferException, IllegalBlockSizeException, BadPaddingException;
 }

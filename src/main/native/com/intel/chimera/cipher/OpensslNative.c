@@ -429,7 +429,8 @@ JNIEXPORT jint JNICALL Java_com_intel_chimera_cipher_OpensslNative_doFinal
 }
 
 JNIEXPORT jint JNICALL Java_com_intel_chimera_cipher_OpensslNative_doFinalByteArray
-    (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray output, jint offset, jint max_output_len)
+    (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray output, jint offset,
+     jint max_output_len)
 {
   EVP_CIPHER_CTX *context = CONTEXT(ctx);
   if (!check_doFinal_max_output_len(context, max_output_len)) {

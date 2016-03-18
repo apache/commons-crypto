@@ -224,11 +224,12 @@ public final class Openssl {
    * @return the number of bytes stored in output
    * @throws ShortBufferException if there is insufficient space in the output byte array
    */
-  public int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+  public int update(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
       throws ShortBufferException {
     checkState();
-    return OpensslNative.updateByteArray(context, input, inputOffset, inputLen, output, outputOffset,
-        output.length - outputOffset);
+    return OpensslNative.updateByteArray(context, input, inputOffset, inputLen,
+        output, outputOffset, output.length - outputOffset);
   }
 
   /**
@@ -290,7 +291,8 @@ public final class Openssl {
   public int doFinal(byte[] output, int outputOffset)
       throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
     checkState();
-    return OpensslNative.doFinalByteArray(context, output, outputOffset, output.length - outputOffset);
+    return OpensslNative.doFinalByteArray(context,
+        output, outputOffset, output.length - outputOffset);
   }
 
   /** Forcibly clean the context. */
