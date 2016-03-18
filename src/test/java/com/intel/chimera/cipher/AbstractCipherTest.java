@@ -20,7 +20,9 @@ package com.intel.chimera.cipher;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
 import java.util.Properties;
+import java.util.Random;
 import javax.xml.bind.DatatypeConverter;
 
 import com.intel.chimera.conf.ConfigurationKeys;
@@ -38,6 +40,12 @@ public abstract class AbstractCipherTest {
   Properties props = null;
   String cipherClass = null;
   CipherTransformation[] transformations = null;
+
+  // cipher
+  static final byte[] KEY = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+      0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16};
+  static final byte[] IV = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+      0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
   Cipher enc, dec;
 
   @Before
@@ -55,6 +63,7 @@ public abstract class AbstractCipherTest {
   @Test
   public void cryptoTest() throws GeneralSecurityException, IOException {
     for (CipherTransformation tran : transformations) {
+      /** uses the small data set in {@link TestData} */
       cipherTests = TestData.getTestData(tran);
       for (int i = 0; i != cipherTests.length; i += 5) {
         byte[] key = DatatypeConverter.parseHexBinary(cipherTests[i + 1]);
@@ -73,6 +82,9 @@ public abstract class AbstractCipherTest {
         byteBufferTest(tran,key, iv, inputBuffer, outputBuffer);
         byteArrayTest(tran, key, iv, inputBytes, outputBytes);
       }
+
+      /** uses randomly generated big data set */
+      byteArrayTest(tran, KEY, IV);
     }
   }
 
@@ -131,6 +143,7 @@ public abstract class AbstractCipherTest {
     }
   }
 
+  /** test byte array whose data is planned in {@link TestData} */
   private void byteArrayTest(CipherTransformation transformation, byte[] key,
       byte[] iv, byte[] input, byte[] output) throws GeneralSecurityException {
     resetCipher(transformation, key, iv);
@@ -147,6 +160,49 @@ public abstract class AbstractCipherTest {
     byte[] plainText = new byte[m];
     System.arraycopy(temp, 0, plainText, 0, m);
     Assert.assertArrayEquals("byte array decryption error.", input, plainText);
+  }
+
+  /** test byte array whose data is randomly generated */
+  private void byteArrayTest(CipherTransformation transformation, byte[] key,
+      byte[] iv) throws GeneralSecurityException {
+    resetCipher(transformation, key, iv);
+    int blockSize = transformation.getAlgorithmBlockSize();
+
+    int dataLen = 10 * 1024;
+    byte[] plainText = new byte[dataLen];
+    Random random = new SecureRandom();
+    random.nextBytes(plainText);
+    byte[] cipherText = new byte[dataLen + blockSize];
+
+    int bufferLen = 2 * 1024 - 128;
+    int offset = 0;
+
+    // encrypt (update + doFinal) the data
+    int cipherPos = 0;
+    for (int i = 0; i < dataLen / bufferLen; i ++) {
+      cipherPos += enc.update(plainText, offset, bufferLen, cipherText, cipherPos);
+      offset += bufferLen;
+    }
+    cipherPos += enc.doFinal(plainText, offset, dataLen % bufferLen, cipherText, cipherPos);
+
+    offset = 0;
+    // decrypt (update + doFinal) the data
+    byte[] realPlainText = new byte[dataLen + blockSize];
+    int plainPos = 0;
+    for (int i = 0; i < cipherPos / bufferLen; i ++) {
+      plainPos += dec.update(cipherText, offset, bufferLen, realPlainText, plainPos);
+      offset += bufferLen;
+    }
+    plainPos += dec.doFinal(cipherText, offset, cipherPos % bufferLen, realPlainText, plainPos);
+
+    // verify
+    Assert.assertEquals("random byte array length changes after transformation",
+        dataLen, plainPos);
+
+    byte[] shrinkPlainText = new byte[plainPos];
+    System.arraycopy(realPlainText, 0, shrinkPlainText, 0, plainPos);
+    Assert.assertArrayEquals("random byte array contents changes after transformation",
+        plainText, shrinkPlainText);
   }
 
   private void resetCipher(CipherTransformation transformation, byte[] key, byte[] iv) {
