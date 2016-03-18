@@ -22,31 +22,24 @@ import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.cipher.JceCipher;
 import com.intel.chimera.cipher.OpensslCipher;
+import com.intel.chimera.input.Input;
 import com.intel.chimera.utils.ReflectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.Random;
 
 public class PositionedCryptoInputStreamTest {
-
-  private static final Log LOG= LogFactory.getLog(PositionedCryptoInputStreamTest.class);
-
 
   private final int dataLen = 20000;
   private byte[] data = new byte[dataLen];
@@ -59,7 +52,6 @@ public class PositionedCryptoInputStreamTest {
   private final String jceCipherClass = JceCipher.class.getName();
   private final String opensslCipherClass = OpensslCipher.class.getName();
   private CipherTransformation transformation = CipherTransformation.AES_CTR_NOPADDING;
-  private Path testDataFilepath;
 
   @Before
   public void before() throws IOException {
@@ -85,30 +77,14 @@ public class PositionedCryptoInputStreamTest {
     out.flush();
     out.close();
     encData = baos.toByteArray();
-
-    // create the file with the encryption data for the test
-    try {
-      testDataFilepath = Files.createTempFile("encData", ".tmp");
-      SeekableByteChannel sbc = Files.newByteChannel(testDataFilepath, StandardOpenOption.APPEND);
-      ByteBuffer bfSrc = ByteBuffer.wrap(encData);
-      sbc.write(bfSrc);
-      sbc.close();
-    } catch (IOException ioe) {
-      LOG.error("Error when prepare file with encryption data.", ioe);
-    }
   }
+
+  public void setUp() throws IOException {}
 
   private CryptoInputStream getCryptoInputStream(Cipher cipher, int bufferSize,byte[] iv)
           throws IOException {
-    return new PositionedCryptoInputStream(Files.newByteChannel(testDataFilepath, StandardOpenOption.READ), cipher,
-            bufferSize, key, iv, 0);
-  }
-
-  @After
-  public void deleteTempFile() throws Exception {
-    if (Files.exists(testDataFilepath)) {
-      Files.delete(testDataFilepath);
-    }
+    return new PositionedCryptoInputStream(new PositionedInputForTest(Arrays.copyOf(encData, encData.length),
+            defaultBufferSize), cipher, bufferSize, key, iv, 0);
   }
 
   @Test
@@ -120,46 +96,59 @@ public class PositionedCryptoInputStreamTest {
   private void doPositionedRead(String cipherClass) throws Exception {
     InputStream in = getCryptoInputStream(getCipher(cipherClass), defaultBufferSize, iv);
     int positionedReadLength = 100;
-    ByteBuffer buf = ByteBuffer.allocate(positionedReadLength);
-    allReadTests(in, buf, positionedReadLength);
-    allReadFullyTests(in, buf, positionedReadLength);
+    allReadTests(in, positionedReadLength);
+    allReadFullyTests(in, positionedReadLength);
     allSeekTests(in, positionedReadLength);
     in.close();
   }
 
-  private void allReadTests(InputStream in, ByteBuffer buf, int positionedReadLength) throws Exception {
-    positionedReadCheck(in, buf.array(), 0, 0, positionedReadLength);
-    positionedReadCheck(in, buf.array(), defaultBufferSize - 1, 0, positionedReadLength);
-    positionedReadCheck(in, buf.array(), defaultBufferSize, 0, positionedReadLength);
-    positionedReadCheck(in, buf.array(), -1, 0, positionedReadLength);
-    positionedReadCheck(in, buf.array(), dataLen - positionedReadLength, 0, positionedReadLength);
-    positionedReadCheck(in, buf.array(), dataLen, 0, positionedReadLength);
-    positionedReadCheck(in, buf.array(), dataLen - 1, 0, positionedReadLength);
-    positionedReadCheck(in, buf.array(), dataLen - positionedReadLength/2, 0, positionedReadLength);
+  private void allReadTests(InputStream in, int positionedReadLength) throws Exception {
+    positionedReadCheck(in, 0, 0, positionedReadLength);
+    positionedReadCheck(in, defaultBufferSize - 1, 0, positionedReadLength);
+    positionedReadCheck(in, defaultBufferSize, 0, positionedReadLength);
+    positionedReadCheck(in, dataLen - positionedReadLength, 0, positionedReadLength);
+    positionedReadCheck(in, dataLen - 1, 0, positionedReadLength);
+    positionedReadCheck(in, dataLen - positionedReadLength/2, 0, positionedReadLength);
+
+    try {
+      // -1 will be returned with the negative position, and NegativeArraySizeException will be thrown during the test.
+      positionedReadCheck(in, -1, 0, positionedReadLength);
+      Assert.fail("Excepted NegativeArraySizeException.");
+    } catch (NegativeArraySizeException nase) {
+     // excepted exception
+    }
+
+    try {
+      // -1 will be returned, and NegativeArraySizeException will be thrown during the test.
+      positionedReadCheck(in, dataLen, 0, positionedReadLength);
+      Assert.fail("Excepted NegativeArraySizeException.");
+    } catch (NegativeArraySizeException nase) {
+      // excepted exception
+    }
   }
 
-  private void allReadFullyTests(InputStream in, ByteBuffer buf, int positionedReadLength) throws Exception {
-    positionedReadFullyCheck(in, buf.array(), 0, 0, positionedReadLength);
-    positionedReadFullyCheck(in, buf.array(), defaultBufferSize - 1, 0, positionedReadLength);
-    positionedReadFullyCheck(in, buf.array(), defaultBufferSize, 0, positionedReadLength);
-    positionedReadFullyCheck(in, buf.array(), dataLen - positionedReadLength, 0, positionedReadLength);
+  private void allReadFullyTests(InputStream in, int positionedReadLength) throws Exception {
+    positionedReadFullyCheck(in, 0, 0, positionedReadLength);
+    positionedReadFullyCheck(in, defaultBufferSize - 1, 0, positionedReadLength);
+    positionedReadFullyCheck(in, defaultBufferSize, 0, positionedReadLength);
+    positionedReadFullyCheck(in, dataLen - positionedReadLength, 0, positionedReadLength);
 
     try {
-      positionedReadFullyCheck(in, buf.array(), -1, 0, positionedReadLength);
+      positionedReadFullyCheck(in, -1, 0, positionedReadLength);
       Assert.fail("Excepted EOFException.");
     } catch (IOException ioe) {
       // excepted exception
     }
 
     try {
-      positionedReadFullyCheck(in, buf.array(), dataLen, 0, positionedReadLength);
+      positionedReadFullyCheck(in, dataLen, 0, positionedReadLength);
       Assert.fail("Excepted EOFException.");
     } catch (IOException ioe) {
       // excepted exception
     }
 
     try {
-      positionedReadFullyCheck(in, buf.array(), dataLen - positionedReadLength/2, 0, positionedReadLength);
+      positionedReadFullyCheck(in, dataLen - positionedReadLength/2, 0, positionedReadLength);
       Assert.fail("Excepted EOFException.");
     } catch (IOException ioe) {
       // excepted exception
@@ -172,22 +161,13 @@ public class PositionedCryptoInputStreamTest {
     positionedSeekCheck(in, defaultBufferSize, positionedReadLength);
     positionedSeekCheck(in, dataLen - positionedReadLength, positionedReadLength);
     positionedSeekCheck(in, dataLen - 1, positionedReadLength);
-    positionedSeekCheck(in, dataLen - positionedReadLength/2, positionedReadLength);
-
+    positionedSeekCheck(in, dataLen - positionedReadLength / 2, positionedReadLength);
+    positionedSeekCheck(in, dataLen, positionedReadLength);
     try {
-      // the position can't be negative
+      // Cannot seek to negative offset
       positionedSeekCheck(in, -1, positionedReadLength);
-      Assert.fail("Excepted IllegalArgumentException.");
-    } catch (IllegalArgumentException iae) {
-      // excepted exception
-    }
-
-    try {
-      // the position out of size, and the read() will return -1.
-      positionedSeekCheck(in, dataLen, positionedReadLength);
-      Assert.fail("Excepted NegativeArraySizeException.");
-    } catch (NegativeArraySizeException naze) {
-      // excepted exception
+      Assert.fail("Excepted IllegalArgumentException");
+    } catch (Exception IllegalArgumentException) {
     }
   }
 
@@ -199,10 +179,10 @@ public class PositionedCryptoInputStreamTest {
     byteArrayCompare(n, buf.array(), position, length);
   }
 
-  private void positionedReadCheck(InputStream in, byte[] buf,
-                                   int position, int offset, int length) throws Exception {
-    int n = ((PositionedCryptoInputStream) in).read(position, buf, offset, length);
-    byteArrayCompare(n, buf, position, length);
+  private void positionedReadCheck(InputStream in, int position, int offset, int length) throws Exception {
+    ByteBuffer buf = ByteBuffer.allocate(length);
+    int n = ((PositionedCryptoInputStream) in).read(position, buf.array(), offset, length);
+    byteArrayCompare(n, buf.array(), position, length);
   }
 
   private void byteArrayCompare(int readLength, byte[] buf, int position, int length) {
@@ -221,12 +201,13 @@ public class PositionedCryptoInputStreamTest {
     }
   }
 
-  private void positionedReadFullyCheck(InputStream in, byte[] buf,
-                                   int position, int offset, int length) throws Exception {
-    ((PositionedCryptoInputStream) in).readFully(position, buf, offset, length);
+  private void positionedReadFullyCheck(InputStream in,int position,
+      int offset, int length) throws Exception {
+    ByteBuffer buf = ByteBuffer.allocate(length);
+    ((PositionedCryptoInputStream) in).readFully(position, buf.array(), offset, length);
     byte[] readData = new byte[length];
     byte[] expectedData = new byte[length];
-    System.arraycopy(buf, 0, readData, 0, length);
+    System.arraycopy(buf.array(), 0, readData, 0, length);
     System.arraycopy(data, position, expectedData, 0, length);
     Assert.assertArrayEquals(expectedData, readData);
   }
@@ -237,6 +218,113 @@ public class PositionedCryptoInputStreamTest {
               ReflectionUtils.getClassByName(cipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto cipher!");
+    }
+  }
+
+  class PositionedInputForTest implements Input {
+
+    byte[] buf;
+    long pos;
+    long count;
+    int bufferSize;
+
+    public PositionedInputForTest(byte[] buf, int bufferSize) {
+      this.buf = buf;
+      this.pos = 0;
+      this.count = buf.length;
+      this.bufferSize = bufferSize;
+    }
+
+    @Override
+    public int read(ByteBuffer dst) throws IOException {
+      int remaining = dst.remaining();
+      final byte[] tmp = getBuf();
+      int read = 0;
+      int offset = 0;
+      while (remaining > 0) {
+        int copyLen = Math.min(Math.min(remaining, bufferSize), available());
+        if (copyLen == 0) {
+          break;
+        }
+        System.arraycopy(buf, (int)pos, tmp, 0, copyLen);
+        dst.put(tmp, offset, copyLen);
+        read += copyLen;
+        offset += copyLen;
+        pos += copyLen;
+        remaining -= copyLen;
+      }
+      return read;
+    }
+
+    @Override
+    public long skip(long n) throws IOException {
+      long k = count - pos;
+      if (n < k) {
+        k = n < 0 ? 0 : n;
+      }
+
+      pos += k;
+      return k;
+    }
+
+    @Override
+    public int read(long position, byte[] buffer, int offset, int length)
+            throws IOException {
+      if (buffer == null) {
+        throw new NullPointerException();
+      } else if (offset < 0 || length < 0 || length > buffer.length - offset) {
+        throw new IndexOutOfBoundsException();
+      }
+
+      if (position < 0 || position >= count) {
+        return -1;
+      }
+
+      long avail = count - position;
+      if (length > avail) {
+        length = (int)avail;
+      }
+      if (length <= 0) {
+        return 0;
+      }
+      System.arraycopy(buf, (int)position, buffer, offset, length);
+      return length;
+    }
+
+    @Override
+    public void readFully(long position, byte[] buffer, int offset, int length)
+            throws IOException {
+      int nread = 0;
+      while (nread < length) {
+        int nbytes = read(position+nread, buffer, offset+nread, length-nread);
+        if (nbytes < 0) {
+          throw new EOFException("End of file reached before reading fully.");
+        }
+        nread += nbytes;
+      }
+    }
+
+    @Override
+    public void seek(long position) throws IOException {
+      if (position >= 0 && position < count) {
+        pos = position;
+      }
+    }
+
+    @Override
+    public void close() throws IOException {
+    }
+
+    @Override
+    public int available() throws IOException {
+      return (int)(count - pos);
+    }
+
+    private byte[] getBuf() {
+      if (buf == null) {
+        buf = new byte[bufferSize];
+      }
+      return buf;
     }
   }
 }
