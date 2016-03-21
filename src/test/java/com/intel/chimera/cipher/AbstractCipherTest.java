@@ -165,44 +165,51 @@ public abstract class AbstractCipherTest {
   /** test byte array whose data is randomly generated */
   private void byteArrayTest(CipherTransformation transformation, byte[] key,
       byte[] iv) throws GeneralSecurityException {
-    resetCipher(transformation, key, iv);
     int blockSize = transformation.getAlgorithmBlockSize();
 
-    int dataLen = 10 * 1024;
-    byte[] plainText = new byte[dataLen];
-    Random random = new SecureRandom();
-    random.nextBytes(plainText);
-    byte[] cipherText = new byte[dataLen + blockSize];
+    // AES_CBC_NOPADDING only accepts data whose size is the multiple of block size
+    int[] dataLenList = (transformation == CipherTransformation.AES_CBC_NOPADDING)
+        ? new int[] {10 * 1024} : new int[] {10 * 1024, 10 * 1024 - 3};
+    for (int dataLen : dataLenList) {
+      byte[] plainText = new byte[dataLen];
+      Random random = new SecureRandom();
+      random.nextBytes(plainText);
+      byte[] cipherText = new byte[dataLen + blockSize];
 
-    int bufferLen = 2 * 1024 - 128;
-    int offset = 0;
+      // check update method with inputs whose sizes are the multiple of block size or not
+      int[] bufferLenList = new int[] {2 * 1024 - 128, 2 * 1024 - 125};
+      for (int bufferLen : bufferLenList) {
+        resetCipher(transformation, key, iv);
+        
+        int offset = 0;
+        // encrypt (update + doFinal) the data
+        int cipherPos = 0;
+        for (int i = 0; i < dataLen / bufferLen; i ++) {
+          cipherPos += enc.update(plainText, offset, bufferLen, cipherText, cipherPos);
+          offset += bufferLen;
+        }
+        cipherPos += enc.doFinal(plainText, offset, dataLen % bufferLen, cipherText, cipherPos);
 
-    // encrypt (update + doFinal) the data
-    int cipherPos = 0;
-    for (int i = 0; i < dataLen / bufferLen; i ++) {
-      cipherPos += enc.update(plainText, offset, bufferLen, cipherText, cipherPos);
-      offset += bufferLen;
+        offset = 0;
+        // decrypt (update + doFinal) the data
+        byte[] realPlainText = new byte[cipherPos + blockSize];
+        int plainPos = 0;
+        for (int i = 0; i < cipherPos / bufferLen; i ++) {
+          plainPos += dec.update(cipherText, offset, bufferLen, realPlainText, plainPos);
+          offset += bufferLen;
+        }
+        plainPos += dec.doFinal(cipherText, offset, cipherPos % bufferLen, realPlainText, plainPos);
+
+        // verify
+        Assert.assertEquals("random byte array length changes after transformation",
+            dataLen, plainPos);
+
+        byte[] shrinkPlainText = new byte[plainPos];
+        System.arraycopy(realPlainText, 0, shrinkPlainText, 0, plainPos);
+        Assert.assertArrayEquals("random byte array contents changes after transformation",
+            plainText, shrinkPlainText);
+      }
     }
-    cipherPos += enc.doFinal(plainText, offset, dataLen % bufferLen, cipherText, cipherPos);
-
-    offset = 0;
-    // decrypt (update + doFinal) the data
-    byte[] realPlainText = new byte[dataLen + blockSize];
-    int plainPos = 0;
-    for (int i = 0; i < cipherPos / bufferLen; i ++) {
-      plainPos += dec.update(cipherText, offset, bufferLen, realPlainText, plainPos);
-      offset += bufferLen;
-    }
-    plainPos += dec.doFinal(cipherText, offset, cipherPos % bufferLen, realPlainText, plainPos);
-
-    // verify
-    Assert.assertEquals("random byte array length changes after transformation",
-        dataLen, plainPos);
-
-    byte[] shrinkPlainText = new byte[plainPos];
-    System.arraycopy(realPlainText, 0, shrinkPlainText, 0, plainPos);
-    Assert.assertArrayEquals("random byte array contents changes after transformation",
-        plainText, shrinkPlainText);
   }
 
   private void resetCipher(CipherTransformation transformation, byte[] key, byte[] iv) {
