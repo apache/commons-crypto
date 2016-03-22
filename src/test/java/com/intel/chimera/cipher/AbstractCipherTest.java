@@ -20,7 +20,9 @@ package com.intel.chimera.cipher;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
 import java.util.Properties;
+import java.util.Random;
 import javax.xml.bind.DatatypeConverter;
 
 import com.intel.chimera.conf.ConfigurationKeys;
@@ -39,6 +41,13 @@ public abstract class AbstractCipherTest {
   String cipherClass = null;
   CipherTransformation[] transformations = null;
 
+  // cipher
+  static final byte[] KEY = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+      0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16};
+  static final byte[] IV = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+      0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+  Cipher enc, dec;
+
   @Before
   public void setup() {
     init();
@@ -54,23 +63,28 @@ public abstract class AbstractCipherTest {
   @Test
   public void cryptoTest() throws GeneralSecurityException, IOException {
     for (CipherTransformation tran : transformations) {
+      /** uses the small data set in {@link TestData} */
       cipherTests = TestData.getTestData(tran);
       for (int i = 0; i != cipherTests.length; i += 5) {
-        byte[] inputBytes =
-            DatatypeConverter.parseHexBinary(cipherTests[i + 3]);
-        byte[] outputBytes =
-            DatatypeConverter.parseHexBinary(cipherTests[i + 4]);
+        byte[] key = DatatypeConverter.parseHexBinary(cipherTests[i + 1]);
+        byte[] iv = DatatypeConverter.parseHexBinary(cipherTests[i + 2]);
+
+        byte[] inputBytes = DatatypeConverter.parseHexBinary(cipherTests[i + 3]);
+        byte[] outputBytes = DatatypeConverter.parseHexBinary(cipherTests[i + 4]);
+
         ByteBuffer inputBuffer = ByteBuffer.allocateDirect(inputBytes.length);
         ByteBuffer outputBuffer = ByteBuffer.allocateDirect(outputBytes.length);
         inputBuffer.put(inputBytes);
         inputBuffer.flip();
         outputBuffer.put(outputBytes);
         outputBuffer.flip();
-        byteBufferTest(tran,
-            DatatypeConverter.parseHexBinary(cipherTests[i + 1]),
-            DatatypeConverter.parseHexBinary(cipherTests[i + 2]), inputBuffer,
-            outputBuffer);
+
+        byteBufferTest(tran,key, iv, inputBuffer, outputBuffer);
+        byteArrayTest(tran, key, iv, inputBytes, outputBytes);
       }
+
+      /** uses randomly generated big data set */
+      byteArrayTest(tran, KEY, IV);
     }
   }
 
@@ -126,6 +140,92 @@ public abstract class AbstractCipherTest {
       input.get(inArray);
       decResult.get(decResultArray);
       Assert.fail();
+    }
+  }
+
+  /** test byte array whose data is planned in {@link TestData} */
+  private void byteArrayTest(CipherTransformation transformation, byte[] key,
+      byte[] iv, byte[] input, byte[] output) throws GeneralSecurityException {
+    resetCipher(transformation, key, iv);
+    int blockSize = transformation.getAlgorithmBlockSize();
+
+    byte[] temp = new byte[input.length + blockSize];
+    int n = enc.doFinal(input, 0, input.length, temp, 0);
+    byte[] cipherText = new byte[n];
+    System.arraycopy(temp, 0, cipherText, 0, n);
+    Assert.assertArrayEquals("byte array encryption error.", output, cipherText);
+
+    temp = new byte[cipherText.length + blockSize];
+    int m = dec.doFinal(cipherText, 0, cipherText.length, temp, 0);
+    byte[] plainText = new byte[m];
+    System.arraycopy(temp, 0, plainText, 0, m);
+    Assert.assertArrayEquals("byte array decryption error.", input, plainText);
+  }
+
+  /** test byte array whose data is randomly generated */
+  private void byteArrayTest(CipherTransformation transformation, byte[] key,
+      byte[] iv) throws GeneralSecurityException {
+    int blockSize = transformation.getAlgorithmBlockSize();
+
+    // AES_CBC_NOPADDING only accepts data whose size is the multiple of block size
+    int[] dataLenList = (transformation == CipherTransformation.AES_CBC_NOPADDING)
+        ? new int[] {10 * 1024} : new int[] {10 * 1024, 10 * 1024 - 3};
+    for (int dataLen : dataLenList) {
+      byte[] plainText = new byte[dataLen];
+      Random random = new SecureRandom();
+      random.nextBytes(plainText);
+      byte[] cipherText = new byte[dataLen + blockSize];
+
+      // check update method with inputs whose sizes are the multiple of block size or not
+      int[] bufferLenList = new int[] {2 * 1024 - 128, 2 * 1024 - 125};
+      for (int bufferLen : bufferLenList) {
+        resetCipher(transformation, key, iv);
+        
+        int offset = 0;
+        // encrypt (update + doFinal) the data
+        int cipherPos = 0;
+        for (int i = 0; i < dataLen / bufferLen; i ++) {
+          cipherPos += enc.update(plainText, offset, bufferLen, cipherText, cipherPos);
+          offset += bufferLen;
+        }
+        cipherPos += enc.doFinal(plainText, offset, dataLen % bufferLen, cipherText, cipherPos);
+
+        offset = 0;
+        // decrypt (update + doFinal) the data
+        byte[] realPlainText = new byte[cipherPos + blockSize];
+        int plainPos = 0;
+        for (int i = 0; i < cipherPos / bufferLen; i ++) {
+          plainPos += dec.update(cipherText, offset, bufferLen, realPlainText, plainPos);
+          offset += bufferLen;
+        }
+        plainPos += dec.doFinal(cipherText, offset, cipherPos % bufferLen, realPlainText, plainPos);
+
+        // verify
+        Assert.assertEquals("random byte array length changes after transformation",
+            dataLen, plainPos);
+
+        byte[] shrinkPlainText = new byte[plainPos];
+        System.arraycopy(realPlainText, 0, shrinkPlainText, 0, plainPos);
+        Assert.assertArrayEquals("random byte array contents changes after transformation",
+            plainText, shrinkPlainText);
+      }
+    }
+  }
+
+  private void resetCipher(CipherTransformation transformation, byte[] key, byte[] iv) {
+    enc = getCipher(transformation);
+    dec = getCipher(transformation);
+
+    try {
+      enc.init(Cipher.ENCRYPT_MODE, key, iv);
+    } catch (Exception e) {
+      Assert.fail("AES failed initialisation - " + e.toString());
+    }
+
+    try {
+      dec.init(Cipher.DECRYPT_MODE, key, iv);
+    } catch (Exception e) {
+      Assert.fail("AES failed initialisation - " + e.toString());
     }
   }
 

@@ -40,11 +40,6 @@ public class OpensslCipherTest extends AbstractCipherTest {
     cipherClass = OpensslCipher.class.getName();
   }
 
-  private static final byte[] key = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-      0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16};
-  private static final byte[] iv = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-      0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
-
   @Test(expected = NoSuchAlgorithmException.class, timeout=120000)
   public void testInvalidAlgorithm() throws Exception {
     Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
@@ -89,7 +84,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     Openssl cipher = Openssl.getInstance(CipherTransformation.AES_CTR_NOPADDING.getName());
     Assert.assertNotNull(cipher);
 
-    cipher.init(Openssl.ENCRYPT_MODE, key, iv);
+    cipher.init(Openssl.ENCRYPT_MODE, KEY, IV);
 
     // Require direct buffers
     ByteBuffer input = ByteBuffer.allocate(1024);
@@ -120,7 +115,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     Openssl cipher = Openssl.getInstance(CipherTransformation.AES_CTR_NOPADDING.getName());
     Assert.assertNotNull(cipher);
 
-    cipher.init(Openssl.ENCRYPT_MODE, key, iv);
+    cipher.init(Openssl.ENCRYPT_MODE, KEY, IV);
 
     // Require direct buffer
     ByteBuffer output = ByteBuffer.allocate(1024);
@@ -142,7 +137,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     final byte[] invalidKey = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
             0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11};
     try {
-      cipher.init(Openssl.ENCRYPT_MODE, invalidKey, iv);
+      cipher.init(Openssl.ENCRYPT_MODE, invalidKey, IV);
       Assert.fail("java.security.InvalidKeyException should be thrown.");
     } catch (Exception e) {
       Assert.assertTrue(e.getMessage().contains("Invalid key length."));
@@ -159,7 +154,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     final byte[] invalidIV = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
             0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11};
     try {
-      cipher.init(Openssl.ENCRYPT_MODE, key, invalidIV);
+      cipher.init(Openssl.ENCRYPT_MODE, KEY, invalidIV);
       Assert.fail("java.security.InvalidAlgorithmParameterException should be thrown.");
     } catch (Exception e) {
       Assert.assertTrue(e.getMessage().contains("Wrong IV length."));

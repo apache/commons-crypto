@@ -100,6 +100,26 @@ public class OpensslCipher implements Cipher {
   }
 
   /**
+   * Continues a multiple-part encryption/decryption operation. The data
+   * is encrypted or decrypted, depending on how this cipher was initialized.
+   *
+   * @param input the input byte array
+   * @param inputOffset the offset in input where the input starts
+   * @param inputLen the input length
+   * @param output the byte array for the result
+   * @param outputOffset the offset in output where the result is stored
+   * @return the number of bytes stored in output
+   * @throws ShortBufferException if there is insufficient space in the output byte array
+   */
+  @Override
+  public int update(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
+      throws ShortBufferException {
+    return cipher.update(input, inputOffset, inputLen,
+                         output, outputOffset);
+  }
+
+  /**
    * Encrypts or decrypts data in a single-part operation, or finishes a
    * multiple-part operation. The data is encrypted or decrypted, depending
    * on how this cipher was initialized.
@@ -123,6 +143,36 @@ public class OpensslCipher implements Cipher {
       BadPaddingException {
     int n = cipher.update(inBuffer, outBuffer);
     return n + cipher.doFinal(outBuffer);
+  }
+
+  /**
+   * Encrypts or decrypts data in a single-part operation, or finishes a
+   * multiple-part operation.
+   *
+   * @param input the input byte array
+   * @param inputOffset the offset in input where the input starts
+   * @param inputLen the input length
+   * @param output the byte array for the result
+   * @param outputOffset the offset in output where the result is stored
+   * @return the number of bytes stored in output
+   * @throws ShortBufferException if the given output byte array is too small
+   * to hold the result
+   * @throws BadPaddingException if this cipher is in decryption mode,
+   * and (un)padding has been requested, but the decrypted data is not
+   * bounded by the appropriate padding bytes
+   * @throws IllegalBlockSizeException if this cipher is a block cipher,
+   * no padding has been requested (only in encryption mode), and the total
+   * input length of the data processed by this cipher is not a multiple of
+   * block size; or if this encryption algorithm is unable to
+   * process the input data provided.
+   */
+  @Override
+  public int doFinal(byte[] input, int inputOffset, int inputLen,
+      byte[] output, int outputOffset)
+      throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    int n = cipher.update(input, inputOffset, inputLen,
+                          output, outputOffset);
+    return n + cipher.doFinal(output, outputOffset + n);
   }
 
   /**
