@@ -41,22 +41,27 @@ import java.util.Random;
 public class PositionedCryptoInputStreamTest {
 
   private final int dataLen = 20000;
-  private byte[] data = new byte[dataLen];
+  private byte[] testData = new byte[dataLen];
   private byte[] encData;
   private Properties props = new Properties();
   private byte[] key = new byte[16];
   private byte[] iv = new byte[16];
-  private static int defaultBufferSize = 8192;
-  private static int smallBufferSize = 1024;
+  int bufferSize = 2048;
+  int bufferSizeLess = bufferSize - 1;
+  int bufferSizeMore = bufferSize + 1;
+  int length = 1024;
+  int lengthLess = length - 1;
+  int lengthMore = length + 1;
 
   private final String jceCipherClass = JceCipher.class.getName();
   private final String opensslCipherClass = OpensslCipher.class.getName();
-  private CipherTransformation transformation = CipherTransformation.AES_CTR_NOPADDING;
+  private CipherTransformation transformation =
+                                CipherTransformation.AES_CTR_NOPADDING;
 
   @Before
   public void before() throws IOException {
     Random random = new SecureRandom();
-    random.nextBytes(data);
+    random.nextBytes(testData);
     random.nextBytes(key);
     random.nextBytes(iv);
     prepareData();
@@ -66,15 +71,16 @@ public class PositionedCryptoInputStreamTest {
     Cipher cipher = null;
     try {
       cipher = (Cipher)ReflectionUtils.newInstance(
-              ReflectionUtils.getClassByName(jceCipherClass), props, transformation);
+              ReflectionUtils.getClassByName(jceCipherClass),
+              props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto cipher!");
     }
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     // encryption data
-    OutputStream out = new CryptoOutputStream(baos, cipher, defaultBufferSize, key, iv);
-    out.write(data);
+    OutputStream out = new CryptoOutputStream(baos, cipher, bufferSize, key, iv);
+    out.write(testData);
     out.flush();
     out.close();
     encData = baos.toByteArray();
@@ -82,168 +88,207 @@ public class PositionedCryptoInputStreamTest {
 
   public void setUp() throws IOException {}
 
-  private PositionedCryptoInputStream getCryptoInputStream(Cipher cipher, int bufferSize,byte[] iv)
-          throws IOException {
-    return new PositionedCryptoInputStream(new PositionedInputForTest(Arrays.copyOf(encData, encData.length),
-            defaultBufferSize), cipher, bufferSize, key, iv, 0);
+  private PositionedCryptoInputStream getCryptoInputStream(Cipher cipher,
+      int bufferSize) throws IOException {
+    return new PositionedCryptoInputStream(new PositionedInputForTest(
+      Arrays.copyOf(encData, encData.length)), cipher, bufferSize, key, iv, 0);
   }
 
   @Test
   public void doTest() throws Exception {
-    doTest(jceCipherClass);
-    doTest(opensslCipherClass);
+    testCipher(jceCipherClass);
+    testCipher(opensslCipherClass);
   }
 
-  private void doTest(String cipherClass) throws Exception {
-    int positionedReadLength = 100;
-    allBufferReadTests(cipherClass);
-    allPositionedReadTests(cipherClass, positionedReadLength);
-    allReadFullyTests(cipherClass, positionedReadLength);
-    allSeekTests(cipherClass, positionedReadLength);
+  private void testCipher(String cipherClass) throws Exception {
+    doPositionedReadTests(cipherClass);
+    doReadFullyTests(cipherClass);
+    doSeekTests(cipherClass);
+    doMultipleReadTest(cipherClass);
   }
 
-  private void allPositionedReadTests(String cipherClass, int positionedReadLength) throws Exception {
-    positionedReadCheck(cipherClass, 0, 0, positionedReadLength);
-    positionedReadCheck(cipherClass, defaultBufferSize - 1, 0, positionedReadLength);
-    positionedReadCheck(cipherClass, defaultBufferSize, 0, positionedReadLength);
-    positionedReadCheck(cipherClass, dataLen - positionedReadLength, 0, positionedReadLength);
-    positionedReadCheck(cipherClass, dataLen - 1, 0, positionedReadLength);
-    positionedReadCheck(cipherClass, dataLen - positionedReadLength/2, 0, positionedReadLength);
+  // when there are multiple positioned read actions and one read action,
+  // they will not interfere each other.
+  private void doMultipleReadTest(String cipherClass) throws Exception {
+    PositionedCryptoInputStream in = getCryptoInputStream(
+            getCipher(cipherClass), bufferSize);
+    int position = 0;
+    while (in.available() > 0) {
+      ByteBuffer buf = ByteBuffer.allocate(length);
+      byte[] bytes1 = new byte[length];
+      byte[] bytes2 = new byte[lengthLess];
+      // do the read and position read
+      int pn1 = in.read(position, bytes1, 0, length);
+      int n = in.read(buf);
+      int pn2 = in.read(position, bytes2, 0, lengthLess);
 
-    try {
-      // -1 will be returned with the negative position, and NegativeArraySizeException will be thrown during the test.
-      positionedReadCheck(cipherClass, -1, 0, positionedReadLength);
-      Assert.fail("Excepted NegativeArraySizeException.");
-    } catch (NegativeArraySizeException nase) {
-     // excepted exception
-    }
+      // verify the result
+      if (pn1 > 0) {
+        compareByteArray(testData, position, bytes1, pn1);
+      }
 
-    try {
-      // -1 will be returned, and NegativeArraySizeException will be thrown during the test.
-      positionedReadCheck(cipherClass, dataLen, 0, positionedReadLength);
-      Assert.fail("Excepted NegativeArraySizeException.");
-    } catch (NegativeArraySizeException nase) {
-      // excepted exception
+      if (pn2 > 0) {
+        compareByteArray(testData, position, bytes2, pn2);
+      }
+
+      if (n > 0) {
+        compareByteArray(testData, position, buf.array(), n);
+        position += n;
+      } else {
+        break;
+      }
     }
+    in.close();
   }
 
-  private void allReadFullyTests(String cipherClass, int positionedReadLength) throws Exception {
-    positionedReadFullyCheck(cipherClass, 0, 0, positionedReadLength);
-    positionedReadFullyCheck(cipherClass, defaultBufferSize - 1, 0, positionedReadLength);
-    positionedReadFullyCheck(cipherClass, defaultBufferSize, 0, positionedReadLength);
-    positionedReadFullyCheck(cipherClass, dataLen - positionedReadLength, 0, positionedReadLength);
-
-    try {
-      positionedReadFullyCheck(cipherClass, -1, 0, positionedReadLength);
-      Assert.fail("Excepted EOFException.");
-    } catch (IOException ioe) {
-      // excepted exception
-    }
-
-    try {
-      positionedReadFullyCheck(cipherClass, dataLen, 0, positionedReadLength);
-      Assert.fail("Excepted EOFException.");
-    } catch (IOException ioe) {
-      // excepted exception
-    }
-
-    try {
-      positionedReadFullyCheck(cipherClass, dataLen - positionedReadLength/2, 0, positionedReadLength);
-      Assert.fail("Excepted EOFException.");
-    } catch (IOException ioe) {
-      // excepted exception
-    }
+  private void doPositionedReadTests(String cipherClass) throws Exception {
+    // test with different bufferSize when position = 0
+    testPositionedReadLoop(cipherClass, 0, length, bufferSize, dataLen);
+    testPositionedReadLoop(cipherClass, 0, length, bufferSizeLess, dataLen);
+    testPositionedReadLoop(cipherClass, 0, length, bufferSizeMore, dataLen);
+    // test with different position when bufferSize = 2048
+    testPositionedReadLoop(cipherClass, dataLen / 2, length, bufferSize, dataLen);
+    testPositionedReadLoop(cipherClass, dataLen / 2 - 1, length,
+            bufferSizeLess, dataLen);
+    testPositionedReadLoop(cipherClass, dataLen / 2 + 1, length,
+            bufferSizeMore, dataLen);
+    // position = -1 or position = max length, read nothing and return -1
+    testPositionedReadNone(cipherClass, -1, length, bufferSize);
+    testPositionedReadNone(cipherClass, dataLen, length, bufferSize);
   }
 
-  private void allSeekTests(String cipherClass, int positionedReadLength) throws Exception {
-    positionedSeekCheck(cipherClass, 0, positionedReadLength, positionedReadLength);
-    positionedSeekCheck(cipherClass, defaultBufferSize - 1, positionedReadLength, positionedReadLength);
-    positionedSeekCheck(cipherClass, defaultBufferSize, positionedReadLength, positionedReadLength);
-    positionedSeekCheck(cipherClass, dataLen - positionedReadLength, positionedReadLength, positionedReadLength);
-    positionedSeekCheck(cipherClass, dataLen - 1, positionedReadLength, 1);
-    positionedSeekCheck(cipherClass, dataLen - positionedReadLength / 2, positionedReadLength, positionedReadLength / 2);
-    positionedSeekCheck(cipherClass, dataLen, positionedReadLength, 0);
+  private void doReadFullyTests(String cipherClass) throws Exception {
+    // test with different bufferSize when position = 0
+    testReadFullyLoop(cipherClass, 0, length, bufferSize, dataLen);
+    testReadFullyLoop(cipherClass, 0, length, bufferSizeLess, dataLen);
+    testReadFullyLoop(cipherClass, 0, length, bufferSizeMore, dataLen);
+    // test with different length when position = 0
+    testReadFullyLoop(cipherClass, 0, length, bufferSize, dataLen);
+    testReadFullyLoop(cipherClass, 0, lengthLess, bufferSize, dataLen);
+    testReadFullyLoop(cipherClass, 0, lengthMore, bufferSize, dataLen);
+    // test read fully failed
+    testReadFullyFailed(cipherClass, -1, length, bufferSize);
+    testReadFullyFailed(cipherClass, dataLen, length, bufferSize);
+    testReadFullyFailed(cipherClass, dataLen - length + 1, length, bufferSize);
+  }
+
+  private void doSeekTests(String cipherClass) throws Exception {
+    // test with different length when position = 0
+    testSeekLoop(cipherClass, 0, length, bufferSize);
+    testSeekLoop(cipherClass, 0, lengthLess, bufferSize);
+    testSeekLoop(cipherClass, 0, lengthMore, bufferSize);
+    // there should be none data read when position = dataLen
+    testSeekLoop(cipherClass, dataLen, length, bufferSize);
+    // test exception when position = -1
+    testSeekFailed(cipherClass, -1, bufferSize);
+  }
+
+  private void testSeekLoop(String cipherClass, int position, int length,
+      int bufferSize) throws Exception {
+    PositionedCryptoInputStream in = getCryptoInputStream(
+            getCipher(cipherClass), bufferSize);
+    while (in.available() > 0) {
+      in.seek(position);
+      ByteBuffer buf = ByteBuffer.allocate(length);
+      int n = in.read(buf);
+      if (n > 0) {
+        compareByteArray(testData, position, buf.array(), n);
+        position += n;
+      } else {
+        break;
+      }
+    }
+    in.close();
+  }
+
+  // test for the out of index position, eg, -1.
+  private void testSeekFailed(String cipherClass, int position,
+      int bufferSize) throws Exception {
+    PositionedCryptoInputStream in = getCryptoInputStream(
+            getCipher(cipherClass), bufferSize);
     try {
-      // Cannot seek to negative offset
-      positionedSeekCheck(cipherClass, -1, positionedReadLength, 0);
+      in.seek(position);
       Assert.fail("Excepted exception for cannot seek to negative offset.");
     } catch (IllegalArgumentException iae) {
     }
-  }
-
-  private void allBufferReadTests(String cipherClass) throws Exception {
-    bufferReadCheck(cipherClass, defaultBufferSize, 0);
-    bufferReadCheck(cipherClass, defaultBufferSize, 11);
-    bufferReadCheck(cipherClass, smallBufferSize, 0);
-    bufferReadCheck(cipherClass, smallBufferSize, 11);
-  }
-
-  private void positionedSeekCheck(String cipherClass, int position, int length, int exceptedLength) throws Exception {
-    PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), defaultBufferSize, iv);
-    in.seek(position);
-    ByteBuffer buf = ByteBuffer.allocate(length);
-    int n = in.read(buf);
-    Assert.assertEquals(exceptedLength, n);
-    byteArrayCompare(n, buf.array(), position, length);
     in.close();
   }
 
-  private void positionedReadCheck(String cipherClass, int position, int offset, int length) throws Exception {
-    PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), defaultBufferSize, iv);
-    ByteBuffer buf = ByteBuffer.allocate(length);
-    int n = in.read(position, buf.array(), offset, length);
-    byteArrayCompare(n, buf.array(), position, length);
-    in.close();
-  }
-
-  private void byteArrayCompare(int readLength, byte[] buf, int position, int length) {
-    byte[] readData = new byte[readLength];
-    byte[] expectedData = new byte[readLength];
-    System.arraycopy(buf, 0, readData, 0, readLength);
-
-    if (position < 0 || position > dataLen - 1) {
-      Assert.assertArrayEquals(new byte[readLength], readData);
-    } else if (position + length > dataLen) {
-      System.arraycopy(data, position, expectedData, 0, dataLen - position);
-      Assert.assertArrayEquals(expectedData, readData);
-    } else {
-      System.arraycopy(data, position, expectedData, 0, readLength);
-      Assert.assertArrayEquals(expectedData, readData);
+  private void testPositionedReadLoop(String cipherClass, int position,
+      int length, int bufferSize, int total) throws Exception {
+    PositionedCryptoInputStream in = getCryptoInputStream(
+            getCipher(cipherClass), bufferSize);
+    // do the position read until the end of data
+    while (position < total) {
+      byte[] bytes = new byte[length];
+      int n = in.read(position, bytes, 0, length);
+      if (n >= 0) {
+        compareByteArray(testData, position, bytes, n);
+        position += n;
+      } else {
+        break;
+      }
     }
-  }
-
-  private void positionedReadFullyCheck(String cipherClass,int position,
-      int offset, int length) throws Exception {
-    PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), defaultBufferSize, iv);
-    ByteBuffer buf = ByteBuffer.allocate(length);
-    in.readFully(position, buf.array(), offset, length);
-    byte[] readData = new byte[length];
-    byte[] expectedData = new byte[length];
-    System.arraycopy(buf.array(), 0, readData, 0, length);
-    System.arraycopy(data, position, expectedData, 0, length);
-    Assert.assertArrayEquals(expectedData, readData);
-  }
-
-  private void bufferReadCheck(String cipherClass, int bufferSize, int bufPos) throws Exception {
-    PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize, iv);
-    ByteBuffer buf = ByteBuffer.allocate(dataLen + 100);
-    buf.position(bufPos);
-    int n = in.read(buf);
-    Assert.assertEquals(bufPos + n, buf.position());
-    byte[] readData = new byte[n];
-    buf.rewind();
-    buf.position(bufPos);
-    buf.get(readData);
-    byte[] expectedData = new byte[n];
-    System.arraycopy(data, 0, expectedData, 0, n);
-    Assert.assertArrayEquals(readData, expectedData);
     in.close();
+  }
+
+  // test for the out of index position, eg, -1.
+  private void testPositionedReadNone(String cipherClass, int position,
+      int length, int bufferSize) throws Exception {
+    PositionedCryptoInputStream in = getCryptoInputStream(
+            getCipher(cipherClass), bufferSize);
+    byte[] bytes = new byte[length];
+    int n = in.read(position, bytes, 0, length);
+    Assert.assertEquals(n, -1);
+    in.close();
+  }
+
+  private void testReadFullyLoop(String cipherClass,int position,
+      int length, int bufferSize, int total) throws Exception {
+    PositionedCryptoInputStream in = getCryptoInputStream(
+            getCipher(cipherClass), bufferSize);
+
+    // do the position read full until remain < length
+    while (position + length <= total) {
+      byte[] bytes = new byte[length];
+      in.readFully(position, bytes, 0, length);
+      compareByteArray(testData, position, bytes, length);
+      position += length;
+    }
+
+    in.close();
+  }
+
+  // test for the End of file reached before reading fully
+  private void testReadFullyFailed(String cipherClass, int position,
+      int length, int bufferSize) throws Exception {
+    PositionedCryptoInputStream in = getCryptoInputStream(
+            getCipher(cipherClass), bufferSize);
+    byte[] bytes = new byte[length];
+    try {
+      in.readFully(position, bytes, 0, length);
+      Assert.fail("Excepted EOFException.");
+    } catch (IOException ioe) {
+      // excepted exception
+    }
+    in.close();
+  }
+
+  // compare the data from pos with length and data2 from 0 with length
+  private void compareByteArray(byte[] data1, int pos, byte[] data2, int length) {
+    byte[] expectedData = new byte[length];
+    byte[] realData = new byte[length];
+    // get the expected data with the position and length
+    System.arraycopy(data1, pos, expectedData, 0, length);
+    // get the real data
+    System.arraycopy(data2, 0, realData, 0, length);
+    Assert.assertArrayEquals(expectedData, realData);
   }
 
   private Cipher getCipher(String cipherClass) throws IOException {
     try {
       return (Cipher)ReflectionUtils.newInstance(
-              ReflectionUtils.getClassByName(cipherClass), props, transformation);
+          ReflectionUtils.getClassByName(cipherClass), props, transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto cipher!");
     }
@@ -254,35 +299,26 @@ public class PositionedCryptoInputStreamTest {
     byte[] data;
     long pos;
     long count;
-    byte[] buf;
-    int bufferSize;
 
-    public PositionedInputForTest(byte[] data, int bufferSize) {
+    public PositionedInputForTest(byte[] data) {
       this.data = data;
       this.pos = 0;
       this.count = data.length;
-      this.bufferSize = bufferSize;
     }
 
     @Override
     public int read(ByteBuffer dst) throws IOException {
       int remaining = dst.remaining();
-      final byte[] tmp = getBuf();
-      int read = 0;
-      int offset = 0;
-      while (remaining > 0) {
-        int copyLen = Math.min(Math.min(remaining, bufferSize), available());
-        if (copyLen == 0) {
-          break;
-        }
-        System.arraycopy(data, (int)pos, tmp, 0, copyLen);
-        dst.put(tmp, offset, copyLen);
-        read += copyLen;
-        offset += copyLen;
-        pos += copyLen;
-        remaining -= copyLen;
+      int length = Math.min(remaining, available());
+      byte[] tmp = new byte[length];
+      int readLength = read(pos, tmp, 0, length);
+
+      if (readLength > 0) {
+        dst.put(tmp, 0, readLength);
+        pos += readLength;
       }
-      return read;
+
+      return readLength;
     }
 
     @Override
@@ -356,13 +392,6 @@ public class PositionedCryptoInputStreamTest {
     @Override
     public int available() throws IOException {
       return (int)(count - pos);
-    }
-
-    private byte[] getBuf() {
-      if (buf == null) {
-        buf = new byte[bufferSize];
-      }
-      return buf;
     }
   }
 }
