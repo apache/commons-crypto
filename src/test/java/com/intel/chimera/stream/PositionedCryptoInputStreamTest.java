@@ -308,17 +308,15 @@ public class PositionedCryptoInputStreamTest {
 
     @Override
     public int read(ByteBuffer dst) throws IOException {
-      int remaining = dst.remaining();
-      int length = Math.min(remaining, available());
-      byte[] tmp = new byte[length];
-      int readLength = read(pos, tmp, 0, length);
-
-      if (readLength > 0) {
-        dst.put(tmp, 0, readLength);
-        pos += readLength;
+      int remaining = (int)(count - pos);
+      if(remaining <= 0) {
+        return -1;
       }
 
-      return readLength;
+      int length = Math.min(dst.remaining(), remaining);
+      dst.put(data, (int)pos, length);
+      pos += length;
+      return length;
     }
 
     @Override
