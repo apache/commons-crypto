@@ -121,7 +121,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
   public void readFully(long position, byte[] buffer, int offset, int length)
       throws IOException {
     checkStream();
-    IOUtils.readFullyWithPosition(input, position, buffer, offset, length);
+    IOUtils.readFully(input, position, buffer, offset, length);
     if (length > 0) {
       // This operation does not change the current offset of the file
       decrypt(position, buffer, offset, length);

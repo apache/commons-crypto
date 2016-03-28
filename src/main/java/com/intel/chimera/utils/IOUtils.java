@@ -41,7 +41,7 @@ public class IOUtils {
    * Do the readFully based on Input's positioned read.
    * This does not change the current offset of the stream and is thread-safe.
    */
-  public static void readFullyWithPosition(Input in, long position,
+  public static void readFully(Input in, long position,
       byte[] buffer, int offset, int length) throws IOException {
     int nread = 0;
     while (nread < length) {
