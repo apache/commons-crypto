@@ -17,7 +17,6 @@
  */
 package com.intel.chimera.stream;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -38,6 +37,7 @@ import com.intel.chimera.cipher.CipherFactory;
 import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;
+import com.intel.chimera.utils.IOUtils;
 import com.intel.chimera.utils.Utils;
 
 import static com.intel.chimera.cipher.CipherTransformation.AES_CTR_NOPADDING;
@@ -121,26 +121,10 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
   public void readFully(long position, byte[] buffer, int offset, int length)
       throws IOException {
     checkStream();
-    readFullyInternal(position, buffer, offset, length);
+    IOUtils.readFullyWithPosition(input, position, buffer, offset, length);
     if (length > 0) {
       // This operation does not change the current offset of the file
       decrypt(position, buffer, offset, length);
-    }
-  }
-
-  /**
-   * Do the readFully based on Input's positioned read.
-   * This does not change the current offset of the stream and is thread-safe.
-   */
-  private void readFullyInternal(long position, byte[] buffer,
-      int offset, int length) throws IOException {
-    int nread = 0;
-    while (nread < length) {
-      int nbytes = input.read(position+nread, buffer, offset+nread, length-nread);
-      if (nbytes < 0) {
-        throw new EOFException("End of stream reached before reading fully.");
-      }
-      nread += nbytes;
     }
   }
 
