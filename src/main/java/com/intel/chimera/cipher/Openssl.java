@@ -93,6 +93,10 @@ public final class Openssl {
     }
   }
 
+  /**
+   * Gets the failure reason when loading Openssl native.
+   * @return the failure reason.
+   */
   public static String getLoadingFailureReason() {
     return loadingFailureReason;
   }
@@ -303,7 +307,7 @@ public final class Openssl {
     }
   }
 
-  /** Check whether context is initialized. */
+  /** Checks whether context is initialized. */
   private void checkState() {
     Utils.checkState(context != 0);
   }
