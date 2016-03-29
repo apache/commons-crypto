@@ -98,13 +98,6 @@ public interface Input {
       throws IOException;
 
   /**
-   * Read the specified number of bytes from a given position within a stream.
-   * This does not change the current offset of the stream and is thread-safe.
-   */
-  void readFully(long position, byte[] buffer, int offset, int length)
-      throws IOException;
-
-  /**
    * Seek to the given offset from the start of the stream.
    * The next read() will be from that location.
    */

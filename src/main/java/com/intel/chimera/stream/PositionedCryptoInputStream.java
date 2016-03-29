@@ -37,6 +37,7 @@ import com.intel.chimera.cipher.CipherFactory;
 import com.intel.chimera.input.ChannelInput;
 import com.intel.chimera.input.Input;
 import com.intel.chimera.input.StreamInput;
+import com.intel.chimera.utils.IOUtils;
 import com.intel.chimera.utils.Utils;
 
 import static com.intel.chimera.cipher.CipherTransformation.AES_CTR_NOPADDING;
@@ -120,7 +121,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
   public void readFully(long position, byte[] buffer, int offset, int length)
       throws IOException {
     checkStream();
-    input.readFully(position, buffer, offset, length);
+    IOUtils.readFully(input, position, buffer, offset, length);
     if (length > 0) {
       // This operation does not change the current offset of the file
       decrypt(position, buffer, offset, length);

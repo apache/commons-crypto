@@ -359,19 +359,6 @@ public class PositionedCryptoInputStreamTest {
     }
 
     @Override
-    public void readFully(long position, byte[] buffer, int offset, int length)
-            throws IOException {
-      int nread = 0;
-      while (nread < length) {
-        int nbytes = read(position+nread, buffer, offset+nread, length-nread);
-        if (nbytes < 0) {
-          throw new EOFException("End of file reached before reading fully.");
-        }
-        nread += nbytes;
-      }
-    }
-
-    @Override
     public void seek(long position) throws IOException {
       if (pos < 0) {
         throw new IOException("Negative seek offset");

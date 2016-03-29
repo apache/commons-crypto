@@ -20,6 +20,7 @@ package com.intel.chimera.utils;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.intel.chimera.input.Input;
 import org.apache.commons.logging.Log;
 
 public class IOUtils {
@@ -33,6 +34,22 @@ public class IOUtils {
       }
       toRead -= ret;
       off += ret;
+    }
+  }
+
+  /**
+   * Do the readFully based on Input's positioned read.
+   * This does not change the current offset of the stream and is thread-safe.
+   */
+  public static void readFully(Input in, long position,
+      byte[] buffer, int offset, int length) throws IOException {
+    int nread = 0;
+    while (nread < length) {
+      int nbytes = in.read(position+nread, buffer, offset+nread, length-nread);
+      if (nbytes < 0) {
+        throw new IOException("End of stream reached before reading fully.");
+      }
+      nread += nbytes;
     }
   }
 
