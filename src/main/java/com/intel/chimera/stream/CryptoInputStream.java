@@ -121,6 +121,17 @@ public class CryptoInputStream extends InputStream implements
     return (n == -1) ? -1 : oneByteBuf[0] & 0xff;
   }
 
+  /**
+   * Decryption is buffer based.
+   * If there is data in {@link #outBuffer}, then read it out of this buffer.
+   * If there is no data in {@link #outBuffer}, then read more from the
+   * underlying stream and do the decryption.
+   * @param b the buffer into which the decrypted data is read.
+   * @param off the buffer offset.
+   * @param len the maximum number of decrypted data bytes to read.
+   * @return int the total number of decrypted data bytes read into the buffer.
+   * @throws IOException
+   */
   @Override
   public int read(byte[] b, int off, int len) throws IOException {
     checkStream();
@@ -141,8 +152,8 @@ public class CryptoInputStream extends InputStream implements
     } else {
       // No data in the out buffer, try read new data and decrypt it
       int nd = decryptMore();
-      if(nd < 0)
-        return -1;
+      if(nd <= 0)
+        return nd;
 
       int n = Math.min(len, outBuffer.remaining());
       outBuffer.get(b, off, n);
