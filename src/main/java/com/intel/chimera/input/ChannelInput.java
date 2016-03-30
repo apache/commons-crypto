@@ -78,7 +78,7 @@ public class ChannelInput implements Input {
   }
 
   @Override
-  public void seek(long pos) throws IOException {
+  public void seek(long position) throws IOException {
     throw new UnsupportedOperationException(
         "Seek is not supported by this implementation");
   }
