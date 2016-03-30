@@ -47,7 +47,7 @@ public class SecureRandomFactory {
     if (secureRandomClasses != null) {
       for (String klassName : Utils.splitClassNames(secureRandomClasses, ",")) {
         try {
-          final Class klass = ReflectionUtils.getClassByName(klassName);
+          final Class<?> klass = ReflectionUtils.getClassByName(klassName);
           random = (SecureRandom) ReflectionUtils.newInstance(klass, props);
           if (random != null) {
             break;
