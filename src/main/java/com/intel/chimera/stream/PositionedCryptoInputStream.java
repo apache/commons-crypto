@@ -73,11 +73,6 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     super(input, cipher, bufferSize, key, iv, streamOffset);
   }
 
-  protected long getPos() throws IOException {
-    checkStream();
-    return streamOffset - outBuffer.remaining();
-  }
-
   /**
    * Read upto the specified number of bytes from a given position
    * within a stream and return the number of bytes read. This does not
@@ -110,24 +105,6 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
 
   public void readFully(long position, byte[] buffer) throws IOException {
     readFully(position, buffer, 0, buffer.length);
-  }
-
-  public void seek(long position) throws IOException {
-    Utils.checkArgument(position >= 0, "Cannot seek to negative offset.");
-    checkStream();
-    /*
-     * If data of target pos in the underlying stream has already been read
-     * and decrypted in outBuffer, we just need to re-position outBuffer.
-     */
-    if (position <= getStreamOffset() && position >= getPos()) {
-      int forward = (int) (position - getPos());
-      if (forward > 0) {
-        outBuffer.position(outBuffer.position() + forward);
-      }
-    } else {
-      input.seek(position);
-      resetStreamOffset(position);
-    }
   }
 
   /**
