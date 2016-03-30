@@ -22,8 +22,12 @@ package com.intel.chimera.cipher;
  * {@link javax.crypto.Cipher}.
  */
 public enum CipherTransformation {
+
+  /** A crypto transformation representing AES/CTR/NoPadding */
   AES_CTR_NOPADDING("AES/CTR/NoPadding", 16),
+  /** A crypto transformation representing AES/CBC/NoPadding */
   AES_CBC_NOPADDING("AES/CBC/NoPadding", 16),
+  /** A crypto transformation representing AES/CBC/PKCS5Padding */
   AES_CBC_PKCS5PADDING("AES/CBC/PKCS5Padding", 16);
 
   private final String name;
@@ -32,8 +36,9 @@ public enum CipherTransformation {
   /**
    * Constructor for CipherTransformation.  Initalizes the cipher with algorithm
    * name and block size of the algorithm.
-   * @param name
-   * @param algorithmBlockSize
+   *
+   * @param name the name of cipher algorithm
+   * @param algorithmBlockSize the blockSize of cipher algorithm
    */
   CipherTransformation(String name, int algorithmBlockSize) {
     this.name = name;
@@ -61,7 +66,7 @@ public enum CipherTransformation {
   /**
    * Overrides {@link java.lang.Enum#toString()}
    *
-   * @return the name of cipher algorithm name and blocksize.
+   * @return the name of cipher algorithm and blocksize.
    */
   @Override
   public String toString() {
@@ -74,8 +79,7 @@ public enum CipherTransformation {
 
   /**
    * Converts to CipherTransformation from name, {@link #algorithmBlockSize} 
-   * * is fixed for certain cipher transformation, just need to compare the 
-   * name.
+   * is fixed for certain cipher transformation, just need to compare the name.
    *
    * @param name cipher transformation name
    * @return CipherTransformation cipher transformation

@@ -32,6 +32,7 @@ public class OpensslNative {
 
   /**
    * Declares a native method to initialize the cipher context.
+   *
    * @param algorithm The algorithm name of cipher
    * @param padding The padding name of cipher
    * @return the context address of cipher
@@ -40,7 +41,8 @@ public class OpensslNative {
 
   /**
    * Declares a native method to initialize the cipher context.
-   *  
+   *
+   * @return the context address of cipher
    */
   public native static long init(long context, int mode, int alg, int padding,
       byte[] key, byte[] iv);
