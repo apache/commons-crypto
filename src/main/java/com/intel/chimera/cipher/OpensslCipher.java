@@ -29,7 +29,7 @@ import javax.crypto.ShortBufferException;
 import com.intel.chimera.utils.Utils;
 
 /**
- * Implement the Cipher using JNI into OpenSSL.
+ * Implements the Cipher using JNI into OpenSSL.
  */
 public class OpensslCipher implements Cipher {
   private final Properties props;
@@ -38,6 +38,7 @@ public class OpensslCipher implements Cipher {
 
   /**
    * Constructs a {@link com.intel.chimera.cipher.Cipher} using JNI into OpenSSL
+   * 
    * @param props properties for OpenSSL cipher
    * @param transformation transformation for OpenSSL cipher
    * @throws GeneralSecurityException if OpenSSL cipher initialize failed
@@ -55,11 +56,21 @@ public class OpensslCipher implements Cipher {
     cipher = Openssl.getInstance(transformation.getName());
   }
 
+  /**
+   * Gets the CipherTransformation for the openssl cipher.
+   *
+   * @return the CipherTransformation for this cipher
+   */
   @Override
   public CipherTransformation getTransformation() {
     return transformation;
   }
 
+  /**
+   * Gets the properties for the openssl cipher.
+   *
+   * @return the properties for this cipher.
+   */
   @Override
   public Properties getProperties() {
     return props;

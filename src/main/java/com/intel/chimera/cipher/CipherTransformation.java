@@ -22,19 +22,32 @@ package com.intel.chimera.cipher;
  * {@link javax.crypto.Cipher}.
  */
 public enum CipherTransformation {
+
+  /** A crypto transformation representing AES/CTR/NoPadding */
   AES_CTR_NOPADDING("AES/CTR/NoPadding", 16),
+  /** A crypto transformation representing AES/CBC/NoPadding */
   AES_CBC_NOPADDING("AES/CBC/NoPadding", 16),
+  /** A crypto transformation representing AES/CBC/PKCS5Padding */
   AES_CBC_PKCS5PADDING("AES/CBC/PKCS5Padding", 16);
 
   private final String name;
   private final int algorithmBlockSize;
 
+  /**
+   * Constructor for CipherTransformation.  Initalizes the cipher with algorithm
+   * name and block size of the algorithm.
+   *
+   * @param name the name of cipher algorithm
+   * @param algorithmBlockSize the blockSize of cipher algorithm
+   */
   CipherTransformation(String name, int algorithmBlockSize) {
     this.name = name;
     this.algorithmBlockSize = algorithmBlockSize;
   }
 
   /**
+   * Gets the algorithm name of cipher.
+   *
    * @return name of cipher transformation, as in {@link javax.crypto.Cipher}
    */
   public String getName() {
@@ -42,12 +55,19 @@ public enum CipherTransformation {
   }
 
   /**
-   * @return size of an algorithm block in bytes
+   * Gets the algorithm block size of cipher.
+   *
+   * @return size of an algorithm block in bytes.
    */
   public int getAlgorithmBlockSize() {
     return algorithmBlockSize;
   }
 
+  /**
+   * Overrides {@link java.lang.Enum#toString()}
+   *
+   * @return the name of cipher algorithm and blocksize.
+   */
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder("{");
@@ -58,8 +78,8 @@ public enum CipherTransformation {
   }
 
   /**
-   * Convert to CipherTransformation from name, {@link #algorithmBlockSize} is fixed
-   * for certain cipher transformation, just need to compare the name.
+   * Converts to CipherTransformation from name, {@link #algorithmBlockSize} 
+   * is fixed for certain cipher transformation, just need to compare the name.
    *
    * @param name cipher transformation name
    * @return CipherTransformation cipher transformation

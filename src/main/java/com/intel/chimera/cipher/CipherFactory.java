@@ -17,24 +17,26 @@
  */
 package com.intel.chimera.cipher;
 
-import com.intel.chimera.utils.ReflectionUtils;
-import com.intel.chimera.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.intel.chimera.utils.ReflectionUtils;
+import com.intel.chimera.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This is the factory class used for creating cipher class
  */
 public class CipherFactory {
+  
+  /** LOG instance for {@CipherFactory} */
   public final static Logger LOG = LoggerFactory.getLogger(CipherFactory.class);
 
   /**
-   * Get a cipher instance for specified algorithm/mode/padding.
+   * Gets a cipher instance for specified algorithm/mode/padding.
    *
    * @param props
    *          the configuration properties
@@ -67,7 +69,7 @@ public class CipherFactory {
   }
 
   /**
-   * Get a cipher for algorithm/mode/padding in config value
+   * Gets a cipher for algorithm/mode/padding in config value
    * chimera.crypto.cipher.transformation
    *
    * @return Cipher the cipher object Null value will be returned if no

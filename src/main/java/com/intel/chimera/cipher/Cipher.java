@@ -31,22 +31,36 @@ import javax.crypto.ShortBufferException;
  * The interface of cryptographic cipher for encryption and decryption.
  */
 public interface Cipher extends Closeable {
-  // The mode constant to be used when calling init method of the Cipher
+
+  /**
+   * A constant representing encrypt mode.  The mode constant to be used
+   * when calling init method of the Cipher.
+   */
   int ENCRYPT_MODE = 1;
+
+  /**
+   * A constant representing decrypt mode.  The mode constant to be used 
+   * when calling init method of the Cipher.
+   */
   int DECRYPT_MODE = 0;
 
   /**
+   * Gets the CipherTransformation for this cipher.
+   *
    * @return the CipherTransformation for this cipher.
    */
   CipherTransformation getTransformation();
 
   /**
-   * Get the properties for this cipher.
+   * Gets the properties for this cipher.
+   * 
+   * @return the properties for this cipher.
    */
   Properties getProperties();
 
   /**
    * Initializes the cipher with mode, key and iv.
+   * 
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param iv Initialization vector for the cipher
@@ -66,6 +80,7 @@ public interface Cipher extends Closeable {
   /**
    * Continues a multiple-part encryption/decryption operation. The data
    * is encrypted or decrypted, depending on how this cipher was initialized.
+   * 
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
@@ -94,6 +109,7 @@ public interface Cipher extends Closeable {
   /**
    * Encrypts or decrypts data in a single-part operation, or finishes a
    * multiple-part operation.
+   * 
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
