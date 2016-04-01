@@ -38,7 +38,8 @@ public class ConfigurationKeys {
   /**
    * The prefix of crypto configuration.
    */
-	public static final String CONF_PREFIX = "chimera.crypto.";
+  public static final String CONF_PREFIX =
+      CHIMERA_PREFIX + "crypto.";
 
   /**
    * The configuration key of implementation class for crypto cipher.
@@ -121,18 +122,18 @@ public class ConfigurationKeys {
   /**
    * The configuration key of the path for loading crypto library.
    */
-  public static final String CHIMERA_CRYPTO_LIB_PATH_KEY = CONF_PREFIX + "lib" +
-      ".path";
+  public static final String CHIMERA_CRYPTO_LIB_PATH_KEY =
+      CONF_PREFIX + "lib.path";
 
   /**
    * The configuration key of the file name for loading crypto library.
    */
-  public static final String CHIMERA_CRYPTO_LIB_NAME_KEY = CONF_PREFIX + "lib" +
-      ".name";
+  public static final String CHIMERA_CRYPTO_LIB_NAME_KEY =
+      CONF_PREFIX + "lib.name";
 
   /**
    * The configuration key of temp directory for extracting crypto library.
    */
-  public static final String CHIMERA_CRYPTO_LIB_TEMPDIR_KEY = CONF_PREFIX +
-      "lib.tempdir";
+  public static final String CHIMERA_CRYPTO_LIB_TEMPDIR_KEY =
+      CONF_PREFIX + "lib.tempdir";
 }
