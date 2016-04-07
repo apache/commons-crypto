@@ -22,14 +22,15 @@ import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.cipher.JceCipher;
 import com.intel.chimera.cipher.OpensslCipher;
-import com.intel.chimera.input.Input;
+import com.intel.chimera.stream.input.Input;
+import com.intel.chimera.stream.input.PositionedCryptoInputStream;
+import com.intel.chimera.stream.output.CryptoOutputStream;
 import com.intel.chimera.utils.ReflectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;

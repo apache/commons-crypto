@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.output;
+package com.intel.chimera.stream.output;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

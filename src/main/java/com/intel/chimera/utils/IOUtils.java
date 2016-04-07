@@ -20,7 +20,7 @@ package com.intel.chimera.utils;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.intel.chimera.input.Input;
+import com.intel.chimera.stream.input.Input;
 import org.apache.commons.logging.Log;
 
 public class IOUtils {
