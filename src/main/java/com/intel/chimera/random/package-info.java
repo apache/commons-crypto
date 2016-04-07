@@ -15,22 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.random;
-
-import java.io.Closeable;
-
 /**
- * The interface for SecureRandom.
+ * Random classes
  */
-public interface SecureRandom extends Closeable {
-
-  /**
-   * Generates random bytes and places them into a user-supplied
-   * byte array.  The number of random bytes produced is equal to
-   * the length of the byte array.
-   *
-   * @param bytes the byte array to fill with random bytes
-   */
-  void nextBytes(byte[] bytes);
-
-}
+package com.intel.chimera.random;

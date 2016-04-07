@@ -58,6 +58,11 @@ public class OsSecureRandom extends Random implements SecureRandom {
     }
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.random.OsSecureRandom}.
+   *
+   * @param props the configuration properties.
+   */
   public OsSecureRandom(Properties props) {
     randomDevPath = Utils.getRandomDevPath(props);
     File randomDevFile = new File(randomDevPath);
@@ -77,6 +82,13 @@ public class OsSecureRandom extends Random implements SecureRandom {
     }
   }
 
+  /**
+   * Overrides {@link com.intel.chimera.random.SecureRandom#nextBytes(byte[])}.
+   * Generates random bytes and places them into a user-supplied byte array.
+   * The number of random bytes produced is equal to the length of the byte array.
+   *
+   * @param bytes the array to be filled in with random bytes.
+   */
   @Override
   synchronized public void nextBytes(byte[] bytes) {
     int off = 0;
@@ -90,6 +102,14 @@ public class OsSecureRandom extends Random implements SecureRandom {
     }
   }
 
+  /**
+   * Overrides {@link java.util.Random# next()}. Generates the next pseudorandom number.
+   * Subclasses should override this, as this is used by all other methods.
+   *
+   * @param  nbits random bits.
+   * @return the next pseudorandom value from this random number
+   *         generator's sequence.
+   */
   @Override
   synchronized protected int next(int nbits) {
     fillReservoir(4);
@@ -100,6 +120,9 @@ public class OsSecureRandom extends Random implements SecureRandom {
     return n & (0xffffffff >> (32 - nbits));
   }
 
+  /**
+   * Overrides {@link java.lang.AutoCloseable#close()}. Closes the OS stream.
+   */
   @Override
   synchronized public void close() {
     if (stream != null) {
