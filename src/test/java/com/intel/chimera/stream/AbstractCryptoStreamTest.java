@@ -36,8 +36,6 @@ import com.intel.chimera.cipher.CipherTransformation;
 import com.intel.chimera.cipher.JceCipher;
 import com.intel.chimera.cipher.Openssl;
 import com.intel.chimera.cipher.OpensslCipher;
-import com.intel.chimera.stream.input.CryptoInputStream;
-import com.intel.chimera.stream.output.CryptoOutputStream;
 import com.intel.chimera.utils.ReflectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

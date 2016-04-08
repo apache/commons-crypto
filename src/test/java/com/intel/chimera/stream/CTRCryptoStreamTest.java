@@ -24,8 +24,6 @@ import java.nio.channels.Channels;
 
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
-import com.intel.chimera.stream.input.CTRCryptoInputStream;
-import com.intel.chimera.stream.output.CTRCryptoOutputStream;
 
 public class CTRCryptoStreamTest extends AbstractCryptoStreamTest {
 

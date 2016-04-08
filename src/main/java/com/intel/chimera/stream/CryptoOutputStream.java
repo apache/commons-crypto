@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.intel.chimera.stream.output;
+package com.intel.chimera.stream;
 
 import java.io.IOException;
 import java.io.OutputStream;

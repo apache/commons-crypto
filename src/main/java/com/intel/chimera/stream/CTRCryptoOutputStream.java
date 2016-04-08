@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intel.chimera.stream.output;
+package com.intel.chimera.stream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,6 +31,9 @@ import javax.crypto.ShortBufferException;
 
 import com.intel.chimera.cipher.Cipher;
 import com.intel.chimera.cipher.CipherTransformation;
+import com.intel.chimera.stream.output.ChannelOutput;
+import com.intel.chimera.stream.output.Output;
+import com.intel.chimera.stream.output.StreamOutput;
 import com.intel.chimera.utils.Utils;
 
 /**
