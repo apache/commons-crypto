@@ -127,12 +127,13 @@ public class NativeCodeLoader {
   }
 
   /**
-   * Extract the specified library file to the target folder
+   * Extracts the specified library file to the target folder.
    * 
-   * @param libFolderForCurrentOS
-   * @param libraryFileName
-   * @param targetFolder
-   * @return
+   * @param libFolderForCurrentOS the library in chimera.lib.path.
+   * @param libraryFileName the library name.
+   * @param targetFolder Target folder for the native lib. Use the value of
+   *                     chimera.tempdir or java.io.tmpdir.
+   * @return the library file.
    */
   private static File extractLibraryFile(String libFolderForCurrentOS,
       String libraryFileName, String targetFolder) {
@@ -213,7 +214,7 @@ public class NativeCodeLoader {
   }
 
   /**
-   * Get the version by reading pom.properties embedded in jar.
+   * Gets the version by reading pom.properties embedded in jar.
    * This version data is used as a suffix of a dll file extracted from the
    * jar.
    * 
@@ -267,10 +268,10 @@ public class NativeCodeLoader {
   }
 
   /**
-   * Check if native code is loaded for this platform.
+   * Checks whether native code is loaded for this platform.
    * 
    * @return <code>true</code> if native is loaded, 
-   *         else <code>false</code>
+   *         else <code>false</code>.
    */
   public static boolean isNativeCodeLoaded() {
     return nativeCodeLoaded;

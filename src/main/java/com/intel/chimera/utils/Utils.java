@@ -42,6 +42,9 @@ import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_SECURE_RAN
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
 import static com.intel.chimera.conf.ConfigurationKeys.CHIMERA_CRYPTO_LIB_TEMPDIR_KEY;
 
+/**
+ * General utility methods.
+ */
 public class Utils {
   private static final int MIN_BUFFER_SIZE = 512;
 
@@ -58,8 +61,8 @@ public class Utils {
   }
 
   /**
-   * load system properties when configuration file of the name
-   * {@link #CHIMERA_SYSTEM_PROPERTIES_FILE} is found
+   * loads system properties when configuration file of the name
+   * {@link #CHIMERA_SYSTEM_PROPERTIES_FILE} is found.
    */
   private static void loadChimeraSystemProperties() {
     try {
@@ -89,7 +92,11 @@ public class Utils {
     }
   }
 
-  /** Forcibly free the direct buffer. */
+  /**
+   * Forcibly free the direct buffer.
+   *
+   * @param buffer the bytebuffer to be freed.
+   */
   public static void freeDirectBuffer(ByteBuffer buffer) {
     if (buffer instanceof sun.nio.ch.DirectBuffer) {
       final sun.misc.Cleaner bufferCleaner =
@@ -98,7 +105,13 @@ public class Utils {
     }
   }
 
-  /** Read crypto buffer size */
+  /**
+   * Reads crypto buffer size.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @return the buffer size.
+   * */
   public static int getBufferSize(Properties props) {
     String bufferSizeStr = props.getProperty(
         CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY);
@@ -113,18 +126,39 @@ public class Utils {
     }
   }
 
+  /**
+   * Gets the cipher class.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @return the cipher class based on the props.
+   */
   public static String getCipherClassString(Properties props) {
     final String configName = CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
     return props.getProperty(configName) != null ? props.getProperty(configName) : System
         .getProperty(configName, CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT);
   }
 
+  /**
+   * Gets the Jce provider.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @return the jce provider based on the props.
+   */
   public static String getJCEProvider(Properties props) {
     return props.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY) != null ?
         props.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY) :
         System.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
   }
 
+  /**
+   * Gets the random device path.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @return the random device path based on the props.
+   */
   public static String getRandomDevPath(Properties props) {
     String devPath = props.getProperty(
         CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
@@ -136,27 +170,53 @@ public class Utils {
     return devPath;
   }
 
+  /**
+   * Gets path of native library.
+   *
+   * @return the path of native library.
+   */
   public static String getLibPath() {
     return System.getProperty(CHIMERA_CRYPTO_LIB_PATH_KEY);
   }
 
+  /**
+   * Gets the file name of native library.
+   *
+   * @return the file name of native library.
+   */
   public static String getLibName() {
     return System.getProperty(CHIMERA_CRYPTO_LIB_NAME_KEY);
   }
 
+  /**
+   * Gets the temp directory for extracting crypto library.
+   *
+   * @return the temp directory.
+   */
   public static String getTmpDir() {
     return System.getProperty(CHIMERA_CRYPTO_LIB_TEMPDIR_KEY,
         System.getProperty("java.io.tmpdir"));
   }
 
-  /** AES/CTR/NoPadding is required */
+  /**
+   * Checks whether the cipher is supported streaming.
+   *
+   * @param cipher the {@link com.intel.chimera.cipher.Cipher} instance.
+   * @throws IOException if an I/O error occurs.
+   */
   public static void checkStreamCipher(Cipher cipher) throws IOException {
     if (cipher.getTransformation() != CipherTransformation.AES_CTR_NOPADDING) {
       throw new IOException("AES/CTR/NoPadding is required");
     }
   }
 
-  /** Check and floor buffer size */
+  /**
+   * Checks and floors buffer size.
+   *
+   * @param cipher the {@link com.intel.chimera.cipher.Cipher} instance.
+   * @param bufferSize the buffer size.
+   * @return the remaining buffer size.
+   */
   public static int checkBufferSize(Cipher cipher, int bufferSize) {
     checkArgument(bufferSize >= MIN_BUFFER_SIZE,
         "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
@@ -165,10 +225,10 @@ public class Utils {
   }
 
   /**
-   * This method is only for Counter (CTR) mode. Generally the Cipher calculates the IV and maintain encryption context internally.
-   * For example a {@link javax.crypto.Cipher} will maintain its encryption
-   * context internally when we do encryption/decryption using the
-   * Cipher#update interface.
+   * This method is only for Counter (CTR) mode. Generally the Cipher calculates the
+   * IV and maintain encryption context internally.For example a
+   * {@link javax.crypto.Cipher} will maintain its encryption context internally
+   * when we do encryption/decryption using the Cipher#update interface.
    * <p/>
    * Encryption/Decryption is not always on the entire file. For example,
    * in Hadoop, a node may only decrypt a portion of a file (i.e. a split).
@@ -201,7 +261,13 @@ public class Utils {
   }
 
   /**
-   * Helper method to create a Cipher instance and throws only IOException
+   * Helper method to create a Cipher instance and throws only IOException.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param transformation the CipherTransformation instance.
+   * @return the Cipher instance.
+   * @throws IOException if an I/O error occurs.
    */
   public static Cipher getCipherInstance(CipherTransformation transformation,
       Properties props) throws IOException {
@@ -216,8 +282,8 @@ public class Utils {
    * Ensures the truth of an expression involving one or more parameters to
    * the calling method.
    *
-   * @param expression a boolean expression
-   * @throws IllegalArgumentException if expression is false
+   * @param expression a boolean expression.
+   * @throws IllegalArgumentException if expression is false.
    */
   public static void checkArgument(boolean expression) {
     if(!expression) {
@@ -226,11 +292,13 @@ public class Utils {
   }
 
   /**
-   * @param expression   a boolean expression
+   * Checks the truth of an expression.
+   *
+   * @param expression   a boolean expression.
    * @param errorMessage the exception message to use if the check fails;
    *                     will be converted to a string using <code>String
-   *                     .valueOf(Object)</code>
-   * @throws IllegalArgumentException if expression is false
+   *                     .valueOf(Object)</code>.
+   * @throws IllegalArgumentException if expression is false.
    */
   public static void checkArgument(boolean expression, Object errorMessage) {
     if (!expression) {
@@ -242,9 +310,9 @@ public class Utils {
    * Ensures that an object reference passed as a parameter to the calling
    * method is not null.
    *
-   * @param reference an object reference
-   * @return the non-null reference that was validated
-   * @throws NullPointerException if reference is null
+   * @param reference an object reference.
+   * @return the non-null reference that was validated.
+   * @throws NullPointerException if reference is null.
    */
   public static <T> T checkNotNull(T reference) {
     if(reference == null) {
@@ -258,8 +326,8 @@ public class Utils {
    * Ensures the truth of an expression involving the state of the calling
    * instance, but not involving any parameters to the calling method.
    *
-   * @param expression a boolean expression
-   * @throws IllegalStateException if expression is false
+   * @param expression a boolean expression.
+   * @throws IllegalStateException if expression is false.
    */
   public static void checkState(boolean expression) {
     if(!expression) {
@@ -268,13 +336,13 @@ public class Utils {
   }
 
   /**
-   * Split class names sequence into substrings, Trim each substring into an
+   * Splits class names sequence into substrings, Trim each substring into an
    * entry,and returns an list of the entries.
    *
    * @param clazzNames a string consist of a list of the entries joined by a
-   *                   delimiter
-   * @param separator  a delimiter for the input string
-   * @return a list of entries
+   *                   delimiter.
+   * @param separator  a delimiter for the input string.
+   * @return a list of class entries.
    */
   public static List<String> splitClassNames(String clazzNames,
       String separator) {
