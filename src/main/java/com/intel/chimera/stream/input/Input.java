@@ -43,10 +43,12 @@ public interface Input {
    * <i>p</i>&nbsp;<tt>+</tt>&nbsp;<i>n</i>; its limit will not have changed.
    *
    * @param  dst
-   *         The buffer into which bytes are to be transferred
-   *
+   *         The buffer into which bytes are to be transferred.
+   * @return the total number of bytes read into the buffer, or
+   *         <code>-1</code> if there is no more data because the end of
+   *         the stream has been reached.
    * @throws  IOException
-   *          If some other I/O error occurs
+   *          If some other I/O error occurs.
    */
   int read(ByteBuffer dst) throws IOException;
 
@@ -65,7 +67,7 @@ public interface Input {
    * encouraged to provide a more efficient implementation of this method.
    * For instance, the implementation may depend on the ability to seek.
    *
-   * @param      n   the number of bytes to be skipped.
+   * @param      n the number of bytes to be skipped.
    * @return     the actual number of bytes skipped.
    * @exception  IOException  if the stream does not support seek,
    *                          or if some other I/O error occurs.
@@ -90,22 +92,34 @@ public interface Input {
   int available() throws IOException;
 
   /**
-   * Read up to the specified number of bytes from a given position within a
+   * Reads up to the specified number of bytes from a given position within a
    * stream and return the number of bytes read.
    * This does not change the current offset of the stream and is thread-safe.
    * 
    * An implementation may not support positioned read. If the implementation
    * doesn't support positioned read, it throws UnsupportedOperationException.
+   *
+   * @param position the given position within a stream.
+   * @param buffer the buffer into which the data is read.
+   * @param offset the start offset in array buffer.
+   * @param length the maximum number of bytes to read.
+   * @return the total number of bytes read into the buffer, or
+   *         <code>-1</code> if there is no more data because the end of
+   *         the stream has been reached.
+   * @throws IOException if an I/O error occurs.
    */
   int read(long position, byte[] buffer, int offset, int length)
       throws IOException;
 
   /**
-   * Seek to the given offset from the start of the stream.
+   * Seeks to the given offset from the start of the stream.
    * The next read() will be from that location.
    * 
    * An implementation may not support seek. If the implementation 
    * doesn't support seek, it throws UnsupportedOperationException.
+   *
+   * @param position the offset from the start of the stream.
+   * @throws IOException if an I/O error occurs.
    */
   void seek(long position) throws IOException;
 
