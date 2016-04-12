@@ -25,7 +25,6 @@ import java.nio.ByteBuffer;
  * different implementation of output can be used. The implementation Output interface will usually
  * wraps an output mechanism such as <code>OutputStream</code> or <code>WritableByteChannel</code>.
  */
-
 public interface Output {
 
   /**
@@ -45,25 +44,25 @@ public interface Output {
    * <i>p</i>&nbsp;<tt>+</tt>&nbsp;<i>n</i>; its limit will not have changed.
    *
    * @param  src
-   *         The buffer from which bytes are to be retrieved
+   *         The buffer from which bytes are to be retrieved.
    *
-   * @return The number of bytes written, possibly zero
+   * @return The number of bytes written, possibly zero.
    *
    * @throws  IOException
-   *          If some other I/O error occurs
+   *          If some other I/O error occurs.
    */
   int write(ByteBuffer src) throws IOException;
   
   /**
    * Flushes this output and forces any buffered output bytes
-   * to be written out if the under layer output method support
+   * to be written out if the under layer output method support.
    * The general contract of <code>flush</code> is
    * that calling it is an indication that, if any bytes previously
    * written have been buffered by the implementation of the output
    * stream, such bytes should immediately be written to their
    * intended destination.
    *
-   * @exception  IOException  if an I/O error occurs.
+   * @throws IOException  if an I/O error occurs.
    */
   void flush() throws IOException;
   
@@ -71,7 +70,7 @@ public interface Output {
    * Closes this output and releases any system resources associated
    * with the under layer output.
    *
-   * @exception  IOException  if an I/O error occurs.
+   * @throws IOException  if an I/O error occurs.
    */
   void close() throws IOException;
 }
