@@ -79,17 +79,15 @@ public class CipherFactory {
    */
   public static Cipher getInstance(CipherTransformation transformation)
       throws GeneralSecurityException {
-    return getInstance(transformation, null);
+    return getInstance(transformation, new Properties());
   }
 
+  // Return OpenSSLCipher if Properties is null or empty by default
   private static List<Class<? extends Cipher>> getCipherClasses(Properties props) {
     List<Class<? extends Cipher>> result = new ArrayList<Class<? extends
         Cipher>>();
     String cipherClassString = Utils.getCipherClassString(props);
-    if (cipherClassString == null) {
-      LOG.debug("No cipher classes configured.");
-      return null;
-    }
+
     for (String c : Utils.splitClassNames(cipherClassString, ",")) {
       try {
         Class<?> cls = ReflectionUtils.getClassByName(c);

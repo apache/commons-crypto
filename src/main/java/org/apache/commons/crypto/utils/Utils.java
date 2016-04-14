@@ -138,8 +138,13 @@ public class Utils {
    */
   public static String getCipherClassString(Properties props) {
     final String configName = COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
-    return props.getProperty(configName) != null ? props.getProperty(configName) : System
+    String cipherClassString = props.getProperty(configName) != null ? props
+        .getProperty(configName, COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT) : System
         .getProperty(configName, COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
+    if (cipherClassString.isEmpty()) {
+      cipherClassString = COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
+    }
+    return cipherClassString;
   }
 
   /**
