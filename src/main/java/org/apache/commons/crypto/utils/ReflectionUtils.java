@@ -47,6 +47,8 @@ public class ReflectionUtils {
   private static final Class<?> NEGATIVE_CACHE_SENTINEL =
     NegativeCacheSentinel.class;
 
+  private ReflectionUtils() {}
+
   /**
    * A unique class which is used as a sentinel value in the caching
    * for getClassByName. {@link Cipher#getClassByNameOrNull(String)}.

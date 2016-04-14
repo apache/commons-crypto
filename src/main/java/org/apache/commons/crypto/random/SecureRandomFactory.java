@@ -35,6 +35,8 @@ public class SecureRandomFactory {
   public final static Logger LOG = LoggerFactory
       .getLogger(SecureRandomFactory.class);
 
+  private SecureRandomFactory() {}
+
   /**
    * Gets a SecureRandom instance for specified props.
    *

@@ -28,6 +28,8 @@ import org.apache.commons.logging.Log;
  */
 public class IOUtils {
 
+  private IOUtils() {}
+
   /**
    * Does the readFully based on the Input read.
    *
