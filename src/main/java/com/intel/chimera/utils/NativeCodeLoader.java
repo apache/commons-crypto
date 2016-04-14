@@ -42,7 +42,9 @@ public class NativeCodeLoader {
     LogFactory.getLog(NativeCodeLoader.class);
   
   private static boolean nativeCodeLoaded = false;
-  
+
+  private NativeCodeLoader() {}
+
   static {
     // Try to load native library and set fallback flag appropriately
     if(LOG.isDebugEnabled()) {

@@ -136,4 +136,6 @@ public class ConfigurationKeys {
    */
   public static final String CHIMERA_CRYPTO_LIB_TEMPDIR_KEY =
       CONF_PREFIX + "lib.tempdir";
+
+  private ConfigurationKeys() {}
 }
