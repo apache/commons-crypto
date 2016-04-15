@@ -57,26 +57,52 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
   private final Queue<CipherState> cipherPool = new
       ConcurrentLinkedQueue<CipherState>();
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.PositionedCryptoInputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param in the input data.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the data.
+   * @throws IOException if an I/O error occurs.
+   */
   public PositionedCryptoInputStream(Properties props, Input in,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(in, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.PositionedCryptoInputStream}.
+   *
+   * @param input the input data.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the data.
+   * @throws IOException if an I/O error occurs.
+   */
   public PositionedCryptoInputStream(
       Input input,
       Cipher cipher,
       int bufferSize,
-      byte[] key,
-      byte[] iv,
-      long streamOffset) throws IOException {
+      byte[] key, byte[] iv, long streamOffset) throws IOException {
     super(input, cipher, bufferSize, key, iv, streamOffset);
   }
 
   /**
-   * Read upto the specified number of bytes from a given position
+   * Reads up to the specified number of bytes from a given position
    * within a stream and return the number of bytes read. This does not
    * change the current offset of the stream, and is thread-safe.
+   *
+   * @param buffer the buffer into which the data is read.
+   * @param length the maximum number of bytes to read.
+   * @param offset the start offset in the data.
+   * @param position the offset from the start of the stream.
+   * @throws IOException if an I/O error occurs.
    */
   public int read(long position, byte[] buffer, int offset, int length)
       throws IOException {
@@ -90,8 +116,14 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
   }
 
   /**
-   * Read the specified number of bytes from a given position within a stream.
+   * Reads the specified number of bytes from a given position within a stream.
    * This does not change the current offset of the stream and is thread-safe.
+   *
+   * @param buffer the buffer into which the data is read.
+   * @param length the maximum number of bytes to read.
+   * @param offset the start offset in the data.
+   * @param position the offset from the start of the stream.
+   * @throws IOException if an I/O error occurs.
    */
   public void readFully(long position, byte[] buffer, int offset, int length)
       throws IOException {
@@ -103,13 +135,27 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     }
   }
 
+  /**
+   * Reads the specified number of bytes from a given position within a stream.
+   * This does not change the current offset of the stream and is thread-safe.
+   *
+   * @param position the offset from the start of the stream.
+   * @param buffer the buffer into which the data is read.
+   * @throws IOException if an I/O error occurs.
+   */
   public void readFully(long position, byte[] buffer) throws IOException {
     readFully(position, buffer, 0, buffer.length);
   }
 
   /**
-   * Decrypt length bytes in buffer starting at offset. Output is also put
+   * Decrypts length bytes in buffer starting at offset. Output is also put
    * into buffer starting at offset. It is thread-safe.
+   *
+   * @param buffer the buffer into which the data is read.
+   * @param offset the start offset in the data.
+   * @param position the offset from the start of the stream.
+   * @param length the maximum number of bytes to read.
+   * @throws IOException if an I/O error occurs.
    */
   protected void decrypt(long position, byte[] buffer, int offset, int length)
       throws IOException {
@@ -143,9 +189,9 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
   }
 
   /**
-   * Do the decryption using inBuffer as input and outBuffer as output.
+   * Does the decryption using inBuffer as input and outBuffer as output.
    * Upon return, inBuffer is cleared; the decrypted data starts at
-   * outBuffer.position() and ends at outBuffer.limit();
+   * outBuffer.position() and ends at outBuffer.limit()
    */
   private void decrypt(CipherState state, ByteBuffer inBuffer,
       ByteBuffer outBuffer, byte padding) throws IOException {
@@ -269,6 +315,13 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     }
   }
 
+  /**
+   * Overrides the {@link CryptoInputStream#close()}.
+   * Closes this input stream and releases any system resources associated
+   * with the stream.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
   @Override
   public void close() throws IOException {
     if (!isOpen()) {
