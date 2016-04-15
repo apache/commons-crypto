@@ -1,30 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License. See accompanying LICENSE file.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License. See accompanying LICENSE file.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/maven-v4_0_0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-parent</artifactId>
+    <version>39</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.intel.chimera</groupId>
-  <artifactId>chimera</artifactId>
+  <groupId>commons-crypto</groupId>
+  <artifactId>commons-crypto</artifactId>
   <packaging>jar</packaging>
-  <description>chimera: A fast encryption/decryption library</description>
+  <description>
+    Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
+    Standard New Instructions). It provides Java API for both cipher level and Java stream level.
+    Developers can use it to implement high performance AES encryption/decryption with the minimum
+    code and effort. Please note that Chimera doesn't implement the cryptographic algorithm such as
+    AES directly. It wraps to Openssl or JCE which implement the algorithms.
+  </description>
   <version>1.0.0-SNAPSHOT</version>
-  <name>chimera</name>
-  <url>https://github.com/intel-hadoop/chimera</url>
-
+  <name>Apache Commons Crypto</name>
+  <inceptionYear>2015</inceptionYear>
+  <url>http://commons.apache.org/proper/commons-crypto</url>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://issues.apache.org/jira/browse/CRYPTO</url>
+  </issueManagement>
+  <scm>
+    <connection>
+      scm:svn:http://svn.apache.org/repos/asf/commons/proper/crypto/trunk
+    </connection>
+    <developerConnection>
+      scm:svn:https://svn.apache.org/repos/asf/commons/proper/crypto/trunk
+    </developerConnection>
+    <url>
+      http://svn.apache.org/viewvc/commons/proper/crypto/trunk
+    </url>
+  </scm>
+  <developers>
+    <developer>
+      <name>Aaron T Myers</name>
+      <email>atm@apache.org</email>
+      <id>atm</id>
+    </developer>
+    <developer>
+      <name>Andrew Wang</name>
+      <email>wang@apache.org</email>
+      <id>wang</id>
+    </developer>
+    <developer>
+      <name>Chris Nauroth</name>
+      <email>cnauroth@apache.org</email>
+      <id>cnauroth</id>
+    </developer>
+    <developer>
+      <name>Colin P. McCabe</name>
+      <email>cmccabe@apache.org</email>
+      <id>cmccabe</id>
+    </developer>
+    <developer>
+      <name>Dapeng Sun</name>
+      <email>sdp@apache.org</email>
+      <id>sdp</id>
+    </developer>
+    <developer>
+      <name>Dian Fu</name>
+      <email>dianfu@apache.org</email>
+      <id>dianfu</id>
+    </developer>
+    <developer>
+      <name>Dong Chen</name>
+      <email>dongc@apache.org</email>
+      <id>dongc</id>
+    </developer>
+    <developer>
+      <name>Ferdinand Xu</name>
+      <email>xuf@apache.org</email>
+      <id>xuf</id>
+    </developer>
+    <developer>
+      <name>Haifeng Chen</name>
+      <email>haifengchen@apache.org</email>
+      <id>haifengchen</id>
+    </developer>
+    <developer>
+      <name>Marcelo Vanzin</name>
+      <email>vanzin@apache.org</email>
+      <id>vanzin</id>
+    </developer>
+    <developer>
+      <name>Uma Maheswara Rao G</name>
+      <email>umamahesh@apache.org</email>
+      <id>umamahesh</id>
+    </developer>
+    <developer>
+      <name>Yi Liu</name>
+      <email>yliu@apache.org</email>
+      <id>yliu</id>
+    </developer>
+  </developers>
   <properties>
     <!-- The property "target.name" is used to specify the ant target, The All target will use
     OSInfo.java to detect the OS info and arch to generate the native binary for detected platform.
@@ -37,13 +123,20 @@
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <findbugs-maven-plugin.version>3.0.2</findbugs-maven-plugin.version>
     <apache-rat-plugin.version>0.11</apache-rat-plugin.version>
-    <nexus-staging-maven-plugin.version>1.6.3</nexus-staging-maven-plugin.version>
     <junit.version>4.8.2</junit.version>
     <commons-logging.version>1.1.3</commons-logging.version>
     <slf4j-api.version>1.7.10</slf4j-api.version>
-    <javac.version>1.6</javac.version>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+    <commons.javadoc.java.link>http://download.oracle.com/javase/6/docs/api/</commons.javadoc.java.link>
+    <commons.componentid>crypto</commons.componentid>
+    <commons.release.version>1.0.0</commons.release.version>
+    <commons.rc.version>RC1</commons.rc.version>
+    <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
+    <commons.jira.id>CRYPTO</commons.jira.id>
+    <commons.jira.pid>12310487</commons.jira.pid>
+    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
   </properties>
-
   <profiles>
     <profile>
       <id>win32</id>
@@ -93,71 +186,6 @@
         <target.name>linux-aarch64</target.name>
       </properties>
     </profile>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <quiet>true</quiet>
-              <nonavbar>true</nonavbar>
-              <notree>true</notree>
-              <nocomment>true</nocomment>
-              <nohelp>true</nohelp>
-            </configuration>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>false</autoReleaseAfterClose>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
     <!-- FindBugs -->
     <profile>
       <id>findbugs</id>
@@ -173,10 +201,10 @@
             <configuration>
               <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
               <!--
-                  Enables analysis which takes more memory but finds more bugs.
-                  If you run out of memory, changes the value of the effort element
-                  to 'Low'.
-                -->
+              Enables analysis which takes more memory but finds more bugs.
+              If you run out of memory, changes the value of the effort element
+              to 'Low'.
+              -->
               <effort>Max</effort>
               <failOnError>true</failOnError>
               <threshold>Low</threshold>
@@ -196,42 +224,6 @@
       </build>
     </profile>
   </profiles>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-  <developers>
-    <developer>
-      <id>dianfu</id>
-      <name>Dian Fu</name>
-      <email>dian.fu@intel.com</email>
-      <organization>Intel</organization>
-      <roles>
-        <role>Chief Developer</role>
-      </roles>
-      <timezone>+8</timezone>
-    </developer>
-    <developer>
-      <id>chengxu</id>
-      <name>Ferdinand Xu</name>
-      <email>cheng.a.xu@intel.com</email>
-      <organization>Intel</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-      <timezone>+8</timezone>
-    </developer>
-  </developers>
-
-  <scm>
-    <connection>scm:git@github.com:intel-hadoop/chimera.git</connection>
-    <developerConnection>scm:git:git@github.com:intel-hadoop/chimera.git</developerConnection>
-    <url>git@github.com:intel-hadoop/chimera.git</url>
-  </scm>
-
   <build>
     <pluginManagement>
       <plugins>
@@ -282,8 +274,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${maven-compiler-plugin.version}</version>
           <configuration>
-            <source>${javac.version}</source>
-            <target>${javac.version}</target>
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.target}</target>
           </configuration>
         </plugin>
       </plugins>
@@ -333,18 +325,6 @@
       </plugin>
     </plugins>
   </build>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
-
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
