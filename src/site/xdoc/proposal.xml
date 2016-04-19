@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<document>
+ <properties>
+  <title>Apache Commons Crypto: Proposal</title>
+ </properties>
+
+ <body>
+  
+   <section name="Proposal for Apache Commons Crypto Package"><br/>
+   <h4>March 24, 2016</h4>
+  
+
+  
+<subsection name="(0) Rationale">
+  <p>
+   Providing Java based optimized and high performance cryptographic IO streams for
+   the applications who wants to implement the data encryption. It also provides cipher
+   level API to use. It does provide the openssl API integration and provide the fallback
+   mechanism to use JCE when openssl library unavailable.
+  </p>
+
+  </subsection>
+<subsection name="(1) Scope of the Package">
+  <p>
+      This proposal is to create a package of cryptographic IO classes with the integration
+      of Openssl library.
+      It focuses on AES-NI optimizations mainly and it can be extended to other algorithms
+      based on demand from the users later.
+  </p>
+
+  </subsection>
+<subsection name="(1.5) Interaction With Other Packages">
+
+  <p>
+   <em>IO</em> Commons Crypto relies on standard JDK 7 (or later) APIs for production
+   deployment and on OpenSSL 1.0.1c devl libraries. It utilizes the JUnit unit testing
+   framework, but this is of interest only to developers of the component.
+   The functionality provided by Commons Crypto is currently in use by Apache Hadoop
+   and Apache Spark, and both of those communities have expressed interest in changing
+   their dependency to be on the central Commons Crypto package once it exists.
+  </p>
+
+  <p>No external configuration files are utilized.</p>
+
+  </subsection>
+<subsection name="(2) Initial Source of the Package">
+
+  <p>
+   The initial classes came from the Apache Hadoop.
+  </p>
+
+  <p>
+   The proposed package name for the new component is <code>org.apache.commons.crypto</code>.
+  </p>
+
+  </subsection>
+<subsection name="(3)  Required Apache Commons Resources">
+
+  <ul>
+   <li>
+    Git Repository - New repository <code>commons-crypto</code>
+   </li>
+   <li>
+       Mailing List - Discussions will take place on the general<em>dev@commons.apache.org</em>
+       mailing list.
+       <br>To help list subscribers identify messages of interest, it is suggested that the message
+           subject of messages about this component be prefixed with [Crypto].
+       </br>
+   </li>
+   <li>
+       JIRA - New component "Crypto" under the "Commons" project.
+   </li>
+   <li>
+       Confluence FAQ - New category ¡°commons-crypto" (when available).
+   </li>
+  </ul>
+
+  </subsection>
+<subsection name="(4) Initial Committers">
+
+  <p>
+   The initial committers on the Chimera component shall be as follows:
+   <ul>
+       <li>Aaron T Myers (atm@apache.org, Apache Hadoop PMC, one of the original Crypto dev team in Apache Hadoop)</li>
+       <li>Andrew Wang (wang@apache.org, Apache Hadoop PMC, one of the original Crypto dev team in Apache Hadoop)</li>
+       <li>Chris Nauroth (cnauroth@apache.org, Apache Hadoop PMC and active reviewer)</li>
+       <li>Colin P. McCabe (cmccabe@apache.org, Apache Hadoop PMC, one of the original Crypto dev team in Apache Hadoop)</li>
+       <li>Dapeng Sun (sdp@apache.org, Apache Sentry Committer, Chimera contributor)</li>
+       <li>Dian Fu (dianfu@apache.org, Apache Sqoop Committer, Chimera contributor)</li>
+       <li>Dong Chen (dongc@apache.org, Apache Hive Committer,interested on Chimera)</li>
+       <li>Ferdinand Xu (xuf@apache.org, Apache Hive Committer, Chimera contributor)</li>
+       <li>Haifeng Chen (haifengchen@apache.org, Chimera lead and code contributor)</li>
+       <li>Marcelo Vanzin(Apache Spark Committer, Chimera contributor)</li>
+       <li>Uma Maheswara Rao G(umamahesh@apache.org, Apache Hadoop PMC, One of Crypto dev/review in Apache Hadoop)</li>
+       <li>Yi Liu (yliu@apache.org, Apache Hadoop PMC,  One of Crypto dev/review in Apache Hadoop)</li>
+   </ul>
+  </p>
+
+ </subsection>
+</section>
+</body>
+</document>
