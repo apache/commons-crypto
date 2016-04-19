@@ -134,7 +134,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
     <commons.jira.id>CRYPTO</commons.jira.id>
-    <commons.jira.pid>12310487</commons.jira.pid>
+    <commons.jira.pid>12320024</commons.jira.pid>
     <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
   </properties>
   <profiles>
