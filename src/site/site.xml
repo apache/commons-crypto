@@ -24,10 +24,8 @@
     </bannerRight>
     <body>
         <menu name="Documentation">
-            <item name="Overview"      href="/index.html"/>
-            <!-- Should use download_crypto.cgi at apache host -->
-            <!-- <item name="Download"
-                   href="http://commons.apache.org/crypto/download_crypto.cgi"/> -->
+            <item name="Download"
+                   href="http://commons.apache.org/crypto/download_crypto.cgi"/>
             <item name="Download" href="/download_crypto.html"/>
             <item name="Users guide"   href="/userguide.html"/>
             <item name="Javadoc trunk" href="/apidocs/index.html"/>            
