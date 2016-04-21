@@ -67,28 +67,78 @@ public class CTRCryptoInputStream extends CryptoInputStream {
    */
   private boolean cipherReset = false;
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param in the input stream.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv)
       throws IOException {
     this(props, in, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param in the ReadableByteChannel instance.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
       byte[] key, byte[] iv)
       throws IOException {
     this(props, in, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param in the input stream.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(InputStream in, Cipher cipher, int bufferSize,
       byte[] key, byte[] iv) throws IOException {
     this(in, cipher, bufferSize, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param in the ReadableByteChannel instance.
+   * @param cipher the cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(ReadableByteChannel in, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(in, cipher, bufferSize, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param input the input data.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(
       Input input,
       Cipher cipher,
@@ -98,6 +148,17 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     this(input, cipher, bufferSize, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param in the InputStream instance.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the stream.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(Properties props, InputStream in,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
@@ -105,6 +166,17 @@ public class CTRCryptoInputStream extends CryptoInputStream {
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
+  /**
+   *Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param in the ReadableByteChannel instance.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the stream.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
@@ -112,16 +184,49 @@ public class CTRCryptoInputStream extends CryptoInputStream {
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param in the InputStream instance.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the stream.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(InputStream in, Cipher cipher, int bufferSize,
       byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv, streamOffset);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param in the ReadableByteChannel instance.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the stream.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(ReadableByteChannel in, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new ChannelInput(in), cipher, bufferSize, key, iv, streamOffset);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoInputStream}.
+   *
+   * @param input the input data.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the stream.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoInputStream(
       Input input,
       Cipher cipher,
@@ -136,7 +241,15 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     resetStreamOffset(streamOffset);
   }
 
-  /** Skip n bytes */
+  /**
+   * Overrides the {@link com.intel.chimera.stream.CryptoInputStream#skip(long)}.
+   * Skips over and discards <code>n</code> bytes of data from this input
+   * stream.
+   *
+   * @param n the number of bytes to be skipped.
+   * @return the actual number of bytes skipped.
+   * @throws IOException if an I/O error occurs.
+   */
   @Override
   public long skip(long n) throws IOException {
     Utils.checkArgument(n >= 0, "Negative skip length.");
@@ -167,7 +280,15 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     }
   }
 
-  /** ByteBuffer read. */
+  /**
+   * Overrides the {@link com.intel.chimera.stream.CTRCryptoInputStream#read(ByteBuffer)}.
+   * Reads a sequence of bytes from this channel into the given buffer.
+   *
+   * @param buf The buffer into which bytes are to be transferred.
+   * @return The number of bytes read, possibly zero, or <tt>-1</tt> if the
+   *          channel has reached end-of-stream.
+   * @throws IOException if an I/O error occurs.
+   */
   @Override
   public int read(ByteBuffer buf) throws IOException {
     checkStream();
@@ -207,10 +328,10 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Seek the stream to a specific position relative to start of the under layer stream.
+   * Seeks the stream to a specific position relative to start of the under layer stream.
    * 
-   * @param position The position to seek to
-   * @throws IOException if seek failed
+   * @param position the given position in the data.
+   * @throws IOException if an I/O error occurs.
    */
   public void seek(long position) throws IOException {
     Utils.checkArgument(position >= 0, "Cannot seek to negative offset.");
@@ -230,19 +351,30 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     }
   }
 
+  /**
+   * Gets the offset of the stream.
+   *
+   * @return the stream offset.
+   */
   protected long getStreamOffset() {
     return streamOffset;
   }
 
+  /**
+   * Gets the position of the stream.
+   *
+   * @return the position of the stream.
+   */
   protected long getStreamPosition() {
     return streamOffset - outBuffer.remaining();
   }
 
   /**
-   * Decrypt more data by reading the under layer stream. The decrypted data will
+   * Decrypts more data by reading the under layer stream. The decrypted data will
    * be put in the output buffer.
    *
-   * @return The number of decrypted data. -1 if end of the decrypted stream
+   * @return The number of decrypted data. -1 if end of the decrypted stream.
+   * @throws IOException if an I/O error occurs.
    */
   protected int decryptMore() throws IOException {
     int n = input.read(inBuffer);
@@ -257,9 +389,11 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Do the decryption using inBuffer as input and outBuffer as output.
+   * Does the decryption using inBuffer as input and outBuffer as output.
    * Upon return, inBuffer is cleared; the decrypted data starts at
-   * outBuffer.position() and ends at outBuffer.limit();
+   * outBuffer.position() and ends at outBuffer.limit().
+   *
+   * @throws IOException if an I/O error occurs.
    */
   protected void decrypt() throws IOException {
     Utils.checkState(inBuffer.position() >= padding);
@@ -284,11 +418,14 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Do the decryption using inBuffer as input and buf as output.
+   * Does the decryption using inBuffer as input and buf as output.
    * Upon return, inBuffer is cleared; the buf's position will be equal to
    * <i>p</i>&nbsp;<tt>+</tt>&nbsp;<i>n</i> where <i>p</i> is the position before
    * decryption, <i>n</i> is the number of bytes decrypted.
    * The buf's limit will not have changed.
+   *
+   * @param buf The buffer into which bytes are to be transferred.
+   * @throws IOException if an I/O error occurs.
    */
   protected void decryptInPlace(ByteBuffer buf) throws IOException {
     Utils.checkState(inBuffer.position() >= padding);
@@ -306,9 +443,14 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Decrypt all data in buf: total n bytes from given start position.
+   * Decrypts all data in buf: total n bytes from given start position.
    * Output is also buf and same start position.
    * buf.position() and buf.limit() should be unchanged after decryption.
+   *
+   * @param buf The buffer into which bytes are to be transferred.
+   * @param offset the start offset in the data.
+   * @param len the the maximum number of decrypted data bytes to read.
+   * @throws IOException if an I/O error occurs.
    */
   protected void decrypt(ByteBuffer buf, int offset, int len)
       throws IOException {
@@ -334,8 +476,11 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * This method is executed immediately after decryption. Check whether
+   * This method is executed immediately after decryption. Checks whether
    * cipher should be updated and recalculate padding if needed.
+   *
+   * @param position the given position in the data..
+   * @return the byte.
    */
   protected byte postDecryption(long position) throws IOException {
     byte padding = 0;
@@ -353,22 +498,42 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     return padding;
   }
 
+  /**
+   * Gets the counter for input stream position.
+   *
+   * @param position the given position in the data.
+   * @return the counter for input stream position.
+   */
   protected long getCounter(long position) {
     return position / cipher.getTransformation().getAlgorithmBlockSize();
   }
 
+  /**
+   * Gets the padding for input stream position.
+   *
+   * @param position the given position in the data.
+   * @return the padding for input stream position.
+   */
   protected byte getPadding(long position) {
     return (byte)(position % cipher.getTransformation().getAlgorithmBlockSize());
   }
 
-  /** Initialize the cipher. */
+  /**
+   * Overrides the {@link CTRCryptoInputStream#initCipher()}.
+   * Initializes the cipher.
+   */
   @Override
   protected void initCipher() {
     // Do nothing for initCipher
     // Will reset the cipher when reset the stream offset
   }
 
-  /** Calculate the counter and iv, reset the cipher. */
+  /**
+   * Calculates the counter and iv, resets the cipher.
+   *
+   * @param position the given position in the data.
+   * @throws IOException if an I/O error occurs.
+   */
   protected void resetCipher(long position)
       throws IOException {
     final long counter = getCounter(position);
@@ -384,8 +549,11 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Reset the underlying stream offset; clear {@link #inBuffer} and
+   * Resets the underlying stream offset; clear {@link #inBuffer} and
    * {@link #outBuffer}. This Typically happens during {@link #skip(long)}.
+   *
+   * @param offset the offset of the stream.
+   * @throws IOException if an I/O error occurs.
    */
   protected void resetStreamOffset(long offset) throws IOException {
     streamOffset = offset;
@@ -397,6 +565,12 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     inBuffer.position(padding); // Set proper position for input data.
   }
 
+  /**
+   * Does the decryption using out as output.
+   *
+   * @param out the output ByteBuffer.
+   * @throws IOException if an I/O error occurs.
+   */
   protected void decryptBuffer(ByteBuffer out)
       throws IOException {
     int inputSize = inBuffer.remaining();

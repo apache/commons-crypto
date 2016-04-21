@@ -65,34 +65,95 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
    */
   private boolean cipherReset = false;
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param out the output stream.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv)
       throws IOException {
     this(props, out, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param out the WritableByteChannel instance.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(Properties props, WritableByteChannel out,
       byte[] key, byte[] iv)
       throws IOException {
     this(props, out, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param out the output stream.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(OutputStream out, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(out, cipher, bufferSize, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param channel the WritableByteChannel instance.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(WritableByteChannel channel, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(channel, cipher, bufferSize, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param output the Output instance.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(Output output, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv)
       throws IOException {
     this(output, cipher, bufferSize, key, iv, 0);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param out the output stream.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the data.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(Properties props, OutputStream out,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
@@ -100,6 +161,17 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param props The <code>Properties</code> class represents a set of
+   *              properties.
+   * @param out the WritableByteChannel instance.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the data.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(Properties props, WritableByteChannel out,
       byte[] key, byte[] iv, long streamOffset)
       throws IOException {
@@ -107,18 +179,51 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param out the output stream.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the data.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(OutputStream out, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new StreamOutput(out, bufferSize), cipher,
         bufferSize, key, iv, streamOffset);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param channel the WritableByteChannel instance.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the data.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(WritableByteChannel channel, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new ChannelOutput(channel), cipher,
         bufferSize, key, iv, streamOffset);
   }
 
+  /**
+   * Constructs a {@link com.intel.chimera.stream.CTRCryptoOutputStream}.
+   *
+   * @param output the output stream.
+   * @param cipher the Cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key crypto key for the cipher.
+   * @param iv Initialization vector for the cipher.
+   * @param streamOffset the start offset in the data.
+   * @throws IOException if an I/O error occurs.
+   */
   public CTRCryptoOutputStream(Output output, Cipher cipher,
       int bufferSize, byte[] key, byte[] iv, long streamOffset)
       throws IOException {
@@ -131,8 +236,10 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Do the encryption, input is {@link #inBuffer} and output is
+   * Does the encryption, input is {@link #inBuffer} and output is
    * {@link #outBuffer}.
+   *
+   * @throws IOException if an I/O error occurs.
    */
   @Override
   protected void encrypt() throws IOException {
@@ -171,7 +278,9 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Do final encryption of the last data
+   * Does final encryption of the last data.
+   *
+   * @throws IOException if an I/O error occurs.
    */
   @Override
   protected void encryptFinal() throws IOException {
@@ -179,14 +288,21 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
     encrypt();
   }
 
-  /** Initialize the cipher. */
+  /**
+   * Overrides the {@link CryptoOutputStream#initCipher()}.
+   * Initializes the cipher.
+   */
   @Override
   protected void initCipher() {
     // Do nothing for initCipher
     // Will reset the cipher considering the stream offset
   }
 
-  /** Reset the {@link #cipher}: calculate counter and {@link #padding}. */
+  /**
+   * Resets the {@link #cipher}: calculate counter and {@link #padding}.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
   private void resetCipher() throws IOException {
     final long counter =
         streamOffset / cipher.getTransformation().getAlgorithmBlockSize();
@@ -205,6 +321,12 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
     cipherReset = false;
   }
 
+  /**
+   * Does the encryption if the ByteBuffer data.
+   *
+   * @param out the output ByteBuffer.
+   * @throws IOException if an I/O error occurs.
+   */
   private void encryptBuffer(ByteBuffer out)
       throws IOException {
     int inputSize = inBuffer.remaining();

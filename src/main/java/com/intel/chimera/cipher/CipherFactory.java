@@ -35,6 +35,8 @@ public class CipherFactory {
   /** LOG instance for {@CipherFactory} */
   public final static Logger LOG = LoggerFactory.getLogger(CipherFactory.class);
 
+  private CipherFactory() {}
+
   /**
    * Gets a cipher instance for specified algorithm/mode/padding.
    *

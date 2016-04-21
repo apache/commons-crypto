@@ -25,6 +25,8 @@ import java.nio.ByteBuffer;
  */
 public class OpensslNative {
 
+  private OpensslNative() {}
+
   /**
    * Declares a native method to initialize JNI field and method IDs.
    */
