@@ -19,8 +19,8 @@ Chimera [![Build Status](https://travis-ci.org/intel-hadoop/chimera.svg?branch=m
 Add the following dependency to your pom.xml:
 
     <dependency>
-      <groupId>org.apache.commons.crypto</groupId>
-      <artifactId>chimera</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-crypto</artifactId>
       <version>0.9.0</version>
       <type>jar</type>
       <scope>compile</scope>
@@ -29,7 +29,7 @@ Add the following dependency to your pom.xml:
 ### Using with sbt
 
 ```
-libraryDependencies += "org.apache.commons.crypto" % "chimera" % "0.9.0"
+libraryDependencies += "org.apache.commons" % "commons-crypto" % "0.9.0"
 ```
 
 ## Usage 
@@ -37,7 +37,7 @@ libraryDependencies += "org.apache.commons.crypto" % "chimera" % "0.9.0"
 ```java
 
 Properties properties = new Properties();
-properties.setProperty("chimera.crypto.cipher.classes", "org.apache.commons.crypto.crypto.OpensslCipher");
+properties.setProperty("chimera.crypto.cipher.classes", "org.apache.commons.crypto.cipher.OpensslCipher");
 
 Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);
 byte[] key = new byte[16];
@@ -61,15 +61,15 @@ int decryptedLen = cis.read(decryptedData, 0, 1024);
 ### Configuration
 Currently, two ciphers are supported: JceCipher and OpensslCipher, you can configure which cipher to use as follows:
 
-    $ java -Dchimera.crypto.cipher.classes=org.apache.commons.crypto.crypto.OpensslCipher Sample
-    $ java -Dchimera.crypto.cipher.classes=org.apache.commons.crypto.crypto.JceCipher Sample
+    $ java -Dchimera.crypto.cipher.classes=org.apache.commons.crypto.cipher.OpensslCipher Sample
+    $ java -Dchimera.crypto.cipher.classes=org.apache.commons.crypto.cipher.JceCipher Sample
 
 More detailed information about the configurations are as follows.
 
 | Property Name | Default | Meaning         |
 | --------------|---------|-------------------------|
 | chimera.crypto.cipher.transformation | AES/CTR/NoPadding | The value is identical to the transformations described in the Cipher section of the Java Cryptography Architecture Standard Algorithm Name Documentation. Currently only "AES/CTR/NoPadding" algorithm is supported.|
-| chimera.crypto.cipher.classes | org.apache.commons.crypto.crypto.OpensslCipher, org.apache.commons.crypto.crypto.JceCipher | Comma-separated list of cipher classes which implement cipher algorithm of "AES/CTR/NoPadding". A cipher implementation encapsulates the encryption and decryption details. The first  available implementation appearing in this list will be used. |
+| chimera.crypto.cipher.classes | org.apache.commons.crypto.cipher.OpensslCipher, org.apache.commons.crypto.cipher.JceCipher | Comma-separated list of cipher classes which implement cipher algorithm of "AES/CTR/NoPadding". A cipher implementation encapsulates the encryption and decryption details. The first  available implementation appearing in this list will be used. |
 
 ## Building from the source code
 Building from the source code is an option when your OS platform and CPU architecture is not supported. To build Chimera, you need JDK 1.7 or higher, OpenSSL 1.0.1c or higher, etc.
