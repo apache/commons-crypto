@@ -230,28 +230,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
-  <developers>
-    <developer>
-      <id>dianfu</id>
-      <name>Dian Fu</name>
-      <email>dian.fu@intel.com</email>
-      <organization>Intel</organization>
-      <roles>
-        <role>Chief Developer</role>
-      </roles>
-      <timezone>+8</timezone>
-    </developer>
-    <developer>
-      <id>chengxu</id>
-      <name>Ferdinand Xu</name>
-      <email>xuf@apache.org</email>
-      <organization>Intel</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-      <timezone>+8</timezone>
-    </developer>
-  </developers>
 
   <build>
     <pluginManagement>
