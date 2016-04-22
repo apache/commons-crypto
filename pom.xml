@@ -20,7 +20,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
     <version>39</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>commons-crypto</groupId>
+  <groupId>org.apache.commons</groupId>
   <artifactId>commons-crypto</artifactId>
   <packaging>jar</packaging>
   <description>
@@ -224,6 +224,40 @@ http://maven.apache.org/maven-v4_0_0.xsd">
       </build>
     </profile>
   </profiles>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>dianfu</id>
+      <name>Dian Fu</name>
+      <email>dian.fu@intel.com</email>
+      <organization>Intel</organization>
+      <roles>
+        <role>Chief Developer</role>
+      </roles>
+      <timezone>+8</timezone>
+    </developer>
+    <developer>
+      <id>chengxu</id>
+      <name>Ferdinand Xu</name>
+      <email>xuf@apache.org</email>
+      <organization>Intel</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>+8</timezone>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git@github.com:intel-hadoop/chimera.git</connection>
+    <developerConnection>scm:git:git@github.com:intel-hadoop/chimera.git</developerConnection>
+    <url>git@github.com:intel-hadoop/chimera.git</url>
+  </scm>
   <build>
     <pluginManagement>
       <plugins>
@@ -315,7 +349,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
             <exclude>Makefile.common</exclude>
             <exclude>project/project/target/config-classes/*</exclude>
             <exclude>project/target/</exclude>
-            <exclude>src/main/java/com/intel/chimera/VERSION</exclude>
+            <exclude>src/main/java/org/apache/commons/crypto/VERSION</exclude>
           </excludes>
         </configuration>
       </plugin>
