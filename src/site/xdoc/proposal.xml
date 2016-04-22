@@ -96,7 +96,7 @@ limitations under the License.
 <subsection name="(4) Initial Committers">
 
   <p>
-   The initial committers on the Chimera component shall be as follows:
+   The initial committers on the Apache Commons Crypto component shall be as follows:
    <ul>
        <li>Aaron T Myers (atm@apache.org, Apache Hadoop PMC, one of the original Crypto dev team in Apache Hadoop)</li>
        <li>Andrew Wang (wang@apache.org, Apache Hadoop PMC, one of the original Crypto dev team in Apache Hadoop)</li>
