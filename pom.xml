@@ -40,13 +40,13 @@ http://maven.apache.org/maven-v4_0_0.xsd">
   </issueManagement>
   <scm>
     <connection>
-      scm:svn:http://svn.apache.org/repos/asf/commons/proper/crypto/trunk
+      scm:git:http://git-wip-us.apache.org/repos/asf/commons-crypto.git
     </connection>
     <developerConnection>
-      scm:svn:https://svn.apache.org/repos/asf/commons/proper/crypto/trunk
+      scm:git:https://git-wip-us.apache.org/repos/asf/commons-crypto.git
     </developerConnection>
     <url>
-      http://svn.apache.org/viewvc/commons/proper/crypto/trunk
+      https://git-wip-us.apache.org/repos/asf?p=commons-crypto.git
     </url>
   </scm>
   <developers>
@@ -253,11 +253,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
     </developer>
   </developers>
 
-  <scm>
-    <connection>scm:git@github.com:intel-hadoop/chimera.git</connection>
-    <developerConnection>scm:git:git@github.com:intel-hadoop/chimera.git</developerConnection>
-    <url>git@github.com:intel-hadoop/chimera.git</url>
-  </scm>
   <build>
     <pluginManagement>
       <plugins>
