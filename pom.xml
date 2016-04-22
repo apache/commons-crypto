@@ -17,8 +17,8 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.intel.chimera</groupId>
-  <artifactId>chimera</artifactId>
+  <groupId>org.apache.commons</groupId>
+  <artifactId>commons-crypto</artifactId>
   <packaging>jar</packaging>
   <description>chimera: A fast encryption/decryption library</description>
   <version>1.0.0-SNAPSHOT</version>
@@ -217,7 +217,7 @@
     <developer>
       <id>chengxu</id>
       <name>Ferdinand Xu</name>
-      <email>cheng.a.xu@intel.com</email>
+      <email>xuf@apache.org</email>
       <organization>Intel</organization>
       <roles>
         <role>Developer</role>
@@ -323,7 +323,7 @@
             <exclude>Makefile.common</exclude>
             <exclude>project/project/target/config-classes/*</exclude>
             <exclude>project/target/</exclude>
-            <exclude>src/main/java/com/intel/chimera/VERSION</exclude>
+            <exclude>src/main/java/org/apache/commons/crypto/VERSION</exclude>
           </excludes>
         </configuration>
       </plugin>
