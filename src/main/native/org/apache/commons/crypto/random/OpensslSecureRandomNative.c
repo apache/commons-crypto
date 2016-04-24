@@ -32,7 +32,7 @@
 #ifdef WINDOWS
 #include <windows.h>
 #endif
- 
+
 #include "OpensslSecureRandomNative.h"
 
 #ifdef UNIX
@@ -91,15 +91,15 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpensslSecureRandom
 {
   char msg[1000];
 #ifdef UNIX
-  void *openssl = dlopen(CHIMERA_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
 #endif
 
 #ifdef WINDOWS
-  HMODULE openssl = LoadLibrary(CHIMERA_OPENSSL_LIBRARY);
+  HMODULE openssl = LoadLibrary(COMMONS_CRYPTO_OPENSSL_LIBRARY);
 #endif
 
   if (!openssl) {
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", CHIMERA_OPENSSL_LIBRARY,  \
+    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
         dlerror());
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
@@ -175,7 +175,7 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpensslSecureRa
   int b_len = (*env)->GetArrayLength(env, bytes);
   int ret = openssl_rand_bytes((unsigned char *)b, b_len);
   (*env)->ReleaseByteArrayElements(env, bytes, b, 0);
-  
+
   if (1 != ret) {
     return JNI_FALSE;
   }
@@ -183,7 +183,7 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpensslSecureRa
 }
 
 /**
- * To ensure thread safety for random number generators, we need to call 
+ * To ensure thread safety for random number generators, we need to call
  * CRYPTO_set_locking_callback.
  * http://wiki.openssl.org/index.php/Random_Numbers
  * Example: crypto/threads/mttest.c
@@ -221,7 +221,7 @@ static void locks_cleanup(void)
 static void windows_locking_callback(int mode, int type, char *file, int line)
 {
   UNUSED(file), UNUSED(line);
-  
+
   if (mode & CRYPTO_LOCK) {
     WaitForSingleObject(lock_cs[type], INFINITE);
   } else {
@@ -244,7 +244,7 @@ static void locks_setup(void)
   for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
     pthread_mutex_init(&(lock_cs[i]), NULL);
   }
-  
+
   dlsym_CRYPTO_set_id_callback((unsigned long (*)())pthreads_thread_id);
   dlsym_CRYPTO_set_locking_callback((void (*)())pthreads_locking_callback);
 }
@@ -253,18 +253,18 @@ static void locks_cleanup(void)
 {
   int i;
   dlsym_CRYPTO_set_locking_callback(NULL);
-  
+
   for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
     pthread_mutex_destroy(&(lock_cs[i]));
   }
-  
+
   dlsym_CRYPTO_free(lock_cs);
 }
 
 static void pthreads_locking_callback(int mode, int type, char *file, int line)
 {
   UNUSED(file), UNUSED(line);
-  
+
   if (mode & CRYPTO_LOCK) {
     pthread_mutex_lock(&(lock_cs[type]));
   } else {
@@ -286,33 +286,33 @@ static unsigned long pthreads_thread_id(void)
 static ENGINE * openssl_rand_init(void)
 {
   locks_setup();
-  
+
   dlsym_ENGINE_load_rdrand();
   ENGINE *eng = dlsym_ENGINE_by_id("rdrand");
-  
+
   int ret = -1;
   do {
     if (NULL == eng) {
       break;
     }
-    
+
     int rc = dlsym_ENGINE_init(eng);
     if (0 == rc) {
       break;
     }
-    
+
     rc = dlsym_ENGINE_set_default(eng, ENGINE_METHOD_RAND);
     if (0 == rc) {
       break;
     }
-  
+
     ret = 0;
   } while(0);
-  
+
   if (ret == -1) {
     openssl_rand_clean(eng, 0);
   }
-  
+
   return eng;
 }
 
@@ -322,7 +322,7 @@ static void openssl_rand_clean(ENGINE *eng, int clean_locks)
     dlsym_ENGINE_finish(eng);
     dlsym_ENGINE_free(eng);
   }
-    
+
   dlsym_ENGINE_cleanup();
   if (clean_locks) {
     locks_cleanup();

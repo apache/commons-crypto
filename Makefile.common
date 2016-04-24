@@ -9,13 +9,13 @@ endif
 
 
 JAVA  := "$$JAVA_HOME/bin/java"
-JAVAC := "$$JAVA_HOME/bin/javac" 
+JAVAC := "$$JAVA_HOME/bin/javac"
 JAVAH := "$$JAVA_HOME/bin/javah"
 
 OSINFO_CLASS := org.apache.commons.crypto.utils.OSInfo
 OSINFO_PROG := lib/org/apache/commons/crypto/utils/OSInfo.class
 
-## building OSInfo.java 
+## building OSInfo.java
 $(info compiling OSInfo.java)
 $(shell mkdir -p lib)
 $(shell $(JAVAC) src/main/java/org/apache/commons/crypto/utils/OSInfo.java -d lib)
@@ -32,7 +32,7 @@ else
   sep := :
 endif
 
-chimera := chimera-$(VERSION)
+commons-crypto := commons-crypto-$(VERSION)
 
 
 jni_md := $(shell find -L "$(JAVA_HOME)" -name jni_md.h | head -1)
@@ -72,8 +72,8 @@ Default_STRIP        := $(CROSS_PREFIX)strip
 Default_CFLAGS     := -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden
 Default_CXXFLAGS     := -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden
 Default_LINKFLAGS    := -shared -static
-Default_LIBNAME      := libchimera.so
-Default_CHIMERA_FLAGS := 
+Default_LIBNAME      := libcommons-crypto.so
+Default_COMMONS_CRYPTO_FLAGS :=
 
 Linux-x86_CC        := $(CROSS_PREFIX)gcc
 Linux-x86_CXX       := $(CROSS_PREFIX)g++
@@ -86,22 +86,22 @@ else
   Linux-x86_CFLAGS    := -include $(IBM_JDK_LIB)/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m32
 endif
 Linux-x86_LINKFLAGS := -shared -static-libgcc -static-libstdc++
-Linux-x86_LIBNAME   := libchimera.so
-Linux-x86_CHIMERA_FLAGS:= 
+Linux-x86_LIBNAME   := libcommons-crypto.so
+Linux-x86_COMMONS_CRYPTO_FLAGS:=
 
 Linux-x86_64_CC        := $(CROSS_PREFIX)gcc
-Linux-x86_64_CXX       := $(CROSS_PREFIX)g++ 
+Linux-x86_64_CXX       := $(CROSS_PREFIX)g++
 Linux-x86_64_STRIP     := $(CROSS_PREFIX)strip
 ifeq ($(IBM_JDK_7),)
   Linux-x86_64_CXXFLAGS  := -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
-  Linux-x86_64_CFLAGS    := -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64  
+  Linux-x86_64_CFLAGS    := -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
 else
   Linux-x86_64_CXXFLAGS  := -include $(IBM_JDK_LIB)/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
-  Linux-x86_64_CFLAGS    := -include $(IBM_JDK_LIB)/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64  
+  Linux-x86_64_CFLAGS    := -include $(IBM_JDK_LIB)/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
 endif
 Linux-x86_64_LINKFLAGS := -shared -static-libgcc -static-libstdc++
-Linux-x86_64_LIBNAME   := libchimera.so
-Linux-x86_64_CHIMERA_FLAGS  := 
+Linux-x86_64_LIBNAME   := libcommons-crypto.so
+Linux-x86_64_COMMONS_CRYPTO_FLAGS  :=
 
 Linux-ppc_CC          := gcc
 Linux-ppc_CXX         := g++
@@ -114,27 +114,27 @@ else
   Linux-ppc_CFLAGS      := -DHAVE_CONFIG_H -include lib/inc_linux/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -O2 -fPIC -m32
 endif
 Linux-ppc_LINKFLAGS   := -shared -static-libgcc -static-libstdc++
-Linux-ppc_LIBNAME     := libchimera.so
-Linux-ppc_CHIMERA_FLAGS  :=
+Linux-ppc_LIBNAME     := libcommons-crypto.so
+Linux-ppc_COMMONS_CRYPTO_FLAGS  :=
 
 Linux-ppc64_CC        := gcc
 Linux-ppc64_CXX       := g++
 Linux-ppc64_STRIP     := strip
 ifeq ($(IBM_JDK_7),)
   Linux-ppc64_CXXFLAGS  := -DHAVE_CONFIG_H -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
-  Linux-ppc64_CFLAGS    := -DHAVE_CONFIG_H -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64  
+  Linux-ppc64_CFLAGS    := -DHAVE_CONFIG_H -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
 else
   Linux-ppc64_CXXFLAGS  := -DHAVE_CONFIG_H -include $(IBM_JDK_LIB)/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -O2 -fPIC -m64
   Linux-ppc64_CFLAGS    := -DHAVE_CONFIG_H -include $(IBM_JDK_LIB)/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -O2 -fPIC -m64
 endif
 Linux-ppc64_LINKFLAGS := -shared -static-libgcc -static-libstdc++
-Linux-ppc64_LIBNAME   := libchimera.so
-Linux-ppc64_CHIMERA_FLAGS  :=
+Linux-ppc64_LIBNAME   := libcommons-crypto.so
+Linux-ppc64_COMMONS_CRYPTO_FLAGS  :=
 
 AIX-ppc64_CC        := gcc
 AIX-ppc64_CXX       := g++
 AIX-ppc64_STRIP     := strip -X64
-AIX-ppc64_LIBNAME   := libchimera.a
+AIX-ppc64_LIBNAME   := libcommons-crypto.a
 ifeq ($(IBM_JDK_7),)
   AIX-ppc64_CXXFLAGS     := -DHAVE_CONFIG_H -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
   AIX-ppc64_CFLAGS       := -DHAVE_CONFIG_H -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
@@ -143,25 +143,25 @@ else
   AIX-ppc64_CFLAGS       := -DHAVE_CONFIG_H -I$(JAVA_HOME)/include/aix -Ilib/inc_ibm -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -maix64
 endif
 AIX-ppc64_LINKFLAGS := -shared -static-libgcc -static-libstdc++ -lcrypt
-AIX-ppc64_CHIMERA_FLAGS  :=
+AIX-ppc64_COMMONS_CRYPTO_FLAGS  :=
 
 SunOS-x86_CC        := gcc
-SunOS-x86_CXX       := g++ 
+SunOS-x86_CXX       := g++
 SunOS-x86_STRIP     := strip
 SunOS-x86_CFLAGS    := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden
 SunOS-x86_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden
 SunOS-x86_LINKFLAGS := -shared -static-libgcc -static-libstdc++
-SunOS-x86_LIBNAME   := libchimera.so
-SunOS-x86_CHIMERA_FLAGS  := 
+SunOS-x86_LIBNAME   := libcommons-crypto.so
+SunOS-x86_COMMONS_CRYPTO_FLAGS  :=
 
 SunOS-sparc_CC        := gcc
-SunOS-sparc_CXX       := g++ 
+SunOS-sparc_CXX       := g++
 SunOS-sparc_STRIP     := strip
 SunOS-sparc_CFLAGS    := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden
 SunOS-sparc_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden
 SunOS-sparc_LINKFLAGS := -shared -static-libgcc -static-libstdc++
-SunOS-sparc_LIBNAME   := libchimera.so
-SunOS-sparc_CHIMERA_FLAGS  := 
+SunOS-sparc_LIBNAME   := libcommons-crypto.so
+SunOS-sparc_COMMONS_CRYPTO_FLAGS  :=
 
 SunOS-x86_64_CC        := gcc
 SunOS-x86_64_CXX       := g++
@@ -169,8 +169,8 @@ SunOS-x86_64_STRIP     := strip
 SunOS-x86_64_CFLAGS    := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m64
 SunOS-x86_64_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m64
 SunOS-x86_64_LINKFLAGS := -shared -static-libgcc -static-libstdc++
-SunOS-x86_64_LIBNAME   := libchimera.so
-SunOS-x86_64_CHIMERA_FLAGS  :=
+SunOS-x86_64_LIBNAME   := libcommons-crypto.so
+SunOS-x86_64_COMMONS_CRYPTO_FLAGS  :=
 
 # '-include lib/inc_linux/jni_md.h' is used to force the use of our version,
 # which defines JNIEXPORT differently; otherwise, since OpenJDK includes
@@ -183,8 +183,8 @@ Linux-arm_STRIP     := $(CROSS_PREFIX)strip
 Linux-arm_CFLAGS    := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
 Linux-arm_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
 Linux-arm_LINKFLAGS := -shared -static-libgcc
-Linux-arm_LIBNAME   := libchimera.so
-Linux-arm_CHIMERA_FLAGS:= 
+Linux-arm_LIBNAME   := libcommons-crypto.so
+Linux-arm_COMMONS_CRYPTO_FLAGS:=
 
 Linux-armhf_CC        := $(CROSS_PREFIX)gcc
 Linux-armhf_CXX       := $(CROSS_PREFIX)g++
@@ -192,8 +192,8 @@ Linux-armhf_STRIP     := $(CROSS_PREFIX)strip
 Linux-armhf_CFLAGS    := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -mfloat-abi=hard
 Linux-armhf_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -mfloat-abi=hard
 Linux-armhf_LINKFLAGS := -shared -static-libgcc
-Linux-armhf_LIBNAME   := libchimera.so
-Linux-armhf_CHIMERA_FLAGS:= 
+Linux-armhf_LIBNAME   := libcommons-crypto.so
+Linux-armhf_COMMONS_CRYPTO_FLAGS:=
 
 Mac-x86_CC        := gcc -arch i386
 Mac-x86_CXX       := g++ -arch i386
@@ -201,17 +201,17 @@ Mac-x86_STRIP     := strip -x
 Mac-x86_CFLAGS    := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.4 -fvisibility=hidden
 Mac-x86_CXXFLAGS  := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.4 -fvisibility=hidden
 Mac-x86_LINKFLAGS := -dynamiclib -static-libgcc
-Mac-x86_LIBNAME   := libchimera.jnilib
-Mac-x86_CHIMERA_FLAGS  :=
+Mac-x86_LIBNAME   := libcommons-crypto.jnilib
+Mac-x86_COMMONS_CRYPTO_FLAGS  :=
 
 Mac-x86_64_CC        := gcc -arch $(OS_ARCH)
-Mac-x86_64_CXX       := g++ -arch $(OS_ARCH) 
+Mac-x86_64_CXX       := g++ -arch $(OS_ARCH)
 Mac-x86_64_STRIP     := strip -x
 Mac-x86_64_CFLAGS    := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.5 -fvisibility=hidden
 Mac-x86_64_CXXFLAGS  := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.5 -fvisibility=hidden
-Mac-x86_64_LINKFLAGS := -dynamiclib 
-Mac-x86_64_LIBNAME   := libchimera.jnilib 
-Mac-x86_64_CHIMERA_FLAGS  := 
+Mac-x86_64_LINKFLAGS := -dynamiclib
+Mac-x86_64_LIBNAME   := libcommons-crypto.jnilib
+Mac-x86_64_COMMONS_CRYPTO_FLAGS  :=
 
 FreeBSD-x86_64_CC           := $(CROSS_PREFIX)gcc
 FreeBSD-x86_64_CXX          := $(CROSS_PREFIX)g++
@@ -219,37 +219,37 @@ FreeBSD-x86_64_STRIP        := $(CROSS_PREFIX)strip
 FreeBSD-x86_64_CFLAGS       := -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden
 FreeBSD-x86_64_CXXFLAGS     := -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden
 FreeBSD-x86_64_LINKFLAGS    := -shared -static-libgcc
-FreeBSD-x86_64_LIBNAME      := libchimera.so
-FreeBSD-x86_64_CHIMERA_FLAGS := 
+FreeBSD-x86_64_LIBNAME      := libcommons-crypto.so
+FreeBSD-x86_64_COMMONS_CRYPTO_FLAGS :=
 
 Windows-x86_CC           := $(CROSS_PREFIX)gcc
 Windows-x86_CXX          := $(CROSS_PREFIX)g++
 Windows-x86_STRIP        := $(CROSS_PREFIX)strip
-Windows-x86_CFLAGS       := -Ilib/inc_win -O2 
-Windows-x86_CXXFLAGS     := -Ilib/inc_win -O2 
+Windows-x86_CFLAGS       := -Ilib/inc_win -O2
+Windows-x86_CXXFLAGS     := -Ilib/inc_win -O2
 Windows-x86_LINKFLAGS    := -Wl,--kill-at -shared -static
-Windows-x86_LIBNAME      := chimera.dll
-Windows-x86_CHIMERA_FLAGS := 
+Windows-x86_LIBNAME      := commons-crypto.dll
+Windows-x86_COMMONS_CRYPTO_FLAGS :=
 
 Windows-x86_64_CC           := $(CROSS_PREFIX)gcc
 Windows-x86_64_CXX          := $(CROSS_PREFIX)g++
 Windows-x86_64_STRIP        := $(CROSS_PREFIX)strip
-Windows-x86_64_CFLAGS       := -Ilib/inc_win -O2 
-Windows-x86_64_CXXFLAGS     := -Ilib/inc_win -O2 
-Windows-x86_64_LINKFLAGS    := -Wl,--kill-at -shared -static 
-Windows-x86_64_LIBNAME      := chimera.dll
-Windows-x86_64_CHIMERA_FLAGS := 
+Windows-x86_64_CFLAGS       := -Ilib/inc_win -O2
+Windows-x86_64_CXXFLAGS     := -Ilib/inc_win -O2
+Windows-x86_64_LINKFLAGS    := -Wl,--kill-at -shared -static
+Windows-x86_64_LIBNAME      := commons-crypto.dll
+Windows-x86_64_COMMONS-CRYPTO_FLAGS :=
 
 
 STRIP     := $($(os_arch)_STRIP)
 CC        := $($(os_arch)_CC)
 CXX       := $($(os_arch)_CXX)
 STRIP     := $($(os_arch)_STRIP)
-CFLAGS    := $($(os_arch)_CXXFLAGS) 
-CXXFLAGS  := $($(os_arch)_CXXFLAGS) 
-LINKFLAGS := $($(os_arch)_LINKFLAGS) 
+CFLAGS    := $($(os_arch)_CXXFLAGS)
+CXXFLAGS  := $($(os_arch)_CXXFLAGS)
+LINKFLAGS := $($(os_arch)_LINKFLAGS)
 LIBNAME   := $($(os_arch)_LIBNAME)
-CHIMERA_FLAGS := $($(os_arch)_CHIMERA_FLAGS)
+COMMONS-CRYPTO_FLAGS := $($(os_arch)_COMMONS-CRYPTO_FLAGS)
 
 
 CFLAGS := $(CFLAGS) -Ilib/include -I/usr/include -I"$(SRC_NATIVE)/org/apache/commons/crypto/"

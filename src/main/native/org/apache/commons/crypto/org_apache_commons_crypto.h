@@ -18,7 +18,7 @@
 
 /**
  * This file includes some common utilities
- * for all native code used in chimera.
+ * for all native code used in commons-crypto.
  */
 
 #if !defined ORG_APACHE_COMMONS_CRYPTO_H
@@ -198,13 +198,13 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
 #include <openssl/err.h>
 
 /**
- * A helper macro to convert the java 'context-handle' 
- * to a EVP_CIPHER_CTX pointer. 
+ * A helper macro to convert the java 'context-handle'
+ * to a EVP_CIPHER_CTX pointer.
  */
 #define CONTEXT(context) ((EVP_CIPHER_CTX*)((ptrdiff_t)(context)))
 
 /**
- * A helper macro to convert the EVP_CIPHER_CTX pointer to the 
+ * A helper macro to convert the EVP_CIPHER_CTX pointer to the
  * java 'context-handle'.
  */
 #define JLONG(context) ((jlong)((ptrdiff_t)(context)))
