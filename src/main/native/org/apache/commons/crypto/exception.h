@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#ifndef CHIMERA_NATIVE_SRC_EXCEPTION_H
-#define CHIMERA_NATIVE_SRC_EXCEPTION_H
+#ifndef COMMONS_CRYPTO_NATIVE_SRC_EXCEPTION_H
+#define COMMONS_CRYPTO_NATIVE_SRC_EXCEPTION_H
 
 #include <jni.h> /* for jthrowable */
 #include <stdarg.h> /* for va_list */

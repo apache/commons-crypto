@@ -32,21 +32,21 @@ import org.apache.commons.logging.LogFactory;
 
 
 /**
- * A helper to load the native code i.e. libchimera.so.
- * This handles the fallback to either the bundled libchimera-Linux-i386-32.so
+ * A helper to load the native code i.e. libcommons-crypto.so.
+ * This handles the fallback to either the bundled libcommons-crypto-Linux-i386-32.so
  * or the default java implementations where appropriate.
  */
 public class NativeCodeLoader {
 
   private static final Log LOG =
     LogFactory.getLog(NativeCodeLoader.class);
-  
+
   private static boolean nativeCodeLoaded = false;
-  
+
   static {
     // Try to load native library and set fallback flag appropriately
     if(LOG.isDebugEnabled()) {
-      LOG.debug("Trying to load the custom-built native-chimera library...");
+      LOG.debug("Trying to load the custom-built native-commons-crypto library...");
     }
 
     try {
@@ -56,7 +56,7 @@ public class NativeCodeLoader {
         System.load(nativeLibFile.getAbsolutePath());
       } else {
         // Load preinstalled library (in the path -Djava.library.path)
-        System.loadLibrary("chimera");
+        System.loadLibrary("commons-crypto");
       }
       LOG.debug("Loaded the native library");
       nativeCodeLoaded = true;
@@ -76,7 +76,7 @@ public class NativeCodeLoader {
   }
 
   static File findNativeLibrary() {
-    // Try to load the library in chimera.lib.path */
+    // Try to load the library in commons-crypto.lib.path */
     String nativeLibraryPath = Utils
         .getLibPath();
     String nativeLibraryName = Utils
@@ -84,7 +84,7 @@ public class NativeCodeLoader {
 
     // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
     if (nativeLibraryName == null)
-      nativeLibraryName = System.mapLibraryName("chimera");
+      nativeLibraryName = System.mapLibraryName("commons-crypto");
 
     if (nativeLibraryPath != null) {
       File nativeLib = new File(nativeLibraryPath,
@@ -101,7 +101,7 @@ public class NativeCodeLoader {
     if(!hasNativeLib) {
       if (OSInfo.getOSName().equals("Mac")) {
         // Fix for openjdk7 for Mac
-        String altName = "libchimera.jnilib";
+        String altName = "libcommons-crypto.jnilib";
         if (hasResource(nativeLibraryPath + "/" + altName)) {
           nativeLibraryName = altName;
           hasNativeLib = true;
@@ -117,7 +117,7 @@ public class NativeCodeLoader {
     }
 
     // Temporary folder for the native lib. Use the value of
-    // chimera.tempdir or java.io.tmpdir
+    // commons-crypto.tempdir or java.io.tmpdir
     String tempFolder = new File(Utils.getTmpDir())
         .getAbsolutePath();
 
@@ -128,11 +128,11 @@ public class NativeCodeLoader {
 
   /**
    * Extracts the specified library file to the target folder.
-   * 
-   * @param libFolderForCurrentOS the library in chimera.lib.path.
+   *
+   * @param libFolderForCurrentOS the library in commons-crypto.lib.path.
    * @param libraryFileName the library name.
    * @param targetFolder Target folder for the native lib. Use the value of
-   *                     chimera.tempdir or java.io.tmpdir.
+   *                     commons-crypto.tempdir or java.io.tmpdir.
    * @return the library file.
    */
   private static File extractLibraryFile(String libFolderForCurrentOS,
@@ -141,9 +141,9 @@ public class NativeCodeLoader {
         + libraryFileName;
 
     // Attach UUID to the native library file to ensure multiple class loaders
-    // can read the libchimera multiple times.
+    // can read the libcommons-crypto multiple times.
     String uuid = UUID.randomUUID().toString();
-    String extractedLibFileName = String.format("chimera-%s-%s-%s", getVersion(), uuid,
+    String extractedLibFileName = String.format("commons-crypto-%s-%s-%s", getVersion(), uuid,
         libraryFileName);
     File extractedLibFile = new File(targetFolder, extractedLibFileName);
 
@@ -217,12 +217,12 @@ public class NativeCodeLoader {
    * Gets the version by reading pom.properties embedded in jar.
    * This version data is used as a suffix of a dll file extracted from the
    * jar.
-   * 
+   *
    * @return the version string
    */
   public static String getVersion() {
     URL versionFile = NativeCodeLoader.class
-        .getResource("/META-INF/maven/org.apache.commons.crypto/chimera/pom.properties");
+        .getResource("/META-INF/maven/org.apache.commons.crypto/commons-crypto/pom.properties");
     if (versionFile == null)
       versionFile = NativeCodeLoader.class
           .getResource("/org/apache/commons/crypto/VERSION");
@@ -269,8 +269,8 @@ public class NativeCodeLoader {
 
   /**
    * Checks whether native code is loaded for this platform.
-   * 
-   * @return <code>true</code> if native is loaded, 
+   *
+   * @return <code>true</code> if native is loaded,
    *         else <code>false</code>.
    */
   public static boolean isNativeCodeLoaded() {

@@ -112,15 +112,15 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_initI
 {
   char msg[1000];
 #ifdef UNIX
-  openssl = dlopen(CHIMERA_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
 #endif
 
 #ifdef WINDOWS
-  openssl = LoadLibrary(CHIMERA_OPENSSL_LIBRARY);
+  openssl = LoadLibrary(COMMONS_CRYPTO_OPENSSL_LIBRARY);
 #endif
 
   if (!openssl) {
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", CHIMERA_OPENSSL_LIBRARY,  \
+    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
         dlerror());
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;

@@ -2,8 +2,8 @@ include Makefile.common
 
 MVN:=mvn
 
-CHIMERA_OUT:=$(TARGET)/$(chimera)-$(os_arch)
-CHIMERA_OBJ:=$(addprefix $(CHIMERA_OUT)/,OpensslSecureRandom.o OpensslNative.o)
+COMMONS_CRYPTO_OUT:=$(TARGET)/$(commons-crypto)-$(os_arch)
+COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpensslSecureRandom.o OpensslNative.o)
 
 ifeq ($(OS_NAME),SunOS)
   TAR:= gtar
@@ -30,25 +30,25 @@ $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.h: $(TARGET
 $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslSecureRandomNative.h: $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslSecureRandomNative.class
 	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ org.apache.commons.crypto.random.OpensslSecureRandomNative
 
-$(CHIMERA_OUT)/OpensslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpensslNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.h
+$(COMMONS_CRYPTO_OUT)/OpensslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpensslNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(CHIMERA_OUT)/OpensslSecureRandom.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpensslSecureRandomNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslSecureRandomNative.h
+$(COMMONS_CRYPTO_OUT)/OpensslSecureRandom.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpensslSecureRandomNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslSecureRandomNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(CHIMERA_OUT)/$(LIBNAME): $(CHIMERA_OBJ)
+$(COMMONS_CRYPTO_OUT)/$(LIBNAME): $(COMMONS_CRYPTO_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $+ $(LINKFLAGS)
 	$(STRIP) $@
 
 clean:
 	rm -rf $(TARGET)
-	rm -rf $(CHIMERA_OUT)
+	rm -rf $(COMMONS_CRYPTO_OUT)
 
 native: $(NATIVE_DLL)
 
-$(NATIVE_DLL): $(CHIMERA_OUT)/$(LIBNAME)
+$(NATIVE_DLL): $(COMMONS_CRYPTO_OUT)/$(LIBNAME)
 	@mkdir -p $(@D)
 	cp $< $@
 	@mkdir -p $(NATIVE_TARGET_DIR)
