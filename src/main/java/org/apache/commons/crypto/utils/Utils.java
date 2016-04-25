@@ -29,6 +29,7 @@ import java.util.Properties;
 import org.apache.commons.crypto.cipher.Cipher;
 import org.apache.commons.crypto.cipher.CipherFactory;
 import org.apache.commons.crypto.cipher.CipherTransformation;
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY;
@@ -57,14 +58,14 @@ public class Utils {
   private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING.getAlgorithmBlockSize();
 
   static {
-    loadCommonsCryptoSystemProperties();
+    loadSystemProperties();
   }
 
   /**
    * loads system properties when configuration file of the name
    * {@link #COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE} is found.
    */
-  private static void loadCommonsCryptoSystemProperties() {
+  private static void loadSystemProperties() {
     try {
       InputStream is = Thread.currentThread().getContextClassLoader()
           .getResourceAsStream(COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE);
@@ -79,7 +80,7 @@ public class Utils {
       Enumeration<?> names = props.propertyNames();
       while (names.hasMoreElements()) {
         String name = (String) names.nextElement();
-        if (name.startsWith("commons.crypto.")) {
+        if (name.startsWith(ConfigurationKeys.CONF_PREFIX)) {
           if (System.getProperty(name) == null) {
             System.setProperty(name, props.getProperty(name));
           }
