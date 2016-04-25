@@ -36,14 +36,11 @@ limitations under the License.
   <p>
     <ul>
       <li>Cipher API for low level cryptographic operations.</li>
-      <li>Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream
+      <li>Secure true random number generator.</li>
+      <li>Java stream API for high level stream
         encyrption/decryption.
       </li>
-      <li>Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s
-        throughput in modern Xeon processors).
-      </li>
-      <li>JNI-based implementation to achieve comparable performance to the native C++ version 
-          based on Openssl.
+      <li>High performance AES encryption/decryption optimized with Intel AES-NI.
       </li>
       <li>Portable across various operating systems (currently only Linux); Apache Commons Crypto loads the
           library according to your machine environment (It looks system properties, os.name and
