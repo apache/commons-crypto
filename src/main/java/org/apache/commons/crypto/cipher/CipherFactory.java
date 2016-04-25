@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * This is the factory class used for creating cipher class
  */
 public class CipherFactory {
-  
+
   /** LOG instance for {@CipherFactory} */
   public final static Logger LOG = LoggerFactory.getLogger(CipherFactory.class);
 
@@ -70,7 +70,7 @@ public class CipherFactory {
 
   /**
    * Gets a cipher for algorithm/mode/padding in config value
-   * chimera.crypto.cipher.transformation
+   * commons.crypto.cipher.transformation
    *
    * @return Cipher the cipher object Null value will be returned if no
    *         cipher classes with transformation configured.

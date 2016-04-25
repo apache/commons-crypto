@@ -54,7 +54,7 @@ public abstract class AbstractCipherTest {
     Utils.checkNotNull(cipherClass);
     Utils.checkNotNull(transformations);
     props = new Properties();
-    props.setProperty(ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY,
+    props.setProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
         cipherClass);
   }
 
@@ -180,7 +180,7 @@ public abstract class AbstractCipherTest {
       int[] bufferLenList = new int[] {2 * 1024 - 128, 2 * 1024 - 125};
       for (int bufferLen : bufferLenList) {
         resetCipher(transformation, key, iv);
-        
+
         int offset = 0;
         // encrypt (update + doFinal) the data
         int cipherPos = 0;

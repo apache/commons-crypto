@@ -25,25 +25,19 @@ import org.apache.commons.crypto.cipher.JceCipher;
 public class ConfigurationKeys {
 
   /**
-   * The prefix named with project name.
+   * The prefix of crypto configuration.
    */
-  public static final String CHIMERA_PREFIX = "chimera.";
+  public static final String CONF_PREFIX = "commons.crypto.";
 
   /**
    * The filename of configuration file.
    */
-  public static final String CHIMERA_SYSTEM_PROPERTIES_FILE =
-      CHIMERA_PREFIX + "properties";
-
-  /**
-   * The prefix of crypto configuration.
-   */
-  public static final String CONF_PREFIX =
-      CHIMERA_PREFIX + "crypto.";
+  public static final String COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE =
+      CONF_PREFIX + "properties";
 
   /**
    * The configuration key of implementation class for crypto cipher.
-   * The values of CHIMERA_CRYPTO_CIPHER_CLASSES_KEY can be
+   * The values of COMMONS_CRYPTO_CIPHER_CLASSES_KEY can be
    * "org.apache.commons.crypto.cipher.JceCipher" and "org.apache.commons.crypto.cipher.OpensslCipher".
    * And it takes a common separated list.
    * The "org.apache.commons.crypto.cipher.JceCipher" use jce provider to
@@ -52,49 +46,49 @@ public class ConfigurationKeys {
    * Note that for each value,the first value which can be created without exception
    * will be used (priority by order).
     */
-  public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_KEY =
+  public static final String COMMONS_CRYPTO_CIPHER_CLASSES_KEY =
       CONF_PREFIX + "cipher.classes";
 
   /**
    * The default value for crypto cipher.
    */
-  public static final String CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT =
+  public static final String COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT =
       JceCipher.class.getName();
 
   /**
    * The configuration key of the provider class for JCE cipher.
    */
-  public static final String CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY =
+  public static final String COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY =
       CONF_PREFIX + "cipher.jce.provider";
 
   // security random related configuration keys
   /**
    * The configuration key of the file path for secure random device.
    */
-  public static final String CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY =
+  public static final String COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY =
       CONF_PREFIX + "secure.random.device.file.path";
 
   /**
    * The default value of the file path for secure random device.
    */
-  public static final String CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT =
+  public static final String COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT =
       "/dev/urandom";
 
   /**
    * The configuration key of the algorithm of secure random.
    */
-  public static final String CHIMERA_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY =
+  public static final String COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY =
       CONF_PREFIX + "secure.random.java.algorithm";
 
   /**
    * The default value of the algorithm of secure random.
    */
   public static final String
-      CHIMERA_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT = "SHA1PRNG";
+      COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT = "SHA1PRNG";
 
   /**
    * The configuration key of the implementation class for secure random.
-   * The values of CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY can be
+   * The values of COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY can be
    * "org.apache.commons.crypto.random.JavaSecureRandom" and "org.apache.commons.crypto.random.OpensslSecureRandom".
    * And it takes a common separated list.
    * The "org.apache.commons.crypto.random.JavaSecureRandom" use java to
@@ -103,37 +97,37 @@ public class ConfigurationKeys {
    * Note that for each value,the first value which can be created without exception
    * will be used (priority by order).
    */
-  public static final String CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY =
+  public static final String COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY =
       CONF_PREFIX + "secure.random.classes";
 
   /**
    * The configuration key of the buffer size for stream.
    */
-  public static final String CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY =
+  public static final String COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY =
       CONF_PREFIX + "stream.buffer.size";
 
   // stream related configuration keys
   /**
    * The default value of the buffer size for stream.
    */
-  public static final int CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT = 8192;
+  public static final int COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT = 8192;
 
   // native lib related configuration keys
   /**
    * The configuration key of the path for loading crypto library.
    */
-  public static final String CHIMERA_CRYPTO_LIB_PATH_KEY =
+  public static final String COMMONS_CRYPTO_LIB_PATH_KEY =
       CONF_PREFIX + "lib.path";
 
   /**
    * The configuration key of the file name for loading crypto library.
    */
-  public static final String CHIMERA_CRYPTO_LIB_NAME_KEY =
+  public static final String COMMONS_CRYPTO_LIB_NAME_KEY =
       CONF_PREFIX + "lib.name";
 
   /**
    * The configuration key of temp directory for extracting crypto library.
    */
-  public static final String CHIMERA_CRYPTO_LIB_TEMPDIR_KEY =
+  public static final String COMMONS_CRYPTO_LIB_TEMPDIR_KEY =
       CONF_PREFIX + "lib.tempdir";
 }
