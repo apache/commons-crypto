@@ -46,7 +46,7 @@ limitations under the License.
           library according to your machine environment (It looks system properties, os.name and
           os.arch).
       </li>
-      <li>Simple usage. Add the crypto-(version).jar file to your classpath.</li>
+      <li>Simple usage. Add the commons-crypto-(version).jar file to your classpath.</li>
     </ul>
   </p>
 </section>
