@@ -37,7 +37,7 @@ import org.apache.commons.crypto.stream.output.StreamOutput;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * CTRCryptoOutputStream encrypts data. It is not thread-safe. AES CTR mode is
+ * CTRCipherOutputStream encrypts data. It is not thread-safe. AES CTR mode is
  * required in order to ensure that the plain text and cipher text have a 1:1
  * mapping. The encryption is buffer based. The key points of the encryption are
  * (1) calculating counter and (2) padding through stream position.
@@ -47,7 +47,7 @@ import org.apache.commons.crypto.utils.Utils;
  * <p/>
  * The underlying stream offset is maintained as state.
  */
-public class CTRCryptoOutputStream extends CryptoOutputStream {
+public class CTRCipherOutputStream extends CipherOutputStream {
   /**
    * Underlying stream offset.
    */
@@ -65,62 +65,62 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
    */
   private boolean cipherReset = false;
 
-  public CTRCryptoOutputStream(Properties props, OutputStream out,
-      byte[] key, byte[] iv)
+  public CTRCipherOutputStream(Properties props, OutputStream out,
+                               byte[] key, byte[] iv)
       throws IOException {
     this(props, out, key, iv, 0);
   }
 
-  public CTRCryptoOutputStream(Properties props, WritableByteChannel out,
-      byte[] key, byte[] iv)
+  public CTRCipherOutputStream(Properties props, WritableByteChannel out,
+                               byte[] key, byte[] iv)
       throws IOException {
     this(props, out, key, iv, 0);
   }
 
-  public CTRCryptoOutputStream(OutputStream out, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+  public CTRCipherOutputStream(OutputStream out, Cipher cipher,
+                               int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(out, cipher, bufferSize, key, iv, 0);
   }
 
-  public CTRCryptoOutputStream(WritableByteChannel channel, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+  public CTRCipherOutputStream(WritableByteChannel channel, Cipher cipher,
+                               int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(channel, cipher, bufferSize, key, iv, 0);
   }
 
-  public CTRCryptoOutputStream(Output output, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv)
+  public CTRCipherOutputStream(Output output, Cipher cipher,
+                               int bufferSize, byte[] key, byte[] iv)
       throws IOException {
     this(output, cipher, bufferSize, key, iv, 0);
   }
 
-  public CTRCryptoOutputStream(Properties props, OutputStream out,
-      byte[] key, byte[] iv, long streamOffset)
+  public CTRCipherOutputStream(Properties props, OutputStream out,
+                               byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(out, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public CTRCryptoOutputStream(Properties props, WritableByteChannel out,
-      byte[] key, byte[] iv, long streamOffset)
+  public CTRCipherOutputStream(Properties props, WritableByteChannel out,
+                               byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(out, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public CTRCryptoOutputStream(OutputStream out, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
+  public CTRCipherOutputStream(OutputStream out, Cipher cipher,
+                               int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new StreamOutput(out, bufferSize), cipher,
         bufferSize, key, iv, streamOffset);
   }
 
-  public CTRCryptoOutputStream(WritableByteChannel channel, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
+  public CTRCipherOutputStream(WritableByteChannel channel, Cipher cipher,
+                               int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new ChannelOutput(channel), cipher,
         bufferSize, key, iv, streamOffset);
   }
 
-  public CTRCryptoOutputStream(Output output, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv, long streamOffset)
+  public CTRCipherOutputStream(Output output, Cipher cipher,
+                               int bufferSize, byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     super(output, cipher, bufferSize, key, iv);
 

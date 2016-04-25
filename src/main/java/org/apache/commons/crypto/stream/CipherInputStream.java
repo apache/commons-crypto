@@ -36,12 +36,12 @@ import org.apache.commons.crypto.stream.input.StreamInput;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * CryptoInputStream reads input data and decrypts data in stream manner. It supports
+ * CipherInputStream reads input data and decrypts data in stream manner. It supports
  * any mode of operations such as AES CBC/CTR/GCM mode in concept.It is not thread-safe.
  *
  */
 
-public class CryptoInputStream extends InputStream implements
+public class CipherInputStream extends InputStream implements
     ReadableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
 
@@ -69,31 +69,31 @@ public class CryptoInputStream extends InputStream implements
    */
   protected ByteBuffer outBuffer;
 
-  public CryptoInputStream(CipherTransformation transformation,
-      Properties props, InputStream in, byte[] key, byte[] iv)
+  public CipherInputStream(CipherTransformation transformation,
+                           Properties props, InputStream in, byte[] key, byte[] iv)
       throws IOException {
     this(in, Utils.getCipherInstance(transformation, props),
         Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoInputStream(CipherTransformation transformation,
-      Properties props, ReadableByteChannel in, byte[] key, byte[] iv)
+  public CipherInputStream(CipherTransformation transformation,
+                           Properties props, ReadableByteChannel in, byte[] key, byte[] iv)
       throws IOException {
     this(in, Utils.getCipherInstance(transformation, props),
         Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoInputStream(InputStream in, Cipher cipher, int bufferSize,
-      byte[] key, byte[] iv) throws IOException {
+  public CipherInputStream(InputStream in, Cipher cipher, int bufferSize,
+                           byte[] key, byte[] iv) throws IOException {
     this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv);
   }
 
-  public CryptoInputStream(ReadableByteChannel in, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+  public CipherInputStream(ReadableByteChannel in, Cipher cipher,
+                           int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(new ChannelInput(in), cipher, bufferSize, key, iv);
   }
 
-  public CryptoInputStream(
+  public CipherInputStream(
       Input input,
       Cipher cipher,
       int bufferSize,

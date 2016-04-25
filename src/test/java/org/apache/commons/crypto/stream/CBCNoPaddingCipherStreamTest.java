@@ -21,11 +21,11 @@ import java.io.IOException;
 
 import org.apache.commons.crypto.cipher.CipherTransformation;
 
-public class CTRNoPaddingCryptoStreamTest extends AbstractCryptoStreamTest {
+public class CBCNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
   public void setUp() throws IOException {
     transformation = CipherTransformation
-        .AES_CTR_NOPADDING;
+        .AES_CBC_NOPADDING;
   }
 
 }

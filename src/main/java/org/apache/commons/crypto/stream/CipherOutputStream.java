@@ -38,11 +38,11 @@ import org.apache.commons.crypto.stream.output.StreamOutput;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * CryptoOutputStream encrypts data and writes to the under layer output. It supports
+ * CipherOutputStream encrypts data and writes to the under layer output. It supports
  * any mode of operations such as AES CBC/CTR/GCM mode in concept. It is not thread-safe.
  */
 
-public class CryptoOutputStream extends OutputStream implements
+public class CipherOutputStream extends OutputStream implements
     WritableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
 
@@ -68,32 +68,32 @@ public class CryptoOutputStream extends OutputStream implements
    */
   protected ByteBuffer outBuffer;
 
-  public CryptoOutputStream(CipherTransformation transformation,
-      Properties props, OutputStream out, byte[] key, byte[] iv)
+  public CipherOutputStream(CipherTransformation transformation,
+                            Properties props, OutputStream out, byte[] key, byte[] iv)
       throws IOException {
     this(out, Utils.getCipherInstance(transformation, props),
         Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoOutputStream(CipherTransformation transformation,
-      Properties props, WritableByteChannel out, byte[] key, byte[] iv)
+  public CipherOutputStream(CipherTransformation transformation,
+                            Properties props, WritableByteChannel out, byte[] key, byte[] iv)
       throws IOException {
     this(out, Utils.getCipherInstance(transformation, props),
         Utils.getBufferSize(props), key, iv);
   }
 
-  public CryptoOutputStream(OutputStream out, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+  public CipherOutputStream(OutputStream out, Cipher cipher,
+                            int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, iv);
   }
 
-  public CryptoOutputStream(WritableByteChannel channel, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+  public CipherOutputStream(WritableByteChannel channel, Cipher cipher,
+                            int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(new ChannelOutput(channel), cipher, bufferSize, key, iv);
   }
 
-  protected CryptoOutputStream(Output output, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv)
+  protected CipherOutputStream(Output output, Cipher cipher,
+                               int bufferSize, byte[] key, byte[] iv)
       throws IOException {
 
     this.output = output;

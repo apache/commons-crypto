@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * The Input interface abstract the input source of <code>CryptoInputStream</code> so that
+ * The Input interface abstract the input source of <code>CipherInputStream</code> so that
  * different implementation of input can be used. The implementation Input interface will usually
  * wraps an input mechanism such as <code>InputStream</code> or <code>ReadableByteChannel</code>.
  */
