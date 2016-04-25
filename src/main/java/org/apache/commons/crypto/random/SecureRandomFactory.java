@@ -26,7 +26,7 @@ import org.apache.commons.crypto.utils.Utils;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 
 import static org.apache.commons.crypto.conf.ConfigurationKeys
-    .CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
+    .COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
 
 /**
  * This is the factory class used for {@link SecureRandom}.
@@ -44,10 +44,10 @@ public class SecureRandomFactory {
    */
   public static SecureRandom getSecureRandom(Properties props) {
     String secureRandomClasses = props.getProperty(
-        CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
+        COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
     if (secureRandomClasses == null) {
       secureRandomClasses = System.getProperty(
-          CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
+          COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
     }
 
     SecureRandom random = null;

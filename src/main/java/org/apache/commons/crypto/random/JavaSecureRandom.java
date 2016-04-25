@@ -43,8 +43,8 @@ public class JavaSecureRandom implements SecureRandom {
     try {
       instance = java.security.SecureRandom
           .getInstance(properties.getProperty(
-              ConfigurationKeys.CHIMERA_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY,
-              ConfigurationKeys.CHIMERA_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
+              ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY,
+              ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
     } catch (NoSuchAlgorithmException e) {
       LOG.error("Failed to create java secure random due to error: " + e);
     }

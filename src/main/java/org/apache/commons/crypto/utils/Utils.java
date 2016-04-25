@@ -30,17 +30,17 @@ import org.apache.commons.crypto.cipher.Cipher;
 import org.apache.commons.crypto.cipher.CipherFactory;
 import org.apache.commons.crypto.cipher.CipherTransformation;
 
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_LIB_NAME_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_LIB_PATH_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_SYSTEM_PROPERTIES_FILE;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.CHIMERA_CRYPTO_LIB_TEMPDIR_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_NAME_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_PATH_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_TEMPDIR_KEY;
 
 /**
  * General utility methods.
@@ -57,17 +57,17 @@ public class Utils {
   private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING.getAlgorithmBlockSize();
 
   static {
-    loadChimeraSystemProperties();
+    loadCommonsCryptoSystemProperties();
   }
 
   /**
    * loads system properties when configuration file of the name
-   * {@link #CHIMERA_SYSTEM_PROPERTIES_FILE} is found.
+   * {@link #COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE} is found.
    */
-  private static void loadChimeraSystemProperties() {
+  private static void loadCommonsCryptoSystemProperties() {
     try {
       InputStream is = Thread.currentThread().getContextClassLoader()
-          .getResourceAsStream(CHIMERA_SYSTEM_PROPERTIES_FILE);
+          .getResourceAsStream(COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE);
 
       if (is == null)
         return; // no configuration file is found
@@ -79,7 +79,7 @@ public class Utils {
       Enumeration<?> names = props.propertyNames();
       while (names.hasMoreElements()) {
         String name = (String) names.nextElement();
-        if (name.startsWith("chimera.")) {
+        if (name.startsWith("commons.crypto.")) {
           if (System.getProperty(name) == null) {
             System.setProperty(name, props.getProperty(name));
           }
@@ -87,7 +87,7 @@ public class Utils {
       }
     } catch (Throwable ex) {
       System.err.println("Could not load '"
-          + CHIMERA_SYSTEM_PROPERTIES_FILE + "' from classpath: "
+          + COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE + "' from classpath: "
           + ex.toString());
     }
   }
@@ -114,13 +114,13 @@ public class Utils {
    * */
   public static int getBufferSize(Properties props) {
     String bufferSizeStr = props.getProperty(
-        CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY);
+        COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY);
     if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
       bufferSizeStr = System
-        .getProperty(CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_KEY);
+        .getProperty(COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY);
     }
     if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
-      return CHIMERA_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
+      return COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
     } else {
       return Integer.parseInt(bufferSizeStr);
     }
@@ -134,9 +134,9 @@ public class Utils {
    * @return the cipher class based on the props.
    */
   public static String getCipherClassString(Properties props) {
-    final String configName = CHIMERA_CRYPTO_CIPHER_CLASSES_KEY;
+    final String configName = COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
     return props.getProperty(configName) != null ? props.getProperty(configName) : System
-        .getProperty(configName, CHIMERA_CRYPTO_CIPHER_CLASSES_DEFAULT);
+        .getProperty(configName, COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
   }
 
   /**
@@ -147,9 +147,9 @@ public class Utils {
    * @return the jce provider based on the props.
    */
   public static String getJCEProvider(Properties props) {
-    return props.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY) != null ?
-        props.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY) :
-        System.getProperty(CHIMERA_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
+    return props.getProperty(COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) != null ?
+        props.getProperty(COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) :
+        System.getProperty(COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
   }
 
   /**
@@ -161,11 +161,11 @@ public class Utils {
    */
   public static String getRandomDevPath(Properties props) {
     String devPath = props.getProperty(
-        CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
+        COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
     if (devPath == null) {
       devPath = System.getProperty(
-          CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
-          CHIMERA_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
+          COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
+          COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
     }
     return devPath;
   }
@@ -176,7 +176,7 @@ public class Utils {
    * @return the path of native library.
    */
   public static String getLibPath() {
-    return System.getProperty(CHIMERA_CRYPTO_LIB_PATH_KEY);
+    return System.getProperty(COMMONS_CRYPTO_LIB_PATH_KEY);
   }
 
   /**
@@ -185,7 +185,7 @@ public class Utils {
    * @return the file name of native library.
    */
   public static String getLibName() {
-    return System.getProperty(CHIMERA_CRYPTO_LIB_NAME_KEY);
+    return System.getProperty(COMMONS_CRYPTO_LIB_NAME_KEY);
   }
 
   /**
@@ -194,7 +194,7 @@ public class Utils {
    * @return the temp directory.
    */
   public static String getTmpDir() {
-    return System.getProperty(CHIMERA_CRYPTO_LIB_TEMPDIR_KEY,
+    return System.getProperty(COMMONS_CRYPTO_LIB_TEMPDIR_KEY,
         System.getProperty("java.io.tmpdir"));
   }
 

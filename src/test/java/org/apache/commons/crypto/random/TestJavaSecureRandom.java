@@ -28,7 +28,7 @@ public class TestJavaSecureRandom extends AbstractRandomTest {
   @Override
   public SecureRandom getSecureRandom() throws IOException {
     Properties props = new Properties();
-    props.setProperty(ConfigurationKeys.CHIMERA_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
+    props.setProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
         JavaSecureRandom.class.getName());
     SecureRandom random = SecureRandomFactory.getSecureRandom(props);
     if ( !(random instanceof JavaSecureRandom)) {
