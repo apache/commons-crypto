@@ -54,7 +54,7 @@ public class CTRCipherInputStream extends CipherInputStream {
   /**
    * Underlying stream offset
    */
-  protected long streamOffset = 0;
+  long streamOffset = 0;
 
   /**
    * The initial IV.
@@ -343,7 +343,7 @@ public class CTRCipherInputStream extends CipherInputStream {
 
   /**
    * Seeks the stream to a specific position relative to start of the under layer stream.
-   * 
+   *
    * @param position the given position in the data.
    * @throws IOException if an I/O error occurs.
    */
@@ -372,6 +372,10 @@ public class CTRCipherInputStream extends CipherInputStream {
    */
   protected long getStreamOffset() {
     return streamOffset;
+  }
+
+  protected void setStreamOffset(long streamOffset) {
+    this.streamOffset = streamOffset;
   }
 
   /**
@@ -618,5 +622,4 @@ public class CTRCipherInputStream extends CipherInputStream {
       throw new IOException(e);
     }
   }
-
 }
