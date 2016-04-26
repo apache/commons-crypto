@@ -11,17 +11,17 @@
   language governing permissions and limitations under the License. -->
 <document>
   <properties>
-    <title>Commons Cipher - User guide</title>
+    <title>Commons Crypto - User guide</title>
     <author email="dev@commons.apache.org">Commons Documentation Team</author>
   </properties>
   <body>
     <!-- ================================================== -->
     <section name="User guide">
-      <p>Apache Commons Cipher is a Ciphergraphic library optimized with AES-NI
+      <p>Apache Commons Crypto is a cryptographic library optimized with AES-NI
         (Advanced Encryption
         Standard New Instructions). It provides Java API for both cipher level and Java stream
         level. Developers can use it to implement high performance AES encryption/decryption with
-        the minimum code and effort. Please note that Apache Commons Cipher doesn't implement the Ciphergraphic
+        the minimum code and effort. Please note that Apache Commons Crypto doesn't implement the cryptographic
         algorithm such as AES directly. It wraps to Openssl or JCE which implement the algorithms.
       </p>
       <subsection name="Interfaces Overview">
@@ -43,7 +43,7 @@
               </a>
             </td>
             <td>
-              The interface of Ciphergraphic cipher for encryption and decryption.
+              The interface of cryptographic cipher for encryption and decryption.
             </td>
           </tr>
 
@@ -62,7 +62,7 @@
       <subsection name ="Usage">
         <ol style="list-style-type: decimal">
         <h4>Usage of Random API</h4>
-        <p> SecureRandom provides a Ciphergraphically strong random number generators. The default implementation will use Intel® Digital Random Number Generator (DRNG) for accelerating the random generation.</p>
+        <p> SecureRandom provides a cryptographically strong random number generators. The default implementation will use Intel® Digital Random Number Generator (DRNG) for accelerating the random generation.</p>
         <table>
         <tr>
         <td>
@@ -83,7 +83,7 @@
 
 
         <h4>Usage of Cipher API</h4>
-        <p>Cipher provides an Ciphergraphic interface for encryption and decryption. We provide two kind of implementations: JCE Cipher and Openssl Cipher. The JCE implementation uses JCE provider and the Openssl implementation uses Intel® AES New Instructions (Intel® AES NI). </p>
+        <p>Cipher provides an cryptographic interface for encryption and decryption. We provide two kind of implementations: JCE Cipher and Openssl Cipher. The JCE implementation uses JCE provider and the Openssl implementation uses Intel® AES New Instructions (Intel® AES NI). </p>
         <h5>Usage of Byte Array Encryption/Decryption</h5>
         <table>
         <tr>
