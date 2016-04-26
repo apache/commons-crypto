@@ -51,6 +51,8 @@ public class OSInfo {
    * The constant string represents for PPC64 architecture, the value is:{@value #PPC64}.*/
   public static final String PPC64 = "ppc64";
 
+  private OSInfo() {}
+
   static {
     // x86 mappings
     archMapping.put(X86, X86);

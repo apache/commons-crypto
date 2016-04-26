@@ -57,6 +57,8 @@ public class Utils {
    */
   private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING.getAlgorithmBlockSize();
 
+  private Utils() {}
+
   static {
     loadSystemProperties();
   }

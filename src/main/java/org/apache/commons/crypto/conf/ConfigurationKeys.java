@@ -130,4 +130,6 @@ public class ConfigurationKeys {
    */
   public static final String COMMONS_CRYPTO_LIB_TEMPDIR_KEY =
       CONF_PREFIX + "lib.tempdir";
+
+  private ConfigurationKeys() {}
 }

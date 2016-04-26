@@ -23,6 +23,9 @@ package org.apache.commons.crypto.random;
  * OpensslSecureRandomNative.h(genereted by javah).
  */
 public class OpensslSecureRandomNative {
+
+  private OpensslSecureRandomNative() {}
+
   /**
    * Declares a native method to initialize SR.
    */
