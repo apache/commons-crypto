@@ -29,21 +29,21 @@
         <table>
           <tr>
             <td width="150">
-              <a href="apidocs/index.html">cipher
-              </a>
-            </td>
-            <td>
-              The interface of cryptographic cipher for encryption and decryption.
-            </td>
-          </tr>
-
-          <tr>
-            <td width="150">
               <a href="apidocs/index.html">random
               </a>
             </td>
             <td>
               The interface for SecureRandom.
+            </td>
+          </tr>
+
+          <tr>
+            <td width="150">
+              <a href="apidocs/index.html">cipher
+              </a>
+            </td>
+            <td>
+              The interface of cryptographic cipher for encryption and decryption.
             </td>
           </tr>
 
@@ -62,47 +62,18 @@
       <subsection name ="Usage">
         <ol style="list-style-type: decimal">
         <h4>Usage of Random API</h4>
+        <p> Random provides a series of cryptographically strong random number generators which could be used for generating IV or Key of Cipher. The default implementation will use Intel® Digital Random Number Generator (DRNG) for accelerating the random generation.</p>
         <table>
         <tr>
         <td>
         //Constructs a byte array to store random data.<br/>
-        byte[] data = new byte[16];<br/>
-        Properties properties = new Properties();<br/>
-        // Default value is com.intel.chimera.random.JavaSecureRandom.<br/>
-        properties.setProperty("chimera.crypto.secure.random.classes", "com.intel.chimera.random.OpensslSecureRandom,com.intel.chimera.random.OsSecureRandom");<br/>
-        //Gets the 'SecureRandom' instance.<br/>
-        SecureRandom secureRandom = SecureRandomFactory.getSecureRandom(properties);<br/>
-        //Generates random bytes and places them into the byte array.<br/>
-        secureRandom.nextBytes(data);<br/>
-        //Closes the SecureRandom.<br/>
-        secureRandom.close();<br/>
-        </td>
-        </tr>
-        </table>
-
-
-        <h4>Usage of Cipher API</h4>
-        <table>
-        <tr>
-        <td>
-        Properties properties = new Properties();<br/>
-        // Default value is com.intel.chimera.crypto.JceCipher.<br/>
-        properties.setProperty("chimera.crypto.cipher.classes", "com.intel.chimera.crypto.OpensslCipher,com.intel.chimera.crypto.JceCipher");<br/>
-        Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
-        properties = new Properties();<br/>
-        // Default value is com.intel.chimera.random.JavaSecureRandom.<br/>
-        properties.setProperty("chimera.crypto.secure.random.classes", "com.intel.chimera.random.OpensslSecureRandom,com.intel.chimera.random.OsSecureRandom");<br/>
-        //Gets the 'SecureRandom' instance.<br/>
-        SecureRandom secureRandom = SecureRandomFactory.getSecureRandom(properties);<br/>
-        // Available key length is: 16, 24, 32 bytes.<br/>
-        //Constructs the crypto key for cipher.<br/>
         byte[] key = new byte[16];<br/>
+        byte[] iv = new byte[16];<br/>
+        Properties properties = new Properties();<br/>
+        //Gets the 'SecureRandom' instance.<br/>
+        SecureRandom secureRandom = SecureRandomFactory.getSecureRandom(properties);<br/>
         //Generates random bytes and places them into the byte array.<br/>
         secureRandom.nextBytes(key);<br/>
-        // IV length is always 16 bytes.<br/>
-        //Constructs the crypto iv for cipher.<br/>
-        byte[] iv = new byte[16];<br/>
-        //Generates random bytes and places them into the byte array.<br/>
         secureRandom.nextBytes(iv);<br/>
         //Closes the SecureRandom.<br/>
         secureRandom.close();<br/>
@@ -111,10 +82,15 @@
         </table>
 
 
+        <h4>Usage of Cipher API</h4>
+        <p>Cipher provides an cryptographic interface for encryption and decryption. We provide two kind of implementations: JCE Cipher and Openssl Cipher. The JCE implementation uses JCE provider and the Openssl implementation uses Intel® AES New Instructions (Intel® AES NI). </p>
         <h5>Usage of Byte Array Encryption/Decryption</h5>
         <table>
         <tr>
         <td>
+        Properties properties = new Properties();<br/>
+        //Creates a Cipher instance with the transformation and properties.<br/>
+        Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
         String input = "hello world!";<br/>
         int inputOffset = 0;<br/>
         int inputLen = input.length();<br/>
@@ -132,11 +108,13 @@
         </tr>
         </table>
 
-
         <h5>Usage of ByteBuffer Encryption/Decryption</h5>
         <table>
         <tr>
         <td>
+        Properties properties = new Properties();<br/>
+        //Creates a Cipher instance with the transformation and properties.<br/>
+        Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
         int bufferSize = 4096;<br/>
         ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
         ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
@@ -155,30 +133,11 @@
 
 
         <h4>Usage of Stream API</h4>
+        <p>Stream provides the encryption and decryption data in stream manner. We provide CrypoInputStream,CTRCryptoInputStream and PositionedCryptoInputstream implementations for InputStream and CrypoOutputStream and CTRCryptoOutputStream implementations for OutputStream. </p>
+        <h5>Usage of stream encryption</h5>
         <table>
         <tr>
         <td>
-        Properties properties = new Properties();<br/>
-        // Default value is com.intel.chimera.random.JavaSecureRandom.<br/>
-        properties.setProperty("chimera.crypto.secure.random.classes", "com.intel.chimera.random.OpensslSecureRandom,com.intel.chimera.random.OsSecureRandom");<br/>
-        //Gets the 'SecureRandom' instance.<br/>
-        SecureRandom secureRandom = SecureRandomFactory.getSecureRandom(properties);<br/>
-        // Available key length is: 16, 24, 32 bytes.<br/>
-        //Constructs the crypto key for cipher.<br/>
-        byte[] key = new byte[16];<br/>
-        //Generates random bytes and places them into the byte array.<br/>
-        secureRandom.nextBytes(key);<br/>
-        // IV length is always 16 bytes<br/>
-        //Constructs the crypto iv for cipher.<br/>
-        byte[] iv = new byte[16];<br/>
-        //Generates random bytes and places them into the byte array.<br/>
-        secureRandom.nextBytes(iv);<br/>
-        //Closes the SecureRandom.<br/>
-        secureRandom.close();<br/>
-        properties = new Properties();<br/>
-        // Default value is com.intel.chimera.crypto.JceCipher.<br/>
-        properties.setProperty("chimera.crypto.cipher.classes", "com.intel.chimera.crypto.OpensslCipher,com.intel.chimera.crypto.JceCipher");<br/>
-        Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/>
         int bufferSize = 4096;<br/>
         String input = "hello world!";<br/>
         byte[] decryptedData = new byte[1024];<br/>
@@ -193,6 +152,14 @@
         cos.flush();<br/>
         cos.close();<br/>
         // Decryption with CryptoInputStream.<br/>
+
+        </td>
+        </tr>
+        </table>
+        <h5>Usage of stream decryption</h5>
+        <table>
+        <tr>
+        <td>
         //Initializes the cipher with DECRYPT_MODE,key and iv.<br/>
         cipher.init(Cipher.DECRYPT_MODE, key, iv);<br/>
         //Constructs the original InputStream.<br/>
