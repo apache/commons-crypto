@@ -62,7 +62,7 @@
       <subsection name ="Usage">
         <ol style="list-style-type: decimal">
         <h4>Usage of Random API</h4>
-        <p> Random provides a series of cryptographically strong random number generators which could be used for generating IV or Key of Cipher. The default implementation will use Intel® Digital Random Number Generator (DRNG) for accelerating the random generation.</p>
+        <p> SecureRandom provides a cryptographically strong random number generators. The default implementation will use Intel® Digital Random Number Generator (DRNG) for accelerating the random generation.</p>
         <table>
         <tr>
         <td>
