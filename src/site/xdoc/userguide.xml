@@ -11,17 +11,17 @@
   language governing permissions and limitations under the License. -->
 <document>
   <properties>
-    <title>Commons Crypto - User guide</title>
+    <title>Commons Cipher - User guide</title>
     <author email="dev@commons.apache.org">Commons Documentation Team</author>
   </properties>
   <body>
     <!-- ================================================== -->
     <section name="User guide">
-      <p>Apache Commons Crypto is a cryptographic library optimized with AES-NI
+      <p>Apache Commons Cipher is a Ciphergraphic library optimized with AES-NI
         (Advanced Encryption
         Standard New Instructions). It provides Java API for both cipher level and Java stream
         level. Developers can use it to implement high performance AES encryption/decryption with
-        the minimum code and effort. Please note that Apache Commons Crypto doesn't implement the cryptographic
+        the minimum code and effort. Please note that Apache Commons Cipher doesn't implement the Ciphergraphic
         algorithm such as AES directly. It wraps to Openssl or JCE which implement the algorithms.
       </p>
       <subsection name="Interfaces Overview">
@@ -43,7 +43,7 @@
               </a>
             </td>
             <td>
-              The interface of cryptographic cipher for encryption and decryption.
+              The interface of Ciphergraphic cipher for encryption and decryption.
             </td>
           </tr>
 
@@ -62,7 +62,7 @@
       <subsection name ="Usage">
         <ol style="list-style-type: decimal">
         <h4>Usage of Random API</h4>
-        <p> SecureRandom provides a cryptographically strong random number generators. The default implementation will use Intel® Digital Random Number Generator (DRNG) for accelerating the random generation.</p>
+        <p> SecureRandom provides a Ciphergraphically strong random number generators. The default implementation will use Intel® Digital Random Number Generator (DRNG) for accelerating the random generation.</p>
         <table>
         <tr>
         <td>
@@ -83,7 +83,7 @@
 
 
         <h4>Usage of Cipher API</h4>
-        <p>Cipher provides an cryptographic interface for encryption and decryption. We provide two kind of implementations: JCE Cipher and Openssl Cipher. The JCE implementation uses JCE provider and the Openssl implementation uses Intel® AES New Instructions (Intel® AES NI). </p>
+        <p>Cipher provides an Ciphergraphic interface for encryption and decryption. We provide two kind of implementations: JCE Cipher and Openssl Cipher. The JCE implementation uses JCE provider and the Openssl implementation uses Intel® AES New Instructions (Intel® AES NI). </p>
         <h5>Usage of Byte Array Encryption/Decryption</h5>
         <table>
         <tr>
@@ -133,7 +133,7 @@
 
 
         <h4>Usage of Stream API</h4>
-        <p>Stream provides the encryption and decryption data in stream manner. We provide CrypoInputStream,CTRCryptoInputStream and PositionedCryptoInputstream implementations for InputStream and CrypoOutputStream and CTRCryptoOutputStream implementations for OutputStream. </p>
+        <p>Stream provides the data encryption and decryption in stream manner. We provide CipherInputStream,CTRCipherInputStream,PositionedCipherInputstream implementations for InputStream and CipherOutputStream,CTRCipherOutputStream implementations for OutputStream. </p>
         <h5>Usage of stream encryption</h5>
         <table>
         <tr>
@@ -141,17 +141,17 @@
         int bufferSize = 4096;<br/>
         String input = "hello world!";<br/>
         byte[] decryptedData = new byte[1024];<br/>
-        //Encryption with CryptoOutputStream.<br/>
+        //Encryption with CipherOutputStream.<br/>
         //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
         cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
         // Constructs the original OutputStream.<br/>
         OutputStream outputStream = new ByteArrayOutputStream();<br/>
-        //Constructs the instance of CryptoOutputStream.<br/>
-        CryptoOutputStream cos = new CryptoOutputStream(outputStream, cipher, bufferSize, key, iv);<br/>
+        //Constructs the instance of CipherOutputStream.<br/>
+        CipherOutputStream cos = new CipherOutputStream(outputStream, cipher, bufferSize, key, iv);<br/>
         cos.write(input.getBytes("UTF-8"));<br/>
         cos.flush();<br/>
         cos.close();<br/>
-        // Decryption with CryptoInputStream.<br/>
+
 
         </td>
         </tr>
@@ -160,12 +160,13 @@
         <table>
         <tr>
         <td>
+        // Decryption with CipherInputStream.<br/>
         //Initializes the cipher with DECRYPT_MODE,key and iv.<br/>
         cipher.init(Cipher.DECRYPT_MODE, key, iv);<br/>
         //Constructs the original InputStream.<br/>
         InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());<br/>
-        //Constructs the instance of CryptoInputStream.<br/>
-        CryptoInputStream cis = new CryptoInputStream(inputStream, cipher, bufferSize, key, iv);<br/>
+        //Constructs the instance of CipherInputStream.<br/>
+        CipherInputStream cis = new CipherInputStream(inputStream, cipher, bufferSize, key, iv);<br/>
         int decryptedLen = cis.read(decryptedData, 0, 1024);<br/>
         cis.close();<br/>
         </td>
