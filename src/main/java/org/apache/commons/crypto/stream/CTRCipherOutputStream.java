@@ -53,7 +53,7 @@ public class CTRCipherOutputStream extends CipherOutputStream {
   /**
    * Underlying stream offset.
    */
-  protected long streamOffset = 0;
+  long streamOffset = 0;
 
   /**
    * The initial IV.
@@ -363,5 +363,23 @@ public class CTRCipherOutputStream extends CipherOutputStream {
     } catch (IllegalBlockSizeException e) {
       throw new IOException(e);
     }
+  }
+
+  /**
+   * Get the underlying stream offset
+   *
+   * @return the underlying stream offset
+   */
+  protected long getStreamOffset() {
+    return streamOffset;
+  }
+
+  /**
+   * Set the underlying stream offset
+   *
+   * @param streamOffset the underlying stream offset
+   */
+  protected void setStreamOffset(long streamOffset) {
+    this.streamOffset = streamOffset;
   }
 }

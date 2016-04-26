@@ -52,34 +52,34 @@ public class CipherOutputStream extends OutputStream implements
   private final byte[] oneByteBuf = new byte[1];
 
   /** The output.*/
-  protected Output output;
+  Output output;
 
   /**the Cipher instance*/
-  protected final Cipher cipher;
+  final Cipher cipher;
 
   /**The buffer size.*/
-  protected final int bufferSize;
+  final int bufferSize;
 
   /**Crypto key for the cipher.*/
-  protected final Key key;
+  final Key key;
 
   /** the algorithm parameters */
-  protected final AlgorithmParameterSpec params;
+  final AlgorithmParameterSpec params;
 
   /** Flag to mark whether the output stream is closed.*/
-  protected boolean closed;
+  private boolean closed;
 
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at
    * inBuffer.limit().
    */
-  protected ByteBuffer inBuffer;
+  ByteBuffer inBuffer;
 
   /**
    * Encrypted data buffer. The data starts at outBuffer.position() and ends at
    * outBuffer.limit().
    */
-  protected ByteBuffer outBuffer;
+  ByteBuffer outBuffer;
 
   /**
    * Constructs a {@link org.apache.commons.crypto.stream.CipherOutputStream}.
@@ -92,11 +92,14 @@ public class CipherOutputStream extends OutputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherOutputStream(CipherTransformation transformation,
-                            Properties props, OutputStream out, Key key, AlgorithmParameterSpec params)
-      throws IOException {
-    this(out, Utils.getCipherInstance(transformation, props),
-        Utils.getBufferSize(props), key, params);
+  public CipherOutputStream(
+    CipherTransformation transformation,
+    Properties props,
+    OutputStream out,
+    Key key,
+    AlgorithmParameterSpec params) throws IOException {
+    this(out, Utils.getCipherInstance(transformation, props), Utils.getBufferSize(props), key,
+      params);
   }
 
   /**
@@ -110,11 +113,14 @@ public class CipherOutputStream extends OutputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherOutputStream(CipherTransformation transformation,
-                            Properties props, WritableByteChannel out, Key key, AlgorithmParameterSpec params)
-      throws IOException {
-    this(out, Utils.getCipherInstance(transformation, props),
-        Utils.getBufferSize(props), key, params);
+  public CipherOutputStream(
+    CipherTransformation transformation,
+    Properties props,
+    WritableByteChannel out,
+    Key key,
+    AlgorithmParameterSpec params) throws IOException {
+    this(out, Utils.getCipherInstance(transformation, props), Utils.getBufferSize(props), key,
+      params);
   }
 
   /**
@@ -392,5 +398,41 @@ public class CipherOutputStream extends OutputStream implements
   protected void freeBuffers() {
     Utils.freeDirectBuffer(inBuffer);
     Utils.freeDirectBuffer(outBuffer);
+  }
+
+  /**
+   * Gets the outBuffer.
+   *
+   * @return the outBuffer.
+   */
+  protected ByteBuffer getOutBuffer() {
+    return outBuffer;
+  }
+
+  /**
+   * Gets the internal Cipher.
+   *
+   * @return the cipher instance.
+   */
+  protected Cipher getCipher() {
+    return cipher;
+  }
+
+  /**
+   * Gets the buffer size.
+   *
+   * @return the buffer size.
+   */
+  protected int getBufferSize() {
+    return bufferSize;
+  }
+
+  /**
+   * Gets the inBuffer.
+   *
+   * @return the inBuffer.
+   */
+  protected ByteBuffer getInBuffer() {
+    return inBuffer;
   }
 }

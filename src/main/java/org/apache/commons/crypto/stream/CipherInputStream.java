@@ -50,25 +50,25 @@ public class CipherInputStream extends InputStream implements
   private final byte[] oneByteBuf = new byte[1];
 
   /**The Cipher instance.*/
-  protected final Cipher cipher;
+  final Cipher cipher;
 
   /**The buffer size.*/
-  protected final int bufferSize;
+  final int bufferSize;
 
   /**Crypto key for the cipher.*/
-  protected final Key key;
+  final Key key;
 
   /** the algorithm parameters */
-  protected final AlgorithmParameterSpec params;
+  final AlgorithmParameterSpec params;
 
   /** Flag to mark whether the input stream is closed.*/
-  protected boolean closed;
+  private boolean closed;
 
   /** Flag to mark whether do final of the cipher to end the decrypting stream.*/
-  protected boolean finalDone = false;
+  private boolean finalDone = false;
 
   /**The input data.*/
-  protected Input input;
+  Input input;
 
   /**
    * Input data buffer. The data starts at inBuffer.position() and ends at
@@ -96,8 +96,8 @@ public class CipherInputStream extends InputStream implements
   public CipherInputStream(CipherTransformation transformation,
                            Properties props, InputStream in, Key key, AlgorithmParameterSpec params)
       throws IOException {
-    this(in, Utils.getCipherInstance(transformation, props),
-        Utils.getBufferSize(props), key, params);
+    this(in, Utils.getCipherInstance(transformation, props), Utils.getBufferSize(props), key,
+      params);
   }
 
   /**
@@ -421,6 +421,24 @@ public class CipherInputStream extends InputStream implements
    */
   protected Cipher getCipher() {
     return cipher;
+  }
+
+  /**
+   * Gets the specification of cryptographic parameters.
+   *
+   * @return the params.
+   */
+  protected AlgorithmParameterSpec getParams() {
+    return params;
+  }
+
+  /**
+   * Gets the input.
+   *
+   * @return the input.
+   */
+  protected Input getInput() {
+    return input;
   }
 
   /**
