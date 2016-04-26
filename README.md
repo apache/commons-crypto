@@ -2,7 +2,7 @@ Chimera [![Build Status](https://travis-ci.org/intel-hadoop/chimera.svg?branch=m
 
 ## Features
   * Cipher API for low level cryptographic operations.
-  * Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encyrption/decryption.
+  * Java stream API (CipherInputStream/CipherOutputStream) for high level stream encyrption/decryption.
   * Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
   * JNI-based implementation to achieve comparable performance to the native C++ version based on Openssl.
   * Portable across various operating systems (currently only Linux); Chimera loads the library according to your machine environment (It looks system properties, `os.name` and `os.arch`). 
@@ -47,13 +47,13 @@ String input = "hello world!";
 byte[] decryptedData = new byte[1024];
 // Encrypt
 ByteArrayOutputStream os = new ByteArrayOutputStream();
-CryptoOutputStream cos = new CryptoOutputStream(os, cipher, bufferSize, key, iv);
+CipherOutputStream cos = new CipherOutputStream(os, cipher, bufferSize, key, iv);
 cos.write(input.getBytes("UTF-8"));
 cos.flush();
 cos.close();
 
 // Decrypt
-CryptoInputStream cis = new CryptoInputStream(new ByteArrayInputStream(os.toByteArray()), cipher, bufferSize, key, iv);
+CipherInputStream cis = new CipherInputStream(new ByteArrayInputStream(os.toByteArray()), cipher, bufferSize, key, iv);
 int decryptedLen = cis.read(decryptedData, 0, 1024);
 
 ```

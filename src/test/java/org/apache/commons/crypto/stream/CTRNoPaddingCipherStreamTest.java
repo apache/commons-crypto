@@ -17,42 +17,15 @@
  */
 package org.apache.commons.crypto.stream;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.channels.Channels;
 
-import org.apache.commons.crypto.cipher.Cipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
 
-public class CTRCryptoStreamTest extends AbstractCryptoStreamTest {
+public class CTRNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
   public void setUp() throws IOException {
     transformation = CipherTransformation
         .AES_CTR_NOPADDING;
   }
 
-  @Override
-  protected CTRCryptoInputStream getCryptoInputStream
-      (ByteArrayInputStream bais, Cipher cipher, int
-      bufferSize,byte[] iv, boolean withChannel)
-      throws IOException {
-    if (withChannel) {
-      return new CTRCryptoInputStream(Channels.newChannel(bais), cipher,
-          bufferSize, key, iv);
-    } else {
-      return new CTRCryptoInputStream(bais, cipher, bufferSize, key, iv);
-    }
-  }
-
-  @Override
-  protected CTRCryptoOutputStream getCryptoOutputStream(ByteArrayOutputStream baos,Cipher cipher, int
-      bufferSize,  byte[] iv, boolean withChannel)
-      throws IOException {
-    if (withChannel) {
-      return new CTRCryptoOutputStream(Channels.newChannel(baos), cipher, bufferSize, key, iv);
-    } else {
-      return new CTRCryptoOutputStream(baos, cipher, bufferSize, key, iv);
-    }
-  }
 }

@@ -43,8 +43,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class AbstractCryptoStreamTest {
-  private static final Log LOG= LogFactory.getLog(AbstractCryptoStreamTest.class);
+public abstract class AbstractCipherStreamTest {
+  private static final Log LOG= LogFactory.getLog(AbstractCipherStreamTest.class);
 
   private final int dataLen = 20000;
   private byte[] data = new byte[dataLen];
@@ -104,7 +104,7 @@ public abstract class AbstractCryptoStreamTest {
   }
 
   private void doSkipTest(String cipherClass, boolean withChannel) throws IOException {
-    InputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    InputStream in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     byte[] result = new byte[dataLen];
     int n1 = readAll(in, result, 0, dataLen / 3);
@@ -135,56 +135,56 @@ public abstract class AbstractCryptoStreamTest {
 
   private void doByteBufferRead(String cipherClass, boolean withChannel) throws Exception {
     // Default buffer size, initial buffer position is 0
-    InputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    InputStream in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     ByteBuffer buf = ByteBuffer.allocate(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Default buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Small buffer size, initial buffer position is 0
-    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), smallBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Small buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), smallBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Direct buffer, default buffer size, initial buffer position is 0
-    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     buf = ByteBuffer.allocateDirect(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Direct buffer, default buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
     in.close();
 
     // Direct buffer, small buffer size, initial buffer position is 0
-    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), smallBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 0);
     in.close();
 
     // Direct buffer, small buffer size, initial buffer position is not 0
-    in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), smallBufferSize, iv, withChannel);
     buf.clear();
     byteBufferReadCheck(in, buf, 11);
@@ -195,8 +195,8 @@ public abstract class AbstractCryptoStreamTest {
                                  boolean withChannel)
       throws Exception {
     baos.reset();
-    CryptoOutputStream out =
-        getCryptoOutputStream(baos, getCipher(cipherClass), defaultBufferSize,
+    CipherOutputStream out =
+        getCipherOutputStream(baos, getCipher(cipherClass), defaultBufferSize,
             iv, withChannel);
     ByteBuffer buf = ByteBuffer.allocateDirect(dataLen / 2);
     buf.put(data, 0, dataLen / 2);
@@ -217,7 +217,7 @@ public abstract class AbstractCryptoStreamTest {
 
     out.flush();
 
-    InputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
+    InputStream in = getCipherInputStream(new ByteArrayInputStream(encData),
         getCipher(cipherClass), defaultBufferSize, iv, withChannel);
     buf = ByteBuffer.allocate(dataLen + 100);
     byteBufferReadCheck(in, buf, 0);
@@ -248,36 +248,36 @@ public abstract class AbstractCryptoStreamTest {
     }
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    OutputStream out = new CryptoOutputStream(baos, cipher, defaultBufferSize, key, iv);
+    OutputStream out = new CipherOutputStream(baos, cipher, defaultBufferSize, key, iv);
     out.write(data);
     out.flush();
     out.close();
     encData = baos.toByteArray();
   }
 
-  protected CryptoInputStream getCryptoInputStream(ByteArrayInputStream bais,
+  protected CipherInputStream getCipherInputStream(ByteArrayInputStream bais,
                                                    Cipher cipher,
                                                    int bufferSize, byte[] iv,
                                                    boolean withChannel) throws
       IOException {
     if (withChannel) {
-      return new CryptoInputStream(Channels.newChannel(bais), cipher,
+      return new CipherInputStream(Channels.newChannel(bais), cipher,
           bufferSize, key, iv);
     } else {
-      return new CryptoInputStream(bais, cipher, bufferSize, key, iv);
+      return new CipherInputStream(bais, cipher, bufferSize, key, iv);
     }
   }
 
-  protected CryptoOutputStream getCryptoOutputStream(ByteArrayOutputStream baos,
-                                                   Cipher cipher,
-                                                   int bufferSize, byte[] iv,
-                                                   boolean withChannel) throws
+  protected CipherOutputStream getCipherOutputStream(ByteArrayOutputStream baos,
+                                                     Cipher cipher,
+                                                     int bufferSize, byte[] iv,
+                                                     boolean withChannel) throws
       IOException {
     if (withChannel) {
-      return new CryptoOutputStream(Channels.newChannel(baos), cipher,
+      return new CipherOutputStream(Channels.newChannel(baos), cipher,
           bufferSize, key, iv);
     } else {
-      return new CryptoOutputStream(baos, cipher, bufferSize, key, iv);
+      return new CipherOutputStream(baos, cipher, bufferSize, key, iv);
     }
   }
 
@@ -345,8 +345,8 @@ public abstract class AbstractCryptoStreamTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out =
-        getCryptoOutputStream(encryptedData, encCipher, defaultBufferSize, iv,
+    CipherOutputStream out =
+        getCipherOutputStream(encryptedData, encCipher, defaultBufferSize, iv,
             false);
     out.write(originalData, 0, originalData.length);
     out.flush();
@@ -357,7 +357,7 @@ public abstract class AbstractCryptoStreamTest {
     LOG.debug("Created a cipher object of type: " + decCipherClass);
 
     // Decrypt data
-    CryptoInputStream in = getCryptoInputStream(
+    CipherInputStream in = getCipherInputStream(
         new ByteArrayInputStream(encryptedData.toByteArray()), decCipher,
         defaultBufferSize, iv, false);
 
@@ -376,7 +376,7 @@ public abstract class AbstractCryptoStreamTest {
         originalData, decryptedData);
 
     // Decrypt data byte-at-a-time
-    in = getCryptoInputStream(
+    in = getCipherInputStream(
         new ByteArrayInputStream(encryptedData.toByteArray()), decCipher,
         defaultBufferSize, iv, false);
 
@@ -408,8 +408,8 @@ public abstract class AbstractCryptoStreamTest {
 
     // Encrypt data
     ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-    CryptoOutputStream out =
-        getCryptoOutputStream(encryptedData, encCipher, defaultBufferSize, iv,
+    CipherOutputStream out =
+        getCipherOutputStream(encryptedData, encCipher, defaultBufferSize, iv,
             true);
     out.write(originalData, 0, originalData.length);
     out.flush();
@@ -420,7 +420,7 @@ public abstract class AbstractCryptoStreamTest {
     LOG.debug("Created a cipher object of type: " + decCipherClass);
 
     // Decrypt data
-    CryptoInputStream in = getCryptoInputStream(
+    CipherInputStream in = getCipherInputStream(
         new ByteArrayInputStream(encryptedData.toByteArray()), decCipher,
         defaultBufferSize, iv, true);
 
@@ -439,7 +439,7 @@ public abstract class AbstractCryptoStreamTest {
         originalData, decryptedData);
 
     // Decrypt data byte-at-a-time
-    in = getCryptoInputStream(new ByteArrayInputStream(
+    in = getCipherInputStream(new ByteArrayInputStream(
         encryptedData.toByteArray()),decCipher,defaultBufferSize,iv,true);
 
     // Check

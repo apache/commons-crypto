@@ -37,7 +37,7 @@ import org.apache.commons.crypto.stream.input.StreamInput;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * CTRCryptoInputStream decrypts data. AES CTR mode is required in order to
+ * CTRCipherInputStream decrypts data. AES CTR mode is required in order to
  * ensure that the plain text and cipher text have a 1:1 mapping. CTR crypto
  * stream has stream characteristic which is useful for implement features
  * like random seek. The decryption is buffer based. The key points of the
@@ -49,7 +49,7 @@ import org.apache.commons.crypto.utils.Utils;
  * <p/>
  * The underlying stream offset is maintained as state. It is not thread-safe.
  */
-public class CTRCryptoInputStream extends CryptoInputStream {
+public class CTRCipherInputStream extends CipherInputStream {
   /**
    * Underlying stream offset
    */
@@ -67,29 +67,29 @@ public class CTRCryptoInputStream extends CryptoInputStream {
    */
   private boolean cipherReset = false;
 
-  public CTRCryptoInputStream(Properties props, InputStream in,
-      byte[] key, byte[] iv)
+  public CTRCipherInputStream(Properties props, InputStream in,
+                              byte[] key, byte[] iv)
       throws IOException {
     this(props, in, key, iv, 0);
   }
 
-  public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
-      byte[] key, byte[] iv)
+  public CTRCipherInputStream(Properties props, ReadableByteChannel in,
+                              byte[] key, byte[] iv)
       throws IOException {
     this(props, in, key, iv, 0);
   }
 
-  public CTRCryptoInputStream(InputStream in, Cipher cipher, int bufferSize,
-      byte[] key, byte[] iv) throws IOException {
+  public CTRCipherInputStream(InputStream in, Cipher cipher, int bufferSize,
+                              byte[] key, byte[] iv) throws IOException {
     this(in, cipher, bufferSize, key, iv, 0);
   }
 
-  public CTRCryptoInputStream(ReadableByteChannel in, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+  public CTRCipherInputStream(ReadableByteChannel in, Cipher cipher,
+                              int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(in, cipher, bufferSize, key, iv, 0);
   }
 
-  public CTRCryptoInputStream(
+  public CTRCipherInputStream(
       Input input,
       Cipher cipher,
       int bufferSize,
@@ -98,31 +98,31 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     this(input, cipher, bufferSize, key, iv, 0);
   }
 
-  public CTRCryptoInputStream(Properties props, InputStream in,
-      byte[] key, byte[] iv, long streamOffset)
+  public CTRCipherInputStream(Properties props, InputStream in,
+                              byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
-      byte[] key, byte[] iv, long streamOffset)
+  public CTRCipherInputStream(Properties props, ReadableByteChannel in,
+                              byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public CTRCryptoInputStream(InputStream in, Cipher cipher, int bufferSize,
-      byte[] key, byte[] iv, long streamOffset) throws IOException {
+  public CTRCipherInputStream(InputStream in, Cipher cipher, int bufferSize,
+                              byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv, streamOffset);
   }
 
-  public CTRCryptoInputStream(ReadableByteChannel in, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
+  public CTRCipherInputStream(ReadableByteChannel in, Cipher cipher,
+                              int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new ChannelInput(in), cipher, bufferSize, key, iv, streamOffset);
   }
 
-  public CTRCryptoInputStream(
+  public CTRCipherInputStream(
       Input input,
       Cipher cipher,
       int bufferSize,

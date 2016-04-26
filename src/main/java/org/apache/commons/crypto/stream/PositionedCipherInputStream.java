@@ -39,11 +39,11 @@ import org.apache.commons.crypto.utils.Utils;
 import static org.apache.commons.crypto.cipher.CipherTransformation.AES_CTR_NOPADDING;
 
 /**
- * PositionedCryptoInputStream provides the capability to decrypt the stream starting
+ * PositionedCipherInputStream provides the capability to decrypt the stream starting
  * at random position as well as provides the foundation for positioned read for
  * decrypting. This needs a stream cipher mode such as AES CTR mode.
  */
-public class PositionedCryptoInputStream extends CTRCryptoInputStream {
+public class PositionedCipherInputStream extends CTRCipherInputStream {
 
   /**
    * DirectBuffer pool
@@ -57,13 +57,13 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
   private final Queue<CipherState> cipherPool = new
       ConcurrentLinkedQueue<CipherState>();
 
-  public PositionedCryptoInputStream(Properties props, Input in,
-      byte[] key, byte[] iv, long streamOffset) throws IOException {
+  public PositionedCipherInputStream(Properties props, Input in,
+                                     byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(in, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
-  public PositionedCryptoInputStream(
+  public PositionedCipherInputStream(
       Input input,
       Cipher cipher,
       int bufferSize,
