@@ -42,7 +42,7 @@ public interface Cipher extends Closeable {
    * A constant representing decrypt mode.  The mode constant to be used 
    * when calling init method of the Cipher.
    */
-  int DECRYPT_MODE = 0;
+  int DECRYPT_MODE = 2;
 
   /**
    * Gets the CipherTransformation for this cipher.
