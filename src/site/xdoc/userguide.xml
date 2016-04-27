@@ -15,7 +15,6 @@
     <author email="dev@commons.apache.org">Commons Documentation Team</author>
   </properties>
   <body>
-    <!-- ================================================== -->
     <section name="User guide">
       <p>Apache Commons Crypto is a cryptographic library optimized with AES-NI
         (Advanced Encryption
@@ -36,7 +35,6 @@
               The interface for SecureRandom.
             </td>
           </tr>
-
           <tr>
             <td width="150">
               <a href="apidocs/index.html">cipher
@@ -46,7 +44,6 @@
               The interface of cryptographic cipher for encryption and decryption.
             </td>
           </tr>
-
           <tr>
             <td width="150">
               <a href="apidocs/index.html">stream
@@ -58,9 +55,9 @@
               read.
             </td>
           </tr>
-
         </table>
       </subsection>
+
       <subsection name ="Usage">
         <ol style="list-style-type: decimal">
         <h4>Usage of Random API</h4>
@@ -70,23 +67,22 @@
           for accelerating the random generation.
         </p>
         <table>
-        <tr>
-        <td>
-          //Constructs a byte array to store random data.<br/>
-          byte[] key = new byte[16];<br/>
-          byte[] iv = new byte[16];<br/>
-          Properties properties = new Properties();<br/>
-          //Gets the 'SecureRandom' instance.<br/>
-          SecureRandom secureRandom = SecureRandomFactory.getSecureRandom(properties);<br/>
-          //Generates random bytes and places them into the byte array.<br/>
-          secureRandom.nextBytes(key);<br/>
-          secureRandom.nextBytes(iv);<br/>
-          //Closes the SecureRandom.<br/>
-          secureRandom.close();<br/>
-        </td>
-        </tr>
+          <tr>
+            <td>
+              //Constructs a byte array to store random data.<br/>
+              byte[] key = new byte[16];<br/>
+              byte[] iv = new byte[16];<br/>
+              Properties properties = new Properties();<br/>
+              //Gets the 'SecureRandom' instance.<br/>
+              SecureRandom secureRandom = SecureRandomFactory.getSecureRandom(properties);<br/>
+              //Generates random bytes and places them into the byte array.<br/>
+              secureRandom.nextBytes(key);<br/>
+              secureRandom.nextBytes(iv);<br/>
+              //Closes the SecureRandom.<br/>
+              secureRandom.close();<br/>
+            </td>
+          </tr>
         </table>
-
 
         <h4>Usage of Cipher API</h4>
         <p>
@@ -97,51 +93,50 @@
         </p>
         <h5>Usage of Byte Array Encryption/Decryption</h5>
         <table>
-        <tr>
-        <td>
-        Properties properties = new Properties();<br/>
-        //Creates a Cipher instance with the transformation and properties.<br/>
-        Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
-        String input = "hello world!";<br/>
-        int inputOffset = 0;<br/>
-        int inputLen = input.length();<br/>
-        byte[] output = new byte[1024];<br/>
-        int outputOffset = 0;<br/>
-        //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
-        cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
-        //Continues a multiple-part encryption/decryption operation for byte array.<br/>
-        cipher.update(input.getBytes("UTF-8"), inputOffset, inputLen, output, outputOffset);<br/>
-        //We should call do final at the end of encryption/decryption.<br/>
-        cipher.doFinal(inBuffer, outBuffer);<br/>
-        //Closes the cipher.<br/>
-        cipher.close();
-        </td>
-        </tr>
+          <tr>
+            <td>
+              Properties properties = new Properties();<br/>
+              //Creates a Cipher instance with the transformation and properties.<br/>
+              Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
+              String input = "hello world!";<br/>
+              int inputOffset = 0;<br/>
+              int inputLen = input.length();<br/>
+              byte[] output = new byte[1024];<br/>
+              int outputOffset = 0;<br/>
+              //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
+              cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
+              //Continues a multiple-part encryption/decryption operation for byte array.<br/>
+              cipher.update(input.getBytes("UTF-8"), inputOffset, inputLen, output, outputOffset);<br/>
+              //We should call do final at the end of encryption/decryption.<br/>
+              cipher.doFinal(inBuffer, outBuffer);<br/>
+              //Closes the cipher.<br/>
+              cipher.close();
+            </td>
+          </tr>
         </table>
 
         <h5>Usage of ByteBuffer Encryption/Decryption</h5>
         <table>
-        <tr>
-        <td>
-        Properties properties = new Properties();<br/>
-        //Creates a Cipher instance with the transformation and properties.<br/>
-        Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
-        int bufferSize = 4096;<br/>
-        ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
-        ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
-        inBuffer.put("The data you want to encrypt or decrypt".getBytes("UTF-8"));<br/>
-        //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
-        cipher..init(Cipher.ENCRYPT_MODE, key, iv);<br/>
-        //Continues a multiple-part encryption/decryption operation for byte array.<br/>
-        cipher.update(inBuffer, outBuffer);<br/>
-        //We should call do final at the end of encryption/decryption.<br/>
-        cipher.doFinal(inBuffer, outBuffer);<br/>
-        //Closes the cipher.<br/>
-        cipher.close();
-        </td>
-        </tr>
+          <tr>
+            <td>
+              Properties properties = new Properties();<br/>
+              //Creates a Cipher instance with the transformation and properties.<br/>
+              Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
+              int bufferSize = 4096;<br/>
+              ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
+              ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
+              inBuffer.put("The data you want to encrypt or decrypt".getBytes("UTF-8"));<br/>
+              //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
+              cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
+              //Continues a multiple-part encryption/decryption operation for byte array.<br/>
+              cipher.update(inBuffer, outBuffer);<br/>
+              //We should call do final at the end of encryption/decryption.<br/>
+              cipher.doFinal(inBuffer, outBuffer);<br/>
+              //Closes the cipher.<br/>
+              cipher.close();
+            </td>
+          </tr>
         </table>
-
 
         <h4>Usage of Stream API</h4>
         <p>
@@ -151,47 +146,43 @@
         </p>
         <h5>Usage of stream encryption</h5>
         <table>
-        <tr>
-        <td>
-        int bufferSize = 4096;<br/>
-        String input = "hello world!";<br/>
-        byte[] decryptedData = new byte[1024];<br/>
-        //Encryption with CipherOutputStream.<br/>
-        //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
-        cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
-        // Constructs the original OutputStream.<br/>
-        OutputStream outputStream = new ByteArrayOutputStream();<br/>
-        //Constructs the instance of CipherOutputStream.<br/>
-        CipherOutputStream cos = new CipherOutputStream(outputStream, cipher, bufferSize, key, iv);<br/>
-        cos.write(input.getBytes("UTF-8"));<br/>
-        cos.flush();<br/>
-        cos.close();<br/>
-
-
-        </td>
-        </tr>
+          <tr>
+            <td>
+              int bufferSize = 4096;<br/>
+              String input = "hello world!";<br/>
+              byte[] decryptedData = new byte[1024];<br/>
+              //Encryption with CipherOutputStream.<br/>
+              //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
+              cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
+              // Constructs the original OutputStream.<br/>
+              OutputStream outputStream = new ByteArrayOutputStream();<br/>
+              //Constructs the instance of CipherOutputStream.<br/>
+              CipherOutputStream cos = new CipherOutputStream(outputStream, cipher, bufferSize, key, iv);<br/>
+              cos.write(input.getBytes("UTF-8"));<br/>
+              cos.flush();<br/>
+              cos.close();<br/>
+            </td>
+          </tr>
         </table>
         <h5>Usage of stream decryption</h5>
         <table>
-        <tr>
-        <td>
-        // Decryption with CipherInputStream.<br/>
-        //Initializes the cipher with DECRYPT_MODE,key and iv.<br/>
-        cipher.init(Cipher.DECRYPT_MODE, key, iv);<br/>
-        //Constructs the original InputStream.<br/>
-        InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());<br/>
-        //Constructs the instance of CipherInputStream.<br/>
-        CipherInputStream cis = new CipherInputStream(inputStream, cipher, bufferSize, key, iv);<br/>
-        int decryptedLen = cis.read(decryptedData, 0, 1024);<br/>
-        cis.close();<br/>
-        </td>
-        </tr>
+          <tr>
+            <td>
+              // Decryption with CipherInputStream.<br/>
+              //Initializes the cipher with DECRYPT_MODE,key and iv.<br/>
+              cipher.init(Cipher.DECRYPT_MODE, key, iv);<br/>
+              //Constructs the original InputStream.<br/>
+              InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());<br/>
+              //Constructs the instance of CipherInputStream.<br/>
+              CipherInputStream cis = new CipherInputStream(inputStream, cipher, bufferSize, key, iv);<br/>
+              int decryptedLen = cis.read(decryptedData, 0, 1024);<br/>
+              cis.close();<br/>
+            </td>
+          </tr>
         </table>
         </ol>
       </subsection>
-
     </section>
-    <!-- ================================================== -->
   </body>
 </document>
 
