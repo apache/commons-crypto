@@ -375,6 +375,7 @@ public class CTRCipherInputStream extends CipherInputStream {
    * @return The number of decrypted data. -1 if end of the decrypted stream.
    * @throws IOException if an I/O error occurs.
    */
+  @Override
   protected int decryptMore() throws IOException {
     int n = input.read(inBuffer);
     if (n <= 0) {
@@ -394,6 +395,7 @@ public class CTRCipherInputStream extends CipherInputStream {
    *
    * @throws IOException if an I/O error occurs.
    */
+  @Override
   protected void decrypt() throws IOException {
     Utils.checkState(inBuffer.position() >= padding);
     if(inBuffer.position() == padding) {

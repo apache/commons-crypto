@@ -201,6 +201,7 @@ public class CipherOutputStream extends OutputStream implements
    * @param len the number of bytes to write.
    * @throws IOException if an I/O error occurs.
    */
+  @Override
   public void write(byte[] b, int off, int len) throws IOException {
     checkStream();
     if (b == null) {
