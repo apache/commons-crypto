@@ -25,11 +25,14 @@ import java.nio.channels.Channel;
 import java.nio.channels.WritableByteChannel;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.Cipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
@@ -58,13 +61,10 @@ public class CipherOutputStream extends OutputStream implements
   protected final int bufferSize;
 
   /**Crypto key for the cipher.*/
-  protected final byte[] key;
+  protected final Key key;
 
-  /**The initial IV.*/
-  protected final byte[] initIV;
-
-  /** Initialization vector for the cipher.*/
-  protected byte[] iv;
+  /** the algorithm parameters */
+  protected final AlgorithmParameterSpec params;
 
   /** Flag to mark whether the output stream is closed.*/
   protected boolean closed;
@@ -89,15 +89,14 @@ public class CipherOutputStream extends OutputStream implements
    *              properties.
    * @param out the output stream.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherOutputStream(CipherTransformation transformation,
-                            Properties props, OutputStream out, byte[] key,
-                            byte[] iv)
+                            Properties props, OutputStream out, Key key, AlgorithmParameterSpec params)
       throws IOException {
     this(out, Utils.getCipherInstance(transformation, props),
-        Utils.getBufferSize(props), key, iv);
+        Utils.getBufferSize(props), key, params);
   }
 
   /**
@@ -108,15 +107,14 @@ public class CipherOutputStream extends OutputStream implements
    *              properties.
    * @param out the WritableByteChannel instance.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherOutputStream(CipherTransformation transformation,
-                            Properties props, WritableByteChannel out,
-                            byte[] key, byte[] iv)
+                            Properties props, WritableByteChannel out, Key key, AlgorithmParameterSpec params)
       throws IOException {
     this(out, Utils.getCipherInstance(transformation, props),
-        Utils.getBufferSize(props), key, iv);
+        Utils.getBufferSize(props), key, params);
   }
 
   /**
@@ -126,12 +124,12 @@ public class CipherOutputStream extends OutputStream implements
    * @param cipher the Cipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherOutputStream(OutputStream out, Cipher cipher, int bufferSize,
-                            byte[] key, byte[] iv) throws IOException {
-    this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, iv);
+                            Key key, AlgorithmParameterSpec params) throws IOException {
+    this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, params);
   }
 
   /**
@@ -141,12 +139,12 @@ public class CipherOutputStream extends OutputStream implements
    * @param cipher the cipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherOutputStream(WritableByteChannel channel, Cipher cipher,
-                            int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(new ChannelOutput(channel), cipher, bufferSize, key, iv);
+                            int bufferSize, Key key, AlgorithmParameterSpec params) throws IOException {
+    this(new ChannelOutput(channel), cipher, bufferSize, key, params);
   }
 
   /**
@@ -156,19 +154,25 @@ public class CipherOutputStream extends OutputStream implements
    * @param cipher the Cipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   protected CipherOutputStream(Output output, Cipher cipher, int bufferSize,
-                               byte[] key, byte[] iv)
+                               Key key, AlgorithmParameterSpec params)
       throws IOException {
 
     this.output = output;
     this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
     this.cipher = cipher;
-    this.key = key.clone();
-    this.initIV = iv.clone();
-    this.iv = iv.clone();
+
+    this.key = key;
+    this.params = params;
+
+    if (!(params instanceof IvParameterSpec)) {
+      //other AlgorithmParameterSpec such as GCMParameterSpec is not supported now.
+      throw new IOException("Illegal parameters");
+    }
+
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize +
         cipher.getTransformation().getAlgorithmBlockSize());
@@ -320,7 +324,7 @@ public class CipherOutputStream extends OutputStream implements
   protected void initCipher()
       throws IOException {
     try {
-      cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+      cipher.init(Cipher.ENCRYPT_MODE, key, params);
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     } catch(InvalidAlgorithmParameterException e) {

@@ -21,6 +21,8 @@ import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
@@ -84,7 +86,7 @@ public class JceCipher implements Cipher {
    * 
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
-   * @param iv Initialization vector for the cipher
+   * @param params the algorithm parameters
    * @throws InvalidAlgorithmParameterException if the given algorithm
    * parameters are inappropriate for this cipher, or this cipher requires
    * algorithm parameters and <code>params</code> is null, or the given
@@ -93,17 +95,16 @@ public class JceCipher implements Cipher {
    * policy files).
    */
   @Override
-  public void init(int mode, byte[] key, byte[] iv)
+  public void init(int mode, Key key, AlgorithmParameterSpec params)
       throws InvalidKeyException, InvalidAlgorithmParameterException {
     Utils.checkNotNull(key);
-    Utils.checkNotNull(iv);
+    Utils.checkNotNull(params);
 
     int cipherMode = javax.crypto.Cipher.DECRYPT_MODE;
     if (mode == ENCRYPT_MODE)
       cipherMode = javax.crypto.Cipher.ENCRYPT_MODE;
 
-    cipher.init(cipherMode, new SecretKeySpec(key, "AES"),
-        new IvParameterSpec(iv));
+    cipher.init(cipherMode, key, params);
   }
 
   /**

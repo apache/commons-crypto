@@ -28,6 +28,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -78,7 +80,8 @@ public class PositionedCipherInputStreamTest {
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     // encryption data
-    OutputStream out = new CipherOutputStream(baos, cipher, bufferSize, key, iv);
+    OutputStream out = new CipherOutputStream(baos, cipher, bufferSize,
+            new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     out.write(testData);
     out.flush();
     out.close();

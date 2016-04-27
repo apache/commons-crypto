@@ -23,6 +23,8 @@ import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
@@ -100,13 +102,13 @@ public abstract class AbstractCipherTest {
     dec = getCipher(transformation);
 
     try {
-      enc.init(Cipher.ENCRYPT_MODE, key, iv);
+      enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } catch (Exception e) {
       Assert.fail("AES failed initialisation - " + e.toString());
     }
 
     try {
-      dec.init(Cipher.DECRYPT_MODE, key, iv);
+      dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } catch (Exception e) {
       Assert.fail("AES failed initialisation - " + e.toString());
     }
@@ -217,13 +219,13 @@ public abstract class AbstractCipherTest {
     dec = getCipher(transformation);
 
     try {
-      enc.init(Cipher.ENCRYPT_MODE, key, iv);
+      enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } catch (Exception e) {
       Assert.fail("AES failed initialisation - " + e.toString());
     }
 
     try {
-      dec.init(Cipher.DECRYPT_MODE, key, iv);
+      dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } catch (Exception e) {
       Assert.fail("AES failed initialisation - " + e.toString());
     }

@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.Cipher;
 import org.apache.commons.crypto.cipher.CipherFactory;
@@ -261,7 +262,7 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
     final long counter = getCounter(position);
     Utils.calculateIV(getInitIV(), counter, iv);
     try {
-      state.getCipher().init(Cipher.DECRYPT_MODE, getKey(), iv);
+      state.getCipher().init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     } catch (InvalidAlgorithmParameterException e) {

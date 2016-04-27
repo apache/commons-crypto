@@ -20,11 +20,16 @@ package org.apache.commons.crypto.cipher;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.utils.Utils;
 
@@ -80,19 +85,26 @@ public class OpensslCipher implements Cipher {
    * Initializes the cipher with mode, key and iv.
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
-   * @param iv Initialization vector for the cipher
+   * @param params the algorithm parameters
    * @throws IOException if cipher initialize fails
    */
   @Override
-  public void init(int mode, byte[] key, byte[] iv) {
+  public void init(int mode, Key key, AlgorithmParameterSpec params)
+      throws InvalidKeyException, InvalidAlgorithmParameterException {
     Utils.checkNotNull(key);
-    Utils.checkNotNull(iv);
+    Utils.checkNotNull(params);
 
     int cipherMode = Openssl.DECRYPT_MODE;
     if (mode == ENCRYPT_MODE)
       cipherMode = Openssl.ENCRYPT_MODE;
-
-    cipher.init(cipherMode, key, iv);
+    byte[] iv;
+    if (params instanceof IvParameterSpec) {
+      iv = ((IvParameterSpec) params).getIV();
+    } else {
+      //other AlgorithmParameterSpec such as GCMParameterSpec is not supported now.
+      throw new InvalidAlgorithmParameterException("Illegal parameters");
+    }
+    cipher.init(cipherMode, key.getEncoded(), iv);
   }
 
   /**

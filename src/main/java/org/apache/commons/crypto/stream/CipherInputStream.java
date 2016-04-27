@@ -24,10 +24,13 @@ import java.nio.channels.Channel;
 import java.nio.channels.ReadableByteChannel;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.Cipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
@@ -53,13 +56,10 @@ public class CipherInputStream extends InputStream implements
   protected final int bufferSize;
 
   /**Crypto key for the cipher.*/
-  protected final byte[] key;
+  protected final Key key;
 
-  /**The initial IV.*/
-  protected final byte[] initIV;
-
-  /** Initialization vector for the cipher.*/
-  protected byte[] iv;
+  /** the algorithm parameters */
+  protected final AlgorithmParameterSpec params;
 
   /** Flag to mark whether the input stream is closed.*/
   protected boolean closed;
@@ -90,15 +90,14 @@ public class CipherInputStream extends InputStream implements
    *              properties.
    * @param in the input stream.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherInputStream(CipherTransformation transformation,
-                           Properties props, InputStream in, byte[] key,
-                           byte[] iv)
+                           Properties props, InputStream in, Key key, AlgorithmParameterSpec params)
       throws IOException {
     this(in, Utils.getCipherInstance(transformation, props),
-        Utils.getBufferSize(props), key, iv);
+        Utils.getBufferSize(props), key, params);
   }
 
   /**
@@ -109,15 +108,14 @@ public class CipherInputStream extends InputStream implements
    *              properties.
    * @param in the ReadableByteChannel object.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherInputStream(CipherTransformation transformation,
-                           Properties props, ReadableByteChannel in, byte[] key,
-                           byte[] iv)
+                           Properties props, ReadableByteChannel in, Key key, AlgorithmParameterSpec params)
       throws IOException {
     this(in, Utils.getCipherInstance(transformation, props),
-        Utils.getBufferSize(props), key, iv);
+        Utils.getBufferSize(props), key, params);
   }
 
   /**
@@ -127,12 +125,12 @@ public class CipherInputStream extends InputStream implements
    * @param in the input stream.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherInputStream(InputStream in, Cipher cipher, int bufferSize,
-                           byte[] key, byte[] iv) throws IOException {
-    this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv);
+                           Key key, AlgorithmParameterSpec params) throws IOException {
+    this(new StreamInput(in, bufferSize), cipher, bufferSize, key, params);
   }
 
   /**
@@ -142,12 +140,12 @@ public class CipherInputStream extends InputStream implements
    * @param cipher the cipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherInputStream(ReadableByteChannel in, Cipher cipher,
-                           int bufferSize, byte[] key, byte[] iv) throws IOException {
-    this(new ChannelInput(in), cipher, bufferSize, key, iv);
+                           int bufferSize, Key key, AlgorithmParameterSpec params) throws IOException {
+    this(new ChannelInput(in), cipher, bufferSize, key, params);
   }
 
   /**
@@ -157,17 +155,21 @@ public class CipherInputStream extends InputStream implements
    * @param cipher the cipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
-   * @param iv Initialization vector for the cipher.
+   * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
   public CipherInputStream(Input input, Cipher cipher, int bufferSize,
-                           byte[] key, byte[] iv) throws IOException {
+                           Key key, AlgorithmParameterSpec params) throws IOException {
     this.input = input;
     this.cipher = cipher;
     this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
-    this.key = key.clone();
-    this.initIV = iv.clone();
-    this.iv = iv.clone();
+
+    this.key = key;
+    this.params = params;
+    if (!(params instanceof IvParameterSpec)) {
+      //other AlgorithmParameterSpec such as GCMParameterSpec is not supported now.
+      throw new IOException("Illegal parameters");
+    }
 
     inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
     outBuffer = ByteBuffer.allocateDirect(this.bufferSize +
@@ -340,7 +342,7 @@ public class CipherInputStream extends InputStream implements
   /**
    * Overrides the {@link InputStream#markSupported()}.
    *
-   * @return false,the {@link CTRCryptoInputStream} don't support the mark method.
+   * @return false,the {@link CTRCipherInputStream} don't support the mark method.
    */
   @Override
   public boolean markSupported() {
@@ -407,18 +409,10 @@ public class CipherInputStream extends InputStream implements
    *
    * @return the key.
    */
-  protected byte[] getKey() {
+  protected Key getKey() {
     return key;
   }
 
-  /**
-   * Gets the initialization vector.
-   *
-   * @return the initIV.
-   */
-  protected byte[] getInitIV() {
-    return initIV;
-  }
 
   /**
    * Gets the internal Cipher.
@@ -437,7 +431,7 @@ public class CipherInputStream extends InputStream implements
   protected void initCipher()
       throws IOException {
     try {
-      cipher.init(Cipher.DECRYPT_MODE, key, iv);
+      cipher.init(Cipher.DECRYPT_MODE, key, params);
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     } catch(InvalidAlgorithmParameterException e) {

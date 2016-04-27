@@ -43,6 +43,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
 public abstract class AbstractCipherStreamTest {
   private static final Log LOG= LogFactory.getLog(AbstractCipherStreamTest.class);
 
@@ -248,7 +251,8 @@ public abstract class AbstractCipherStreamTest {
     }
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    OutputStream out = new CipherOutputStream(baos, cipher, defaultBufferSize, key, iv);
+    OutputStream out = new CipherOutputStream(baos, cipher, defaultBufferSize,
+            new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     out.write(data);
     out.flush();
     out.close();
@@ -262,9 +266,10 @@ public abstract class AbstractCipherStreamTest {
       IOException {
     if (withChannel) {
       return new CipherInputStream(Channels.newChannel(bais), cipher,
-          bufferSize, key, iv);
+          bufferSize, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } else {
-      return new CipherInputStream(bais, cipher, bufferSize, key, iv);
+      return new CipherInputStream(bais, cipher, bufferSize,
+              new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     }
   }
 
@@ -275,9 +280,10 @@ public abstract class AbstractCipherStreamTest {
       IOException {
     if (withChannel) {
       return new CipherOutputStream(Channels.newChannel(baos), cipher,
-          bufferSize, key, iv);
+          bufferSize, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } else {
-      return new CipherOutputStream(baos, cipher, bufferSize, key, iv);
+      return new CipherOutputStream(baos, cipher, bufferSize,
+              new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     }
   }
 

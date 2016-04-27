@@ -27,6 +27,8 @@ import java.util.Properties;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.Cipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
@@ -53,6 +55,16 @@ public class CTRCipherInputStream extends CipherInputStream {
    * Underlying stream offset
    */
   protected long streamOffset = 0;
+
+  /**
+   * The initial IV.
+   */
+  protected final byte[] initIV;
+
+  /**
+   * Initialization vector for the cipher.
+   */
+  protected byte[] iv;
 
   /**
    * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer}
@@ -233,7 +245,10 @@ public class CTRCipherInputStream extends CipherInputStream {
       byte[] key,
       byte[] iv,
       long streamOffset) throws IOException {
-    super(input, cipher, bufferSize, key, iv);
+    super(input, cipher, bufferSize, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+
+    this.initIV = iv.clone();
+    this.iv = iv.clone();
 
     Utils.checkStreamCipher(cipher);
 
@@ -500,6 +515,15 @@ public class CTRCipherInputStream extends CipherInputStream {
   }
 
   /**
+   * Gets the initialization vector.
+   *
+   * @return the initIV.
+   */
+  protected byte[] getInitIV() {
+    return initIV;
+  }
+
+  /**
    * Gets the counter for input stream position.
    *
    * @param position the given position in the data.
@@ -540,7 +564,7 @@ public class CTRCipherInputStream extends CipherInputStream {
     final long counter = getCounter(position);
     Utils.calculateIV(initIV, counter, iv);
     try {
-      cipher.init(Cipher.DECRYPT_MODE, key, iv);
+      cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     } catch (InvalidAlgorithmParameterException e) {

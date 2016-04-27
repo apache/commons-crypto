@@ -28,6 +28,8 @@ import java.util.Properties;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.Cipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
@@ -52,6 +54,16 @@ public class CTRCipherOutputStream extends CipherOutputStream {
    * Underlying stream offset.
    */
   protected long streamOffset = 0;
+
+  /**
+   * The initial IV.
+   */
+  protected final byte[] initIV;
+
+  /**
+   * Initialization vector for the cipher.
+   */
+  protected byte[] iv;
 
   /**
    * Padding = pos%(algorithm blocksize); Padding is put into {@link #inBuffer}
@@ -228,10 +240,12 @@ public class CTRCipherOutputStream extends CipherOutputStream {
   public CTRCipherOutputStream(Output output, Cipher cipher, int bufferSize,
                                byte[] key, byte[] iv, long streamOffset)
       throws IOException {
-    super(output, cipher, bufferSize, key, iv);
+    super(output, cipher, bufferSize, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
 
     Utils.checkStreamCipher(cipher);
     this.streamOffset = streamOffset;
+    this.initIV = iv.clone();
+    this.iv = iv.clone();
 
     resetCipher();
   }
@@ -313,7 +327,7 @@ public class CTRCipherOutputStream extends CipherOutputStream {
 
     Utils.calculateIV(initIV, counter, iv);
     try {
-      cipher.init(Cipher.ENCRYPT_MODE, key, iv);
+      cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     }catch (InvalidAlgorithmParameterException e) {

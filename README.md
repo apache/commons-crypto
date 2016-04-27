@@ -47,13 +47,15 @@ String input = "hello world!";
 byte[] decryptedData = new byte[1024];
 // Encrypt
 ByteArrayOutputStream os = new ByteArrayOutputStream();
-CipherOutputStream cos = new CipherOutputStream(os, cipher, bufferSize, key, iv);
+CipherOutputStream cos = new CipherOutputStream(os, cipher, bufferSize,
+                                                new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
 cos.write(input.getBytes("UTF-8"));
 cos.flush();
 cos.close();
 
 // Decrypt
-CipherInputStream cis = new CipherInputStream(new ByteArrayInputStream(os.toByteArray()), cipher, bufferSize, key, iv);
+CipherInputStream cis = new CipherInputStream(new ByteArrayInputStream(os.toByteArray()), cipher, bufferSize,
+                                              new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
 int decryptedLen = cis.read(decryptedData, 0, 1024);
 
 ```

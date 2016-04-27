@@ -21,6 +21,8 @@ import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
@@ -63,7 +65,7 @@ public interface Cipher extends Closeable {
    * 
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
-   * @param iv Initialization vector for the cipher
+   * @param params the algorithm parameters
    * @throws InvalidKeyException if the given key is inappropriate for
    * initializing this cipher, or its keysize exceeds the maximum allowable
    * keysize (as determined from the configured jurisdiction policy files).
@@ -74,7 +76,7 @@ public interface Cipher extends Closeable {
    * the legal limits (as determined from the configured jurisdiction
    * policy files).
    */
-  void init(int mode, byte[] key, byte[] iv)
+  void init(int mode, Key key, AlgorithmParameterSpec params)
       throws InvalidKeyException, InvalidAlgorithmParameterException;
 
   /**
