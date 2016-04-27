@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.random;
 
+import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -41,10 +42,11 @@ public class SecureRandomFactory {
    * Gets a SecureRandom instance for specified props.
    *
    * @param props the configuration properties.
-   * @return SecureRandom the secureRandom object.Null value will be returned if no
-   *         SecureRandom classes with props.
+   * @return SecureRandom the secureRandom object.Null value will be returned if no SecureRandom
+   *         classes with props.
+   * @throws GeneralSecurityException if fail to create the {@link SecureRandom}.
    */
-  public static SecureRandom getSecureRandom(Properties props) {
+  public static SecureRandom getSecureRandom(Properties props) throws GeneralSecurityException {
     String secureRandomClasses = props.getProperty(
         COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
     if (secureRandomClasses == null) {

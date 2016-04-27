@@ -45,7 +45,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
 
     try {
-      Openssl cipher = Openssl.getInstance("AES2/CTR/NoPadding");
+      Openssl.getInstance("AES2/CTR/NoPadding");
       Assert.fail("Should specify correct algorithm.");
     } catch (NoSuchAlgorithmException e) {
       Assert.assertTrue(e.getMessage().contains("Doesn't support algorithm: AES2 and mode: CTR"));
@@ -58,7 +58,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
 
     try {
-      Openssl cipher = Openssl.getInstance("AES/CTR/NoPadding2");
+      Openssl.getInstance("AES/CTR/NoPadding2");
       Assert.fail("Should specify correct padding.");
     } catch (NoSuchPaddingException e) {
       Assert.assertTrue(e.getMessage().contains("Doesn't support padding: NoPadding2"));
@@ -70,7 +70,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
   public void testInvalidMode() throws Exception {
     try {
       Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
-      Openssl cipher = Openssl.getInstance("AES/CTR2/NoPadding");
+      Openssl.getInstance("AES/CTR2/NoPadding");
       Assert.fail("java.security.NoSuchAlgorithmException should be thrown.");
     } catch (NoSuchAlgorithmException e) {
       Assert.assertTrue(e.getMessage().contains("Doesn't support algorithm: AES and mode: CTR2"));

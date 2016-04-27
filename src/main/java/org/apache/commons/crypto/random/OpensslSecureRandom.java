@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.random;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 import java.util.Random;
 
@@ -72,8 +73,10 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
    * Constructs a {@link org.apache.commons.crypto.random.OpensslSecureRandom}.
    *
    * @param props the configuration properties.
+   * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for
+   *         the specified algorithm.
    */
-  public OpensslSecureRandom(Properties props) {
+  public OpensslSecureRandom(Properties props) throws NoSuchAlgorithmException {
     if (!nativeEnabled) {
       fallback = new JavaSecureRandom(props);
     }

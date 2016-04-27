@@ -17,7 +17,7 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
@@ -26,7 +26,7 @@ import static junit.framework.Assert.fail;
 public class TestJavaSecureRandom extends AbstractRandomTest {
 
   @Override
-  public SecureRandom getSecureRandom() throws IOException {
+  public SecureRandom getSecureRandom() throws GeneralSecurityException {
     Properties props = new Properties();
     props.setProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
         JavaSecureRandom.class.getName());

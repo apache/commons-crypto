@@ -17,14 +17,14 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
 import org.junit.Test;
 
 public abstract class AbstractRandomTest {
 
-  public abstract SecureRandom getSecureRandom() throws IOException;
+  public abstract SecureRandom getSecureRandom() throws GeneralSecurityException;
 
   @Test(timeout=120000)
   public void testRandomBytes() throws Exception {

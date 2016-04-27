@@ -17,13 +17,12 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.io.IOException;
 import java.util.Properties;
 
 public class TestOsSecureRandom extends AbstractRandomTest{
 
   @Override
-  public SecureRandom getSecureRandom() throws IOException {
+  public SecureRandom getSecureRandom() {
     return new OsSecureRandom(new Properties());
   }
 }

@@ -38,8 +38,10 @@ public class JavaSecureRandom implements SecureRandom {
    * Constructs a {@link org.apache.commons.crypto.random.JavaSecureRandom}.
    *
    * @param properties the configuration properties.
+   * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for
+   *         the specified algorithm.
    */
-  public JavaSecureRandom(Properties properties) {
+  public JavaSecureRandom(Properties properties) throws NoSuchAlgorithmException {
     try {
       instance = java.security.SecureRandom
           .getInstance(properties.getProperty(
@@ -47,6 +49,7 @@ public class JavaSecureRandom implements SecureRandom {
               ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
     } catch (NoSuchAlgorithmException e) {
       LOG.error("Failed to create java secure random due to error: " + e);
+      throw e;
     }
   }
 
