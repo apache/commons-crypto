@@ -32,7 +32,7 @@
               </a>
             </td>
             <td>
-              The interface for SecureRandom.
+              The interface for CryptoRandom.
             </td>
           </tr>
           <tr>
@@ -62,7 +62,7 @@
         <ol style="list-style-type: decimal">
         <h4>Usage of Random API</h4>
         <p>
-          SecureRandom provides a cryptographically strong random number generators.
+          CryptoRandom provides a cryptographically strong random number generators.
           The default implementation will use Intel® Digital Random Number Generator (DRNG)
           for accelerating the random generation.
         </p>
@@ -73,13 +73,13 @@
               byte[] key = new byte[16];<br/>
               byte[] iv = new byte[16];<br/>
               Properties properties = new Properties();<br/>
-              //Gets the 'SecureRandom' instance.<br/>
-              SecureRandom secureRandom = SecureRandomFactory.getSecureRandom(properties);<br/>
+              //Gets the 'CryptoRandom' instance.<br/>
+              CryptoRandom CryptoRandom = CryptoRandomFactory.getCryptoRandom(properties);<br/>
               //Generates random bytes and places them into the byte array.<br/>
-              secureRandom.nextBytes(key);<br/>
-              secureRandom.nextBytes(iv);<br/>
-              //Closes the SecureRandom.<br/>
-              secureRandom.close();<br/>
+              CryptoRandom.nextBytes(key);<br/>
+              CryptoRandom.nextBytes(iv);<br/>
+              //Closes the CryptoRandom.<br/>
+              CryptoRandom.close();<br/>
             </td>
           </tr>
         </table>
@@ -96,8 +96,8 @@
           <tr>
             <td>
               Properties properties = new Properties();<br/>
-              //Creates a Cipher instance with the transformation and properties.<br/>
-              Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
+              //Creates a CryptoCipher instance with the transformation and properties.<br/>
+              CryptoCipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
               String input = "hello world!";<br/>
               int inputOffset = 0;<br/>
               int inputLen = input.length();<br/>
@@ -121,7 +121,7 @@
             <td>
               Properties properties = new Properties();<br/>
               //Creates a Cipher instance with the transformation and properties.<br/>
-              Cipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
+              CryptoCipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
               int bufferSize = 4096;<br/>
               ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
               ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
@@ -140,9 +140,9 @@
 
         <h4>Usage of Stream API</h4>
         <p>
-          Stream provides the data encryption and decryption in stream manner. We provide CipherInputStream,
-          CTRCipherInputStream, PositionedCipherInputstream implementations for InputStream and CipherOutputStream,
-          CTRCipherOutputStream implementations for OutputStream.
+          Stream provides the data encryption and decryption in stream manner. We provide CryptoInputStream,
+          CTRCryptoInputStream, PositionedCryptoInputStream implementations for InputStream and CryptoOutputStream,
+          CTRCryptoOutputStream implementations for OutputStream.
         </p>
         <h5>Usage of stream encryption</h5>
         <table>
@@ -151,13 +151,13 @@
               int bufferSize = 4096;<br/>
               String input = "hello world!";<br/>
               byte[] decryptedData = new byte[1024];<br/>
-              //Encryption with CipherOutputStream.<br/>
+              //Encryption with CryptoOutputStream.<br/>
               //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
               cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
               // Constructs the original OutputStream.<br/>
               OutputStream outputStream = new ByteArrayOutputStream();<br/>
-              //Constructs the instance of CipherOutputStream.<br/>
-              CipherOutputStream cos = new CipherOutputStream(outputStream, cipher, bufferSize, key, iv);<br/>
+              //Constructs the instance of CryptoOutputStream.<br/>
+              CryptoOutputStream cos = new CryptoOutputStream(outputStream, cipher, bufferSize, key, iv);<br/>
               cos.write(input.getBytes("UTF-8"));<br/>
               cos.flush();<br/>
               cos.close();<br/>
@@ -168,13 +168,13 @@
         <table>
           <tr>
             <td>
-              // Decryption with CipherInputStream.<br/>
+              // Decryption with CryptoInputStream.<br/>
               //Initializes the cipher with DECRYPT_MODE,key and iv.<br/>
               cipher.init(Cipher.DECRYPT_MODE, key, iv);<br/>
               //Constructs the original InputStream.<br/>
               InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());<br/>
-              //Constructs the instance of CipherInputStream.<br/>
-              CipherInputStream cis = new CipherInputStream(inputStream, cipher, bufferSize, key, iv);<br/>
+              //Constructs the instance of CryptoInputStream.<br/>
+              CryptoInputStream cis = new CryptoInputStream(inputStream, cipher, bufferSize, key, iv);<br/>
               int decryptedLen = cis.read(decryptedData, 0, 1024);<br/>
               cis.close();<br/>
             </td>

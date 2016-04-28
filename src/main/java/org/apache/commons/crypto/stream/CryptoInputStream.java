@@ -32,7 +32,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
-import org.apache.commons.crypto.cipher.Cipher;
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
@@ -45,12 +45,12 @@ import org.apache.commons.crypto.utils.Utils;
  *
  */
 
-public class CipherInputStream extends InputStream implements
+public class CryptoInputStream extends InputStream implements
     ReadableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
 
-  /**The Cipher instance.*/
-  final Cipher cipher;
+  /**The CryptoCipher instance.*/
+  final CryptoCipher cipher;
 
   /**The buffer size.*/
   final int bufferSize;
@@ -83,7 +83,7 @@ public class CipherInputStream extends InputStream implements
   protected ByteBuffer outBuffer;
 
   /**
-   * Constructs a {@link CipherInputStream}.
+   * Constructs a {@link CryptoInputStream}.
    *
    * @param transformation the CipherTransformation instance.
    * @param props The <code>Properties</code> class represents a set of
@@ -93,7 +93,7 @@ public class CipherInputStream extends InputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherInputStream(CipherTransformation transformation,
+  public CryptoInputStream(CipherTransformation transformation,
                            Properties props, InputStream in, Key key, AlgorithmParameterSpec params)
       throws IOException {
     this(in, Utils.getCipherInstance(transformation, props), Utils.getBufferSize(props), key,
@@ -101,7 +101,7 @@ public class CipherInputStream extends InputStream implements
   }
 
   /**
-   * Constructs a {@link CipherInputStream}.
+   * Constructs a {@link CryptoInputStream}.
    *
    * @param transformation the CipherTransformation instance.
    * @param props The <code>Properties</code> class represents a set of
@@ -111,7 +111,7 @@ public class CipherInputStream extends InputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherInputStream(CipherTransformation transformation,
+  public CryptoInputStream(CipherTransformation transformation,
                            Properties props, ReadableByteChannel in, Key key, AlgorithmParameterSpec params)
       throws IOException {
     this(in, Utils.getCipherInstance(transformation, props),
@@ -119,7 +119,7 @@ public class CipherInputStream extends InputStream implements
   }
 
   /**
-   * Constructs a {@link CipherInputStream}.
+   * Constructs a {@link CryptoInputStream}.
    *
    * @param cipher the cipher instance.
    * @param in the input stream.
@@ -128,13 +128,13 @@ public class CipherInputStream extends InputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherInputStream(InputStream in, Cipher cipher, int bufferSize,
+  public CryptoInputStream(InputStream in, CryptoCipher cipher, int bufferSize,
                            Key key, AlgorithmParameterSpec params) throws IOException {
     this(new StreamInput(in, bufferSize), cipher, bufferSize, key, params);
   }
 
   /**
-   * Constructs a {@link CipherInputStream}.
+   * Constructs a {@link CryptoInputStream}.
    *
    * @param in the ReadableByteChannel instance.
    * @param cipher the cipher instance.
@@ -143,13 +143,13 @@ public class CipherInputStream extends InputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherInputStream(ReadableByteChannel in, Cipher cipher,
+  public CryptoInputStream(ReadableByteChannel in, CryptoCipher cipher,
                            int bufferSize, Key key, AlgorithmParameterSpec params) throws IOException {
     this(new ChannelInput(in), cipher, bufferSize, key, params);
   }
 
   /**
-   * Constructs a {@link CipherInputStream}.
+   * Constructs a {@link CryptoInputStream}.
    *
    * @param input the input data.
    * @param cipher the cipher instance.
@@ -158,7 +158,7 @@ public class CipherInputStream extends InputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherInputStream(Input input, Cipher cipher, int bufferSize,
+  public CryptoInputStream(Input input, CryptoCipher cipher, int bufferSize,
                            Key key, AlgorithmParameterSpec params) throws IOException {
     this.input = input;
     this.cipher = cipher;
@@ -319,7 +319,7 @@ public class CipherInputStream extends InputStream implements
 
   /**
    * Overrides the {@link java.io.InputStream#mark(int)}.
-   * For {@link CipherInputStream},we don't support the mark method.
+   * For {@link CryptoInputStream},we don't support the mark method.
    *
    * @param readlimit the maximum limit of bytes that can be read before
    *                  the mark position becomes invalid.
@@ -330,7 +330,7 @@ public class CipherInputStream extends InputStream implements
 
   /**
    * Overrides the {@link InputStream#reset()}.
-   * For {@link CipherInputStream},we don't support the reset method.
+   * For {@link CryptoInputStream},we don't support the reset method.
    *
    * @throws IOException if an I/O error occurs.
    */
@@ -415,11 +415,11 @@ public class CipherInputStream extends InputStream implements
 
 
   /**
-   * Gets the internal Cipher.
+   * Gets the internal CryptoCipher.
    *
    * @return the cipher instance.
    */
-  protected Cipher getCipher() {
+  protected CryptoCipher getCipher() {
     return cipher;
   }
 
@@ -449,7 +449,7 @@ public class CipherInputStream extends InputStream implements
   protected void initCipher()
       throws IOException {
     try {
-      cipher.init(Cipher.DECRYPT_MODE, key, params);
+      cipher.init(CryptoCipher.DECRYPT_MODE, key, params);
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     } catch(InvalidAlgorithmParameterException e) {

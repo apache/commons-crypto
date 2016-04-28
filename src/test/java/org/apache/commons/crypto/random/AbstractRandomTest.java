@@ -24,11 +24,11 @@ import org.junit.Test;
 
 public abstract class AbstractRandomTest {
 
-  public abstract SecureRandom getSecureRandom() throws GeneralSecurityException;
+  public abstract CryptoRandom getCryptoRandom() throws GeneralSecurityException;
 
   @Test(timeout=120000)
   public void testRandomBytes() throws Exception {
-    SecureRandom random = getSecureRandom();
+    CryptoRandom random = getCryptoRandom();
     // len = 16
     checkRandomBytes(random, 16);
     // len = 32
@@ -44,7 +44,7 @@ public abstract class AbstractRandomTest {
    * Test will timeout if secure random implementation always returns a
    * constant value.
    */
-  private void checkRandomBytes(SecureRandom random, int len) {
+  private void checkRandomBytes(CryptoRandom random, int len) {
     byte[] bytes = new byte[len];
     byte[] bytes1 = new byte[len];
     random.nextBytes(bytes);

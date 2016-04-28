@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.apache.commons.crypto.cipher.Cipher;
+import org.apache.commons.crypto.cipher.CryptoCipher;
 
 /**
  * General utility methods for working with reflection.
@@ -37,7 +37,7 @@ public class ReflectionUtils {
   static {
     classLoader = Thread.currentThread().getContextClassLoader();
     if (classLoader == null) {
-      classLoader = Cipher.class.getClassLoader();
+      classLoader = CryptoCipher.class.getClassLoader();
     }
   }
 
@@ -51,7 +51,7 @@ public class ReflectionUtils {
 
   /**
    * A unique class which is used as a sentinel value in the caching
-   * for getClassByName. {@link Cipher#getClassByNameOrNull(String)}.
+   * for getClassByName. {@link CryptoCipher#getClassByNameOrNull(String)}.
    */
   private static abstract class NegativeCacheSentinel {}
 

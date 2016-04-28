@@ -26,8 +26,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.crypto.cipher.Cipher;
-import org.apache.commons.crypto.cipher.CipherFactory;
+import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 
@@ -209,10 +209,10 @@ public class Utils {
   /**
    * Checks whether the cipher is supported streaming.
    *
-   * @param cipher the {@link org.apache.commons.crypto.cipher.Cipher} instance.
+   * @param cipher the {@link CryptoCipher} instance.
    * @throws IOException if an I/O error occurs.
    */
-  public static void checkStreamCipher(Cipher cipher) throws IOException {
+  public static void checkStreamCipher(CryptoCipher cipher) throws IOException {
     if (cipher.getTransformation() != CipherTransformation.AES_CTR_NOPADDING) {
       throw new IOException("AES/CTR/NoPadding is required");
     }
@@ -221,11 +221,11 @@ public class Utils {
   /**
    * Checks and floors buffer size.
    *
-   * @param cipher the {@link org.apache.commons.crypto.cipher.Cipher} instance.
+   * @param cipher the {@link CryptoCipher} instance.
    * @param bufferSize the buffer size.
    * @return the remaining buffer size.
    */
-  public static int checkBufferSize(Cipher cipher, int bufferSize) {
+  public static int checkBufferSize(CryptoCipher cipher, int bufferSize) {
     checkArgument(bufferSize >= MIN_BUFFER_SIZE,
         "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
     return bufferSize - bufferSize % cipher.getTransformation()
@@ -233,10 +233,10 @@ public class Utils {
   }
 
   /**
-   * This method is only for Counter (CTR) mode. Generally the Cipher calculates the
+   * This method is only for Counter (CTR) mode. Generally the CryptoCipher calculates the
    * IV and maintain encryption context internally.For example a
    * {@link javax.crypto.Cipher} will maintain its encryption context internally
-   * when we do encryption/decryption using the Cipher#update interface.
+   * when we do encryption/decryption using the CryptoCipher#update interface.
    * <p/>
    * Encryption/Decryption is not always on the entire file. For example,
    * in Hadoop, a node may only decrypt a portion of a file (i.e. a split).
@@ -269,18 +269,18 @@ public class Utils {
   }
 
   /**
-   * Helper method to create a Cipher instance and throws only IOException.
+   * Helper method to create a CryptoCipher instance and throws only IOException.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
    * @param transformation the CipherTransformation instance.
-   * @return the Cipher instance.
+   * @return the CryptoCipher instance.
    * @throws IOException if an I/O error occurs.
    */
-  public static Cipher getCipherInstance(CipherTransformation transformation,
-      Properties props) throws IOException {
+  public static CryptoCipher getCipherInstance(CipherTransformation transformation,
+                                               Properties props) throws IOException {
     try {
-      return CipherFactory.getInstance(transformation, props);
+      return CryptoCipherFactory.getInstance(transformation, props);
     } catch (GeneralSecurityException e) {
       throw new IOException(e);
     }

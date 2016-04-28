@@ -48,7 +48,7 @@ public abstract class AbstractCipherTest {
       0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16};
   static final byte[] IV = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
       0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
-  Cipher enc, dec;
+  CryptoCipher enc, dec;
 
   @Before
   public void setup() {
@@ -96,19 +96,19 @@ public abstract class AbstractCipherTest {
       GeneralSecurityException, IOException {
     ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
     ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
-    Cipher enc, dec;
+    CryptoCipher enc, dec;
 
     enc = getCipher(transformation);
     dec = getCipher(transformation);
 
     try {
-      enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
+      enc.init(CryptoCipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } catch (Exception e) {
       Assert.fail("AES failed initialisation - " + e.toString());
     }
 
     try {
-      dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
+      dec.init(CryptoCipher.DECRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } catch (Exception e) {
       Assert.fail("AES failed initialisation - " + e.toString());
     }
@@ -219,21 +219,21 @@ public abstract class AbstractCipherTest {
     dec = getCipher(transformation);
 
     try {
-      enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
+      enc.init(CryptoCipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } catch (Exception e) {
       Assert.fail("AES failed initialisation - " + e.toString());
     }
 
     try {
-      dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
+      dec.init(CryptoCipher.DECRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));
     } catch (Exception e) {
       Assert.fail("AES failed initialisation - " + e.toString());
     }
   }
 
-  private Cipher getCipher(CipherTransformation transformation) {
+  private CryptoCipher getCipher(CipherTransformation transformation) {
     try {
-      return (Cipher) ReflectionUtils
+      return (CryptoCipher) ReflectionUtils
           .newInstance(ReflectionUtils.getClassByName(cipherClass), props,
               transformation);
     } catch (ClassNotFoundException e) {

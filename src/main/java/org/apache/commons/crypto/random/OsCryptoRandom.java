@@ -32,8 +32,8 @@ import org.apache.commons.logging.LogFactory;
  * A Random implementation that uses random bytes sourced from the
  * operating system.
  */
-public class OsSecureRandom extends Random implements SecureRandom {
-  public static final Log LOG = LogFactory.getLog(OsSecureRandom.class);
+public class OsCryptoRandom extends Random implements CryptoRandom {
+  public static final Log LOG = LogFactory.getLog(OsCryptoRandom.class);
   
   private static final long serialVersionUID = 6391500337172057900L;
 
@@ -59,11 +59,11 @@ public class OsSecureRandom extends Random implements SecureRandom {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.random.OsSecureRandom}.
+   * Constructs a {@link org.apache.commons.crypto.random.OsCryptoRandom}.
    *
    * @param props the configuration properties.
    */
-  public OsSecureRandom(Properties props) {
+  public OsCryptoRandom(Properties props) {
     randomDevPath = Utils.getRandomDevPath(props);
     File randomDevFile = new File(randomDevPath);
 
@@ -83,7 +83,7 @@ public class OsSecureRandom extends Random implements SecureRandom {
   }
 
   /**
-   * Overrides {@link org.apache.commons.crypto.random.SecureRandom#nextBytes(byte[])}.
+   * Overrides {@link org.apache.commons.crypto.random.CryptoRandom#nextBytes(byte[])}.
    * Generates random bytes and places them into a user-supplied byte array.
    * The number of random bytes produced is equal to the length of the byte array.
    *

@@ -23,7 +23,7 @@ import java.nio.channels.WritableByteChannel;
 
 /**
  * The ChannelOutput class takes a <code>WritableByteChannel</code> object and wraps it as 
- * <code>Output</code> object acceptable by <code>CipherOutputStream</code> as the output target.
+ * <code>Output</code> object acceptable by <code>CryptoOutputStream</code> as the output target.
  */
 public class ChannelOutput implements Output {
 

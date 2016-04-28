@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * The Output interface abstract the output target of <code>CipherOutputStream</code> so that
+ * The Output interface abstract the output target of <code>CryptoOutputStream</code> so that
  * different implementation of output can be used. The implementation Output interface will usually
  * wraps an output mechanism such as <code>OutputStream</code> or <code>WritableByteChannel</code>.
  */

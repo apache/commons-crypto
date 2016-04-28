@@ -34,7 +34,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
-import org.apache.commons.crypto.cipher.Cipher;
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.stream.output.ChannelOutput;
 import org.apache.commons.crypto.stream.output.Output;
@@ -42,20 +42,20 @@ import org.apache.commons.crypto.stream.output.StreamOutput;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * {@link CipherOutputStream} encrypts data and writes to the under layer
+ * {@link CryptoOutputStream} encrypts data and writes to the under layer
  * output. It supports any mode of operations such as AES CBC/CTR/GCM mode
  * in concept. It is not thread-safe.
  */
 
-public class CipherOutputStream extends OutputStream implements
+public class CryptoOutputStream extends OutputStream implements
     WritableByteChannel {
   private final byte[] oneByteBuf = new byte[1];
 
   /** The output.*/
   Output output;
 
-  /**the Cipher instance*/
-  final Cipher cipher;
+  /**the CryptoCipher instance*/
+  final CryptoCipher cipher;
 
   /**The buffer size.*/
   final int bufferSize;
@@ -82,7 +82,7 @@ public class CipherOutputStream extends OutputStream implements
   ByteBuffer outBuffer;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CipherOutputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
    *
    * @param transformation the CipherTransformation instance.
    * @param props The <code>Properties</code> class represents a set of
@@ -92,18 +92,20 @@ public class CipherOutputStream extends OutputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherOutputStream(
+
+
+  public CryptoOutputStream(
     CipherTransformation transformation,
     Properties props,
     OutputStream out,
     Key key,
     AlgorithmParameterSpec params) throws IOException {
-    this(out, Utils.getCipherInstance(transformation, props), Utils.getBufferSize(props), key,
-      params);
+    this(out, Utils.getCipherInstance(transformation, props), Utils.getBufferSize(props), key, params);
+
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CipherOutputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
    *
    * @param transformation the CipherTransformation instance.
    * @param props The <code>Properties</code> class represents a set of
@@ -113,33 +115,34 @@ public class CipherOutputStream extends OutputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherOutputStream(
+  public CryptoOutputStream(
     CipherTransformation transformation,
     Properties props,
     WritableByteChannel out,
     Key key,
     AlgorithmParameterSpec params) throws IOException {
-    this(out, Utils.getCipherInstance(transformation, props), Utils.getBufferSize(props), key,
-      params);
+    this(out, Utils.getCipherInstance(transformation, props),
+        Utils.getBufferSize(props), key, params);
+
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CipherOutputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
    *
    * @param out the output stream.
-   * @param cipher the Cipher instance.
+   * @param cipher the CryptoCipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherOutputStream(OutputStream out, Cipher cipher, int bufferSize,
+  public CryptoOutputStream(OutputStream out, CryptoCipher cipher, int bufferSize,
                             Key key, AlgorithmParameterSpec params) throws IOException {
     this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, params);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CipherOutputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
    *
    * @param channel the WritableByteChannel instance.
    * @param cipher the cipher instance.
@@ -148,22 +151,22 @@ public class CipherOutputStream extends OutputStream implements
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  public CipherOutputStream(WritableByteChannel channel, Cipher cipher,
+  public CryptoOutputStream(WritableByteChannel channel, CryptoCipher cipher,
                             int bufferSize, Key key, AlgorithmParameterSpec params) throws IOException {
     this(new ChannelOutput(channel), cipher, bufferSize, key, params);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CipherOutputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
    *
    * @param output the output stream.
-   * @param cipher the Cipher instance.
+   * @param cipher the CryptoCipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
    * @param params the algorithm parameters.
    * @throws IOException if an I/O error occurs.
    */
-  protected CipherOutputStream(Output output, Cipher cipher, int bufferSize,
+  protected CryptoOutputStream(Output output, CryptoCipher cipher, int bufferSize,
                                Key key, AlgorithmParameterSpec params)
       throws IOException {
 
@@ -330,7 +333,7 @@ public class CipherOutputStream extends OutputStream implements
   protected void initCipher()
       throws IOException {
     try {
-      cipher.init(Cipher.ENCRYPT_MODE, key, params);
+      cipher.init(CryptoCipher.ENCRYPT_MODE, key, params);
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     } catch(InvalidAlgorithmParameterException e) {
@@ -414,7 +417,7 @@ public class CipherOutputStream extends OutputStream implements
    *
    * @return the cipher instance.
    */
-  protected Cipher getCipher() {
+  protected CryptoCipher getCipher() {
     return cipher;
   }
 

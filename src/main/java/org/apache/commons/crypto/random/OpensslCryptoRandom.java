@@ -41,21 +41,21 @@ import org.apache.commons.crypto.utils.Utils;
  * @see https://wiki.openssl.org/index.php/Random_Numbers
  * @see http://en.wikipedia.org/wiki/RdRand
  */
-public class OpensslSecureRandom extends Random implements SecureRandom {
+public class OpensslCryptoRandom extends Random implements CryptoRandom {
   private static final long serialVersionUID = -7828193502768789584L;
   private static final Log LOG =
-      LogFactory.getLog(OpensslSecureRandom.class.getName());
+      LogFactory.getLog(OpensslCryptoRandom.class.getName());
 
-  /** If native SecureRandom unavailable, use java SecureRandom */
-  private JavaSecureRandom fallback = null;
+  /** If native CryptoRandom unavailable, use java SecureRandom */
+  private JavaCryptoRandom fallback = null;
   private static boolean nativeEnabled = false;
   static {
     if (NativeCodeLoader.isNativeCodeLoaded()) {
       try {
-        OpensslSecureRandomNative.initSR();
+        OpensslCryptoRandomNative.initSR();
         nativeEnabled = true;
       } catch (Throwable t) {
-        LOG.error("Failed to load Openssl SecureRandom", t);
+        LOG.error("Failed to load Openssl CryptoRandom", t);
       }
     }
   }
@@ -70,15 +70,15 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.random.OpensslSecureRandom}.
+   * Constructs a {@link org.apache.commons.crypto.random.OpensslCryptoRandom}.
    *
    * @param props the configuration properties.
    * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for
    *         the specified algorithm.
    */
-  public OpensslSecureRandom(Properties props) throws NoSuchAlgorithmException {
+  public OpensslCryptoRandom(Properties props) throws NoSuchAlgorithmException {
     if (!nativeEnabled) {
-      fallback = new JavaSecureRandom(props);
+      fallback = new JavaCryptoRandom(props);
     }
   }
 
@@ -90,14 +90,14 @@ public class OpensslSecureRandom extends Random implements SecureRandom {
    */
   @Override
   public void nextBytes(byte[] bytes) {
-    if (!nativeEnabled || !OpensslSecureRandomNative.nextRandBytes(bytes)) {
+    if (!nativeEnabled || !OpensslCryptoRandomNative.nextRandBytes(bytes)) {
       fallback.nextBytes(bytes);
     }
   }
 
   /**
-   * Overrides {@link OpensslSecureRandom}.
-   * For {@link OpensslSecureRandom}, we don't need to set seed.
+   * Overrides {@link OpensslCryptoRandom}.
+   * For {@link OpensslCryptoRandom}, we don't need to set seed.
    *
    * @param seed the initial seed.
    */

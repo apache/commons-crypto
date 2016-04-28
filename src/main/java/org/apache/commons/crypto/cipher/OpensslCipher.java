@@ -34,15 +34,15 @@ import javax.crypto.spec.IvParameterSpec;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * Implements the Cipher using JNI into OpenSSL.
+ * Implements the CryptoCipher using JNI into OpenSSL.
  */
-public class OpensslCipher implements Cipher {
+public class OpensslCipher implements CryptoCipher {
   private final Properties props;
   private final CipherTransformation transformation;
   private final Openssl cipher;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.cipher.Cipher} using JNI into OpenSSL
+   * Constructs a {@link org.apache.commons.crypto.cipher.CryptoCipher} using JNI into OpenSSL
    * 
    * @param props properties for OpenSSL cipher
    * @param transformation transformation for OpenSSL cipher

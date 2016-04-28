@@ -17,6 +17,6 @@
  */
 
 /**
- * Cipher classes
+ * CryptoCipher classes
  */
 package org.apache.commons.crypto.cipher;

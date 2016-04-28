@@ -31,8 +31,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
-import org.apache.commons.crypto.cipher.Cipher;
-import org.apache.commons.crypto.cipher.CipherFactory;
+import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.utils.IOUtils;
 import org.apache.commons.crypto.utils.Utils;
@@ -40,11 +40,11 @@ import org.apache.commons.crypto.utils.Utils;
 import static org.apache.commons.crypto.cipher.CipherTransformation.AES_CTR_NOPADDING;
 
 /**
- * PositionedCipherInputStream provides the capability to decrypt the stream starting
+ * PositionedCryptoInputStream provides the capability to decrypt the stream starting
  * at random position as well as provides the foundation for positioned read for
  * decrypting. This needs a stream cipher mode such as AES CTR mode.
  */
-public class PositionedCipherInputStream extends CTRCipherInputStream {
+public class PositionedCryptoInputStream extends CTRCryptoInputStream {
 
   /**
    * DirectBuffer pool
@@ -53,13 +53,13 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
       ConcurrentLinkedQueue<ByteBuffer>();
 
   /**
-   * Cipher pool
+   * CryptoCipher pool
    */
   private final Queue<CipherState> cipherPool = new
       ConcurrentLinkedQueue<CipherState>();
 
   /**
-   * Constructs a {@link PositionedCipherInputStream}.
+   * Constructs a {@link PositionedCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -69,24 +69,24 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
    * @param streamOffset the start offset in the data.
    * @throws IOException if an I/O error occurs.
    */
-  public PositionedCipherInputStream(Properties props, Input in, byte[] key,
+  public PositionedCryptoInputStream(Properties props, Input in, byte[] key,
                                      byte[] iv, long streamOffset) throws IOException {
     this(in, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   /**
-   * Constructs a {@link PositionedCipherInputStream}.
+   * Constructs a {@link PositionedCryptoInputStream}.
    *
    * @param input the input data.
-   * @param cipher the Cipher instance.
+   * @param cipher the CryptoCipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
    * @param iv Initialization vector for the cipher.
    * @param streamOffset the start offset in the data.
    * @throws IOException if an I/O error occurs.
    */
-  public PositionedCipherInputStream(Input input, Cipher cipher, int bufferSize,
+  public PositionedCryptoInputStream(Input input, CryptoCipher cipher, int bufferSize,
                                      byte[] key, byte[] iv, long streamOffset) throws IOException {
     super(input, cipher, bufferSize, key, iv, streamOffset);
   }
@@ -219,9 +219,9 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
       int n = state.getCipher().update(inBuffer, outBuffer);
       if (n < inputSize) {
         /**
-         * Typically code will not get here. Cipher#update will consume all
+         * Typically code will not get here. CryptoCipher#update will consume all
          * input data and put result in outBuffer.
-         * Cipher#doFinal will reset the cipher context.
+         * CryptoCipher#doFinal will reset the cipher context.
          */
         state.getCipher().doFinal(inBuffer, outBuffer);
         state.reset(true);
@@ -262,7 +262,7 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
     final long counter = getCounter(position);
     Utils.calculateIV(getInitIV(), counter, iv);
     try {
-      state.getCipher().init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+      state.getCipher().init(CryptoCipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     } catch (InvalidAlgorithmParameterException e) {
@@ -271,13 +271,13 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
     state.reset(false);
   }
 
-  /** Get Cipher from pool */
+  /** Get CryptoCipher from pool */
   private CipherState getCipherState() throws IOException {
     CipherState state = cipherPool.poll();
     if (state == null) {
-      Cipher cipher;
+      CryptoCipher cipher;
       try {
-        cipher = CipherFactory.getInstance(getCipher().getTransformation(),
+        cipher = CryptoCipherFactory.getInstance(getCipher().getTransformation(),
             getCipher().getProperties());
       } catch (GeneralSecurityException e) {
         throw new IOException(e);
@@ -288,7 +288,7 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
     return state;
   }
 
-  /** Return Cipher to pool */
+  /** Return CryptoCipher to pool */
   private void returnCipherState(CipherState state) {
     if (state != null) {
       cipherPool.add(state);
@@ -314,7 +314,7 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
   }
 
   /**
-   * Overrides the {@link CipherInputStream#close()}.
+   * Overrides the {@link CryptoInputStream#close()}.
    * Closes this input stream and releases any system resources associated
    * with the stream.
    *
@@ -339,15 +339,15 @@ public class PositionedCipherInputStream extends CTRCipherInputStream {
   }
 
   private class CipherState {
-    private Cipher cipher;
+    private CryptoCipher cipher;
     private boolean reset;
 
-    public CipherState(Cipher cipher) {
+    public CipherState(CryptoCipher cipher) {
       this.cipher = cipher;
       this.reset = false;
     }
 
-    public Cipher getCipher() {
+    public CryptoCipher getCipher() {
       return cipher;
     }
 

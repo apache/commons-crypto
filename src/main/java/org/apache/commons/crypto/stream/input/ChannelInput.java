@@ -23,7 +23,7 @@ import java.nio.channels.ReadableByteChannel;
 
 /**
  * The ChannelInput class takes a <code>ReadableByteChannel</code> object and
- * wraps it as <code>Input</code> object acceptable by <code>CipherInputStream</code>.
+ * wraps it as <code>Input</code> object acceptable by <code>CryptoInputStream</code>.
  */
 public class ChannelInput implements Input {
   private static final int SKIP_BUFFER_SIZE = 2048;
