@@ -23,7 +23,8 @@ import org.apache.commons.crypto.cipher.CipherTransformation;
 
 public class CBCNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
-  public void setUp() throws IOException {
+  @Override
+public void setUp() throws IOException {
     transformation = CipherTransformation
         .AES_CBC_NOPADDING;
   }
