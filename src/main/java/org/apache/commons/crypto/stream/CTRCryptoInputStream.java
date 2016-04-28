@@ -30,7 +30,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.crypto.cipher.Cipher;
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
@@ -38,7 +38,7 @@ import org.apache.commons.crypto.stream.input.StreamInput;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * CTRCipherInputStream decrypts data. AES CTR mode is required in order to
+ * CTRCryptoInputStream decrypts data. AES CTR mode is required in order to
  * ensure that the plain text and cipher text have a 1:1 mapping. CTR crypto
  * stream has stream characteristic which is useful for implement features
  * like random seek. The decryption is buffer based. The key points of the
@@ -50,7 +50,7 @@ import org.apache.commons.crypto.utils.Utils;
  * <p/>
  * The underlying stream offset is maintained as state. It is not thread-safe.
  */
-public class CTRCipherInputStream extends CipherInputStream {
+public class CTRCryptoInputStream extends CryptoInputStream {
   /**
    * Underlying stream offset
    */
@@ -79,7 +79,7 @@ public class CTRCipherInputStream extends CipherInputStream {
   private boolean cipherReset = false;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -88,14 +88,14 @@ public class CTRCipherInputStream extends CipherInputStream {
    * @param iv Initialization vector for the cipher.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(Properties props, InputStream in,
-      byte[] key, byte[] iv)
+  public CTRCryptoInputStream(Properties props, InputStream in,
+                              byte[] key, byte[] iv)
       throws IOException {
     this(props, in, key, iv, 0);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -104,29 +104,29 @@ public class CTRCipherInputStream extends CipherInputStream {
    * @param iv Initialization vector for the cipher.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(Properties props, ReadableByteChannel in,
-      byte[] key, byte[] iv)
+  public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
+                              byte[] key, byte[] iv)
       throws IOException {
     this(props, in, key, iv, 0);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param in the input stream.
-   * @param cipher the Cipher instance.
+   * @param cipher the CryptoCipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
    * @param iv Initialization vector for the cipher.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(InputStream in, Cipher cipher, int bufferSize,
-      byte[] key, byte[] iv) throws IOException {
+  public CTRCryptoInputStream(InputStream in, CryptoCipher cipher, int bufferSize,
+                              byte[] key, byte[] iv) throws IOException {
     this(in, cipher, bufferSize, key, iv, 0);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param in the ReadableByteChannel instance.
    * @param cipher the cipher instance.
@@ -135,24 +135,24 @@ public class CTRCipherInputStream extends CipherInputStream {
    * @param iv Initialization vector for the cipher.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(ReadableByteChannel in, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv) throws IOException {
+  public CTRCryptoInputStream(ReadableByteChannel in, CryptoCipher cipher,
+                              int bufferSize, byte[] key, byte[] iv) throws IOException {
     this(in, cipher, bufferSize, key, iv, 0);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param input the input data.
-   * @param cipher the Cipher instance.
+   * @param cipher the CryptoCipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
    * @param iv Initialization vector for the cipher.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(
+  public CTRCryptoInputStream(
       Input input,
-      Cipher cipher,
+      CryptoCipher cipher,
       int bufferSize,
       byte[] key,
       byte[] iv) throws IOException {
@@ -160,7 +160,7 @@ public class CTRCipherInputStream extends CipherInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -170,15 +170,15 @@ public class CTRCipherInputStream extends CipherInputStream {
    * @param streamOffset the start offset in the stream.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(Properties props, InputStream in,
-      byte[] key, byte[] iv, long streamOffset)
+  public CTRCryptoInputStream(Properties props, InputStream in,
+                              byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   /**
-   *Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   *Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -188,59 +188,59 @@ public class CTRCipherInputStream extends CipherInputStream {
    * @param streamOffset the start offset in the stream.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(Properties props, ReadableByteChannel in,
-      byte[] key, byte[] iv, long streamOffset)
+  public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
+                              byte[] key, byte[] iv, long streamOffset)
       throws IOException {
     this(in, Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, props),
         Utils.getBufferSize(props), key, iv, streamOffset);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param in the InputStream instance.
-   * @param cipher the Cipher instance.
+   * @param cipher the CryptoCipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
    * @param iv Initialization vector for the cipher.
    * @param streamOffset the start offset in the stream.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(InputStream in, Cipher cipher, int bufferSize,
-      byte[] key, byte[] iv, long streamOffset) throws IOException {
+  public CTRCryptoInputStream(InputStream in, CryptoCipher cipher, int bufferSize,
+                              byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv, streamOffset);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param in the ReadableByteChannel instance.
-   * @param cipher the Cipher instance.
+   * @param cipher the CryptoCipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
    * @param iv Initialization vector for the cipher.
    * @param streamOffset the start offset in the stream.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(ReadableByteChannel in, Cipher cipher,
-      int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
+  public CTRCryptoInputStream(ReadableByteChannel in, CryptoCipher cipher,
+                              int bufferSize, byte[] key, byte[] iv, long streamOffset) throws IOException {
     this(new ChannelInput(in), cipher, bufferSize, key, iv, streamOffset);
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCipherInputStream}.
+   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
    *
    * @param input the input data.
-   * @param cipher the Cipher instance.
+   * @param cipher the CryptoCipher instance.
    * @param bufferSize the bufferSize.
    * @param key crypto key for the cipher.
    * @param iv Initialization vector for the cipher.
    * @param streamOffset the start offset in the stream.
    * @throws IOException if an I/O error occurs.
    */
-  public CTRCipherInputStream(
+  public CTRCryptoInputStream(
       Input input,
-      Cipher cipher,
+      CryptoCipher cipher,
       int bufferSize,
       byte[] key,
       byte[] iv,
@@ -256,7 +256,7 @@ public class CTRCipherInputStream extends CipherInputStream {
   }
 
   /**
-   * Overrides the {@link org.apache.commons.crypto.stream.CipherInputStream#skip(long)}.
+   * Overrides the {@link org.apache.commons.crypto.stream.CryptoInputStream#skip(long)}.
    * Skips over and discards <code>n</code> bytes of data from this input
    * stream.
    *
@@ -295,7 +295,7 @@ public class CTRCipherInputStream extends CipherInputStream {
   }
 
   /**
-   * Overrides the {@link org.apache.commons.crypto.stream.CTRCipherInputStream#read(ByteBuffer)}.
+   * Overrides the {@link org.apache.commons.crypto.stream.CTRCryptoInputStream#read(ByteBuffer)}.
    * Reads a sequence of bytes from this channel into the given buffer.
    *
    * @param buf The buffer into which bytes are to be transferred.
@@ -548,7 +548,7 @@ public class CTRCipherInputStream extends CipherInputStream {
   }
 
   /**
-   * Overrides the {@link CTRCipherInputStream#initCipher()}.
+   * Overrides the {@link CTRCryptoInputStream#initCipher()}.
    * Initializes the cipher.
    */
   @Override
@@ -568,7 +568,7 @@ public class CTRCipherInputStream extends CipherInputStream {
     final long counter = getCounter(position);
     Utils.calculateIV(initIV, counter, iv);
     try {
-      cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+      cipher.init(CryptoCipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
     } catch (InvalidKeyException e) {
       throw new IOException(e);
     } catch (InvalidAlgorithmParameterException e) {
@@ -607,9 +607,9 @@ public class CTRCipherInputStream extends CipherInputStream {
       int n = cipher.update(inBuffer, out);
       if (n < inputSize) {
         /**
-         * Typically code will not get here. Cipher#update will consume all
+         * Typically code will not get here. CryptoCipher#update will consume all
          * input data and put result in outBuffer.
-         * Cipher#doFinal will reset the cipher context.
+         * CryptoCipher#doFinal will reset the cipher context.
          */
         cipher.doFinal(inBuffer, out);
         cipherReset = true;

@@ -17,24 +17,12 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
-import static junit.framework.Assert.fail;
-
-public class TestJavaSecureRandom extends AbstractRandomTest {
+public class TestOsCryptoRandom extends AbstractRandomTest{
 
   @Override
-  public SecureRandom getSecureRandom() throws GeneralSecurityException {
-    Properties props = new Properties();
-    props.setProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
-        JavaSecureRandom.class.getName());
-    SecureRandom random = SecureRandomFactory.getSecureRandom(props);
-    if ( !(random instanceof JavaSecureRandom)) {
-      fail("The SecureRandom should be: " + JavaSecureRandom.class.getName());
-    }
-    return random;
+  public CryptoRandom getCryptoRandom() {
+    return new OsCryptoRandom(new Properties());
   }
-
 }

@@ -17,20 +17,24 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.io.Closeable;
+import java.security.GeneralSecurityException;
+import java.util.Properties;
 
-/**
- * The interface for SecureRandom.
- */
-public interface SecureRandom extends Closeable {
+import org.apache.commons.crypto.conf.ConfigurationKeys;
+import static junit.framework.Assert.fail;
 
-  /**
-   * Generates random bytes and places them into a user-supplied
-   * byte array.  The number of random bytes produced is equal to
-   * the length of the byte array.
-   *
-   * @param bytes the byte array to fill with random bytes
-   */
-  void nextBytes(byte[] bytes);
+public class TestJavaCryptoRandom extends AbstractRandomTest {
+
+  @Override
+  public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
+    Properties props = new Properties();
+    props.setProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
+        JavaCryptoRandom.class.getName());
+    CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+    if ( !(random instanceof JavaCryptoRandom)) {
+      fail("The CryptoRandom should be: " + JavaCryptoRandom.class.getName());
+    }
+    return random;
+  }
 
 }

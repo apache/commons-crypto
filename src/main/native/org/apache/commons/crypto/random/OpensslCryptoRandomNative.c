@@ -33,7 +33,7 @@
 #include <windows.h>
 #endif
 
-#include "OpensslSecureRandomNative.h"
+#include "OpensslCryptoRandomNative.h"
 
 #ifdef UNIX
 static void * (*dlsym_CRYPTO_malloc) (int, const char *, int);
@@ -86,7 +86,7 @@ static ENGINE * openssl_rand_init(void);
 static void openssl_rand_clean(ENGINE *eng, int clean_locks);
 static int openssl_rand_bytes(unsigned char *buf, int num);
 
-JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpensslSecureRandomNative_initSR
+JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpensslCryptoRandomNative_initSR
     (JNIEnv *env, jclass clazz)
 {
   char msg[1000];
@@ -160,7 +160,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpensslSecureRandom
   openssl_rand_init();
 }
 
-JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpensslSecureRandomNative_nextRandBytes___3B
+JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpensslCryptoRandomNative_nextRandBytes___3B
     (JNIEnv *env, jobject object, jbyteArray bytes)
 {
   if (NULL == bytes) {

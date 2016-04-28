@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 
 /**
  * The StreamInput class takes a <code>InputStream</code> object and
- * wraps it as <code>Input</code> object acceptable by <code>CipherInputStream</code>.
+ * wraps it as <code>Input</code> object acceptable by <code>CryptoInputStream</code>.
  */
 public class StreamInput implements Input {
   private byte[] buf;

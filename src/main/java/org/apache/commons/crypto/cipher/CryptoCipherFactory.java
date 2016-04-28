@@ -30,12 +30,12 @@ import org.slf4j.LoggerFactory;
 /**
  * This is the factory class used for creating cipher class
  */
-public class CipherFactory {
+public class CryptoCipherFactory {
 
   /** LOG instance for {@CipherFactory} */
-  public final static Logger LOG = LoggerFactory.getLogger(CipherFactory.class);
+  public final static Logger LOG = LoggerFactory.getLogger(CryptoCipherFactory.class);
 
-  private CipherFactory() {}
+  private CryptoCipherFactory() {}
 
   /**
    * Gets a cipher instance for specified algorithm/mode/padding.
@@ -44,15 +44,15 @@ public class CipherFactory {
    *          the configuration properties
    * @param transformation
    *          algorithm/mode/padding
-   * @return Cipher the cipher. Null value will be returned if no
+   * @return CryptoCipher the cipher. Null value will be returned if no
    *         cipher classes with transformation configured.
    */
-  public static Cipher getInstance(CipherTransformation transformation,
-      Properties props) throws GeneralSecurityException {
-    List<Class<? extends Cipher>> klasses = getCipherClasses(props);
-    Cipher cipher = null;
+  public static CryptoCipher getInstance(CipherTransformation transformation,
+                                         Properties props) throws GeneralSecurityException {
+    List<Class<? extends CryptoCipher>> klasses = getCipherClasses(props);
+    CryptoCipher cipher = null;
     if (klasses != null) {
-      for (Class<? extends Cipher> klass : klasses) {
+      for (Class<? extends CryptoCipher> klass : klasses) {
         try {
           cipher = ReflectionUtils.newInstance(klass, props, transformation);
           if (cipher != null) {
@@ -61,7 +61,7 @@ public class CipherFactory {
             break;
           }
         } catch (Exception e) {
-          LOG.error("Cipher {} is not available or transformation {} is not " +
+          LOG.error("CryptoCipher {} is not available or transformation {} is not " +
             "supported.", klass.getName(), transformation.getName());
         }
       }
@@ -74,28 +74,28 @@ public class CipherFactory {
    * Gets a cipher for algorithm/mode/padding in config value
    * commons.crypto.cipher.transformation
    *
-   * @return Cipher the cipher object Null value will be returned if no
+   * @return CryptoCipher the cipher object Null value will be returned if no
    *         cipher classes with transformation configured.
    */
-  public static Cipher getInstance(CipherTransformation transformation)
+  public static CryptoCipher getInstance(CipherTransformation transformation)
       throws GeneralSecurityException {
     return getInstance(transformation, new Properties());
   }
 
   // Return OpenSSLCipher if Properties is null or empty by default
-  private static List<Class<? extends Cipher>> getCipherClasses(Properties props) {
-    List<Class<? extends Cipher>> result = new ArrayList<Class<? extends
-        Cipher>>();
+  private static List<Class<? extends CryptoCipher>> getCipherClasses(Properties props) {
+    List<Class<? extends CryptoCipher>> result = new ArrayList<Class<? extends
+            CryptoCipher>>();
     String cipherClassString = Utils.getCipherClassString(props);
 
     for (String c : Utils.splitClassNames(cipherClassString, ",")) {
       try {
         Class<?> cls = ReflectionUtils.getClassByName(c);
-        result.add(cls.asSubclass(Cipher.class));
+        result.add(cls.asSubclass(CryptoCipher.class));
       } catch (ClassCastException e) {
-        LOG.error("Class {} is not a Cipher.", c);
+        LOG.error("Class {} is not a CryptoCipher.", c);
       } catch (ClassNotFoundException e) {
-        LOG.error("Cipher {} not found.", c);
+        LOG.error("CryptoCipher {} not found.", c);
       }
     }
 

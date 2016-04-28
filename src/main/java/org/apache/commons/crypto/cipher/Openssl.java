@@ -87,7 +87,7 @@ public final class Openssl {
       }
     } catch (Throwable t) {
       loadingFailure = t.getMessage();
-      LOG.debug("Failed to load OpenSSL Cipher.", t);
+      LOG.debug("Failed to load OpenSSL CryptoCipher.", t);
     } finally {
       loadingFailureReason = loadingFailure;
     }

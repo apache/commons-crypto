@@ -32,15 +32,15 @@ import javax.crypto.ShortBufferException;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * Implements the {@link org.apache.commons.crypto.cipher.Cipher} using JCE provider.
+ * Implements the {@link org.apache.commons.crypto.cipher.CryptoCipher} using JCE provider.
  */
-public class JceCipher implements Cipher {
+public class JceCipher implements CryptoCipher {
   private final Properties props;
   private final CipherTransformation transformation;
   private final javax.crypto.Cipher cipher;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.cipher.Cipher} based on JCE
+   * Constructs a {@link org.apache.commons.crypto.cipher.CryptoCipher} based on JCE
    * Cipher {@link javax.crypto.Cipher}.
    * @param props properties for JCE cipher
    * @param transformation transformation for JCE cipher

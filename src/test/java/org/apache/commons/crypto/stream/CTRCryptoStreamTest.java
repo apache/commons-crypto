@@ -22,10 +22,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.channels.Channels;
 
-import org.apache.commons.crypto.cipher.Cipher;
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
 
-public class CTRCipherStreamTest extends AbstractCipherStreamTest {
+public class CTRCryptoStreamTest extends AbstractCipherStreamTest {
 
   @Override
 public void setUp() throws IOException {
@@ -34,26 +34,26 @@ public void setUp() throws IOException {
   }
 
   @Override
-  protected CTRCipherInputStream getCipherInputStream
-      (ByteArrayInputStream bais, Cipher cipher, int
-      bufferSize,byte[] iv, boolean withChannel)
+  protected CTRCryptoInputStream getCryptoInputStream
+      (ByteArrayInputStream bais, CryptoCipher cipher, int
+      bufferSize, byte[] iv, boolean withChannel)
       throws IOException {
     if (withChannel) {
-      return new CTRCipherInputStream(Channels.newChannel(bais), cipher,
+      return new CTRCryptoInputStream(Channels.newChannel(bais), cipher,
           bufferSize, key, iv);
     } else {
-      return new CTRCipherInputStream(bais, cipher, bufferSize, key, iv);
+      return new CTRCryptoInputStream(bais, cipher, bufferSize, key, iv);
     }
   }
 
   @Override
-  protected CTRCipherOutputStream getCipherOutputStream(ByteArrayOutputStream baos, Cipher cipher, int
-      bufferSize, byte[] iv, boolean withChannel)
+  protected CTRCryptoOutputStream getCryptoOutputStream(ByteArrayOutputStream baos, CryptoCipher cipher,
+                                                        int bufferSize, byte[] iv, boolean withChannel)
       throws IOException {
     if (withChannel) {
-      return new CTRCipherOutputStream(Channels.newChannel(baos), cipher, bufferSize, key, iv);
+      return new CTRCryptoOutputStream(Channels.newChannel(baos), cipher, bufferSize, key, iv);
     } else {
-      return new CTRCipherOutputStream(baos, cipher, bufferSize, key, iv);
+      return new CTRCryptoOutputStream(baos, cipher, bufferSize, key, iv);
     }
   }
 }

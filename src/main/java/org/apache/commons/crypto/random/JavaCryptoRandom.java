@@ -26,22 +26,22 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 
 /**
- * A SecureRandom of Java implementation.
+ * A CryptoRandom of Java implementation.
  */
-public class JavaSecureRandom implements SecureRandom {
+public class JavaCryptoRandom implements CryptoRandom {
   private static final Log LOG =
-      LogFactory.getLog(JavaSecureRandom.class.getName());
+      LogFactory.getLog(JavaCryptoRandom.class.getName());
 
   private java.security.SecureRandom instance;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.random.JavaSecureRandom}.
+   * Constructs a {@link org.apache.commons.crypto.random.JavaCryptoRandom}.
    *
    * @param properties the configuration properties.
    * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for
    *         the specified algorithm.
    */
-  public JavaSecureRandom(Properties properties) throws NoSuchAlgorithmException {
+  public JavaCryptoRandom(Properties properties) throws NoSuchAlgorithmException {
     try {
       instance = java.security.SecureRandom
           .getInstance(properties.getProperty(
@@ -55,7 +55,7 @@ public class JavaSecureRandom implements SecureRandom {
 
   /**
    * Overrides {@link java.lang.AutoCloseable#close()}.
-   * For{@link JavaSecureRandom}, we don't need to recycle resource.
+   * For{@link JavaCryptoRandom}, we don't need to recycle resource.
    */
   @Override
   public void close() {
@@ -63,7 +63,7 @@ public class JavaSecureRandom implements SecureRandom {
   }
 
   /**
-   * Overrides {@link org.apache.commons.crypto.random.SecureRandom#nextBytes(byte[])}.
+   * Overrides {@link org.apache.commons.crypto.random.CryptoRandom#nextBytes(byte[])}.
    * Generates random bytes and places them into a user-supplied byte array.
    * The number of random bytes produced is equal to the length of the byte array.
    *

@@ -32,17 +32,17 @@ import javax.crypto.ShortBufferException;
 /**
  * The interface of cryptographic cipher for encryption and decryption.
  */
-public interface Cipher extends Closeable {
+public interface CryptoCipher extends Closeable {
 
   /**
    * A constant representing encrypt mode.  The mode constant to be used
-   * when calling init method of the Cipher.
+   * when calling init method of the CryptoCipher.
    */
   int ENCRYPT_MODE = javax.crypto.Cipher.ENCRYPT_MODE;
 
   /**
    * A constant representing decrypt mode.  The mode constant to be used 
-   * when calling init method of the Cipher.
+   * when calling init method of the CryptoCipher.
    */
   int DECRYPT_MODE = javax.crypto.Cipher.DECRYPT_MODE;
 

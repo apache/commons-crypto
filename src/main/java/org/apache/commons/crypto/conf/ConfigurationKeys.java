@@ -17,7 +17,9 @@
  */
 package org.apache.commons.crypto.conf;
 
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.OpensslCipher;
+import org.apache.commons.crypto.random.CryptoRandom;
 
 /**
  * The ConfigurationKeys contains Configuration keys and default values.
@@ -41,7 +43,7 @@ public class ConfigurationKeys {
    * "org.apache.commons.crypto.cipher.JceCipher" and "org.apache.commons.crypto.cipher.OpensslCipher".
    * And it takes a common separated list.
    * The "org.apache.commons.crypto.cipher.JceCipher" use jce provider to
-   * implement {@link org.apache.commons.crypto.cipher.Cipher} and
+   * implement {@link org.apache.commons.crypto.cipher.CryptoCipher} and
    * the "org.apache.commons.crypto.cipher.OpensslCipher" use jni into openssl to implement.
    * Note that for each value,the first value which can be created without exception
    * will be used (priority by order).
@@ -89,11 +91,11 @@ public class ConfigurationKeys {
   /**
    * The configuration key of the implementation class for secure random.
    * The values of COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY can be
-   * "org.apache.commons.crypto.random.JavaSecureRandom" and "org.apache.commons.crypto.random.OpensslSecureRandom".
+   * "org.apache.commons.crypto.random.JavaCryptoRandom" and "org.apache.commons.crypto.random.OpensslCryptoRandom".
    * And it takes a common separated list.
-   * The "org.apache.commons.crypto.random.JavaSecureRandom" use java to
-   * implement {@link org.apache.commons.crypto.random.SecureRandom} and
-   * the "org.apache.commons.crypto.random.OpensslSecureRandom" use jni into openssl to implement.
+   * The "org.apache.commons.crypto.random.JavaCryptoRandom" use java to
+   * implement {@link CryptoRandom} and
+   * the "org.apache.commons.crypto.random.OpensslCryptoRandom" use jni into openssl to implement.
    * Note that for each value,the first value which can be created without exception
    * will be used (priority by order).
    */
