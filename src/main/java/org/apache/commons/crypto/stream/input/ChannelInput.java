@@ -29,7 +29,7 @@ public class ChannelInput implements Input {
   private static final int SKIP_BUFFER_SIZE = 2048;
 
   private ByteBuffer buf;
-  private ReadableByteChannel channel;
+  private final ReadableByteChannel channel;
 
   /**
    * Constructs the {@link org.apache.commons.crypto.stream.input.ChannelInput}.

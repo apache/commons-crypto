@@ -25,7 +25,7 @@ import java.util.Locale;
  * Provides OS name and architecture name.
  */
 public class OSInfo {
-  private static HashMap<String, String> archMapping = new HashMap<String, String>();
+  private final static HashMap<String, String> archMapping = new HashMap<String, String>();
 
   /**
    * The constant string represents for X86 architecture, the value is: {@value #X86}.*/

@@ -26,9 +26,9 @@ import java.nio.ByteBuffer;
  * <code>Output</code> object acceptable by <code>CryptoOutputStream</code> as the output target.
  */
 public class StreamOutput implements Output {
-  private byte[] buf;
-  private int bufferSize;
-  private OutputStream out;
+  private final byte[] buf;
+  private final int bufferSize;
+  private final OutputStream out;
 
   /**
    * Constructs a {@link org.apache.commons.crypto.stream.output.StreamOutput}.
@@ -39,6 +39,7 @@ public class StreamOutput implements Output {
   public StreamOutput(OutputStream out, int bufferSize) {
     this.out = out;
     this.bufferSize = bufferSize;
+    buf = new byte[bufferSize];
   }
 
   /**
@@ -54,7 +55,6 @@ public class StreamOutput implements Output {
   @Override
   public int write(ByteBuffer src) throws IOException {
     final int len = src.remaining();
-    final byte[] buf = getBuf();
 
     int remaining = len;
     while(remaining > 0) {
@@ -89,13 +89,6 @@ public class StreamOutput implements Output {
   @Override
   public void close() throws IOException {
     out.close();
-  }
-
-  private byte[] getBuf() {
-    if (buf == null) {
-      buf = new byte[bufferSize];
-    }
-    return buf;
   }
 
   protected OutputStream getOut() {

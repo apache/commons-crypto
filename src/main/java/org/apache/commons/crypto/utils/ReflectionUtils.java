@@ -33,12 +33,11 @@ public class ReflectionUtils {
   private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>>
     CACHE_CLASSES = new WeakHashMap<ClassLoader, Map<String, WeakReference<Class<?>>>>();
 
-  private static ClassLoader classLoader;
+  private final static ClassLoader classLoader;
+
   static {
-    classLoader = Thread.currentThread().getContextClassLoader();
-    if (classLoader == null) {
-      classLoader = CryptoCipher.class.getClassLoader();
-    }
+    ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+    classLoader = (threadClassLoader != null) ? threadClassLoader : CryptoCipher.class.getClassLoader();
   }
 
   /**

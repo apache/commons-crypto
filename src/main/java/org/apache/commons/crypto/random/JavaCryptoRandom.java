@@ -32,7 +32,7 @@ public class JavaCryptoRandom implements CryptoRandom {
   private static final Log LOG =
       LogFactory.getLog(JavaCryptoRandom.class.getName());
 
-  private java.security.SecureRandom instance;
+  private final java.security.SecureRandom instance;
 
   /**
    * Constructs a {@link org.apache.commons.crypto.random.JavaCryptoRandom}.
@@ -42,15 +42,9 @@ public class JavaCryptoRandom implements CryptoRandom {
    *         the specified algorithm.
    */
   public JavaCryptoRandom(Properties properties) throws NoSuchAlgorithmException {
-    try {
-      instance = java.security.SecureRandom
-          .getInstance(properties.getProperty(
-              ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY,
-              ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
-    } catch (NoSuchAlgorithmException e) {
-      LOG.error("Failed to create java secure random due to error: " + e);
-      throw e;
-    }
+    instance = java.security.SecureRandom.getInstance(properties
+      .getProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY,
+        ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
   }
 
   /**

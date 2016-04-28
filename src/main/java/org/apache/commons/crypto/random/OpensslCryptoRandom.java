@@ -46,18 +46,21 @@ public class OpensslCryptoRandom extends Random implements CryptoRandom {
   private static final Log LOG =
       LogFactory.getLog(OpensslCryptoRandom.class.getName());
 
-  /** If native CryptoRandom unavailable, use java SecureRandom */
-  private JavaCryptoRandom fallback = null;
-  private static boolean nativeEnabled = false;
+  /** If native SecureRandom unavailable, use java SecureRandom */
+  private final JavaCryptoRandom fallback;
+  private static final boolean nativeEnabled;
+
   static {
+    boolean opensslLoaded = false;
     if (NativeCodeLoader.isNativeCodeLoaded()) {
       try {
         OpensslCryptoRandomNative.initSR();
-        nativeEnabled = true;
+        opensslLoaded = true;
       } catch (Throwable t) {
         LOG.error("Failed to load Openssl CryptoRandom", t);
       }
     }
+    nativeEnabled = opensslLoaded;
   }
 
   /**
@@ -79,6 +82,8 @@ public class OpensslCryptoRandom extends Random implements CryptoRandom {
   public OpensslCryptoRandom(Properties props) throws NoSuchAlgorithmException {
     if (!nativeEnabled) {
       fallback = new JavaCryptoRandom(props);
+    } else {
+      fallback = null;
     }
   }
 

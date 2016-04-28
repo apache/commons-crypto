@@ -41,7 +41,7 @@ public class NativeCodeLoader {
   private static final Log LOG =
     LogFactory.getLog(NativeCodeLoader.class);
 
-  private static boolean nativeCodeLoaded = false;
+  private final static boolean nativeCodeLoaded;
 
   private NativeCodeLoader() {}
 
@@ -51,6 +51,7 @@ public class NativeCodeLoader {
       LOG.debug("Trying to load the custom-built native-commons-crypto library...");
     }
 
+    boolean nativeLoaded = false;
     try {
       File nativeLibFile = findNativeLibrary();
       if (nativeLibFile != null) {
@@ -61,19 +62,19 @@ public class NativeCodeLoader {
         System.loadLibrary("commons-crypto");
       }
       LOG.debug("Loaded the native library");
-      nativeCodeLoaded = true;
+      nativeLoaded = true;
     } catch (Throwable t) {
       // Ignore failure to load
-      if(LOG.isDebugEnabled()) {
+      if (LOG.isDebugEnabled()) {
         LOG.debug("Failed to load native library with error: " + t);
-        LOG.debug("java.library.path=" +
-            System.getProperty("java.library.path"));
+        LOG.debug("java.library.path=" + System.getProperty("java.library.path"));
       }
     }
 
+    nativeCodeLoaded = nativeLoaded;
     if (!nativeCodeLoaded) {
-      LOG.warn("Unable to load native library for the platform... " +
-               "using builtin-java classes where applicable");
+      LOG.warn("Unable to load native library for the platform... "
+        + "using builtin-java classes where applicable");
     }
   }
 

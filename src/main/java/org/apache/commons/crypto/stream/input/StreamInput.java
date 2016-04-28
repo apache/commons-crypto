@@ -26,9 +26,9 @@ import java.nio.ByteBuffer;
  * wraps it as <code>Input</code> object acceptable by <code>CryptoInputStream</code>.
  */
 public class StreamInput implements Input {
-  private byte[] buf;
-  private int bufferSize;
-  InputStream in;
+  private final byte[] buf;
+  private final int bufferSize;
+  final InputStream in;
 
   /**
    * Constructs a {@link org.apache.commons.crypto.stream.input.StreamInput}.
@@ -39,6 +39,7 @@ public class StreamInput implements Input {
   public StreamInput(InputStream inputStream, int bufferSize) {
     this.in = inputStream;
     this.bufferSize = bufferSize;
+    buf = new byte[bufferSize];
   }
 
   /**
@@ -56,17 +57,16 @@ public class StreamInput implements Input {
   @Override
   public int read(ByteBuffer dst) throws IOException {
     int remaining = dst.remaining();
-    final byte[] tmp = getBuf();
     int read = 0;
     while (remaining > 0) {
-      final int n = in.read(tmp, 0, Math.min(remaining, bufferSize));
+      final int n = in.read(buf, 0, Math.min(remaining, bufferSize));
       if (n == -1) {
         if (read == 0) {
           read = -1;
         }
         break;
       } else if (n > 0) {
-        dst.put(tmp, 0, n);
+        dst.put(buf, 0, n);
         read += n;
         remaining -= n;
       }
@@ -153,12 +153,5 @@ public class StreamInput implements Input {
   @Override
   public void close() throws IOException {
     in.close();
-  }
-
-  private byte[] getBuf() {
-    if (buf == null) {
-      buf = new byte[bufferSize];
-    }
-    return buf;
   }
 }
