@@ -314,18 +314,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <version>${commons.rat.version}</version>
-        <configuration>
-          <excludes>
-            <exclude>*.cache</exclude>
-            <exclude>.travis.yml</exclude>
-            <exclude>lib/</exclude>
-            <exclude>Makefile</exclude>
-            <exclude>Makefile.common</exclude>
-            <exclude>project/project/target/config-classes/*</exclude>
-            <exclude>project/target/</exclude>
-            <exclude>src/main/java/org/apache/commons/crypto/VERSION</exclude>
-          </excludes>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
