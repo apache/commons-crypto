@@ -17,7 +17,6 @@
  */
 package org.apache.commons.crypto.conf;
 
-import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.OpensslCipher;
 import org.apache.commons.crypto.random.CryptoRandom;
 

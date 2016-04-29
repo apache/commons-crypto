@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class OsCryptoRandom extends Random implements CryptoRandom {
   public static final Log LOG = LogFactory.getLog(OsCryptoRandom.class);
-  
+
   private static final long serialVersionUID = 6391500337172057900L;
 
   private final int RESERVOIR_LENGTH = 8192;

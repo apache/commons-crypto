@@ -52,7 +52,7 @@ public interface Output {
    *          If some other I/O error occurs.
    */
   int write(ByteBuffer src) throws IOException;
-  
+
   /**
    * Flushes this output and forces any buffered output bytes
    * to be written out if the under layer output method support.
@@ -65,7 +65,7 @@ public interface Output {
    * @throws IOException  if an I/O error occurs.
    */
   void flush() throws IOException;
-  
+
   /**
    * Closes this output and releases any system resources associated
    * with the under layer output.

@@ -78,7 +78,7 @@ public enum CipherTransformation {
   }
 
   /**
-   * Converts to CipherTransformation from name, {@link #algorithmBlockSize} 
+   * Converts to CipherTransformation from name, {@link #algorithmBlockSize}
    * is fixed for certain cipher transformation, just need to compare the name.
    *
    * @param name cipher transformation name

@@ -39,5 +39,5 @@ public class OpensslCryptoRandomNative {
    * @return true if use {@link OpensslCryptoRandomNative} to
    * generate the user-specified number of random bits.
    */
-  public native static boolean nextRandBytes(byte[] bytes); 
+  public native static boolean nextRandBytes(byte[] bytes);
 }

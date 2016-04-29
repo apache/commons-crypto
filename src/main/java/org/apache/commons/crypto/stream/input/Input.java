@@ -95,7 +95,7 @@ public interface Input {
    * Reads up to the specified number of bytes from a given position within a
    * stream and return the number of bytes read.
    * This does not change the current offset of the stream and is thread-safe.
-   * 
+   *
    * An implementation may not support positioned read. If the implementation
    * doesn't support positioned read, it throws UnsupportedOperationException.
    *
@@ -114,8 +114,8 @@ public interface Input {
   /**
    * Seeks to the given offset from the start of the stream.
    * The next read() will be from that location.
-   * 
-   * An implementation may not support seek. If the implementation 
+   *
+   * An implementation may not support seek. If the implementation
    * doesn't support seek, it throws UnsupportedOperationException.
    *
    * @param position the offset from the start of the stream.

@@ -87,21 +87,21 @@ public class ReflectionUtils {
     }
   }
 
-  /** 
+  /**
    * Gets the value of the <code>name</code> property as a <code>Class</code>
    * implementing the interface specified by <code>xface</code>.
-   * If no such property is specified, then <code>defaultValue</code> is 
+   * If no such property is specified, then <code>defaultValue</code> is
    * returned.An exception is thrown if the returned class does not
    * implement the named interface.
-   * 
+   *
    * @param name the class name of default implementation.
    * @param defaultValue default value.
    * @param xface the interface implemented by the named class.
-   * @return property value as a <code>Class</code>, 
+   * @return property value as a <code>Class</code>,
    *         or <code>defaultValue</code>.
    */
-  public static <U> Class<? extends U> getClass(String name, 
-                                         Class<? extends U> defaultValue, 
+  public static <U> Class<? extends U> getClass(String name,
+                                         Class<? extends U> defaultValue,
                                          Class<U> xface) {
     try {
       Class<?> theClass = null;
@@ -123,15 +123,15 @@ public class ReflectionUtils {
     }
   }
 
-  /** 
+  /**
    * Gets the value of the <code>name</code> property as a <code>Class</code>.
-   * If no such property is specified, then <code>defaultValue</code> is 
+   * If no such property is specified, then <code>defaultValue</code> is
    * returned.
-   * 
+   *
    * @param name the class name.
    * @param defaultValue default value.
-   * @return property value as a <code>Class</code>, 
-   *         or <code>defaultValue</code>. 
+   * @return property value as a <code>Class</code>,
+   *         or <code>defaultValue</code>.
    */
   public static Class<?> getClass(String name, Class<?> defaultValue) {
     String valueString = System.getProperty(name);
@@ -147,7 +147,7 @@ public class ReflectionUtils {
 
   /**
    * Loads a class by name.
-   * 
+   *
    * @param name the class name.
    * @return the class object.
    * @throws ClassNotFoundException if the class is not found.
@@ -160,12 +160,12 @@ public class ReflectionUtils {
     }
     return ret;
   }
-  
+
   /**
    * Loads a class by name, returning null rather than throwing an exception
    * if it couldn't be loaded. This is to avoid the overhead of creating
    * an exception.
-   * 
+   *
    * @param name the class name.
    * @return the class object, or null if it could not be found.
    */
@@ -182,11 +182,11 @@ public class ReflectionUtils {
     }
 
     Class<?> clazz = null;
-    WeakReference<Class<?>> ref = map.get(name); 
+    WeakReference<Class<?>> ref = map.get(name);
     if (ref != null) {
        clazz = ref.get();
     }
-     
+
     if (clazz == null) {
       try {
         clazz = Class.forName(name, true, classLoader);

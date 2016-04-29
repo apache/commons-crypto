@@ -81,7 +81,7 @@ public class JceCipher implements CryptoCipher {
 
   /**
    * Initializes the cipher with mode, key and iv.
-   * 
+   *
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param params the algorithm parameters
@@ -108,7 +108,7 @@ public class JceCipher implements CryptoCipher {
   /**
    * Continues a multiple-part encryption/decryption operation. The data
    * is encrypted or decrypted, depending on how this cipher was initialized.
-   * 
+   *
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>

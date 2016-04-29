@@ -41,7 +41,7 @@ public interface CryptoCipher extends Closeable {
   int ENCRYPT_MODE = javax.crypto.Cipher.ENCRYPT_MODE;
 
   /**
-   * A constant representing decrypt mode.  The mode constant to be used 
+   * A constant representing decrypt mode.  The mode constant to be used
    * when calling init method of the CryptoCipher.
    */
   int DECRYPT_MODE = javax.crypto.Cipher.DECRYPT_MODE;
@@ -55,14 +55,14 @@ public interface CryptoCipher extends Closeable {
 
   /**
    * Gets the properties for this cipher.
-   * 
+   *
    * @return the properties for this cipher.
    */
   Properties getProperties();
 
   /**
    * Initializes the cipher with mode, key and iv.
-   * 
+   *
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param params the algorithm parameters
@@ -82,7 +82,7 @@ public interface CryptoCipher extends Closeable {
   /**
    * Continues a multiple-part encryption/decryption operation. The data
    * is encrypted or decrypted, depending on how this cipher was initialized.
-   * 
+   *
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
@@ -111,7 +111,7 @@ public interface CryptoCipher extends Closeable {
   /**
    * Encrypts or decrypts data in a single-part operation, or finishes a
    * multiple-part operation.
-   * 
+   *
    * @param inBuffer the input ByteBuffer
    * @param outBuffer the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>

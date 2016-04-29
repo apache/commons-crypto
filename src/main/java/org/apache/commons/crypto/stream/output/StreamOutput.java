@@ -22,7 +22,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 /**
- * The StreamOutput class takes a <code>OutputStream</code> object and wraps it as 
+ * The StreamOutput class takes a <code>OutputStream</code> object and wraps it as
  * <code>Output</code> object acceptable by <code>CryptoOutputStream</code> as the output target.
  */
 public class StreamOutput implements Output {
