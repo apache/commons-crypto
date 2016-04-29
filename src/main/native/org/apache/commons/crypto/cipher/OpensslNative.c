@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// export the native interfaces
+#define JNIEXPORT __attribute__((__visibility__("default")))
 #include "OpensslNative.h"
 
 #ifdef UNIX
