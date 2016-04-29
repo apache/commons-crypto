@@ -35,7 +35,7 @@
 
 // export the native interfaces
 #define JNIEXPORT __attribute__((__visibility__("default")))
-#include "OpensslSecureRandomNative.h"
+#include "OpensslCryptoRandomNative.h"
 
 #ifdef UNIX
 static void * (*dlsym_CRYPTO_malloc) (int, const char *, int);
