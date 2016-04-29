@@ -28,8 +28,6 @@ import java.util.Properties;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.utils.Utils;
 
@@ -101,9 +99,9 @@ public class JceCipher implements Cipher {
     Utils.checkNotNull(params);
 
     int cipherMode = javax.crypto.Cipher.DECRYPT_MODE;
-    if (mode == ENCRYPT_MODE)
+    if (mode == ENCRYPT_MODE) {
       cipherMode = javax.crypto.Cipher.ENCRYPT_MODE;
-
+    }
     cipher.init(cipherMode, key, params);
   }
 

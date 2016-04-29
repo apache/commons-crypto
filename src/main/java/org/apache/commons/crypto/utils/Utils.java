@@ -72,9 +72,9 @@ public class Utils {
       InputStream is = Thread.currentThread().getContextClassLoader()
           .getResourceAsStream(COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE);
 
-      if (is == null)
+      if (is == null) {
         return; // no configuration file is found
-
+      }
       // Load property file
       Properties props = new Properties();
       props.load(is);

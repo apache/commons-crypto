@@ -85,14 +85,15 @@ public class NativeCodeLoader {
         .getLibName();
 
     // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
-    if (nativeLibraryName == null)
+    if (nativeLibraryName == null) {
       nativeLibraryName = System.mapLibraryName("commons-crypto");
-
+    }
     if (nativeLibraryPath != null) {
       File nativeLib = new File(nativeLibraryPath,
           nativeLibraryName);
-      if (nativeLib.exists())
+      if (nativeLib.exists()) {
         return nativeLib;
+      }
     }
 
     // Load an OS-dependent native library inside a jar file
@@ -188,15 +189,18 @@ public class NativeCodeLoader {
           nativeIn =
               NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath);
           extractedLibIn = new FileInputStream(extractedLibFile);
-          if (!contentsEquals(nativeIn, extractedLibIn))
+          if (!contentsEquals(nativeIn, extractedLibIn)) {
             throw new RuntimeException(String.format(
                     "Failed to write a native library file at %s",
                     extractedLibFile));
+          }
         } finally {
-          if (nativeIn != null)
+          if (nativeIn != null) {
             nativeIn.close();
-          if (extractedLibIn != null)
+          }
+          if (extractedLibIn != null) {
             extractedLibIn.close();
+          }
         }
       }
 
@@ -225,18 +229,19 @@ public class NativeCodeLoader {
   public static String getVersion() {
     URL versionFile = NativeCodeLoader.class
         .getResource("/META-INF/maven/org.apache.commons.crypto/commons-crypto/pom.properties");
-    if (versionFile == null)
+    if (versionFile == null) {
       versionFile = NativeCodeLoader.class
           .getResource("/org/apache/commons/crypto/VERSION");
-
+    }
     String version = "unknown";
     try {
       if (versionFile != null) {
         Properties versionData = new Properties();
         versionData.load(versionFile.openStream());
         version = versionData.getProperty("version", version);
-        if (version.equals("unknown"))
+        if (version.equals("unknown")) {
           version = versionData.getProperty("VERSION", version);
+        }
         version = version.trim().replaceAll("[^0-9M\\.]", "");
       }
     } catch (IOException e) {
@@ -257,8 +262,9 @@ public class NativeCodeLoader {
     int ch = in1.read();
     while (ch != -1) {
       int ch2 = in2.read();
-      if (ch != ch2)
+      if (ch != ch2) {
         return false;
+      }
       ch = in1.read();
     }
     int ch2 = in2.read();
