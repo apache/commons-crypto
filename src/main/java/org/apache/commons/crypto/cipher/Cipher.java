@@ -38,13 +38,13 @@ public interface Cipher extends Closeable {
    * A constant representing encrypt mode.  The mode constant to be used
    * when calling init method of the Cipher.
    */
-  int ENCRYPT_MODE = 1;
+  int ENCRYPT_MODE = javax.crypto.Cipher.ENCRYPT_MODE;
 
   /**
    * A constant representing decrypt mode.  The mode constant to be used 
    * when calling init method of the Cipher.
    */
-  int DECRYPT_MODE = 0;
+  int DECRYPT_MODE = javax.crypto.Cipher.DECRYPT_MODE;
 
   /**
    * Gets the CipherTransformation for this cipher.
