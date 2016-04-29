@@ -143,8 +143,9 @@ public class OSInfo {
                 + "' -name 'libjvm.so' | head -1 | xargs readelf -A | "
                 + "grep 'Tag_ABI_VFP_args: VFP registers'" };
         int exitCode = Runtime.getRuntime().exec(cmdarray).waitFor();
-        if (exitCode == 0)
+        if (exitCode == 0) {
           return "armhf";
+        }
       } catch (IOException e) {
         // ignored: fall back to "arm" arch (soft-float ABI)
       } catch (InterruptedException e) {
@@ -152,8 +153,9 @@ public class OSInfo {
       }
     } else {
       String lc = osArch.toLowerCase(Locale.US);
-      if (archMapping.containsKey(lc))
+      if (archMapping.containsKey(lc)) {
         return archMapping.get(lc);
+      }
     }
     return translateArchNameToFolderName(osArch);
   }

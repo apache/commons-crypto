@@ -111,12 +111,13 @@ public class ReflectionUtils {
       if (theClass == null) {
         theClass = defaultValue;
       }
-      if (theClass != null && !xface.isAssignableFrom(theClass))
+      if (theClass != null && !xface.isAssignableFrom(theClass)) {
         throw new RuntimeException(theClass+" not "+xface.getName());
-      else if (theClass != null)
+      } else if (theClass != null) {
         return theClass.asSubclass(xface);
-      else
+      } else {
         return null;
+      }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -134,8 +135,9 @@ public class ReflectionUtils {
    */
   public static Class<?> getClass(String name, Class<?> defaultValue) {
     String valueString = System.getProperty(name);
-    if (valueString == null)
+    if (valueString == null) {
       return defaultValue;
+    }
     try {
       return getClassByName(valueString);
     } catch (ClassNotFoundException e) {

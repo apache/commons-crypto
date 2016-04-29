@@ -95,8 +95,9 @@ public class OpensslCipher implements Cipher {
     Utils.checkNotNull(params);
 
     int cipherMode = Openssl.DECRYPT_MODE;
-    if (mode == ENCRYPT_MODE)
+    if (mode == ENCRYPT_MODE) {
       cipherMode = Openssl.ENCRYPT_MODE;
+    }
     byte[] iv;
     if (params instanceof IvParameterSpec) {
       iv = ((IvParameterSpec) params).getIV();
