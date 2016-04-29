@@ -33,6 +33,8 @@
 #include <windows.h>
 #endif
 
+// export the native interfaces
+#define JNIEXPORT __attribute__((__visibility__("default")))
 #include "OpensslCryptoRandomNative.h"
 
 #ifdef UNIX
