@@ -60,6 +60,21 @@
 
       <subsection name ="Usage">
         <ol style="list-style-type: decimal">
+          <h4>Prerequisites</h4>
+          <p>
+            Commons Crypto relies on standard JDK 7 (or above) and OpenSSL 1.0.1c (or above) for production
+            deployment.
+          </p>
+          <h4>Using Commons Crypto in your Apache Maven build</h4>
+          <p>
+            To build with Apache Maven, add the dependencies listed below to your pom.xml file.
+            <br/>
+            &lt;dependency&gt;<br/>
+            &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;<br/>
+            &lt;artifactId&gt;commons-crypto&lt;/artifactId&gt;<br/>
+            &lt;version&gt;1.0.0&lt;/version&gt;<br/>
+            &lt;/dependency&gt;<br/>
+          </p>
         <h4>Usage of Random API</h4>
         <p>
           CryptoRandom provides a cryptographically strong random number generators.
@@ -103,8 +118,8 @@
               int inputLen = input.length();<br/>
               byte[] output = new byte[1024];<br/>
               int outputOffset = 0;<br/>
-              //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
-              cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
+              //Initializes the cipher with ENCRYPT_MODE, key and iv.<br/>
+              cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
               //Continues a multiple-part encryption/decryption operation for byte array.<br/>
               cipher.update(input.getBytes("UTF-8"), inputOffset, inputLen, output, outputOffset);<br/>
               //We should call do final at the end of encryption/decryption.<br/>
@@ -127,7 +142,7 @@
               ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
               inBuffer.put("The data you want to encrypt or decrypt".getBytes("UTF-8"));<br/>
               //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
-              cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
+              cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
               //Continues a multiple-part encryption/decryption operation for byte array.<br/>
               cipher.update(inBuffer, outBuffer);<br/>
               //We should call do final at the end of encryption/decryption.<br/>
@@ -152,12 +167,13 @@
               String input = "hello world!";<br/>
               byte[] decryptedData = new byte[1024];<br/>
               //Encryption with CryptoOutputStream.<br/>
-              //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
-              cipher.init(Cipher.ENCRYPT_MODE, key, iv);<br/>
               // Constructs the original OutputStream.<br/>
               OutputStream outputStream = new ByteArrayOutputStream();<br/>
+              //Creates a CryptoCipher instance with the transformation and properties.<br/>
+              CryptoCipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
               //Constructs the instance of CryptoOutputStream.<br/>
-              CryptoOutputStream cos = new CryptoOutputStream(outputStream, cipher, bufferSize, key, iv);<br/>
+              CryptoOutputStream cos = new CryptoOutputStream(outputStream, cipher, bufferSize,<br/>
+                                                              new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
               cos.write(input.getBytes("UTF-8"));<br/>
               cos.flush();<br/>
               cos.close();<br/>
@@ -169,12 +185,13 @@
           <tr>
             <td>
               // Decryption with CryptoInputStream.<br/>
-              //Initializes the cipher with DECRYPT_MODE,key and iv.<br/>
-              cipher.init(Cipher.DECRYPT_MODE, key, iv);<br/>
               //Constructs the original InputStream.<br/>
               InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());<br/>
+              //Creates a CryptoCipher instance with the transformation and properties.<br/>
+              CryptoCipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
               //Constructs the instance of CryptoInputStream.<br/>
-              CryptoInputStream cis = new CryptoInputStream(inputStream, cipher, bufferSize, key, iv);<br/>
+              CryptoInputStream cis = new CryptoInputStream(inputStream, cipher, bufferSize, <br/>
+                                                            new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
               int decryptedLen = cis.read(decryptedData, 0, 1024);<br/>
               cis.close();<br/>
             </td>
