@@ -18,5 +18,13 @@
 
 #ifndef __CONFIG_H
 #define __CONFIG_H
-#define COMMONS_CRYPTO_OPENSSL_LIBRARY "libcrypto.so"
+
+#if defined(WINDOWS)
+    #define COMMONS_CRYPTO_OPENSSL_LIBRARY "libcrypto.dll"
+#elif defined(MAC_OS)
+    #define COMMONS_CRYPTO_OPENSSL_LIBRARY "libcrypto.dylib"
+#else
+    #define COMMONS_CRYPTO_OPENSSL_LIBRARY "libcrypto.so"
+#endif
+
 #endif // __CONFIG_H

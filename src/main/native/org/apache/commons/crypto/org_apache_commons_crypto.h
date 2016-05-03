@@ -32,6 +32,10 @@
 #define UNIX
 #endif
 
+#if defined(__APPLE__)
+#define MAC_OS
+#endif
+
 /* A helper macro to 'throw' a java exception. */
 #define THROW(env, exception_name, message) \
   { \
