@@ -96,8 +96,8 @@ Linux-x86_CC        := $(CROSS_PREFIX)gcc
 Linux-x86_CXX       := $(CROSS_PREFIX)g++
 Linux-x86_STRIP     := $(CROSS_PREFIX)strip
 ifeq ($(IBM_JDK_7),)
-  Linux-x86_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m32
-  Linux-x86_CFLAGS    := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m32
+  Linux-x86_CXXFLAGS  := -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m32
+  Linux-x86_CFLAGS    := -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m32
 else
   Linux-x86_CXXFLAGS  := -include $(IBM_JDK_LIB)/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m32
   Linux-x86_CFLAGS    := -include $(IBM_JDK_LIB)/jni_md.h -include $(IBM_JDK_LIB)/jniport.h -I$(JAVA_HOME)/include -O2 -fPIC -fvisibility=hidden -m32
