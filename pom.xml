@@ -51,6 +51,13 @@ http://maven.apache.org/maven-v4_0_0.xsd">
       https://git-wip-us.apache.org/repos/asf?p=commons-crypto.git
     </url>
   </scm>
+  <distributionManagement>
+    <site>
+      <id>commons.site</id>
+      <name>Apache Commons Site SVN</name>
+      <url>scm:svn:${commons.scmPubUrl}</url>
+    </site>
+  </distributionManagement>
   <developers>
     <developer>
       <name>Aaron T Myers</name>
@@ -223,6 +230,15 @@ http://maven.apache.org/maven-v4_0_0.xsd">
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>doclint-java8-disable</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <additionalparam>-Xdoclint:none</additionalparam>
+      </properties>
     </profile>
   </profiles>
   <licenses>
