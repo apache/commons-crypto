@@ -20,13 +20,13 @@ package org.apache.commons.crypto.cipher;
 
 public class JceCipherTest extends AbstractCipherTest {
 
-  @Override
-  public void init() {
-    transformations = new CipherTransformation[]{
-        CipherTransformation.AES_CBC_NOPADDING,
-        CipherTransformation.AES_CBC_PKCS5PADDING,
-        CipherTransformation.AES_CTR_NOPADDING};
-    cipherClass = JceCipher.class.getName();
-  }
+    @Override
+    public void init() {
+        transformations = new CipherTransformation[] {
+                CipherTransformation.AES_CBC_NOPADDING,
+                CipherTransformation.AES_CBC_PKCS5PADDING,
+                CipherTransformation.AES_CTR_NOPADDING };
+        cipherClass = JceCipher.class.getName();
+    }
 
 }

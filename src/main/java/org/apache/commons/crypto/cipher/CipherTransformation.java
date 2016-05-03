@@ -18,78 +18,81 @@
 package org.apache.commons.crypto.cipher;
 
 /**
- * Defines properties of a CipherTransformation. Modeled after the ciphers in Cipher.
+ * Defines properties of a CipherTransformation. Modeled after the ciphers in
+ * Cipher.
  */
 public enum CipherTransformation {
 
-  /** A crypto transformation representing AES/CTR/NoPadding */
-  AES_CTR_NOPADDING("AES/CTR/NoPadding", 16),
-  /** A crypto transformation representing AES/CBC/NoPadding */
-  AES_CBC_NOPADDING("AES/CBC/NoPadding", 16),
-  /** A crypto transformation representing AES/CBC/PKCS5Padding */
-  AES_CBC_PKCS5PADDING("AES/CBC/PKCS5Padding", 16);
+    /** A crypto transformation representing AES/CTR/NoPadding */
+    AES_CTR_NOPADDING("AES/CTR/NoPadding", 16),
+    /** A crypto transformation representing AES/CBC/NoPadding */
+    AES_CBC_NOPADDING("AES/CBC/NoPadding", 16),
+    /** A crypto transformation representing AES/CBC/PKCS5Padding */
+    AES_CBC_PKCS5PADDING("AES/CBC/PKCS5Padding", 16);
 
-  private final String name;
-  private final int algorithmBlockSize;
+    private final String name;
+    private final int algorithmBlockSize;
 
-  /**
-   * Constructor for CipherTransformation.  Initalizes the cipher with algorithm
-   * name and block size of the algorithm.
-   *
-   * @param name the name of cipher algorithm
-   * @param algorithmBlockSize the blockSize of cipher algorithm
-   */
-  CipherTransformation(String name, int algorithmBlockSize) {
-    this.name = name;
-    this.algorithmBlockSize = algorithmBlockSize;
-  }
-
-  /**
-   * Gets the algorithm name of cipher.
-   *
-   * @return name of cipher transformation, as in Cipher
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * Gets the algorithm block size of cipher.
-   *
-   * @return size of an algorithm block in bytes.
-   */
-  public int getAlgorithmBlockSize() {
-    return algorithmBlockSize;
-  }
-
-  /**
-   * Overrides {@link java.lang.Enum#toString()}
-   *
-   * @return the name of cipher algorithm and blocksize.
-   */
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder("{");
-    builder.append("name: " + name);
-    builder.append(", algorithmBlockSize: " + algorithmBlockSize);
-    builder.append("}");
-    return builder.toString();
-  }
-
-  /**
-   * Converts to CipherTransformation from name, {@link #algorithmBlockSize}
-   * is fixed for certain cipher transformation, just need to compare the name.
-   *
-   * @param name cipher transformation name
-   * @return CipherTransformation cipher transformation
-   */
-  public static CipherTransformation fromName(String name) {
-    CipherTransformation[] transformations = CipherTransformation.values();
-    for (CipherTransformation transformation : transformations) {
-      if (transformation.getName().equals(name)) {
-        return transformation;
-      }
+    /**
+     * Constructor for CipherTransformation. Initalizes the cipher with
+     * algorithm name and block size of the algorithm.
+     *
+     * @param name the name of cipher algorithm
+     * @param algorithmBlockSize the blockSize of cipher algorithm
+     */
+    CipherTransformation(String name, int algorithmBlockSize) {
+        this.name = name;
+        this.algorithmBlockSize = algorithmBlockSize;
     }
-    throw new IllegalArgumentException("Invalid transformation name: " + name);
-  }
+
+    /**
+     * Gets the algorithm name of cipher.
+     *
+     * @return name of cipher transformation, as in Cipher
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the algorithm block size of cipher.
+     *
+     * @return size of an algorithm block in bytes.
+     */
+    public int getAlgorithmBlockSize() {
+        return algorithmBlockSize;
+    }
+
+    /**
+     * Overrides {@link java.lang.Enum#toString()}
+     *
+     * @return the name of cipher algorithm and blocksize.
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("{");
+        builder.append("name: " + name);
+        builder.append(", algorithmBlockSize: " + algorithmBlockSize);
+        builder.append("}");
+        return builder.toString();
+    }
+
+    /**
+     * Converts to CipherTransformation from name, {@link #algorithmBlockSize}
+     * is fixed for certain cipher transformation, just need to compare the
+     * name.
+     *
+     * @param name cipher transformation name
+     * @return CipherTransformation cipher transformation
+     */
+    public static CipherTransformation fromName(String name) {
+        CipherTransformation[] transformations = CipherTransformation.values();
+        for (CipherTransformation transformation : transformations) {
+            if (transformation.getName().equals(name)) {
+                return transformation;
+            }
+        }
+        throw new IllegalArgumentException("Invalid transformation name: "
+                + name);
+    }
 }

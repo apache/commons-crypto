@@ -26,32 +26,32 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 public class CryptoCipherFactoryTest {
-  @Test
-  public void testDefaultCipher() throws GeneralSecurityException {
-    CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
-        CipherTransformation.AES_CBC_NOPADDING);
-    Assert.assertEquals(OpensslCipher.class.getName(),
-        defaultCipher.getClass().getName());
-  }
+    @Test
+    public void testDefaultCipher() throws GeneralSecurityException {
+        CryptoCipher defaultCipher = CryptoCipherFactory
+                .getInstance(CipherTransformation.AES_CBC_NOPADDING);
+        Assert.assertEquals(OpensslCipher.class.getName(), defaultCipher
+                .getClass().getName());
+    }
 
-  @Test
-  public void testEmptyCipher() throws GeneralSecurityException {
-    Properties properties = new Properties();
-    properties.put(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY, "");
-    CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
-        CipherTransformation.AES_CBC_NOPADDING, properties);
-    Assert.assertEquals(OpensslCipher.class.getName(),
-        defaultCipher.getClass().getName());
-  }
+    @Test
+    public void testEmptyCipher() throws GeneralSecurityException {
+        Properties properties = new Properties();
+        properties.put(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY, "");
+        CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
+                CipherTransformation.AES_CBC_NOPADDING, properties);
+        Assert.assertEquals(OpensslCipher.class.getName(), defaultCipher
+                .getClass().getName());
+    }
 
-  @Test
-  public void testInvalidCipher() throws GeneralSecurityException {
-    Properties properties = new Properties();
-    properties.put(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
-        "InvalidCipherName");
-    CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
-        CipherTransformation.AES_CBC_NOPADDING, properties);
-    Assert.assertEquals(JceCipher.class.getName(),
-        defaultCipher.getClass().getName());
-  }
+    @Test
+    public void testInvalidCipher() throws GeneralSecurityException {
+        Properties properties = new Properties();
+        properties.put(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
+                "InvalidCipherName");
+        CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
+                CipherTransformation.AES_CBC_NOPADDING, properties);
+        Assert.assertEquals(JceCipher.class.getName(), defaultCipher.getClass()
+                .getName());
+    }
 }

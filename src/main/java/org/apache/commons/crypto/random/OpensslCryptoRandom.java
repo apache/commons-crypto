@@ -33,118 +33,120 @@ import org.apache.commons.crypto.utils.Utils;
  * </p>
  *
  * <p>
- * If using an Intel chipset with RDRAND, the high-performance hardware
- * random number generator will be used and it's much faster than
- * SecureRandom. If RDRAND is unavailable, default OpenSSL secure random
- * generator will be used. It's still faster and can generate strong random bytes.
+ * If using an Intel chipset with RDRAND, the high-performance hardware random
+ * number generator will be used and it's much faster than SecureRandom. If
+ * RDRAND is unavailable, default OpenSSL secure random generator will be used.
+ * It's still faster and can generate strong random bytes.
  * </p>
+ *
  * @see <a href="https://wiki.openssl.org/index.php/Random_Numbers">
  *      https://wiki.openssl.org/index.php/Random_Numbers</a>
  * @see <a href="http://en.wikipedia.org/wiki/RdRand">
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
 public class OpensslCryptoRandom extends Random implements CryptoRandom {
-  private static final long serialVersionUID = -7828193502768789584L;
-  private static final Log LOG =
-      LogFactory.getLog(OpensslCryptoRandom.class.getName());
+    private static final long serialVersionUID = -7828193502768789584L;
+    private static final Log LOG = LogFactory.getLog(OpensslCryptoRandom.class
+            .getName());
 
-  /** If native SecureRandom unavailable, use java SecureRandom */
-  private final JavaCryptoRandom fallback;
-  private static final boolean nativeEnabled;
+    /** If native SecureRandom unavailable, use java SecureRandom */
+    private final JavaCryptoRandom fallback;
+    private static final boolean nativeEnabled;
 
-  static {
-    boolean opensslLoaded = false;
-    if (NativeCodeLoader.isNativeCodeLoaded()) {
-      try {
-        OpensslCryptoRandomNative.initSR();
-        opensslLoaded = true;
-      } catch (Throwable t) {
-        LOG.error("Failed to load Openssl CryptoRandom", t);
-      }
-    }
-    nativeEnabled = opensslLoaded;
-  }
-
-  /**
-   * Judges whether loading native library successfully.
-   *
-   * @return true if loading library successfully.
-   */
-  public static boolean isNativeCodeLoaded() {
-    return nativeEnabled;
-  }
-
-  /**
-   * Constructs a {@link OpensslCryptoRandom}.
-   *
-   * @param props the configuration properties.
-   * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for
-   *         the specified algorithm.
-   */
-  public OpensslCryptoRandom(Properties props) throws NoSuchAlgorithmException {
-    if (!nativeEnabled) {
-      fallback = new JavaCryptoRandom(props);
-    } else {
-      fallback = null;
-    }
-  }
-
-  /**
-   * Generates a user-specified number of random bytes.
-   * It's thread-safe.
-   *
-   * @param bytes the array to be filled in with random bytes.
-   */
-  @Override
-  public void nextBytes(byte[] bytes) {
-    if (!nativeEnabled || !OpensslCryptoRandomNative.nextRandBytes(bytes)) {
-      fallback.nextBytes(bytes);
-    }
-  }
-
-  /**
-   * Overrides {@link OpensslCryptoRandom}.
-   * For {@link OpensslCryptoRandom}, we don't need to set seed.
-   *
-   * @param seed the initial seed.
-   */
-  @Override
-  public void setSeed(long seed) {
-    // Self-seeding.
-  }
-
-  /**
-   * Overrides Random#next(). Generates an integer containing the
-   * user-specified number of random bits(right justified, with leading
-   * zeros).
-   *
-   * @param numBits number of random bits to be generated, where 0
-   *        {@literal <=} <code>numBits</code> {@literal <=} 32.
-   * @return int an <code>int</code> containing the user-specified number of
-   *         random bits (right justified, with leading zeros).
-   */
-  @Override
-  final protected int next(int numBits) {
-    Utils.checkArgument(numBits >= 0 && numBits <= 32);
-    int numBytes = (numBits + 7) / 8;
-    byte b[] = new byte[numBytes];
-    int next = 0;
-
-    nextBytes(b);
-    for (int i = 0; i < numBytes; i++) {
-      next = (next << 8) + (b[i] & 0xFF);
+    static {
+        boolean opensslLoaded = false;
+        if (NativeCodeLoader.isNativeCodeLoaded()) {
+            try {
+                OpensslCryptoRandomNative.initSR();
+                opensslLoaded = true;
+            } catch (Throwable t) {
+                LOG.error("Failed to load Openssl CryptoRandom", t);
+            }
+        }
+        nativeEnabled = opensslLoaded;
     }
 
-    return next >>> (numBytes * 8 - numBits);
-  }
-
-  /**
-   * Overrides {@link java.lang.AutoCloseable#close()}. Closes openssl context if native enabled.
-   */
-  @Override
-  public void close() {
-    if (!nativeEnabled && fallback !=null) {
-      fallback.close();
+    /**
+     * Judges whether loading native library successfully.
+     *
+     * @return true if loading library successfully.
+     */
+    public static boolean isNativeCodeLoaded() {
+        return nativeEnabled;
     }
-  }
+
+    /**
+     * Constructs a {@link OpensslCryptoRandom}.
+     *
+     * @param props the configuration properties.
+     * @throws NoSuchAlgorithmException if no Provider supports a
+     *         SecureRandomSpi implementation for the specified algorithm.
+     */
+    public OpensslCryptoRandom(Properties props)
+            throws NoSuchAlgorithmException {
+        if (!nativeEnabled) {
+            fallback = new JavaCryptoRandom(props);
+        } else {
+            fallback = null;
+        }
+    }
+
+    /**
+     * Generates a user-specified number of random bytes. It's thread-safe.
+     *
+     * @param bytes the array to be filled in with random bytes.
+     */
+    @Override
+    public void nextBytes(byte[] bytes) {
+        if (!nativeEnabled || !OpensslCryptoRandomNative.nextRandBytes(bytes)) {
+            fallback.nextBytes(bytes);
+        }
+    }
+
+    /**
+     * Overrides {@link OpensslCryptoRandom}. For {@link OpensslCryptoRandom},
+     * we don't need to set seed.
+     *
+     * @param seed the initial seed.
+     */
+    @Override
+    public void setSeed(long seed) {
+        // Self-seeding.
+    }
+
+    /**
+     * Overrides Random#next(). Generates an integer containing the
+     * user-specified number of random bits(right justified, with leading
+     * zeros).
+     *
+     * @param numBits number of random bits to be generated, where 0
+     *        {@literal <=} <code>numBits</code> {@literal <=} 32.
+     * @return int an <code>int</code> containing the user-specified number of
+     *         random bits (right justified, with leading zeros).
+     */
+    @Override
+    final protected int next(int numBits) {
+        Utils.checkArgument(numBits >= 0 && numBits <= 32);
+        int numBytes = (numBits + 7) / 8;
+        byte b[] = new byte[numBytes];
+        int next = 0;
+
+        nextBytes(b);
+        for (int i = 0; i < numBytes; i++) {
+            next = (next << 8) + (b[i] & 0xFF);
+        }
+
+        return next >>> (numBytes * 8 - numBits);
+    }
+
+    /**
+     * Overrides {@link java.lang.AutoCloseable#close()}. Closes openssl context
+     * if native enabled.
+     */
+    @Override
+    public void close() {
+        if (!nativeEnabled && fallback != null) {
+            fallback.close();
+        }
+    }
 }

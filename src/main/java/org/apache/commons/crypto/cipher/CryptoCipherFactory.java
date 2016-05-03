@@ -32,77 +32,80 @@ import org.slf4j.LoggerFactory;
  */
 public class CryptoCipherFactory {
 
-  /** LOG instance for {@link CryptoCipherFactory} */
-  public final static Logger LOG = LoggerFactory.getLogger(CryptoCipherFactory.class);
+    /** LOG instance for {@link CryptoCipherFactory} */
+    public final static Logger LOG = LoggerFactory
+            .getLogger(CryptoCipherFactory.class);
 
-  private CryptoCipherFactory() {}
+    private CryptoCipherFactory() {
+    }
 
-  /**
-   * Gets a cipher instance for specified algorithm/mode/padding.
-   *
-   * @param props
-   *          the configuration properties
-   * @param transformation
-   *          algorithm/mode/padding
-   * @return CryptoCipher the cipher. Null value will be returned if no
-   *         cipher classes with transformation configured.
-   * @throws GeneralSecurityException if cipher initialize failed
-   */
-  public static CryptoCipher getInstance(CipherTransformation transformation,
-                                         Properties props) throws GeneralSecurityException {
-    List<Class<? extends CryptoCipher>> klasses = getCipherClasses(props);
-    CryptoCipher cipher = null;
-    if (klasses != null) {
-      for (Class<? extends CryptoCipher> klass : klasses) {
-        try {
-          cipher = ReflectionUtils.newInstance(klass, props, transformation);
-          if (cipher != null) {
-            LOG.debug("Using cipher {} for transformation {}.", klass.getName(),
-                transformation.getName());
-            break;
-          }
-        } catch (Exception e) {
-          LOG.error("CryptoCipher {} is not available or transformation {} is not " +
-            "supported.", klass.getName(), transformation.getName());
+    /**
+     * Gets a cipher instance for specified algorithm/mode/padding.
+     *
+     * @param props the configuration properties
+     * @param transformation algorithm/mode/padding
+     * @return CryptoCipher the cipher. Null value will be returned if no cipher
+     *         classes with transformation configured.
+     * @throws GeneralSecurityException if cipher initialize failed
+     */
+    public static CryptoCipher getInstance(CipherTransformation transformation,
+            Properties props) throws GeneralSecurityException {
+        List<Class<? extends CryptoCipher>> klasses = getCipherClasses(props);
+        CryptoCipher cipher = null;
+        if (klasses != null) {
+            for (Class<? extends CryptoCipher> klass : klasses) {
+                try {
+                    cipher = ReflectionUtils.newInstance(klass, props,
+                            transformation);
+                    if (cipher != null) {
+                        LOG.debug("Using cipher {} for transformation {}.",
+                                klass.getName(), transformation.getName());
+                        break;
+                    }
+                } catch (Exception e) {
+                    LOG.error(
+                            "CryptoCipher {} is not available or transformation {} is not "
+                                    + "supported.", klass.getName(),
+                            transformation.getName());
+                }
+            }
         }
-      }
+
+        return (cipher == null) ? new JceCipher(props, transformation) : cipher;
     }
 
-    return (cipher == null) ? new JceCipher(props, transformation) : cipher;
-  }
-
-  /**
-   * Gets a cipher for algorithm/mode/padding in config value
-   * commons.crypto.cipher.transformation
-   *
-   * @param transformation CipherTransformation instance.
-   * @return CryptoCipher the cipher object Null value will be returned if no
-   *         cipher classes with transformation configured.
-   * @throws GeneralSecurityException if JCE cipher initialize failed
-   */
-  public static CryptoCipher getInstance(CipherTransformation transformation)
-      throws GeneralSecurityException {
-    return getInstance(transformation, new Properties());
-  }
-
-  // Return OpenSSLCipher if Properties is null or empty by default
-  private static List<Class<? extends CryptoCipher>> getCipherClasses(Properties props) {
-    List<Class<? extends CryptoCipher>> result = new ArrayList<Class<? extends
-            CryptoCipher>>();
-    String cipherClassString = Utils.getCipherClassString(props);
-
-    for (String c : Utils.splitClassNames(cipherClassString, ",")) {
-      try {
-        Class<?> cls = ReflectionUtils.getClassByName(c);
-        result.add(cls.asSubclass(CryptoCipher.class));
-      } catch (ClassCastException e) {
-        LOG.error("Class {} is not a CryptoCipher.", c);
-      } catch (ClassNotFoundException e) {
-        LOG.error("CryptoCipher {} not found.", c);
-      }
+    /**
+     * Gets a cipher for algorithm/mode/padding in config value
+     * commons.crypto.cipher.transformation
+     *
+     * @param transformation CipherTransformation instance.
+     * @return CryptoCipher the cipher object Null value will be returned if no
+     *         cipher classes with transformation configured.
+     * @throws GeneralSecurityException if JCE cipher initialize failed
+     */
+    public static CryptoCipher getInstance(CipherTransformation transformation)
+            throws GeneralSecurityException {
+        return getInstance(transformation, new Properties());
     }
 
-    return result;
-  }
+    // Return OpenSSLCipher if Properties is null or empty by default
+    private static List<Class<? extends CryptoCipher>> getCipherClasses(
+            Properties props) {
+        List<Class<? extends CryptoCipher>> result = new ArrayList<Class<? extends CryptoCipher>>();
+        String cipherClassString = Utils.getCipherClassString(props);
+
+        for (String c : Utils.splitClassNames(cipherClassString, ",")) {
+            try {
+                Class<?> cls = ReflectionUtils.getClassByName(c);
+                result.add(cls.asSubclass(CryptoCipher.class));
+            } catch (ClassCastException e) {
+                LOG.error("Class {} is not a CryptoCipher.", c);
+            } catch (ClassNotFoundException e) {
+                LOG.error("CryptoCipher {} not found.", c);
+            }
+        }
+
+        return result;
+    }
 
 }

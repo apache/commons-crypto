@@ -26,51 +26,56 @@ import org.slf4j.LoggerFactory;
 import org.apache.commons.crypto.utils.Utils;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 
-import static org.apache.commons.crypto.conf.ConfigurationKeys
-    .COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
 
 /**
  * This is the factory class used for {@link CryptoRandom}.
  */
 public class CryptoRandomFactory {
-  public final static Logger LOG = LoggerFactory
-      .getLogger(CryptoRandomFactory.class);
+    public final static Logger LOG = LoggerFactory
+            .getLogger(CryptoRandomFactory.class);
 
-  private CryptoRandomFactory() {}
-
-  /**
-   * Gets a CryptoRandom instance for specified props.
-   *
-   * @param props the configuration properties.
-   * @return CryptoRandom the cryptoRandom object.Null value will be returned if no CryptoRandom
-   *         classes with props.
-   * @throws GeneralSecurityException if fail to create the {@link CryptoRandom}.
-   */
-  public static CryptoRandom getCryptoRandom(Properties props) throws GeneralSecurityException {
-    String cryptoRandomClasses = props.getProperty(
-        COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
-    if (cryptoRandomClasses == null) {
-      cryptoRandomClasses = System.getProperty(
-          COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
+    private CryptoRandomFactory() {
     }
 
-    CryptoRandom random = null;
-    if (cryptoRandomClasses != null) {
-      for (String klassName : Utils.splitClassNames(cryptoRandomClasses, ",")) {
-        try {
-          final Class<?> klass = ReflectionUtils.getClassByName(klassName);
-          random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
-          if (random != null) {
-            break;
-          }
-        } catch (ClassCastException e) {
-          LOG.error("Class {} is not a CryptoCipher.", klassName);
-        } catch (ClassNotFoundException e) {
-          LOG.error("CryptoCipher {} not found.", klassName);
+    /**
+     * Gets a CryptoRandom instance for specified props.
+     *
+     * @param props the configuration properties.
+     * @return CryptoRandom the cryptoRandom object.Null value will be returned
+     *         if no CryptoRandom classes with props.
+     * @throws GeneralSecurityException if fail to create the
+     *         {@link CryptoRandom}.
+     */
+    public static CryptoRandom getCryptoRandom(Properties props)
+            throws GeneralSecurityException {
+        String cryptoRandomClasses = props
+                .getProperty(COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
+        if (cryptoRandomClasses == null) {
+            cryptoRandomClasses = System
+                    .getProperty(COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
         }
-      }
-    }
 
-    return (random == null) ? new JavaCryptoRandom(props) : random;
-  }
+        CryptoRandom random = null;
+        if (cryptoRandomClasses != null) {
+            for (String klassName : Utils.splitClassNames(cryptoRandomClasses,
+                    ",")) {
+                try {
+                    final Class<?> klass = ReflectionUtils
+                            .getClassByName(klassName);
+                    random = (CryptoRandom) ReflectionUtils.newInstance(klass,
+                            props);
+                    if (random != null) {
+                        break;
+                    }
+                } catch (ClassCastException e) {
+                    LOG.error("Class {} is not a CryptoCipher.", klassName);
+                } catch (ClassNotFoundException e) {
+                    LOG.error("CryptoCipher {} not found.", klassName);
+                }
+            }
+        }
+
+        return (random == null) ? new JavaCryptoRandom(props) : random;
+    }
 }

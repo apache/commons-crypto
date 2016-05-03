@@ -19,3 +19,4 @@
  * Configuration classes
  */
 package org.apache.commons.crypto.conf;
+

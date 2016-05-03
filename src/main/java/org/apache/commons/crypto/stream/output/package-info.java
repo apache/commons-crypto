@@ -19,3 +19,4 @@
  * Output classes
  */
 package org.apache.commons.crypto.stream.output;
+

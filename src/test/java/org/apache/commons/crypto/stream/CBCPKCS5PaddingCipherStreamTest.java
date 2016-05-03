@@ -23,9 +23,8 @@ import org.apache.commons.crypto.cipher.CipherTransformation;
 
 public class CBCPKCS5PaddingCipherStreamTest extends AbstractCipherStreamTest {
 
-  @Override
-public void setUp() throws IOException {
-    transformation = CipherTransformation
-        .AES_CBC_PKCS5PADDING;
-  }
+    @Override
+    public void setUp() throws IOException {
+        transformation = CipherTransformation.AES_CBC_PKCS5PADDING;
+    }
 }

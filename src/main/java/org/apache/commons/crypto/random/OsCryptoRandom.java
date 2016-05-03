@@ -29,105 +29,105 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A Random implementation that uses random bytes sourced from the
- * operating system.
+ * A Random implementation that uses random bytes sourced from the operating
+ * system.
  */
 public class OsCryptoRandom extends Random implements CryptoRandom {
-  public static final Log LOG = LogFactory.getLog(OsCryptoRandom.class);
+    public static final Log LOG = LogFactory.getLog(OsCryptoRandom.class);
 
-  private static final long serialVersionUID = 6391500337172057900L;
+    private static final long serialVersionUID = 6391500337172057900L;
 
-  private final int RESERVOIR_LENGTH = 8192;
+    private final int RESERVOIR_LENGTH = 8192;
 
-  private String randomDevPath;
+    private String randomDevPath;
 
-  private transient FileInputStream stream;
+    private transient FileInputStream stream;
 
-  private final byte[] reservoir = new byte[RESERVOIR_LENGTH];
+    private final byte[] reservoir = new byte[RESERVOIR_LENGTH];
 
-  private int pos = reservoir.length;
+    private int pos = reservoir.length;
 
-  private void fillReservoir(int min) {
-    if (pos >= reservoir.length - min) {
-      try {
-        IOUtils.readFully(stream, reservoir, 0, reservoir.length);
-      } catch (IOException e) {
-        throw new RuntimeException("failed to fill reservoir", e);
-      }
-      pos = 0;
-    }
-  }
-
-  /**
-   * Constructs a {@link OsCryptoRandom}.
-   *
-   * @param props the configuration properties.
-   */
-  public OsCryptoRandom(Properties props) {
-    randomDevPath = Utils.getRandomDevPath(props);
-    File randomDevFile = new File(randomDevPath);
-
-    try {
-      close();
-      this.stream = new FileInputStream(randomDevFile);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    private void fillReservoir(int min) {
+        if (pos >= reservoir.length - min) {
+            try {
+                IOUtils.readFully(stream, reservoir, 0, reservoir.length);
+            } catch (IOException e) {
+                throw new RuntimeException("failed to fill reservoir", e);
+            }
+            pos = 0;
+        }
     }
 
-    try {
-      fillReservoir(0);
-    } catch (RuntimeException e) {
-      close();
-      throw e;
-    }
-  }
+    /**
+     * Constructs a {@link OsCryptoRandom}.
+     *
+     * @param props the configuration properties.
+     */
+    public OsCryptoRandom(Properties props) {
+        randomDevPath = Utils.getRandomDevPath(props);
+        File randomDevFile = new File(randomDevPath);
 
-  /**
-   * Overrides {@link CryptoRandom#nextBytes(byte[])}.
-   * Generates random bytes and places them into a user-supplied byte array.
-   * The number of random bytes produced is equal to the length of the byte array.
-   *
-   * @param bytes the array to be filled in with random bytes.
-   */
-  @Override
-  synchronized public void nextBytes(byte[] bytes) {
-    int off = 0;
-    int n = 0;
-    while (off < bytes.length) {
-      fillReservoir(0);
-      n = Math.min(bytes.length - off, reservoir.length - pos);
-      System.arraycopy(reservoir, pos, bytes, off, n);
-      off += n;
-      pos += n;
-    }
-  }
+        try {
+            close();
+            this.stream = new FileInputStream(randomDevFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-  /**
-   * Overrides Random#next(). Generates the next pseudorandom number.
-   * Subclasses should override this, as this is used by all other methods.
-   *
-   * @param  nbits random bits.
-   * @return the next pseudorandom value from this random number
-   *         generator's sequence.
-   */
-  @Override
-  synchronized protected int next(int nbits) {
-    fillReservoir(4);
-    int n = 0;
-    for (int i = 0; i < 4; i++) {
-      n = ((n << 8) | (reservoir[pos++] & 0xff));
+        try {
+            fillReservoir(0);
+        } catch (RuntimeException e) {
+            close();
+            throw e;
+        }
     }
-    return n & (0xffffffff >> (32 - nbits));
-  }
 
-  /**
-   * Overrides {@link java.lang.AutoCloseable#close()}. Closes the OS stream.
-   */
-  @Override
-  synchronized public void close() {
-    if (stream != null) {
-      IOUtils.cleanup(LOG, stream);
-      stream = null;
+    /**
+     * Overrides {@link CryptoRandom#nextBytes(byte[])}. Generates random bytes
+     * and places them into a user-supplied byte array. The number of random
+     * bytes produced is equal to the length of the byte array.
+     *
+     * @param bytes the array to be filled in with random bytes.
+     */
+    @Override
+    synchronized public void nextBytes(byte[] bytes) {
+        int off = 0;
+        int n = 0;
+        while (off < bytes.length) {
+            fillReservoir(0);
+            n = Math.min(bytes.length - off, reservoir.length - pos);
+            System.arraycopy(reservoir, pos, bytes, off, n);
+            off += n;
+            pos += n;
+        }
     }
-  }
+
+    /**
+     * Overrides Random#next(). Generates the next pseudorandom number.
+     * Subclasses should override this, as this is used by all other methods.
+     *
+     * @param nbits random bits.
+     * @return the next pseudorandom value from this random number generator's
+     *         sequence.
+     */
+    @Override
+    synchronized protected int next(int nbits) {
+        fillReservoir(4);
+        int n = 0;
+        for (int i = 0; i < 4; i++) {
+            n = ((n << 8) | (reservoir[pos++] & 0xff));
+        }
+        return n & (0xffffffff >> (32 - nbits));
+    }
+
+    /**
+     * Overrides {@link java.lang.AutoCloseable#close()}. Closes the OS stream.
+     */
+    @Override
+    synchronized public void close() {
+        if (stream != null) {
+            IOUtils.cleanup(LOG, stream);
+            stream = null;
+        }
+    }
 }

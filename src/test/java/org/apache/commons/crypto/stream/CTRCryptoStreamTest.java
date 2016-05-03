@@ -27,33 +27,32 @@ import org.apache.commons.crypto.cipher.CipherTransformation;
 
 public class CTRCryptoStreamTest extends AbstractCipherStreamTest {
 
-  @Override
-public void setUp() throws IOException {
-    transformation = CipherTransformation
-        .AES_CTR_NOPADDING;
-  }
-
-  @Override
-  protected CTRCryptoInputStream getCryptoInputStream
-      (ByteArrayInputStream bais, CryptoCipher cipher, int
-      bufferSize, byte[] iv, boolean withChannel)
-      throws IOException {
-    if (withChannel) {
-      return new CTRCryptoInputStream(Channels.newChannel(bais), cipher,
-          bufferSize, key, iv);
-    } else {
-      return new CTRCryptoInputStream(bais, cipher, bufferSize, key, iv);
+    @Override
+    public void setUp() throws IOException {
+        transformation = CipherTransformation.AES_CTR_NOPADDING;
     }
-  }
 
-  @Override
-  protected CTRCryptoOutputStream getCryptoOutputStream(ByteArrayOutputStream baos, CryptoCipher cipher,
-                                                        int bufferSize, byte[] iv, boolean withChannel)
-      throws IOException {
-    if (withChannel) {
-      return new CTRCryptoOutputStream(Channels.newChannel(baos), cipher, bufferSize, key, iv);
-    } else {
-      return new CTRCryptoOutputStream(baos, cipher, bufferSize, key, iv);
+    @Override
+    protected CTRCryptoInputStream getCryptoInputStream(
+            ByteArrayInputStream bais, CryptoCipher cipher, int bufferSize,
+            byte[] iv, boolean withChannel) throws IOException {
+        if (withChannel) {
+            return new CTRCryptoInputStream(Channels.newChannel(bais), cipher,
+                    bufferSize, key, iv);
+        } else {
+            return new CTRCryptoInputStream(bais, cipher, bufferSize, key, iv);
+        }
     }
-  }
+
+    @Override
+    protected CTRCryptoOutputStream getCryptoOutputStream(
+            ByteArrayOutputStream baos, CryptoCipher cipher, int bufferSize,
+            byte[] iv, boolean withChannel) throws IOException {
+        if (withChannel) {
+            return new CTRCryptoOutputStream(Channels.newChannel(baos), cipher,
+                    bufferSize, key, iv);
+        } else {
+            return new CTRCryptoOutputStream(baos, cipher, bufferSize, key, iv);
+        }
+    }
 }

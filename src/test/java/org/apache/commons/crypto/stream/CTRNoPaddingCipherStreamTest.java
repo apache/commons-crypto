@@ -23,10 +23,9 @@ import org.apache.commons.crypto.cipher.CipherTransformation;
 
 public class CTRNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
-  @Override
-public void setUp() throws IOException {
-    transformation = CipherTransformation
-        .AES_CTR_NOPADDING;
-  }
+    @Override
+    public void setUp() throws IOException {
+        transformation = CipherTransformation.AES_CTR_NOPADDING;
+    }
 
 }

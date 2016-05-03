@@ -24,34 +24,35 @@ import org.junit.Test;
 
 public abstract class AbstractRandomTest {
 
-  public abstract CryptoRandom getCryptoRandom() throws GeneralSecurityException;
+    public abstract CryptoRandom getCryptoRandom()
+            throws GeneralSecurityException;
 
-  @Test(timeout=120000)
-  public void testRandomBytes() throws Exception {
-    CryptoRandom random = getCryptoRandom();
-    // len = 16
-    checkRandomBytes(random, 16);
-    // len = 32
-    checkRandomBytes(random, 32);
-    // len = 128
-    checkRandomBytes(random, 128);
-    // len = 256
-    checkRandomBytes(random, 256);
-    random.close();
-  }
-
-  /**
-   * Test will timeout if secure random implementation always returns a
-   * constant value.
-   */
-  private void checkRandomBytes(CryptoRandom random, int len) {
-    byte[] bytes = new byte[len];
-    byte[] bytes1 = new byte[len];
-    random.nextBytes(bytes);
-    random.nextBytes(bytes1);
-
-    while (Arrays.equals(bytes, bytes1)) {
-      random.nextBytes(bytes1);
+    @Test(timeout = 120000)
+    public void testRandomBytes() throws Exception {
+        CryptoRandom random = getCryptoRandom();
+        // len = 16
+        checkRandomBytes(random, 16);
+        // len = 32
+        checkRandomBytes(random, 32);
+        // len = 128
+        checkRandomBytes(random, 128);
+        // len = 256
+        checkRandomBytes(random, 256);
+        random.close();
     }
-  }
+
+    /**
+     * Test will timeout if secure random implementation always returns a
+     * constant value.
+     */
+    private void checkRandomBytes(CryptoRandom random, int len) {
+        byte[] bytes = new byte[len];
+        byte[] bytes1 = new byte[len];
+        random.nextBytes(bytes);
+        random.nextBytes(bytes1);
+
+        while (Arrays.equals(bytes, bytes1)) {
+            random.nextBytes(bytes1);
+        }
+    }
 }

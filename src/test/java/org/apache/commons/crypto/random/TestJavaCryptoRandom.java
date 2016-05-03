@@ -25,16 +25,18 @@ import static junit.framework.Assert.fail;
 
 public class TestJavaCryptoRandom extends AbstractRandomTest {
 
-  @Override
-  public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-    Properties props = new Properties();
-    props.setProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
-        JavaCryptoRandom.class.getName());
-    CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-    if ( !(random instanceof JavaCryptoRandom)) {
-      fail("The CryptoRandom should be: " + JavaCryptoRandom.class.getName());
+    @Override
+    public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
+        Properties props = new Properties();
+        props.setProperty(
+                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
+                JavaCryptoRandom.class.getName());
+        CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+        if (!(random instanceof JavaCryptoRandom)) {
+            fail("The CryptoRandom should be: "
+                    + JavaCryptoRandom.class.getName());
+        }
+        return random;
     }
-    return random;
-  }
 
 }

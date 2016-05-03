@@ -19,10 +19,10 @@ package org.apache.commons.crypto.random;
 
 import java.util.Properties;
 
-public class TestOsCryptoRandom extends AbstractRandomTest{
+public class TestOsCryptoRandom extends AbstractRandomTest {
 
-  @Override
-  public CryptoRandom getCryptoRandom() {
-    return new OsCryptoRandom(new Properties());
-  }
+    @Override
+    public CryptoRandom getCryptoRandom() {
+        return new OsCryptoRandom(new Properties());
+    }
 }

@@ -18,26 +18,26 @@
 package org.apache.commons.crypto.random;
 
 /**
- * JNI interface of {@link CryptoRandom} implementation.
- * The native method in this class is defined in
- * OpensslCryptoRandomNative.h(genereted by javah).
+ * JNI interface of {@link CryptoRandom} implementation. The native method in
+ * this class is defined in OpensslCryptoRandomNative.h(genereted by javah).
  */
 public class OpensslCryptoRandomNative {
 
-  private OpensslCryptoRandomNative() {}
+    private OpensslCryptoRandomNative() {
+    }
 
-  /**
-   * Declares a native method to initialize SR.
-   */
-  public native static void initSR();
+    /**
+     * Declares a native method to initialize SR.
+     */
+    public native static void initSR();
 
-  /**
-   * Judges whether use {@link OpensslCryptoRandomNative} to
-   * generate the user-specified number of random bits.
-   *
-   * @param bytes the array to be filled in with random bytes.
-   * @return true if use {@link OpensslCryptoRandomNative} to
-   * generate the user-specified number of random bits.
-   */
-  public native static boolean nextRandBytes(byte[] bytes);
+    /**
+     * Judges whether use {@link OpensslCryptoRandomNative} to generate the
+     * user-specified number of random bits.
+     *
+     * @param bytes the array to be filled in with random bytes.
+     * @return true if use {@link OpensslCryptoRandomNative} to generate the
+     *         user-specified number of random bits.
+     */
+    public native static boolean nextRandBytes(byte[] bytes);
 }

@@ -25,16 +25,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class UtilsTest {
-  @Test
-  public void testSplitOmitEmptyLine() {
-    List<String> clazzNames = Utils.splitClassNames("", ",");
-    Assert.assertEquals(Collections.<String>emptyList(), clazzNames);
+    @Test
+    public void testSplitOmitEmptyLine() {
+        List<String> clazzNames = Utils.splitClassNames("", ",");
+        Assert.assertEquals(Collections.<String> emptyList(), clazzNames);
 
-    clazzNames = Utils.splitClassNames("a,b", ",");
-    Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
-    clazzNames = Utils.splitClassNames("a,b,", ",");
-    Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
-    clazzNames = Utils.splitClassNames("a, b,", ",");
-    Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
-  }
+        clazzNames = Utils.splitClassNames("a,b", ",");
+        Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
+        clazzNames = Utils.splitClassNames("a,b,", ",");
+        Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
+        clazzNames = Utils.splitClassNames("a, b,", ",");
+        Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
+    }
 }

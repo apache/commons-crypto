@@ -35,124 +35,125 @@ import javax.crypto.ShortBufferException;
  */
 public interface CryptoCipher extends Closeable {
 
-  /**
-   * A constant representing encrypt mode.  The mode constant to be used
-   * when calling init method of the CryptoCipher.
-   */
-  int ENCRYPT_MODE = Cipher.ENCRYPT_MODE;
+    /**
+     * A constant representing encrypt mode. The mode constant to be used when
+     * calling init method of the CryptoCipher.
+     */
+    int ENCRYPT_MODE = Cipher.ENCRYPT_MODE;
 
-  /**
-   * A constant representing decrypt mode.  The mode constant to be used
-   * when calling init method of the CryptoCipher.
-   */
-  int DECRYPT_MODE = Cipher.DECRYPT_MODE;
+    /**
+     * A constant representing decrypt mode. The mode constant to be used when
+     * calling init method of the CryptoCipher.
+     */
+    int DECRYPT_MODE = Cipher.DECRYPT_MODE;
 
-  /**
-   * Gets the CipherTransformation for this cipher.
-   *
-   * @return the CipherTransformation for this cipher.
-   */
-  CipherTransformation getTransformation();
+    /**
+     * Gets the CipherTransformation for this cipher.
+     *
+     * @return the CipherTransformation for this cipher.
+     */
+    CipherTransformation getTransformation();
 
-  /**
-   * Gets the properties for this cipher.
-   *
-   * @return the properties for this cipher.
-   */
-  Properties getProperties();
+    /**
+     * Gets the properties for this cipher.
+     *
+     * @return the properties for this cipher.
+     */
+    Properties getProperties();
 
-  /**
-   * Initializes the cipher with mode, key and iv.
-   *
-   * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
-   * @param key crypto key for the cipher
-   * @param params the algorithm parameters
-   * @throws InvalidKeyException if the given key is inappropriate for
-   * initializing this cipher, or its keysize exceeds the maximum allowable
-   * keysize (as determined from the configured jurisdiction policy files).
-   * @throws InvalidAlgorithmParameterException if the given algorithm
-   * parameters are inappropriate for this cipher, or this cipher requires
-   * algorithm parameters and <code>params</code> is null, or the given
-   * algorithm parameters imply a cryptographic strength that would exceed
-   * the legal limits (as determined from the configured jurisdiction
-   * policy files).
-   */
-  void init(int mode, Key key, AlgorithmParameterSpec params)
-      throws InvalidKeyException, InvalidAlgorithmParameterException;
+    /**
+     * Initializes the cipher with mode, key and iv.
+     *
+     * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+     * @param key crypto key for the cipher
+     * @param params the algorithm parameters
+     * @throws InvalidKeyException if the given key is inappropriate for
+     *         initializing this cipher, or its keysize exceeds the maximum
+     *         allowable keysize (as determined from the configured jurisdiction
+     *         policy files).
+     * @throws InvalidAlgorithmParameterException if the given algorithm
+     *         parameters are inappropriate for this cipher, or this cipher
+     *         requires algorithm parameters and <code>params</code> is null, or
+     *         the given algorithm parameters imply a cryptographic strength
+     *         that would exceed the legal limits (as determined from the
+     *         configured jurisdiction policy files).
+     */
+    void init(int mode, Key key, AlgorithmParameterSpec params)
+            throws InvalidKeyException, InvalidAlgorithmParameterException;
 
-  /**
-   * Continues a multiple-part encryption/decryption operation. The data
-   * is encrypted or decrypted, depending on how this cipher was initialized.
-   *
-   * @param inBuffer the input ByteBuffer
-   * @param outBuffer the output ByteBuffer
-   * @return int number of bytes stored in <code>output</code>
-   * @throws ShortBufferException if there is insufficient space
-   * in the output buffer
-   */
-  int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
-      throws ShortBufferException;
+    /**
+     * Continues a multiple-part encryption/decryption operation. The data is
+     * encrypted or decrypted, depending on how this cipher was initialized.
+     *
+     * @param inBuffer the input ByteBuffer
+     * @param outBuffer the output ByteBuffer
+     * @return int number of bytes stored in <code>output</code>
+     * @throws ShortBufferException if there is insufficient space in the output
+     *         buffer
+     */
+    int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
+            throws ShortBufferException;
 
-  /**
-   * Continues a multiple-part encryption/decryption operation. The data
-   * is encrypted or decrypted, depending on how this cipher was initialized.
-   *
-   * @param input the input byte array
-   * @param inputOffset the offset in input where the input starts
-   * @param inputLen the input length
-   * @param output the byte array for the result
-   * @param outputOffset the offset in output where the result is stored
-   * @return the number of bytes stored in output
-   * @throws ShortBufferException if there is insufficient space in the output byte array
-   */
-  int update(byte[] input, int inputOffset, int inputLen,
-      byte[] output, int outputOffset)
-      throws ShortBufferException;
+    /**
+     * Continues a multiple-part encryption/decryption operation. The data is
+     * encrypted or decrypted, depending on how this cipher was initialized.
+     *
+     * @param input the input byte array
+     * @param inputOffset the offset in input where the input starts
+     * @param inputLen the input length
+     * @param output the byte array for the result
+     * @param outputOffset the offset in output where the result is stored
+     * @return the number of bytes stored in output
+     * @throws ShortBufferException if there is insufficient space in the output
+     *         byte array
+     */
+    int update(byte[] input, int inputOffset, int inputLen, byte[] output,
+            int outputOffset) throws ShortBufferException;
 
-  /**
-   * Encrypts or decrypts data in a single-part operation, or finishes a
-   * multiple-part operation.
-   *
-   * @param inBuffer the input ByteBuffer
-   * @param outBuffer the output ByteBuffer
-   * @return int number of bytes stored in <code>output</code>
-   * @throws BadPaddingException if this cipher is in decryption mode,
-   * and (un)padding has been requested, but the decrypted data is not
-   * bounded by the appropriate padding bytes
-   * @throws IllegalBlockSizeException if this cipher is a block cipher,
-   * no padding has been requested (only in encryption mode), and the total
-   * input length of the data processed by this cipher is not a multiple of
-   * block size; or if this encryption algorithm is unable to
-   * process the input data provided.
-   * @throws ShortBufferException if the given output buffer is too small
-   * to hold the result
-   */
-  int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
-      throws ShortBufferException, IllegalBlockSizeException,
-      BadPaddingException;
+    /**
+     * Encrypts or decrypts data in a single-part operation, or finishes a
+     * multiple-part operation.
+     *
+     * @param inBuffer the input ByteBuffer
+     * @param outBuffer the output ByteBuffer
+     * @return int number of bytes stored in <code>output</code>
+     * @throws BadPaddingException if this cipher is in decryption mode, and
+     *         (un)padding has been requested, but the decrypted data is not
+     *         bounded by the appropriate padding bytes
+     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
+     *         padding has been requested (only in encryption mode), and the
+     *         total input length of the data processed by this cipher is not a
+     *         multiple of block size; or if this encryption algorithm is unable
+     *         to process the input data provided.
+     * @throws ShortBufferException if the given output buffer is too small to
+     *         hold the result
+     */
+    int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
+            throws ShortBufferException, IllegalBlockSizeException,
+            BadPaddingException;
 
-  /**
-   * Encrypts or decrypts data in a single-part operation, or finishes a
-   * multiple-part operation.
-   *
-   * @param input the input byte array
-   * @param inputOffset the offset in input where the input starts
-   * @param inputLen the input length
-   * @param output the byte array for the result
-   * @param outputOffset the offset in output where the result is stored
-   * @return the number of bytes stored in output
-   * @throws ShortBufferException if the given output byte array is too small
-   * to hold the result
-   * @throws BadPaddingException if this cipher is in decryption mode,
-   * and (un)padding has been requested, but the decrypted data is not
-   * bounded by the appropriate padding bytes
-   * @throws IllegalBlockSizeException if this cipher is a block cipher,
-   * no padding has been requested (only in encryption mode), and the total
-   * input length of the data processed by this cipher is not a multiple of
-   * block size; or if this encryption algorithm is unable to
-   * process the input data provided.
-   */
-  int doFinal(byte[] input, int inputOffset, int inputLen,
-      byte[] output, int outputOffset)
-      throws ShortBufferException, IllegalBlockSizeException, BadPaddingException;
+    /**
+     * Encrypts or decrypts data in a single-part operation, or finishes a
+     * multiple-part operation.
+     *
+     * @param input the input byte array
+     * @param inputOffset the offset in input where the input starts
+     * @param inputLen the input length
+     * @param output the byte array for the result
+     * @param outputOffset the offset in output where the result is stored
+     * @return the number of bytes stored in output
+     * @throws ShortBufferException if the given output byte array is too small
+     *         to hold the result
+     * @throws BadPaddingException if this cipher is in decryption mode, and
+     *         (un)padding has been requested, but the decrypted data is not
+     *         bounded by the appropriate padding bytes
+     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
+     *         padding has been requested (only in encryption mode), and the
+     *         total input length of the data processed by this cipher is not a
+     *         multiple of block size; or if this encryption algorithm is unable
+     *         to process the input data provided.
+     */
+    int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output,
+            int outputOffset) throws ShortBufferException,
+            IllegalBlockSizeException, BadPaddingException;
 }

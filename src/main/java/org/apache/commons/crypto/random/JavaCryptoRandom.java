@@ -30,42 +30,45 @@ import org.apache.commons.crypto.conf.ConfigurationKeys;
  * A CryptoRandom of Java implementation.
  */
 public class JavaCryptoRandom implements CryptoRandom {
-  private static final Log LOG =
-      LogFactory.getLog(JavaCryptoRandom.class.getName());
+    private static final Log LOG = LogFactory.getLog(JavaCryptoRandom.class
+            .getName());
 
-  private final SecureRandom instance;
+    private final SecureRandom instance;
 
-  /**
-   * Constructs a {@link JavaCryptoRandom}.
-   *
-   * @param properties the configuration properties.
-   * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for
-   *         the specified algorithm.
-   */
-  public JavaCryptoRandom(Properties properties) throws NoSuchAlgorithmException {
-    instance = SecureRandom.getInstance(properties
-      .getProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY,
-        ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
-  }
+    /**
+     * Constructs a {@link JavaCryptoRandom}.
+     *
+     * @param properties the configuration properties.
+     * @throws NoSuchAlgorithmException if no Provider supports a
+     *         SecureRandomSpi implementation for the specified algorithm.
+     */
+    public JavaCryptoRandom(Properties properties)
+            throws NoSuchAlgorithmException {
+        instance = SecureRandom
+                .getInstance(properties
+                        .getProperty(
+                                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY,
+                                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
+    }
 
-  /**
-   * Overrides {@link java.lang.AutoCloseable#close()}.
-   * For{@link JavaCryptoRandom}, we don't need to recycle resource.
-   */
-  @Override
-  public void close() {
-    // do nothing
-  }
+    /**
+     * Overrides {@link java.lang.AutoCloseable#close()}. For
+     * {@link JavaCryptoRandom}, we don't need to recycle resource.
+     */
+    @Override
+    public void close() {
+        // do nothing
+    }
 
-  /**
-   * Overrides {@link CryptoRandom#nextBytes(byte[])}.
-   * Generates random bytes and places them into a user-supplied byte array.
-   * The number of random bytes produced is equal to the length of the byte array.
-   *
-   * @param bytes the array to be filled in with random bytes.
-   */
-  @Override
-  public void nextBytes(byte[] bytes) {
-    instance.nextBytes(bytes);
-  }
+    /**
+     * Overrides {@link CryptoRandom#nextBytes(byte[])}. Generates random bytes
+     * and places them into a user-supplied byte array. The number of random
+     * bytes produced is equal to the length of the byte array.
+     *
+     * @param bytes the array to be filled in with random bytes.
+     */
+    @Override
+    public void nextBytes(byte[] bytes) {
+        instance.nextBytes(bytes);
+    }
 }

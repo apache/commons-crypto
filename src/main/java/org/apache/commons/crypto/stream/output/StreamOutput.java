@@ -22,76 +22,77 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 /**
- * The StreamOutput class takes a <code>OutputStream</code> object and wraps it as
- * <code>Output</code> object acceptable by <code>CryptoOutputStream</code> as the output target.
+ * The StreamOutput class takes a <code>OutputStream</code> object and wraps it
+ * as <code>Output</code> object acceptable by <code>CryptoOutputStream</code>
+ * as the output target.
  */
 public class StreamOutput implements Output {
-  private final byte[] buf;
-  private final int bufferSize;
-  private final OutputStream out;
+    private final byte[] buf;
+    private final int bufferSize;
+    private final OutputStream out;
 
-  /**
-   * Constructs a {@link org.apache.commons.crypto.stream.output.StreamOutput}.
-   *
-   * @param out the OutputStream object.
-   * @param bufferSize the buffersize.
-   */
-  public StreamOutput(OutputStream out, int bufferSize) {
-    this.out = out;
-    this.bufferSize = bufferSize;
-    buf = new byte[bufferSize];
-  }
-
-  /**
-   * Overrides the {@link org.apache.commons.crypto.stream.output.Output#write(ByteBuffer)}.
-   * Writes a sequence of bytes to this output from the given buffer.
-   *
-   * @param  src
-   *         The buffer from which bytes are to be retrieved.
-   *
-   * @return The number of bytes written, possibly zero.
-   * @throws IOException if an I/O error occurs.
-   */
-  @Override
-  public int write(ByteBuffer src) throws IOException {
-    final int len = src.remaining();
-
-    int remaining = len;
-    while(remaining > 0) {
-      final int n = Math.min(remaining, bufferSize);
-      src.get(buf, 0, n);
-      out.write(buf, 0, n);
-      remaining = src.remaining();
+    /**
+     * Constructs a {@link org.apache.commons.crypto.stream.output.StreamOutput}
+     * .
+     *
+     * @param out the OutputStream object.
+     * @param bufferSize the buffersize.
+     */
+    public StreamOutput(OutputStream out, int bufferSize) {
+        this.out = out;
+        this.bufferSize = bufferSize;
+        buf = new byte[bufferSize];
     }
 
-    return len;
-  }
+    /**
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.output.Output#write(ByteBuffer)}.
+     * Writes a sequence of bytes to this output from the given buffer.
+     *
+     * @param src The buffer from which bytes are to be retrieved.
+     *
+     * @return The number of bytes written, possibly zero.
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public int write(ByteBuffer src) throws IOException {
+        final int len = src.remaining();
 
-  /**
-   * Overrides the {@link Output#flush()}.
-   * Flushes this output and forces any buffered output bytes
-   * to be written out if the under layer output method support.
-   *
-   * @throws IOException if an I/O error occurs.
-   */
-  @Override
-  public void flush() throws IOException {
-    out.flush();
-  }
+        int remaining = len;
+        while (remaining > 0) {
+            final int n = Math.min(remaining, bufferSize);
+            src.get(buf, 0, n);
+            out.write(buf, 0, n);
+            remaining = src.remaining();
+        }
 
-  /**
-   * Overrides the {@link Output#close()}.
-   * Closes this output and releases any system resources associated
-   * with the under layer output.
-   *
-   * @throws IOException if an I/O error occurs.
-   */
-  @Override
-  public void close() throws IOException {
-    out.close();
-  }
+        return len;
+    }
 
-  protected OutputStream getOut() {
-    return out;
-  }
+    /**
+     * Overrides the {@link Output#flush()}. Flushes this output and forces any
+     * buffered output bytes to be written out if the under layer output method
+     * support.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void flush() throws IOException {
+        out.flush();
+    }
+
+    /**
+     * Overrides the {@link Output#close()}. Closes this output and releases any
+     * system resources associated with the under layer output.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void close() throws IOException {
+        out.close();
+    }
+
+    protected OutputStream getOut() {
+        return out;
+    }
 }

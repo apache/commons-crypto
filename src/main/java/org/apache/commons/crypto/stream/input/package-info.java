@@ -19,3 +19,4 @@
  * Input classes
  */
 package org.apache.commons.crypto.stream.input;
+
