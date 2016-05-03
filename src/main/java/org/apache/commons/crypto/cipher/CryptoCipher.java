@@ -26,6 +26,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
@@ -38,13 +39,13 @@ public interface CryptoCipher extends Closeable {
    * A constant representing encrypt mode.  The mode constant to be used
    * when calling init method of the CryptoCipher.
    */
-  int ENCRYPT_MODE = javax.crypto.Cipher.ENCRYPT_MODE;
+  int ENCRYPT_MODE = Cipher.ENCRYPT_MODE;
 
   /**
    * A constant representing decrypt mode.  The mode constant to be used
    * when calling init method of the CryptoCipher.
    */
-  int DECRYPT_MODE = javax.crypto.Cipher.DECRYPT_MODE;
+  int DECRYPT_MODE = Cipher.DECRYPT_MODE;
 
   /**
    * Gets the CipherTransformation for this cipher.

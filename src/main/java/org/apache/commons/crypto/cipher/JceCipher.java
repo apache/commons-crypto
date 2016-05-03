@@ -26,22 +26,23 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * Implements the {@link org.apache.commons.crypto.cipher.CryptoCipher} using JCE provider.
+ * Implements the {@link CryptoCipher} using JCE provider.
  */
 public class JceCipher implements CryptoCipher {
   private final Properties props;
   private final CipherTransformation transformation;
-  private final javax.crypto.Cipher cipher;
+  private final Cipher cipher;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.cipher.CryptoCipher} based on JCE
-   * Cipher {@link javax.crypto.Cipher}.
+   * Constructs a {@link CryptoCipher} based on JCE
+   * Cipher {@link Cipher}.
    * @param props properties for JCE cipher
    * @param transformation transformation for JCE cipher
    * @throws GeneralSecurityException if JCE cipher initialize failed
@@ -53,9 +54,9 @@ public class JceCipher implements CryptoCipher {
 
     String provider = Utils.getJCEProvider(props);
     if (provider == null || provider.isEmpty()) {
-      cipher = javax.crypto.Cipher.getInstance(transformation.getName());
+      cipher = Cipher.getInstance(transformation.getName());
     } else {
-      cipher = javax.crypto.Cipher.getInstance(transformation.getName(), provider);
+      cipher = Cipher.getInstance(transformation.getName(), provider);
     }
   }
 
@@ -98,9 +99,9 @@ public class JceCipher implements CryptoCipher {
     Utils.checkNotNull(key);
     Utils.checkNotNull(params);
 
-    int cipherMode = javax.crypto.Cipher.DECRYPT_MODE;
+    int cipherMode = Cipher.DECRYPT_MODE;
     if (mode == ENCRYPT_MODE) {
-      cipherMode = javax.crypto.Cipher.ENCRYPT_MODE;
+      cipherMode = Cipher.ENCRYPT_MODE;
     }
     cipher.init(cipherMode, key, params);
   }

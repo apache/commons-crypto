@@ -78,7 +78,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   private boolean cipherReset = false;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -94,7 +94,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -110,7 +110,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param out the output stream.
    * @param cipher the CryptoCipher instance.
@@ -125,7 +125,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param channel the WritableByteChannel instance.
    * @param cipher the CryptoCipher instance.
@@ -140,7 +140,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param output the Output instance.
    * @param cipher the CryptoCipher instance.
@@ -156,7 +156,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -174,7 +174,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -192,7 +192,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param out the output stream.
    * @param cipher the CryptoCipher instance.
@@ -209,7 +209,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param channel the WritableByteChannel instance.
    * @param cipher the CryptoCipher instance.
@@ -227,7 +227,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoOutputStream}.
+   * Constructs a {@link CTRCryptoOutputStream}.
    *
    * @param output the output stream.
    * @param cipher the CryptoCipher instance.

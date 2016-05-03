@@ -42,7 +42,7 @@ public class ConfigurationKeys {
    * "org.apache.commons.crypto.cipher.JceCipher" and "org.apache.commons.crypto.cipher.OpensslCipher".
    * And it takes a common separated list.
    * The "org.apache.commons.crypto.cipher.JceCipher" use jce provider to
-   * implement {@link org.apache.commons.crypto.cipher.CryptoCipher} and
+   * implement {@link CryptoCipher} and
    * the "org.apache.commons.crypto.cipher.OpensslCipher" use jni into openssl to implement.
    * Note that for each value,the first value which can be created without exception
    * will be used (priority by order).

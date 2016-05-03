@@ -42,7 +42,7 @@ public class OpensslCipher implements CryptoCipher {
   private final Openssl cipher;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.cipher.CryptoCipher} using JNI into OpenSSL
+   * Constructs a {@link CryptoCipher} using JNI into OpenSSL
    *
    * @param props properties for OpenSSL cipher
    * @param transformation transformation for OpenSSL cipher

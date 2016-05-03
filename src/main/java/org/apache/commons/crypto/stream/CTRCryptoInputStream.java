@@ -79,7 +79,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   private boolean cipherReset = false;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -95,7 +95,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -111,7 +111,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param in the input stream.
    * @param cipher the CryptoCipher instance.
@@ -126,7 +126,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param in the ReadableByteChannel instance.
    * @param cipher the cipher instance.
@@ -141,7 +141,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param input the input data.
    * @param cipher the CryptoCipher instance.
@@ -160,7 +160,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -178,7 +178,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   *Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   *Constructs a {@link CTRCryptoInputStream}.
    *
    * @param props The <code>Properties</code> class represents a set of
    *              properties.
@@ -196,7 +196,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param in the InputStream instance.
    * @param cipher the CryptoCipher instance.
@@ -212,7 +212,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param in the ReadableByteChannel instance.
    * @param cipher the CryptoCipher instance.
@@ -228,7 +228,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CTRCryptoInputStream}.
+   * Constructs a {@link CTRCryptoInputStream}.
    *
    * @param input the input data.
    * @param cipher the CryptoCipher instance.
@@ -256,7 +256,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Overrides the {@link org.apache.commons.crypto.stream.CryptoInputStream#skip(long)}.
+   * Overrides the {@link CryptoInputStream#skip(long)}.
    * Skips over and discards <code>n</code> bytes of data from this input
    * stream.
    *
@@ -295,7 +295,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
   }
 
   /**
-   * Overrides the {@link org.apache.commons.crypto.stream.CTRCryptoInputStream#read(ByteBuffer)}.
+   * Overrides the {@link CTRCryptoInputStream#read(ByteBuffer)}.
    * Reads a sequence of bytes from this channel into the given buffer.
    *
    * @param buf The buffer into which bytes are to be transferred.
