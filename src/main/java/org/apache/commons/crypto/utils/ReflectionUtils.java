@@ -59,6 +59,7 @@ public class ReflectionUtils {
    * create and initialize a new instance of the constructor's
    * declaring class, with the specified initialization parameters.
    *
+   * @param <T> type for the new instance
    * @param klass the Class object.
    * @param args array of objects to be passed as arguments to
    *             the constructor call.
@@ -93,6 +94,7 @@ public class ReflectionUtils {
    * returned.An exception is thrown if the returned class does not
    * implement the named interface.
    *
+   * @param <U> type for the class.
    * @param name the class name of default implementation.
    * @param defaultValue default value.
    * @param xface the interface implemented by the named class.

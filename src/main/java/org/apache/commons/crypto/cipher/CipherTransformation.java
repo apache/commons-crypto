@@ -18,8 +18,7 @@
 package org.apache.commons.crypto.cipher;
 
 /**
- * Defines properties of a CipherTransformation. Modeled after the ciphers in
- * {@link Cipher}.
+ * Defines properties of a CipherTransformation. Modeled after the ciphers in Cipher.
  */
 public enum CipherTransformation {
 
@@ -48,7 +47,7 @@ public enum CipherTransformation {
   /**
    * Gets the algorithm name of cipher.
    *
-   * @return name of cipher transformation, as in {@link Cipher}
+   * @return name of cipher transformation, as in Cipher
    */
   public String getName() {
     return name;

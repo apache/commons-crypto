@@ -101,6 +101,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
    * @param offset the start offset in the data.
    * @param position the offset from the start of the stream.
    * @throws IOException if an I/O error occurs.
+   * @return int the total number of decrypted data bytes read into the buffer.
    */
   public int read(long position, byte[] buffer, int offset, int length)
       throws IOException {

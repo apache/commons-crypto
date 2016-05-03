@@ -103,7 +103,7 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
   }
 
   /**
-   * Overrides {@link java.util.Random# next()}. Generates the next pseudorandom number.
+   * Overrides Random#next(). Generates the next pseudorandom number.
    * Subclasses should override this, as this is used by all other methods.
    *
    * @param  nbits random bits.

@@ -38,16 +38,18 @@ import org.apache.commons.crypto.stream.input.StreamInput;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
+ * <p>
  * CTRCryptoInputStream decrypts data. AES CTR mode is required in order to
  * ensure that the plain text and cipher text have a 1:1 mapping. CTR crypto
  * stream has stream characteristic which is useful for implement features
  * like random seek. The decryption is buffer based. The key points of the
  * decryption are (1) calculating the counter and (2) padding through stream
  * position:
- * <p/>
+ * </p>
+ * <p>
  * counter = base + pos/(algorithm blocksize);
  * padding = pos%(algorithm blocksize);
- * <p/>
+ * </p>
  * The underlying stream offset is maintained as state. It is not thread-safe.
  */
 public class CTRCryptoInputStream extends CryptoInputStream {
@@ -501,6 +503,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
    *
    * @param position the given position in the data..
    * @return the byte.
+   * @throws IOException if an I/O error occurs.
    */
   protected byte postDecryption(long position) throws IOException {
     byte padding = 0;

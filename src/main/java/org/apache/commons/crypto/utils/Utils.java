@@ -53,7 +53,8 @@ public class Utils {
 
   /**
    * For AES, the algorithm block is fixed size of 128 bits.
-   * @see http://en.wikipedia.org/wiki/Advanced_Encryption_Standard
+   * @see <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
+   * http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
    */
   private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING.getAlgorithmBlockSize();
 
@@ -233,18 +234,22 @@ public class Utils {
   }
 
   /**
+   * <p>
    * This method is only for Counter (CTR) mode. Generally the CryptoCipher calculates the
-   * IV and maintain encryption context internally.For example a
-   * {@link Cipher} will maintain its encryption context internally
-   * when we do encryption/decryption using the CryptoCipher#update interface.
-   * <p/>
+   * IV and maintain encryption context internally.For example a Cipher will maintain its
+   * encryption context internally when we do encryption/decryption using the
+   * CryptoCipher#update interface.
+   * </p>
+   * <p>
    * Encryption/Decryption is not always on the entire file. For example,
    * in Hadoop, a node may only decrypt a portion of a file (i.e. a split).
    * In these situations, the counter is derived from the file position.
-   * <p/>
+   * </p>
    * The IV can be calculated by combining the initial IV and the counter with
    * a lossless operation (concatenation, addition, or XOR).
-   * @see http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29
+   *
+   * @see <a href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">
+   * http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29</a>
    *
    * @param initIV initial IV
    * @param counter counter for input stream position
@@ -318,6 +323,7 @@ public class Utils {
    * Ensures that an object reference passed as a parameter to the calling
    * method is not null.
    *
+   * @param <T> the type of the object reference to be checked.
    * @param reference an object reference.
    * @return the non-null reference that was validated.
    * @throws NullPointerException if reference is null.

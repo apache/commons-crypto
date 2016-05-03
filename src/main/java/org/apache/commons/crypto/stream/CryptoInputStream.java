@@ -342,7 +342,7 @@ public class CryptoInputStream extends InputStream implements
   /**
    * Overrides the {@link InputStream#markSupported()}.
    *
-   * @return false,the {@link CTRCipherInputStream} don't support the mark method.
+   * @return false,the {@link CTRCryptoInputStream} don't support the mark method.
    */
   @Override
   public boolean markSupported() {
@@ -463,6 +463,7 @@ public class CryptoInputStream extends InputStream implements
    * do final of the cipher to finish all the decrypting of data.
    *
    * @return The number of decrypted data. -1 if end of the decrypted stream.
+   * @throws IOException if an I/O error occurs.
    */
   protected int decryptMore() throws IOException {
     if(finalDone) {

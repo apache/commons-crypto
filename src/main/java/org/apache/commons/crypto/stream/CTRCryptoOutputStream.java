@@ -39,14 +39,16 @@ import org.apache.commons.crypto.stream.output.StreamOutput;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
+ * <p>
  * CTRCryptoOutputStream encrypts data. It is not thread-safe. AES CTR mode is
  * required in order to ensure that the plain text and cipher text have a 1:1
  * mapping. The encryption is buffer based. The key points of the encryption are
  * (1) calculating counter and (2) padding through stream position.
- * <p/>
+ * </p>
+ * <p>
  * counter = base + pos/(algorithm blocksize);
  * padding = pos%(algorithm blocksize);
- * <p/>
+ * </p>
  * The underlying stream offset is maintained as state.
  */
 public class CTRCryptoOutputStream extends CryptoOutputStream {

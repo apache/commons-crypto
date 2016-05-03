@@ -17,7 +17,6 @@
  */
 package org.apache.commons.crypto.cipher;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.Key;
@@ -86,7 +85,8 @@ public class OpensslCipher implements CryptoCipher {
    * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
    * @param key crypto key for the cipher
    * @param params the algorithm parameters
-   * @throws IOException if cipher initialize fails
+   * @throws InvalidKeyException If key length is invalid
+   * @throws InvalidAlgorithmParameterException if IV length is wrong
    */
   @Override
   public void init(int mode, Key key, AlgorithmParameterSpec params)
