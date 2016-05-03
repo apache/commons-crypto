@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CryptoCipherFactory {
 
-  /** LOG instance for {@CipherFactory} */
+  /** LOG instance for {@link CryptoCipherFactory} */
   public final static Logger LOG = LoggerFactory.getLogger(CryptoCipherFactory.class);
 
   private CryptoCipherFactory() {}
@@ -46,6 +46,7 @@ public class CryptoCipherFactory {
    *          algorithm/mode/padding
    * @return CryptoCipher the cipher. Null value will be returned if no
    *         cipher classes with transformation configured.
+   * @throws GeneralSecurityException if cipher initialize failed
    */
   public static CryptoCipher getInstance(CipherTransformation transformation,
                                          Properties props) throws GeneralSecurityException {
@@ -74,8 +75,10 @@ public class CryptoCipherFactory {
    * Gets a cipher for algorithm/mode/padding in config value
    * commons.crypto.cipher.transformation
    *
+   * @param transformation CipherTransformation instance.
    * @return CryptoCipher the cipher object Null value will be returned if no
    *         cipher classes with transformation configured.
+   * @throws GeneralSecurityException if JCE cipher initialize failed
    */
   public static CryptoCipher getInstance(CipherTransformation transformation)
       throws GeneralSecurityException {

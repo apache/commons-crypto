@@ -108,12 +108,12 @@ public final class Openssl {
   }
 
   /**
-   * Return an <code>OpensslCipher<code> object that implements the specified
+   * Return an <code>OpensslCipher</code> object that implements the specified
    * transformation.
    *
    * @param transformation the name of the transformation, e.g.,
    * AES/CTR/NoPadding.
-   * @return OpensslCipher an <code>OpensslCipher<code> object
+   * @return OpensslCipher an <code>OpensslCipher</code> object
    * @throws NoSuchAlgorithmException if <code>transformation</code> is null,
    * empty, in an invalid format, or if Openssl doesn't implement the
    * specified algorithm.
@@ -180,20 +180,23 @@ public final class Openssl {
   }
 
   /**
+   * <p>
    * Continues a multiple-part encryption or decryption operation. The data
    * is encrypted or decrypted, depending on how this cipher was initialized.
-   * <p/>
+   * </p>
    *
+   * <p>
    * All <code>input.remaining()</code> bytes starting at
    * <code>input.position()</code> are processed. The result is stored in
    * the output buffer.
-   * <p/>
+   * </p>
    *
+   * <p>
    * Upon return, the input buffer's position will be equal to its limit;
    * its limit will not have changed. The output buffer's position will have
    * advanced by n, when n is the value returned by this method; the output
    * buffer's limit will not have changed.
-   * <p/>
+   * </p>
    *
    * If <code>output.remaining()</code> bytes are insufficient to hold the
    * result, a <code>ShortBufferException</code> is thrown.
@@ -237,32 +240,43 @@ public final class Openssl {
   }
 
   /**
+   * <p>
    * Finishes a multiple-part operation. The data is encrypted or decrypted,
    * depending on how this cipher was initialized.
-   * <p/>
+   * </p>
    *
+   * <p>
    * The result is stored in the output buffer. Upon return, the output buffer's
    * position will have advanced by n, where n is the value returned by this
    * method; the output buffer's limit will not have changed.
-   * <p/>
+   * </p>
    *
+   * <p>
    * If <code>output.remaining()</code> bytes are insufficient to hold the result,
    * a <code>ShortBufferException</code> is thrown.
-   * <p/>
+   * </p>
    *
+   * <p>
    * Upon finishing, this method resets this cipher object to the state it was
    * in when previously initialized. That is, the object is available to encrypt
    * or decrypt more data.
-   * <p/>
+   * </p>
    *
    * If any exception is thrown, this cipher object need to be reset before it
    * can be used again.
    *
    * @param output the output ByteBuffer
    * @return int number of bytes stored in <code>output</code>
-   * @throws ShortBufferException
-   * @throws IllegalBlockSizeException
-   * @throws BadPaddingException
+   * @throws ShortBufferException if the given output byte array is too small
+   * to hold the result.
+   * @throws IllegalBlockSizeException if this cipher is a block cipher,
+   * no padding has been requested (only in encryption mode), and the total
+   * input length of the data processed by this cipher is not a multiple of
+   * block size; or if this encryption algorithm is unable to
+   * process the input data provided.
+   * @throws BadPaddingException if this cipher is in decryption mode,
+   * and (un)padding has been requested, but the decrypted data is not
+   * bounded by the appropriate padding bytes
    */
   public int doFinal(ByteBuffer output)
       throws ShortBufferException, IllegalBlockSizeException,

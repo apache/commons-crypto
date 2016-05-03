@@ -28,18 +28,20 @@ import org.apache.commons.crypto.utils.NativeCodeLoader;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * OpenSSL secure random using JNI.
- * This implementation is thread-safe.
- * <p/>
+ * <p>
+ * OpenSSL secure random using JNI. This implementation is thread-safe.
+ * </p>
  *
+ * <p>
  * If using an Intel chipset with RDRAND, the high-performance hardware
  * random number generator will be used and it's much faster than
- * {@link SecureRandom}. If RDRAND is unavailable, default
- * OpenSSL secure random generator will be used. It's still faster
- * and can generate strong random bytes.
- * <p/>
- * @see https://wiki.openssl.org/index.php/Random_Numbers
- * @see http://en.wikipedia.org/wiki/RdRand
+ * SecureRandom. If RDRAND is unavailable, default OpenSSL secure random
+ * generator will be used. It's still faster and can generate strong random bytes.
+ * </p>
+ * @see <a href="https://wiki.openssl.org/index.php/Random_Numbers">
+ *      https://wiki.openssl.org/index.php/Random_Numbers</a>
+ * @see <a href="http://en.wikipedia.org/wiki/RdRand">
+ *      http://en.wikipedia.org/wiki/RdRand</a>
  */
 public class OpensslCryptoRandom extends Random implements CryptoRandom {
   private static final long serialVersionUID = -7828193502768789584L;
@@ -112,14 +114,14 @@ public class OpensslCryptoRandom extends Random implements CryptoRandom {
   }
 
   /**
-   * Overrides {@link java.util.Random# next()}. Generates an integer
-   * containing the user-specified number of random
-   * bits(right justified, with leading zeros).
+   * Overrides Random#next(). Generates an integer containing the
+   * user-specified number of random bits(right justified, with leading
+   * zeros).
    *
-   * @param numBits number of random bits to be generated, where
-   * 0 <= <code>numBits</code> <= 32.
-   * @return int an <code>int</code> containing the user-specified number
-   * of random bits (right justified, with leading zeros).
+   * @param numBits number of random bits to be generated, where 0
+   *        {@literal <=} <code>numBits</code> {@literal <=} 32.
+   * @return int an <code>int</code> containing the user-specified number of
+   *         random bits (right justified, with leading zeros).
    */
   @Override
   final protected int next(int numBits) {

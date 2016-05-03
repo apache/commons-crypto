@@ -44,6 +44,12 @@ public class OpensslNative {
   /**
    * Declares a native method to initialize the cipher context.
    *
+   * @param context The cipher context address
+   * @param mode ENCRYPT_MODE or DECRYPT_MODE
+   * @param alg Algorithm Mode of Openssl
+   * @param padding the padding mode of Openssl cipher
+   * @param key crypto key
+   * @param iv crypto iv
    * @return the context address of cipher
    */
   public native static long init(long context, int mode, int alg, int padding,

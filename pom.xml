@@ -241,15 +241,6 @@ Features
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>doclint-java8-disable</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
-      </activation>
-      <properties>
-        <additionalparam>-Xdoclint:none</additionalparam>
-      </properties>
-    </profile>
   </profiles>
   <licenses>
     <license>
