@@ -42,7 +42,7 @@ limitations under the License.
       </li>
       <li>High performance AES encryption/decryption optimized with Intel AES-NI.
       </li>
-      <li>Portable across various operating systems (currently only Linux); Apache Commons Crypto loads the
+      <li>Portable across various operating systems (currently only Linux/Mac OS); Apache Commons Crypto loads the
           library according to your machine environment (It looks system properties, os.name and
           os.arch).
       </li>
@@ -68,8 +68,8 @@ limitations under the License.
         </li>
     </ul>
     <p>
-        The <a href="source-repository.html">subversion repository</a> can be
-        <a href="http://svn.apache.org/viewvc/commons/proper/crypto/trunk/">browsed</a>.
+        The <a href="source-repository.html">git repository</a> can be
+        <a href="https://git-wip-us.apache.org/repos/asf?p=commons-crypto.git">browsed</a>.
     </p>
 </section>
 <!-- ================================================== -->
@@ -77,7 +77,7 @@ limitations under the License.
 <ul>
     <li>
         <a href="http://commons.apache.org/crypto/download_crypto.cgi">Crypto 1.0.0 (mirrors)</a>
-        requires Java 1.7
+        requires Java 1.6
     </li>
 </ul>
 <p>

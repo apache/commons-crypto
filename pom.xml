@@ -60,6 +60,10 @@ Features
       https://git-wip-us.apache.org/repos/asf?p=commons-crypto.git
     </url>
   </scm>
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://builds.apache.org/search/?q=Commons-CRYPTO</url>
+  </ciManagement>
   <distributionManagement>
     <site>
       <id>commons.site</id>
