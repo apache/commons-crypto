@@ -144,9 +144,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
     <commons.jira.id>CRYPTO</commons.jira.id>
     <commons.jira.pid>12320024</commons.jira.pid>
     <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
-
-    <!-- Deactivate JavaDoc lint -->
-    <additionalparam>-Xdoclint:none</additionalparam>
   </properties>
   <profiles>
     <profile>
@@ -233,6 +230,15 @@ http://maven.apache.org/maven-v4_0_0.xsd">
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>doclint-java8-disable</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <additionalparam>-Xdoclint:none</additionalparam>
+      </properties>
     </profile>
   </profiles>
   <licenses>
