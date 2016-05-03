@@ -59,7 +59,7 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.random.OsCryptoRandom}.
+   * Constructs a {@link OsCryptoRandom}.
    *
    * @param props the configuration properties.
    */
@@ -83,7 +83,7 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
   }
 
   /**
-   * Overrides {@link org.apache.commons.crypto.random.CryptoRandom#nextBytes(byte[])}.
+   * Overrides {@link CryptoRandom#nextBytes(byte[])}.
    * Generates random bytes and places them into a user-supplied byte array.
    * The number of random bytes produced is equal to the length of the byte array.
    *

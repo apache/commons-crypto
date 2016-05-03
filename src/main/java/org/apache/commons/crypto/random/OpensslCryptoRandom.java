@@ -34,7 +34,7 @@ import org.apache.commons.crypto.utils.Utils;
  *
  * If using an Intel chipset with RDRAND, the high-performance hardware
  * random number generator will be used and it's much faster than
- * {@link java.security.SecureRandom}. If RDRAND is unavailable, default
+ * {@link SecureRandom}. If RDRAND is unavailable, default
  * OpenSSL secure random generator will be used. It's still faster
  * and can generate strong random bytes.
  * <p/>
@@ -73,7 +73,7 @@ public class OpensslCryptoRandom extends Random implements CryptoRandom {
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.random.OpensslCryptoRandom}.
+   * Constructs a {@link OpensslCryptoRandom}.
    *
    * @param props the configuration properties.
    * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for

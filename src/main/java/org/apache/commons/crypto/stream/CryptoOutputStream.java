@@ -82,7 +82,7 @@ public class CryptoOutputStream extends OutputStream implements
   ByteBuffer outBuffer;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
+   * Constructs a {@link CryptoOutputStream}.
    *
    * @param transformation the CipherTransformation instance.
    * @param props The <code>Properties</code> class represents a set of
@@ -105,7 +105,7 @@ public class CryptoOutputStream extends OutputStream implements
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
+   * Constructs a {@link CryptoOutputStream}.
    *
    * @param transformation the CipherTransformation instance.
    * @param props The <code>Properties</code> class represents a set of
@@ -127,7 +127,7 @@ public class CryptoOutputStream extends OutputStream implements
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
+   * Constructs a {@link CryptoOutputStream}.
    *
    * @param out the output stream.
    * @param cipher the CryptoCipher instance.
@@ -142,7 +142,7 @@ public class CryptoOutputStream extends OutputStream implements
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
+   * Constructs a {@link CryptoOutputStream}.
    *
    * @param channel the WritableByteChannel instance.
    * @param cipher the cipher instance.
@@ -157,7 +157,7 @@ public class CryptoOutputStream extends OutputStream implements
   }
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.stream.CryptoOutputStream}.
+   * Constructs a {@link CryptoOutputStream}.
    *
    * @param output the output stream.
    * @param cipher the CryptoCipher instance.

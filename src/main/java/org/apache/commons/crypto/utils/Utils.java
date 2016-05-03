@@ -235,7 +235,7 @@ public class Utils {
   /**
    * This method is only for Counter (CTR) mode. Generally the CryptoCipher calculates the
    * IV and maintain encryption context internally.For example a
-   * {@link javax.crypto.Cipher} will maintain its encryption context internally
+   * {@link Cipher} will maintain its encryption context internally
    * when we do encryption/decryption using the CryptoCipher#update interface.
    * <p/>
    * Encryption/Decryption is not always on the entire file. For example,

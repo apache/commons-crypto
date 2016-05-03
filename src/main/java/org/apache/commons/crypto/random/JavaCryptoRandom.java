@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.random;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -32,17 +33,17 @@ public class JavaCryptoRandom implements CryptoRandom {
   private static final Log LOG =
       LogFactory.getLog(JavaCryptoRandom.class.getName());
 
-  private final java.security.SecureRandom instance;
+  private final SecureRandom instance;
 
   /**
-   * Constructs a {@link org.apache.commons.crypto.random.JavaCryptoRandom}.
+   * Constructs a {@link JavaCryptoRandom}.
    *
    * @param properties the configuration properties.
    * @throws NoSuchAlgorithmException if no Provider supports a SecureRandomSpi implementation for
    *         the specified algorithm.
    */
   public JavaCryptoRandom(Properties properties) throws NoSuchAlgorithmException {
-    instance = java.security.SecureRandom.getInstance(properties
+    instance = SecureRandom.getInstance(properties
       .getProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY,
         ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
   }
@@ -57,7 +58,7 @@ public class JavaCryptoRandom implements CryptoRandom {
   }
 
   /**
-   * Overrides {@link org.apache.commons.crypto.random.CryptoRandom#nextBytes(byte[])}.
+   * Overrides {@link CryptoRandom#nextBytes(byte[])}.
    * Generates random bytes and places them into a user-supplied byte array.
    * The number of random bytes produced is equal to the length of the byte array.
    *
