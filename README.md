@@ -52,7 +52,7 @@ AES directly. It wraps to Openssl or JCE which implement the algorithms.
 Features
 -------------
 + Cipher API for low level cryptographic operations.
-+ Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encyrption/decryption.
++ Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encryption/decryption.
 + Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
 + JNI-based implementation to achieve comparable performance to the native C++ version based on Openssl.
 + Portable across various operating systems (currently only Linux); Apache Commons Crypto loads the library according to your machine environment (It looks system properties, `os.name` and `os.arch`).
