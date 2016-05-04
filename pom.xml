@@ -337,11 +337,11 @@ Features
         <version>${commons.rat.version}</version>
         <configuration>
           <excludes>
-          <exclude>.gitattributes</exclude>
-          <exclude>.gitignore</exclude>
-          <exclude>.git/**</exclude>
-          <exclude>.idea/**</exclude>
-          <exclude>**/build/**</exclude>
+            <exclude>.gitattributes</exclude>
+            <exclude>.gitignore</exclude>
+            <exclude>.git/**</exclude>
+            <exclude>.idea/**</exclude>
+            <exclude>**/build/**</exclude>
           </excludes>
         </configuration>
       </plugin>

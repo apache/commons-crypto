@@ -4,12 +4,12 @@ Build instructions for Apache Commons Crypto
 Requirements:
 
 * Unix System
-* JDK 1.6+ (environment variable JAVA_HOME must be set)
+* JDK 1.6 or above (environment variable JAVA_HOME must be set)
 * Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy
   Files (if running unit tests)
-* Maven 3.0 or later
+* Maven 3.0 or above
 * Make
-* Openssl devel 1.0.1c+
+* Openssl devel 1.0.1c or above 
 
 ----------------------------------------------------------------------------------
 Install JCE Unlimited Strength Jurisdiction Policy Files:
@@ -31,7 +31,7 @@ Check Openssl version:
 
   $ openssl version
 
-If it is not 1.0.1c+, upgrade Openssl version to 1.0.1c+:
+If it is not 1.0.1c or above, upgrade Openssl version to 1.0.1c or above:
 
   $ brew install homebrew/versions/openssl101
   $ brew link openssl --force
