@@ -18,7 +18,15 @@
 
 package org.apache.commons.crypto.cipher;
 
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.Cipher;
+
+import org.junit.Assert;
+import org.junit.Before;
+
 public class JceCipherTest extends AbstractCipherTest {
+
+    private static final int MAX_KEY_LEN_LOWER_BOUND = 256;
 
     @Override
     public void init() {
@@ -29,4 +37,15 @@ public class JceCipherTest extends AbstractCipherTest {
         cipherClass = JceCipher.class.getName();
     }
 
+    @Before
+    public void checkJceUnlimitedStrength() throws NoSuchAlgorithmException {
+        int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
+        Assert.assertTrue(String.format(
+                "Testing requires support for an AES key length of %d, but " +
+                "the detected maximum key length is %d.  This may indicate " +
+                "that the test environment is missing the JCE Unlimited " +
+                "Strength Jurisdiction Policy Files.",
+                MAX_KEY_LEN_LOWER_BOUND, maxKeyLen),
+                maxKeyLen >= MAX_KEY_LEN_LOWER_BOUND);
+    }
 }
