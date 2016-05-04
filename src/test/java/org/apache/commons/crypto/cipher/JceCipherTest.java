@@ -39,7 +39,7 @@ public class JceCipherTest extends AbstractCipherTest {
     }
 
     @BeforeClass
-    public void checkJceUnlimitedStrength() throws NoSuchAlgorithmException {
+    public static void checkJceUnlimitedStrength() throws NoSuchAlgorithmException {
         int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
         Assert.assertTrue(String.format(
                 "Testing requires support for an AES key length of %d, but " +
