@@ -26,18 +26,32 @@
         <fileSet>
             <includes>
                 <include>LICENSE.txt</include>
+                <include>NOTICE.txt</include>
+                <include>README.md</include>
+                <include>RELEASE-NOTES.txt</include>
+                <include>CONTRIBUTING.md</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>target</directory>
             <outputDirectory/>
             <includes>
-                <include>*.jar</include>
+                <include>${artifactId}-${version}.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>target/site/apidocs</directory>
             <outputDirectory>apidocs</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>${artifactId}-${version}-sources.jar</include>
+            </includes>
         </fileSet>
     </fileSets>
 </assembly>

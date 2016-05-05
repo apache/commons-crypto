@@ -334,6 +334,26 @@ Features
         <artifactId>commons-build-plugin</artifactId>
         <version>${commons-build-plugin.version}</version>
       </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+             <descriptor>src/assembly/bin.xml</descriptor>
+             <descriptor>src/assembly/src.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>1.1</version>
+          <configuration>
+            <ignorePathsToDelete>
+              <ignorePathToDelete>javadocs**</ignorePathToDelete>
+            </ignorePathsToDelete>
+          </configuration>
+        </plugin>
     </plugins>
   </build>
   <dependencies>
