@@ -25,19 +25,19 @@ Install JCE Unlimited Strength Jurisdiction Policy Files to JDK:
 Copy downloaded local_policy.jar and US_export_policy.jar to <java-home>/jre/lib/security/
 
 ----------------------------------------------------------------------------------
-Upgrade OpenSSL:
-
-Upgrade OpenSSL in Linux:
-
-You can follow your OS distribution instructions to upgrade OpenSSL to a proper version.
-
-Upgrade OpenSSL in Mac:
+Verify OpenSSL version:
 
 Check OpenSSL version:
 
   $ openssl version
 
 If it is not 1.0.1c or above, upgrade OpenSSL version to 1.0.1c or above:
+
+Upgrade OpenSSL in Linux:
+
+You can follow your OS distribution instructions to upgrade OpenSSL to a proper version.
+
+Upgrade OpenSSL in Mac:
 
   $ brew install homebrew/versions/openssl101
   $ brew link openssl --force
