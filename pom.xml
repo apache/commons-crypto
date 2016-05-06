@@ -33,18 +33,18 @@ code and effort. Please note that Crypto doesn't implement the cryptographic alg
 AES directly. It wraps to Openssl or JCE which implement the algorithms.
 
 Features
--------------
-+ Cipher API for low level cryptographic operations.
-+ Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encyrption/decryption.
-+ Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
-+ JNI-based implementation to achieve comparable performance to the native C++ version based on Openssl.
-+ Portable across various operating systems (currently only Linux); Apache Commons Crypto loads the library according to your machine environment (It looks system properties, `os.name` and `os.arch`).
-+ Simple usage. Add the commons-crypto-(version).jar file to your classpath.
+
+1. Cipher API for low level cryptographic operations.
+2. Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encyrption/decryption.
+3. Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
+4. JNI-based implementation to achieve comparable performance to the native C++ version based on Openssl.
+5. Portable across various operating systems (currently only Linux); Apache Commons Crypto loads the library according to your machine environment (It looks system properties, `os.name` and `os.arch`).
+6. Simple usage. Add the commons-crypto-(version).jar file to your classpath.
   </description>
   <version>1.0.0-SNAPSHOT</version>
   <name>Apache Commons Crypto</name>
   <inceptionYear>2016</inceptionYear>
-  <url>http://commons.apache.org/proper/commons-crypto</url>
+  <url>http://commons.apache.org/proper/commons-crypto/</url>
   <issueManagement>
     <system>jira</system>
     <url>http://issues.apache.org/jira/browse/CRYPTO</url>
@@ -134,30 +134,43 @@ Features
     </developer>
   </developers>
   <properties>
+    <commons.componentid>crypto</commons.componentid>
+    <commons.release.version>1.0.0</commons.release.version>
+    <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
+    <commons.rc.version>RC1</commons.rc.version>
+
+    <!-- properties not related to versioning -->
+    <commons.jira.id>CRYPTO</commons.jira.id>
+    <commons.jira.pid>12320024</commons.jira.pid>
+    <commons.javadoc.java.link>http://download.oracle.com/javase/6/docs/api/</commons.javadoc.java.link>
+    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
+    <commons-build-plugin.version>1.6</commons-build-plugin.version>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+
+
+    <!--
+        Encoding of Java source files: ensures that the compiler and
+        the javadoc generator use the right encoding. Subprojects may
+        overwrite this, if they are using another encoding.
+    -->
+    <commons.encoding>iso-8859-1</commons.encoding>
+    <!-- used in this pom to provide the Javadoc HTML file encoding -->
+    <commons.docEncoding>${commons.encoding}</commons.docEncoding>
+    <!-- Define source encoding for filtering; used by general plugins -->
+    <project.build.sourceEncoding>${commons.encoding}</project.build.sourceEncoding>
+    <!-- This is used by reporting plugins -->
+    <project.reporting.outputEncoding>${commons.encoding}</project.reporting.outputEncoding>
+
     <!-- The property "target.name" is used to specify the ant target, The All target will use
     OSInfo.java to detect the OS info and arch to generate the native binary for detected platform.
     User is able to specify the platform by maven profiles.-->
     <target.name>all</target.name>
     <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-    <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
-    <maven-source-plugin.version>2.3</maven-source-plugin.version>
-    <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <findbugs-maven-plugin.version>3.0.2</findbugs-maven-plugin.version>
     <junit.version>4.8.2</junit.version>
     <commons-logging.version>1.1.3</commons-logging.version>
     <slf4j-api.version>1.7.10</slf4j-api.version>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <commons.javadoc.java.link>http://download.oracle.com/javase/6/docs/api/</commons.javadoc.java.link>
-    <commons.componentid>crypto</commons.componentid>
-    <commons.release.version>1.0.0</commons.release.version>
-    <commons.rc.version>RC1</commons.rc.version>
-    <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
-    <commons.jira.id>CRYPTO</commons.jira.id>
-    <commons.jira.pid>12320024</commons.jira.pid>
-    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
-    <commons-build-plugin.version>1.6</commons-build-plugin.version>
   </properties>
   <profiles>
     <profile>
@@ -278,35 +291,6 @@ Features
             </dependency>
           </dependencies>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <version>${maven-gpg-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>${maven-javadoc-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${maven-source-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>${nexus-staging-maven-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven-compiler-plugin.version}</version>
-          <configuration>
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.target}</target>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -346,14 +330,30 @@ Features
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <plugin>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-build-plugin</artifactId>
         <version>${commons-build-plugin.version}</version>
       </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+             <descriptor>src/assembly/bin.xml</descriptor>
+             <descriptor>src/assembly/src.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>1.1</version>
+          <configuration>
+            <ignorePathsToDelete>
+              <ignorePathToDelete>javadocs**</ignorePathToDelete>
+            </ignorePathsToDelete>
+          </configuration>
+        </plugin>
     </plugins>
   </build>
   <dependencies>

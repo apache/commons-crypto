@@ -25,10 +25,13 @@
     <fileSets>
         <fileSet>
             <includes>
+                <include>BUILDING.txt</include>
                 <include>LICENSE.txt</include>
                 <include>Makefile</include>
                 <include>Makefile.common</include>
+                <include>NOTICE.txt</include>
                 <include>README.md</include>
+                <include>RELEASE-NOTES.txt</include>
                 <include>findbugs-exclude.xml</include>
                 <include>pom.xml</include>
             </includes>
