@@ -133,6 +133,26 @@ Features
       <id>yliu</id>
     </developer>
   </developers>
+
+  <contributors>
+    <contributor>
+      <name>Colin Ma</name>
+      <email>junjie.ma@intel.com</email>
+    </contributor>
+    <contributor>
+      <name>Xianda Ke</name>
+      <email>xianda.ke@intel.com</email>
+    </contributor>
+    <contributor>
+      <name>Ke Jia</name>
+      <email>ke.a.jia@intel.com</email>
+    </contributor>
+    <contributor>
+      <name>George Kankava </name>
+      <email>george.kankava@devfactory.com</email>
+    </contributor>
+  </contributors>
+
   <properties>
     <commons.componentid>crypto</commons.componentid>
     <commons.release.version>1.0.0</commons.release.version>
