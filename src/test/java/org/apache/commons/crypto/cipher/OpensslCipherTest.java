@@ -149,7 +149,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
             cipher.init(Openssl.ENCRYPT_MODE, invalidKey, IV);
             Assert.fail("java.security.InvalidKeyException should be thrown.");
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Invalid key length."));
+            Assert.assertTrue(e.getMessage().contains("Invalid AES key length: " + invalidKey.length + " bytes"));
             throw e;
         }
     }
@@ -167,7 +167,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
             cipher.init(Openssl.ENCRYPT_MODE, KEY, invalidIV);
             Assert.fail("java.security.InvalidAlgorithmParameterException should be thrown.");
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Wrong IV length."));
+            Assert.assertTrue(e.getMessage().contains("Wrong IV length: must be 16 bytes long"));
             throw e;
         }
     }
