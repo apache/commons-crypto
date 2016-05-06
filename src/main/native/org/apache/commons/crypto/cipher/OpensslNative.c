@@ -248,11 +248,13 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_init
   int jIvLen = (*env)->GetArrayLength(env, iv);
   if (jKeyLen != KEY_LENGTH_128 && jKeyLen != KEY_LENGTH_192
         && jKeyLen != KEY_LENGTH_256) {
-    THROW(env, "java/security/InvalidKeyException", "Invalid key length.");
+    char str[64] = {0};
+    snprintf(str, sizeof(str), "Invalid AES key length: %d bytes", jKeyLen);
+    THROW(env, "java/security/InvalidKeyException", str);
     return (jlong)0;
   }
   if (jIvLen != IV_LENGTH) {
-    THROW(env, "java/security/InvalidAlgorithmParameterException", "Wrong IV length.");
+    THROW(env, "java/security/InvalidAlgorithmParameterException", "Wrong IV length: must be 16 bytes long");
     return (jlong)0;
   }
 
