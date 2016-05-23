@@ -215,8 +215,8 @@ Linux-armhf_COMMONS_CRYPTO_FLAGS:=
 Mac-x86_CC        := gcc -arch i386
 Mac-x86_CXX       := g++ -arch i386
 Mac-x86_STRIP     := strip -x
-Mac-x86_CFLAGS    := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.4 -fvisibility=hidden -I/usr/local/opt/openssl101/include
-Mac-x86_CXXFLAGS  := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.4 -fvisibility=hidden -I/usr/local/opt/openssl101/include
+Mac-x86_CFLAGS    := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.4 -fvisibility=hidden -I/usr/local/include
+Mac-x86_CXXFLAGS  := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.4 -fvisibility=hidden -I/usr/local/include
 Mac-x86_LINKFLAGS := -dynamiclib -static-libgcc -L/usr/local/opt/openssl101/lib
 Mac-x86_LIBNAME   := libcommons-crypto.jnilib
 Mac-x86_COMMONS_CRYPTO_FLAGS  :=
@@ -224,8 +224,8 @@ Mac-x86_COMMONS_CRYPTO_FLAGS  :=
 Mac-x86_64_CC        := gcc -arch $(OS_ARCH)
 Mac-x86_64_CXX       := g++ -arch $(OS_ARCH)
 Mac-x86_64_STRIP     := strip -x
-Mac-x86_64_CFLAGS    := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.5 -fvisibility=hidden -I/usr/local/opt/openssl101/include
-Mac-x86_64_CXXFLAGS  := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.5 -fvisibility=hidden -I/usr/local/opt/openssl101/include
+Mac-x86_64_CFLAGS    := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.5 -fvisibility=hidden -I/usr/local/include
+Mac-x86_64_CXXFLAGS  := -Ilib/inc_mac -I$(JAVA_HOME)/include -O2 -fPIC -mmacosx-version-min=10.5 -fvisibility=hidden -I/usr/local/include
 Mac-x86_64_LINKFLAGS := -dynamiclib -L/usr/local/opt/openssl101/lib
 Mac-x86_64_LIBNAME   := libcommons-crypto.jnilib
 Mac-x86_64_COMMONS_CRYPTO_FLAGS  :=
