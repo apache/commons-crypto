@@ -33,6 +33,7 @@ import java.util.Random;
 
 import org.apache.commons.crypto.cipher.*;
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.jna.OpensslJnaCipher;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,6 +60,7 @@ public abstract class AbstractCipherStreamTest {
 
     private final String jceCipherClass = JceCipher.class.getName();
     private final String opensslCipherClass = OpensslCipher.class.getName();
+    private final String opensslJnaCipherClass = OpensslJnaCipher.class.getName();
     protected CipherTransformation transformation;
 
     public abstract void setUp() throws IOException;
@@ -78,9 +80,11 @@ public abstract class AbstractCipherStreamTest {
     public void testSkip() throws Exception {
         doSkipTest(jceCipherClass, false);
         doSkipTest(opensslCipherClass, false);
+        doSkipTest(opensslJnaCipherClass, false);
 
         doSkipTest(jceCipherClass, true);
         doSkipTest(opensslCipherClass, true);
+        doSkipTest(opensslJnaCipherClass, true);
     }
 
     /** Test byte buffer read with different buffer size. */
@@ -88,9 +92,11 @@ public abstract class AbstractCipherStreamTest {
     public void testByteBufferRead() throws Exception {
         doByteBufferRead(jceCipherClass, false);
         doByteBufferRead(opensslCipherClass, false);
+        doByteBufferRead(opensslJnaCipherClass, false); 
 
         doByteBufferRead(jceCipherClass, true);
         doByteBufferRead(opensslCipherClass, true);
+        doByteBufferRead(opensslJnaCipherClass, true); 
     }
 
     /** Test byte buffer write. */
@@ -99,9 +105,11 @@ public abstract class AbstractCipherStreamTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         doByteBufferWrite(jceCipherClass, baos, false);
         doByteBufferWrite(opensslCipherClass, baos, false);
+        doByteBufferWrite(opensslJnaCipherClass, baos, false);
 
         doByteBufferWrite(jceCipherClass, baos, true);
         doByteBufferWrite(opensslCipherClass, baos, true);
+        doByteBufferWrite(opensslJnaCipherClass, baos, true);
     }
 
     private void doSkipTest(String cipherClass, boolean withChannel)
@@ -318,18 +326,23 @@ public abstract class AbstractCipherStreamTest {
         Assert.assertEquals(null, Openssl.getLoadingFailureReason());
         doReadWriteTest(0, jceCipherClass, jceCipherClass, iv);
         doReadWriteTest(0, opensslCipherClass, opensslCipherClass, iv);
+        doReadWriteTest(0, opensslJnaCipherClass, opensslJnaCipherClass, iv);
         doReadWriteTest(count, jceCipherClass, jceCipherClass, iv);
         doReadWriteTest(count, opensslCipherClass, opensslCipherClass, iv);
+        doReadWriteTest(count, opensslJnaCipherClass, opensslJnaCipherClass, iv);
         doReadWriteTest(count, jceCipherClass, opensslCipherClass, iv);
         doReadWriteTest(count, opensslCipherClass, jceCipherClass, iv);
+        doReadWriteTest(count, opensslJnaCipherClass, opensslJnaCipherClass, iv);
         // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
         for (int i = 0; i < 8; i++) {
             iv[8 + i] = (byte) 0xff;
         }
         doReadWriteTest(count, jceCipherClass, jceCipherClass, iv);
         doReadWriteTest(count, opensslCipherClass, opensslCipherClass, iv);
+        doReadWriteTest(count, opensslJnaCipherClass, opensslJnaCipherClass, iv);
         doReadWriteTest(count, jceCipherClass, opensslCipherClass, iv);
         doReadWriteTest(count, opensslCipherClass, jceCipherClass, iv);
+        doReadWriteTest(count, opensslJnaCipherClass, opensslJnaCipherClass, iv);
     }
 
     private void doReadWriteTest(int count, String encCipherClass,
