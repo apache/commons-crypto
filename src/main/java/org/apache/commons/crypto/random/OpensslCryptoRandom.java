@@ -84,11 +84,9 @@ public class OpensslCryptoRandom extends Random implements CryptoRandom {
      */
     public OpensslCryptoRandom(Properties props)
             throws NoSuchAlgorithmException {
-        if (!nativeEnabled) {
-            fallback = new JavaCryptoRandom(props);
-        } else {
-            fallback = null;
-        }
+        //fallback needs to be initialized here in any case cause even if
+        //nativeEnabled is true OpensslCryptoRandomNative.nextRandBytes may fail
+        fallback = new JavaCryptoRandom(props);
     }
 
     /**
@@ -145,7 +143,7 @@ public class OpensslCryptoRandom extends Random implements CryptoRandom {
      */
     @Override
     public void close() {
-        if (!nativeEnabled && fallback != null) {
+        if (fallback != null) {
             fallback.close();
         }
     }
