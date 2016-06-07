@@ -54,6 +54,7 @@ Maven build goals:
 * Install JAR in M2 cache   : mvn install
 * Deploy JAR to Maven repo  : mvn deploy
 * Run RAT                   : mvn apache-rat:check
+* Run Clirr                 : mvn clirr:check
 * Build javadocs            : mvn javadoc:javadoc
 * Change version            : mvn versions:set -DnewVersion=NEWVERSION
 
