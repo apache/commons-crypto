@@ -70,6 +70,14 @@ At last, import to eclipse by specifying the root directory of the project via
 ----------------------------------------------------------------------------------
 Building distributions:
 
+To perform the license release audit, a.k.a. "RAT check", run:
+
+   mvn apache-rat:check
+
+[Once 1.0.0 is out] To perform a Clirr check, run:
+
+   mvn clirr:check
+
 Create binary distribution:
 
   $ mvn package -DskipTests
