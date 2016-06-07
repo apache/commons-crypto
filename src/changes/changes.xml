@@ -38,7 +38,7 @@
     <title>Release Notes</title>
   </properties>
   <body>
-    <release version="1.0.0" date="2016-MM-DD" description="Feature and bug fix release">
+    <release version="1.0.0" date="2016-06-06" description="Feature and bug fix release">
       <action issue="CRYPTO-11" type="add" dev="Ke Jia" due-to="Ke Jia, Jerry Chen">User guide documentation .</action>
       <action issue="CRYPTO-12" type="add" dev="Xianda Ke" due-to="Xianda Ke">Rename CryptoInputStream to CipherInputStream and CryptoOutputStream to CipherOutputStream .</action>
       <action issue="CRYPTO-13" type="add" dev="Xianda Ke" due-to="Xianda Ke">The API differences between apache.commons.crypto and JCE .</action>
@@ -58,6 +58,10 @@
       <action issue="CRYPTO-48" type="add" dev="Benedikt Ritter" due-to="Benedikt Ritter, Dapeng Sun">Setup site build as defined in commons-parent pom .</action>
       <action issue="CRYPTO-49" type="fix" dev="Dapeng Sun" due-to="Dapeng Sun">CRYPTO-1 Fix build of X86 .</action>
       <action issue="CRYPTO-7" type="update" dev="Ferdinand Xu" due-to="ferdinand xu">Rename source code in Chimera to Apache name space .</action>
+      <action issue="CRYPTO-57" type="fix" dev="Benedikt Ritter" due-to="Benedikt Ritter">Fix build on Mac OS</action>
+      <action issue="CRYPTO-61" type="fix" dev="Hendrik Saly" due-to="Hendrik Saly">Fix possible NPE in OpensslCryptoRandom</action>
+      <action issue="CRYPTO-54" type="fix" dev="Dapeng Sun" due-to="Stian Soiland-Reyes, Jerry Chen, Benedikt Ritter, Gary Gregory">US Export classification and ECCN registration for encryption</action>
+      <action issue="CRYPTO-62" type="update" dev="Hendrik Saly" due-to="Hendrik Saly">Add multithreaded related tests</action>
     </release>
 
   </body>
