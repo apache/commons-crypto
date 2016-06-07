@@ -15,6 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# Comment in if using Cygwin:
+#SHELL:=/bin/bash
+
 TARGET:=target
 SRC:=src/main/java
 SRC_NATIVE:=src/main/native
@@ -23,7 +27,6 @@ include $(TARGET)/classes/org/apache/commons/crypto/VERSION
 ifndef JAVA_HOME
 $(error Set JAVA_HOME environment variable)
 endif
-
 
 JAVA  := "$$JAVA_HOME/bin/java"
 JAVAC := "$$JAVA_HOME/bin/javac"
