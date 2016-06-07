@@ -76,7 +76,7 @@ public class ReflectionUtils {
             if (args.length == 0) {
                 ctor = klass.getDeclaredConstructor(new Class[] {});
             } else {
-                Class[] argClses = new Class[args.length];
+                Class<?>[] argClses = new Class[args.length];
                 for (int i = 0; i < args.length; i++) {
                     argClses[i] = args[i].getClass();
                 }
