@@ -164,9 +164,7 @@ public class NativeCodeLoader {
                 // Delete the extracted lib file on JVM exit.
                 extractedLibFile.deleteOnExit();
 
-                if (writer != null) {
-                    writer.close();
-                }
+                writer.close();
 
                 if (reader != null) {
                     reader.close();
