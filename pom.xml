@@ -377,6 +377,8 @@ The following provides more details on the included cryptographic software:
                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                          classpathref="maven.plugin.classpath"/>
                 <exec executable="make" failonerror="true" dir="${project.basedir}">
+                  <!-- For debugging: -->
+                  <!-- <arg value="-d"/> -->
                   <arg value="${target.name}"/>
                 </exec>
               </target>
