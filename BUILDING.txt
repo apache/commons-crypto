@@ -53,7 +53,7 @@ Maven build goals:
 * Run checkstyle            : mvn compile checkstyle:checkstyle
 * Install JAR in M2 cache   : mvn install
 * Deploy JAR to Maven repo  : mvn deploy
-* Run Rat                   : mvn apache-rat:check
+* Run RAT                   : mvn apache-rat:check
 * Build javadocs            : mvn javadoc:javadoc
 * Change version            : mvn versions:set -DnewVersion=NEWVERSION
 
