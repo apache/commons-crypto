@@ -21,17 +21,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 
 /**
  * A CryptoRandom of Java implementation.
  */
 public class JavaCryptoRandom implements CryptoRandom {
-    private static final Log LOG = LogFactory.getLog(JavaCryptoRandom.class
-            .getName());
 
     private final SecureRandom instance;
 
