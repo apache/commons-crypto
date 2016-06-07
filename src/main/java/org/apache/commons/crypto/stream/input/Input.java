@@ -72,7 +72,7 @@ public interface Input {
      *
      * @param n the number of bytes to be skipped.
      * @return the actual number of bytes skipped.
-     * @exception IOException if the stream does not support seek, or if some
+     * @throws IOException if the stream does not support seek, or if some
      *            other I/O error occurs.
      */
     long skip(long n) throws IOException;
@@ -91,7 +91,7 @@ public interface Input {
      * @return an estimate of the number of bytes that can be read (or skipped
      *         over) from this input stream without blocking or {@code 0} when
      *         it reaches the end of the input stream.
-     * @exception IOException if an I/O error occurs.
+     * @throws IOException if an I/O error occurs.
      */
     int available() throws IOException;
 
@@ -131,7 +131,7 @@ public interface Input {
      * Closes this input and releases any system resources associated with the
      * under layer input.
      *
-     * @exception IOException if an I/O error occurs.
+     * @throws IOException if an I/O error occurs.
      */
     void close() throws IOException;
 }
