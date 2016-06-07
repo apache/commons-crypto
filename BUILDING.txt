@@ -9,7 +9,7 @@ Requirements:
   Files (if running unit tests)
 * Maven 3.0 or above
 * Make
-* OpenSSL devel 1.0.1c or above
+* OpenSSL devel 1.0.1c or above (Openssl library header files are required)
 
 ----------------------------------------------------------------------------------
 Install JCE Unlimited Strength Jurisdiction Policy Files:
