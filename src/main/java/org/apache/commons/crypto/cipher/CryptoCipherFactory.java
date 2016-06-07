@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public class CryptoCipherFactory {
 
     /** LOG instance for {@link CryptoCipherFactory} */
-    public final static Logger LOG = LoggerFactory
+    private final static Logger LOG = LoggerFactory
             .getLogger(CryptoCipherFactory.class);
 
     private CryptoCipherFactory() {
