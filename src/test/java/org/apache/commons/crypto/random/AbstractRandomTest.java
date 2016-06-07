@@ -52,6 +52,7 @@ public abstract class AbstractRandomTest {
 
         for(int i=0; i< threadCount; i++) {
             Thread t = new Thread(new Runnable() {
+                @Override
                 public void run() {
                     checkRandomBytes(random, 10);
                     checkRandomBytes(random, 1000);
