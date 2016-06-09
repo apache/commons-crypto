@@ -314,11 +314,10 @@ public class CTRCryptoInputStream extends CryptoInputStream {
                 decryptInPlace(buf);
                 padding = postDecryption(streamOffset);
                 return n;
-            } else {
-                // Use outBuffer as the output buffer
-                decrypt();
-                padding = postDecryption(streamOffset);
             }
+            // Use outBuffer as the output buffer
+            decrypt();
+            padding = postDecryption(streamOffset);
         }
 
         // Copy decrypted data from outBuffer to buf
@@ -330,10 +329,9 @@ public class CTRCryptoInputStream extends CryptoInputStream {
             buf.put(outBuffer);
             outBuffer.limit(limit);
             return toRead;
-        } else {
-            buf.put(outBuffer);
-            return unread;
         }
+        buf.put(outBuffer);
+        return unread;
     }
 
     /**

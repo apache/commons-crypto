@@ -39,9 +39,8 @@ public class CTRCryptoStreamTest extends AbstractCipherStreamTest {
         if (withChannel) {
             return new CTRCryptoInputStream(Channels.newChannel(bais), cipher,
                     bufferSize, key, iv);
-        } else {
-            return new CTRCryptoInputStream(bais, cipher, bufferSize, key, iv);
         }
+        return new CTRCryptoInputStream(bais, cipher, bufferSize, key, iv);
     }
 
     @Override
@@ -51,8 +50,7 @@ public class CTRCryptoStreamTest extends AbstractCipherStreamTest {
         if (withChannel) {
             return new CTRCryptoOutputStream(Channels.newChannel(baos), cipher,
                     bufferSize, key, iv);
-        } else {
-            return new CTRCryptoOutputStream(baos, cipher, bufferSize, key, iv);
         }
+        return new CTRCryptoOutputStream(baos, cipher, bufferSize, key, iv);
     }
 }

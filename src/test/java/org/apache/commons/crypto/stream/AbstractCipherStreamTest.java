@@ -269,10 +269,9 @@ public abstract class AbstractCipherStreamTest {
             return new CryptoInputStream(Channels.newChannel(bais), cipher,
                     bufferSize, new SecretKeySpec(key, "AES"),
                     new IvParameterSpec(iv));
-        } else {
-            return new CryptoInputStream(bais, cipher, bufferSize,
-                    new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
         }
+        return new CryptoInputStream(bais, cipher, bufferSize,
+                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
     }
 
     protected CryptoOutputStream getCryptoOutputStream(
@@ -282,10 +281,9 @@ public abstract class AbstractCipherStreamTest {
             return new CryptoOutputStream(Channels.newChannel(baos), cipher,
                     bufferSize, new SecretKeySpec(key, "AES"),
                     new IvParameterSpec(iv));
-        } else {
-            return new CryptoOutputStream(baos, cipher, bufferSize,
-                    new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
         }
+        return new CryptoOutputStream(baos, cipher, bufferSize,
+                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
     }
 
     private int readAll(InputStream in, byte[] b, int offset, int len)

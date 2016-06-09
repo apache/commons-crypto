@@ -128,9 +128,8 @@ public class Utils {
         }
         if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
             return COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
-        } else {
-            return Integer.parseInt(bufferSizeStr);
         }
+        return Integer.parseInt(bufferSizeStr);
     }
 
     /**
@@ -339,9 +338,8 @@ public class Utils {
     public static <T> T checkNotNull(T reference) {
         if (reference == null) {
             throw new NullPointerException();
-        } else {
-            return reference;
         }
+        return reference;
     }
 
     /**

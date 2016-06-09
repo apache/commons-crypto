@@ -231,16 +231,15 @@ public class CryptoInputStream extends InputStream implements
             int n = Math.min(len, remaining);
             outBuffer.get(b, off, n);
             return n;
-        } else {
-            // No data in the out buffer, try read new data and decrypt it
-            int nd = decryptMore();
-            if (nd <= 0)
-                return nd;
-
-            int n = Math.min(len, outBuffer.remaining());
-            outBuffer.get(b, off, n);
-            return n;
         }
+        // No data in the out buffer, try read new data and decrypt it
+        int nd = decryptMore();
+        if (nd <= 0)
+            return nd;
+
+        int n = Math.min(len, outBuffer.remaining());
+        outBuffer.get(b, off, n);
+        return n;
     }
 
     /**
@@ -271,10 +270,9 @@ public class CryptoInputStream extends InputStream implements
 
                 remaining = 0;
                 break;
-            } else {
-                remaining -= outBuffer.remaining();
-                outBuffer.clear();
             }
+            remaining -= outBuffer.remaining();
+            outBuffer.clear();
 
             nd = decryptMore();
             if (nd < 0) {
@@ -396,10 +394,9 @@ public class CryptoInputStream extends InputStream implements
             dst.put(outBuffer);
             outBuffer.limit(limit);
             return toRead;
-        } else {
-            dst.put(outBuffer);
-            return remaining;
         }
+        dst.put(outBuffer);
+        return remaining;
     }
 
     /**
