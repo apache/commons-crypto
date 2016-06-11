@@ -68,7 +68,6 @@ public class ReflectionUtils {
      * @return a new object created by calling the constructor this object
      *         represents.
      */
-    @SuppressWarnings("rawtypes")
     public static <T> T newInstance(Class<T> klass, Object... args) {
         try {
             Constructor<T> ctor = null;
