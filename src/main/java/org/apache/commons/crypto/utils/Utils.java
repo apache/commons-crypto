@@ -106,9 +106,7 @@ public class Utils {
      */
     public static void freeDirectBuffer(ByteBuffer buffer) {
         if (buffer instanceof sun.nio.ch.DirectBuffer) {
-            final sun.misc.Cleaner bufferCleaner = ((sun.nio.ch.DirectBuffer) buffer)
-                    .cleaner();
-            bufferCleaner.clean();
+            ((sun.nio.ch.DirectBuffer) buffer).cleaner().clean();
         }
     }
 
