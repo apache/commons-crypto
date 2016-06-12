@@ -47,9 +47,8 @@ import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LI
  * General utility methods.
  */
 public final class Utils {
-    private static final int MIN_BUFFER_SIZE = 512;
 
-    protected static final CipherTransformation AES_CTR_NOPADDING = CipherTransformation.AES_CTR_NOPADDING;
+    private static final int MIN_BUFFER_SIZE = 512;
 
     /**
      * For AES, the algorithm block is fixed size of 128 bits.
@@ -57,7 +56,7 @@ public final class Utils {
      * @see <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
      *      http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
      */
-    private static final int AES_BLOCK_SIZE = AES_CTR_NOPADDING
+    private static final int AES_BLOCK_SIZE = CipherTransformation.AES_CTR_NOPADDING
             .getAlgorithmBlockSize();
 
     private Utils() {
