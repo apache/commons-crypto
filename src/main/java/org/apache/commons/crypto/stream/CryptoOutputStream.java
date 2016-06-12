@@ -21,7 +21,6 @@ package org.apache.commons.crypto.stream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channel;
 import java.nio.channels.WritableByteChannel;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -272,7 +271,7 @@ public class CryptoOutputStream extends OutputStream implements
     }
 
     /**
-     * Overrides the {@link Channel#isOpen()}. Tells whether or not this channel
+     * Overrides the {@link java.nio.channels.Channel#isOpen()}. Tells whether or not this channel
      * is open.
      *
      * @return <tt>true</tt> if, and only if, this channel is open
