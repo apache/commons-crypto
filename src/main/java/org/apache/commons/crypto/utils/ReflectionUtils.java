@@ -70,7 +70,7 @@ public class ReflectionUtils {
      */
     public static <T> T newInstance(Class<T> klass, Object... args) {
         try {
-            Constructor<T> ctor = null;
+            Constructor<T> ctor;
 
             if (args.length == 0) {
                 ctor = klass.getDeclaredConstructor();
