@@ -18,7 +18,6 @@
 package org.apache.commons.crypto.conf;
 
 import org.apache.commons.crypto.cipher.OpensslCipher;
-import org.apache.commons.crypto.random.CryptoRandom;
 
 /**
  * The ConfigurationKeys contains Configuration keys and default values.
@@ -92,7 +91,7 @@ public class ConfigurationKeys {
      * "org.apache.commons.crypto.random.OpensslCryptoRandom". And it takes a
      * common separated list. The
      * "org.apache.commons.crypto.random.JavaCryptoRandom" use java to implement
-     * {@link CryptoRandom} and the
+     * {@link org.apache.commons.crypto.random.CryptoRandom} and the
      * "org.apache.commons.crypto.random.OpensslCryptoRandom" use jni into
      * openssl to implement. Note that for each value,the first value which can
      * be created without exception will be used (priority by order).
