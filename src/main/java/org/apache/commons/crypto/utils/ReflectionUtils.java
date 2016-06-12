@@ -51,7 +51,7 @@ public class ReflectionUtils {
 
     /**
      * A unique class which is used as a sentinel value in the caching for
-     * getClassByName. {@link CryptoCipher#getClassByNameOrNull(String)}.
+     * getClassByName. {@link #getClassByNameOrNull(String)}.
      */
     private static abstract class NegativeCacheSentinel {
     }
