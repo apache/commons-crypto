@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * fallback to either the bundled libcommons-crypto-Linux-i386-32.so or the
  * default java implementations where appropriate.
  */
-public class NativeCodeLoader {
+public final class NativeCodeLoader {
 
     private static final Log LOG = LogFactory.getLog(NativeCodeLoader.class);
 

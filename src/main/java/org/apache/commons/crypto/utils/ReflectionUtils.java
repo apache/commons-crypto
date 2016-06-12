@@ -28,7 +28,7 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 /**
  * General utility methods for working with reflection.
  */
-public class ReflectionUtils {
+public final class ReflectionUtils {
 
     private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<ClassLoader, Map<String, WeakReference<Class<?>>>>();
 

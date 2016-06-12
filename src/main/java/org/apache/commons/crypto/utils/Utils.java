@@ -46,7 +46,7 @@ import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LI
 /**
  * General utility methods.
  */
-public class Utils {
+public final class Utils {
     private static final int MIN_BUFFER_SIZE = 512;
 
     protected static final CipherTransformation AES_CTR_NOPADDING = CipherTransformation.AES_CTR_NOPADDING;
