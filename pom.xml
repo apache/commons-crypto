@@ -218,7 +218,6 @@ The following provides more details on the included cryptographic software:
     User is able to specify the platform by maven profiles.-->
     <target.name>all</target.name>
     <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-    <findbugs-maven-plugin.version>3.0.2</findbugs-maven-plugin.version>
     <junit.version>4.12</junit.version>
     <commons-logging.version>1.1.3</commons-logging.version>
     <slf4j-api.version>1.7.10</slf4j-api.version>
@@ -271,43 +270,6 @@ The following provides more details on the included cryptographic software:
       <properties>
         <target.name>linux-aarch64</target.name>
       </properties>
-    </profile>
-    <!-- FindBugs -->
-    <profile>
-      <id>findbugs</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <version>${findbugs-maven-plugin.version}</version>
-            <configuration>
-              <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
-              <!--
-              Enables analysis which takes more memory but finds more bugs.
-              If you run out of memory, changes the value of the effort element
-              to 'Low'.
-              -->
-              <effort>Max</effort>
-              <failOnError>true</failOnError>
-              <threshold>Low</threshold>
-              <findbugsXmlOutput>true</findbugsXmlOutput>
-              <xmlOutput>true</xmlOutput>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>compile</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
   <licenses>
@@ -389,20 +351,6 @@ The following provides more details on the included cryptographic software:
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>${commons.rat.version}</version>
-        <configuration>
-          <excludes>
-            <exclude>.gitattributes</exclude>
-            <exclude>.gitignore</exclude>
-            <exclude>.git/**</exclude>
-            <exclude>.idea/**</exclude>
-            <exclude>**/build/**</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-build-plugin</artifactId>
         <version>${commons-build-plugin.version}</version>
@@ -429,6 +377,105 @@ The following provides more details on the included cryptographic software:
         </plugin>
     </plugins>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.15</version>
+        <configuration>
+          <configLocation>${basedir}/checkstyle.xml</configLocation>
+          <enableRulesSummary>false</enableRulesSummary>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>checkstyle</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <!-- Requires setting 'export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m" ' -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <!-- Use version from parent pom as that is adjusted according to the Java version used to run Maven -->
+        <version>${commons.findbugs.version}</version>
+        <configuration>
+          <excludeFilterFile>${basedir}/findbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>3.5</version>
+        <configuration>
+          <targetJdk>${maven.compiler.target}</targetJdk>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>taglist-maven-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <tagListOptions>
+            <tagClasses>
+              <tagClass>
+                <displayName>Needs Work</displayName>
+                <tags>
+                  <tag>
+                    <matchString>TODO</matchString>
+                    <matchType>exact</matchType>
+                  </tag>
+                  <tag>
+                    <matchString>FIXME</matchString>
+                    <matchType>exact</matchType>
+                  </tag>
+                  <tag>
+                    <matchString>XXX</matchString>
+                    <matchType>exact</matchType>
+                  </tag>
+                </tags>
+              </tagClass>
+              <tagClass>
+                <displayName>Noteable Markers</displayName>
+                <tags>
+                  <tag>
+                    <matchString>NOTE</matchString>
+                    <matchType>exact</matchType>
+                  </tag>
+                  <tag>
+                    <matchString>NOPMD</matchString>
+                    <matchType>exact</matchType>
+                  </tag>
+                  <tag>
+                    <matchString>NOSONAR</matchString>
+                    <matchType>exact</matchType>
+                  </tag>
+                </tags>
+              </tagClass>
+            </tagClasses>
+          </tagListOptions>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>javancss-maven-plugin</artifactId>
+        <version>2.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>.gitattributes</exclude>
+            <exclude>.gitignore</exclude>
+            <exclude>.git/**</exclude>
+            <exclude>.idea/**</exclude>
+            <exclude>**/build/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
