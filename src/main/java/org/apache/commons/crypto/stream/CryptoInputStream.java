@@ -195,8 +195,9 @@ public class CryptoInputStream extends InputStream implements
     @Override
     public int read() throws IOException {
         int n;
-        while ((n = read(oneByteBuf, 0, 1)) == 0)
-            ;
+        while ((n = read(oneByteBuf, 0, 1)) == 0) {
+            /* no op */
+        }
         return (n == -1) ? -1 : oneByteBuf[0] & 0xff;
     }
 
@@ -233,8 +234,9 @@ public class CryptoInputStream extends InputStream implements
         }
         // No data in the out buffer, try read new data and decrypt it
         int nd = decryptMore();
-        if (nd <= 0)
+        if (nd <= 0) {
             return nd;
+        }
 
         int n = Math.min(len, outBuffer.remaining());
         outBuffer.get(b, off, n);
