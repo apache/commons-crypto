@@ -89,64 +89,6 @@ public class ReflectionUtils {
     }
 
     /**
-     * Gets the value of the <code>name</code> property as a <code>Class</code>
-     * implementing the interface specified by <code>xface</code>. If no such
-     * property is specified, then <code>defaultValue</code> is returned.An
-     * exception is thrown if the returned class does not implement the named
-     * interface.
-     *
-     * @param <U> type for the class.
-     * @param name the class name of default implementation.
-     * @param defaultValue default value.
-     * @param xface the interface implemented by the named class.
-     * @return property value as a <code>Class</code>, or
-     *         <code>defaultValue</code>.
-     */
-    public static <U> Class<? extends U> getClass(String name,
-            Class<? extends U> defaultValue, Class<U> xface) {
-        try {
-            Class<?> theClass = null;
-            if (name != null && !name.isEmpty()) {
-                theClass = getClassByName(name);
-            }
-            if (theClass == null) {
-                theClass = defaultValue;
-            }
-            if (theClass != null && !xface.isAssignableFrom(theClass)) {
-                throw new RuntimeException(theClass + " not " + xface.getName());
-            } else if (theClass != null) {
-                return theClass.asSubclass(xface);
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Gets the value of the <code>name</code> property as a <code>Class</code>.
-     * If no such property is specified, then <code>defaultValue</code> is
-     * returned.
-     *
-     * @param name the class name.
-     * @param defaultValue default value.
-     * @return property value as a <code>Class</code>, or
-     *         <code>defaultValue</code>.
-     */
-    public static Class<?> getClass(String name, Class<?> defaultValue) {
-        String valueString = System.getProperty(name);
-        if (valueString == null) {
-            return defaultValue;
-        }
-        try {
-            return getClassByName(valueString);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * Loads a class by name.
      *
      * @param name the class name.
