@@ -73,7 +73,7 @@ public class ReflectionUtils {
             Constructor<T> ctor = null;
 
             if (args.length == 0) {
-                ctor = klass.getDeclaredConstructor(new Class[] {});
+                ctor = klass.getDeclaredConstructor();
             } else {
                 Class<?>[] argClses = new Class[args.length];
                 for (int i = 0; i < args.length; i++) {
