@@ -25,9 +25,8 @@ before_install:
 
 script:
   - mvn apache-rat:check
-  - mvn clean test
+  - mvn clean test package
   - jdk_switcher use oraclejdk7
-  - mvn test -Pfindbugs
+  - mvn verify site
   - jdk_switcher use oraclejdk8
-  - mvn test -Pfindbugs
-  - mvn clean site
+  - mvn verify site

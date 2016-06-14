@@ -33,16 +33,11 @@ JAVAC := "$$JAVA_HOME/bin/javac"
 JAVAH := "$$JAVA_HOME/bin/javah"
 
 OSINFO_CLASS := org.apache.commons.crypto.utils.OSInfo
-OSINFO_PROG := lib/org/apache/commons/crypto/utils/OSInfo.class
+OSINFO_PROG := $(TARGET)/classes/org/apache/commons/crypto/utils/OSInfo.class
 
-## building OSInfo.java
-$(info compiling OSInfo.java)
-$(shell mkdir -p lib)
-$(shell $(JAVAC) src/main/java/org/apache/commons/crypto/utils/OSInfo.java -d lib)
-
-OS_NAME := $(shell $(JAVA) -cp lib $(OSINFO_CLASS) --os)
-OS_ARCH := $(shell $(JAVA) -cp lib $(OSINFO_CLASS) --arch)
-LIB_FOLDER := $(shell $(JAVA) -cp lib $(OSINFO_CLASS))
+OS_NAME := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS) --os)
+OS_ARCH := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS) --arch)
+LIB_FOLDER := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS))
 IBM_JDK_LIB := lib/inc_ibm
 
 # Windows uses different path separators
