@@ -40,6 +40,11 @@ public class CryptoRandomFactory {
 
     /**
      * Gets a CryptoRandom instance for specified props.
+     * Uses the {@link #COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY}
+     * from the provided properties.
+     * If it is not set, then it checks the System properties.
+     * Failing that, it defaults to {@link JavaCryptoRandom}
+     * The properties are passed to the generated class.
      *
      * @param props the configuration properties.
      * @return CryptoRandom the cryptoRandom object.Null value will be returned
