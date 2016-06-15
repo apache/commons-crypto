@@ -87,9 +87,9 @@ public class ConfigurationKeys {
     /**
      * The configuration key of the implementation class for secure random. The
      * values of COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY can be
-     * "org.apache.commons.crypto.random.JavaCryptoRandom" and
-     * "org.apache.commons.crypto.random.OpensslCryptoRandom". And it takes a
-     * common separated list. The
+     * "org.apache.commons.crypto.random.JavaCryptoRandom" or
+     * "org.apache.commons.crypto.random.OpensslCryptoRandom". Or it takes a
+     * comma separated list. The
      * "org.apache.commons.crypto.random.JavaCryptoRandom" use java to implement
      * {@link org.apache.commons.crypto.random.CryptoRandom} and the
      * "org.apache.commons.crypto.random.OpensslCryptoRandom" use jni into
