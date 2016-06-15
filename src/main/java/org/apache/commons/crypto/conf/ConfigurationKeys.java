@@ -38,8 +38,8 @@ public class ConfigurationKeys {
     /**
      * The configuration key of implementation class for crypto cipher. The
      * values of COMMONS_CRYPTO_CIPHER_CLASSES_KEY can be
-     * "org.apache.commons.crypto.cipher.JceCipher" and
-     * "org.apache.commons.crypto.cipher.OpensslCipher". And it takes a common
+     * "org.apache.commons.crypto.cipher.JceCipher" or
+     * "org.apache.commons.crypto.cipher.OpensslCipher". Or it can be a comma
      * separated list. The "org.apache.commons.crypto.cipher.JceCipher" use jce
      * provider to implement CryptoCipher and the
      * "org.apache.commons.crypto.cipher.OpensslCipher" use jni into openssl to
