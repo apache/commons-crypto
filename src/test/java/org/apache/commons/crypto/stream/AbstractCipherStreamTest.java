@@ -313,7 +313,6 @@ public abstract class AbstractCipherStreamTest {
 
     @Test
     public void testReadWrite() throws Exception {
-        Assert.assertEquals(null, Openssl.getLoadingFailureReason());
         doReadWriteTest(0, jceCipherClass, jceCipherClass, iv);
         doReadWriteTest(0, opensslCipherClass, opensslCipherClass, iv);
         doReadWriteTest(count, jceCipherClass, jceCipherClass, iv);

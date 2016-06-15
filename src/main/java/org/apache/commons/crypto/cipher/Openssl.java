@@ -36,7 +36,7 @@ import org.apache.commons.crypto.utils.Utils;
  * OpenSSL cryptographic wrapper using JNI. Currently only AES-CTR is supported.
  * It's flexible to add other crypto algorithms/modes.
  */
-public final class Openssl {
+final class Openssl {
     private static final Log LOG = LogFactory.getLog(Openssl.class.getName());
 
     // Mode constant defined by Openssl JNI
