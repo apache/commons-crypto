@@ -111,7 +111,7 @@ limitations under the License.
       </p>
     </subsection>
     </section>
-    <section name="Apache Commons Crypto 1.0.0 (Requires Java 1.6 or later)">
+    <section name="Apache Commons Crypto 1.0.0 (Requires Java 1.7 or later)">
       <subsection name="Binaries">
         <table>
           <tr>

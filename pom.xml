@@ -193,11 +193,11 @@ The following provides more details on the included cryptographic software:
     <!-- properties not related to versioning -->
     <commons.jira.id>CRYPTO</commons.jira.id>
     <commons.jira.pid>12320024</commons.jira.pid>
-    <commons.javadoc.java.link>http://download.oracle.com/javase/6/docs/api/</commons.javadoc.java.link>
+    <commons.javadoc.java.link>http://download.oracle.com/javase/7/docs/api/</commons.javadoc.java.link>
     <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
     <commons-build-plugin.version>1.6</commons-build-plugin.version>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
 
 
     <!--

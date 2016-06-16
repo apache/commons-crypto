@@ -62,7 +62,7 @@
         <ol style="list-style-type: decimal">
           <h4>Prerequisites</h4>
           <p>
-            Commons Crypto relies on standard JDK 6 (or above) and OpenSSL 1.0.1c (or above) for production
+            Commons Crypto relies on standard JDK 1.7 (or above) and OpenSSL 1.0.1c (or above) for production
             deployment.
           </p>
           <h4>Using Commons Crypto in your Apache Maven build</h4>
