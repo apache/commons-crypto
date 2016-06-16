@@ -31,17 +31,7 @@ import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.conf.ConfigurationKeys;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_NAME_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_PATH_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_TEMPDIR_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE;
+
 
 /**
  * General utility methods.
@@ -76,7 +66,7 @@ public final class Utils {
     private static void loadSystemProperties() {
         try {
             InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream(COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE);
+                    .getResourceAsStream(ConfigurationKeys.COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE);
 
             if (is == null) {
                 return; // no configuration file is found
@@ -88,15 +78,13 @@ public final class Utils {
             Enumeration<?> names = props.propertyNames();
             while (names.hasMoreElements()) {
                 String name = (String) names.nextElement();
-                if (name.startsWith(ConfigurationKeys.CONF_PREFIX)) {
-                    if (System.getProperty(name) == null) {
-                        System.setProperty(name, props.getProperty(name));
-                    }
+                if (name.startsWith(ConfigurationKeys.CONF_PREFIX) && System.getProperty(name) == null) {
+                    System.setProperty(name, props.getProperty(name));
                 }
             }
         } catch (Throwable ex) {
             System.err.println("Could not load '"
-                    + COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE
+                    + ConfigurationKeys.COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE
                     + "' from classpath: " + ex.toString());
         }
     }
@@ -126,8 +114,9 @@ public final class Utils {
                     return;
                 }
             }
-        } catch (ReflectiveOperationException e) {
-            // Ignore the Reflection exception.
+        } catch (ReflectiveOperationException e) { // NOPMD
+             // Ignore the Reflection exception.
+
         }
     }
 
@@ -140,13 +129,13 @@ public final class Utils {
      * */
     public static int getBufferSize(Properties props) {
         String bufferSizeStr = props
-                .getProperty(COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY);
+                .getProperty(ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY);
         if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
             bufferSizeStr = System
-                    .getProperty(COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY);
+                    .getProperty(ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY);
         }
         if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
-            return COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
+            return ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
         }
         return Integer.parseInt(bufferSizeStr);
     }
@@ -159,13 +148,13 @@ public final class Utils {
      * @return the cipher class based on the props.
      */
     public static String getCipherClassString(Properties props) {
-        final String configName = COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
+        final String configName = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
         String cipherClassString = props.getProperty(configName) != null ? props
-                .getProperty(configName, COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT)
+                .getProperty(configName, ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT)
                 : System.getProperty(configName,
-                        COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
+            ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
         if (cipherClassString.isEmpty()) {
-            cipherClassString = COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
+            cipherClassString = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
         }
         return cipherClassString;
     }
@@ -178,9 +167,9 @@ public final class Utils {
      * @return the jce provider based on the props.
      */
     public static String getJCEProvider(Properties props) {
-        return props.getProperty(COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) != null ? props
-                .getProperty(COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) : System
-                .getProperty(COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
+        return props.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) != null ? props
+                .getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) : System
+                .getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
     }
 
     /**
@@ -192,11 +181,11 @@ public final class Utils {
      */
     public static String getRandomDevPath(Properties props) {
         String devPath = props
-                .getProperty(COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
+                .getProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
         if (devPath == null) {
             devPath = System.getProperty(
-                    COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
-                    COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
+                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
+                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
         }
         return devPath;
     }
@@ -207,7 +196,7 @@ public final class Utils {
      * @return the path of native library.
      */
     public static String getLibPath() {
-        return System.getProperty(COMMONS_CRYPTO_LIB_PATH_KEY);
+        return System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_LIB_PATH_KEY);
     }
 
     /**
@@ -216,7 +205,7 @@ public final class Utils {
      * @return the file name of native library.
      */
     public static String getLibName() {
-        return System.getProperty(COMMONS_CRYPTO_LIB_NAME_KEY);
+        return System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_LIB_NAME_KEY);
     }
 
     /**
@@ -225,7 +214,7 @@ public final class Utils {
      * @return the temp directory.
      */
     public static String getTmpDir() {
-        return System.getProperty(COMMONS_CRYPTO_LIB_TEMPDIR_KEY,
+        return System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_LIB_TEMPDIR_KEY,
                 System.getProperty("java.io.tmpdir"));
     }
 
@@ -288,7 +277,7 @@ public final class Utils {
         int sum = 0;
         while (i-- > 0) {
             // (sum >>> Byte.SIZE) is the carry for addition
-            sum = (initIV[i] & 0xff) + (sum >>> Byte.SIZE);
+            sum = initIV[i] & 0xff + sum >>> Byte.SIZE;
             if (j++ < 8) { // Big-endian, and long is 8 bytes length
                 sum += (byte) counter & 0xff;
                 counter >>>= 8;

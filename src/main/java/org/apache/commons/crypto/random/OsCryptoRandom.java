@@ -120,7 +120,7 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
         fillReservoir(4);
         int n = 0;
         for (int i = 0; i < 4; i++) {
-            n = ((n << 8) | (reservoir[pos++] & 0xff));
+            n = (n << 8) | (reservoir[pos++] & 0xff);
         }
         return n & (0xffffffff >> (32 - nbits));
     }
