@@ -19,6 +19,7 @@ package org.apache.commons.crypto.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -26,22 +27,21 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
-import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.conf.ConfigurationKeys;
-
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_NAME_KEY;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_PATH_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_TEMPDIR_KEY;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_LIB_TEMPDIR_KEY;
 
 /**
  * General utility methods.
@@ -68,7 +68,7 @@ public final class Utils {
 
     /**
      * loads system properties when configuration file of the name
-     * {@link #COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE} is found.
+     * {@link ConfigurationKeys#COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE} is found.
      */
     private static void loadSystemProperties() {
         try {
@@ -104,8 +104,27 @@ public final class Utils {
      * @param buffer the bytebuffer to be freed.
      */
     public static void freeDirectBuffer(ByteBuffer buffer) {
-        if (buffer instanceof sun.nio.ch.DirectBuffer) {
-            ((sun.nio.ch.DirectBuffer) buffer).cleaner().clean();
+        try {
+            /* Using reflection to implement sun.nio.ch.DirectBuffer.cleaner()
+            .clean(); */
+            Class<?> sunClass = Class.forName("sun.nio.ch.DirectBuffer");
+            Class<?> cleanerClass = Class.forName("sun.misc.Cleaner");
+
+            Class<?>[] interfaces = buffer.getClass().getInterfaces();
+
+            for (Class clazz : interfaces) {
+                if (clazz.getName().equals(sunClass.getName())) {
+                    /* DirectBuffer#cleaner() */
+                    Method getCleaner = sunClass.getMethod("cleaner");
+                    Object cleaner = getCleaner.invoke(buffer, null);
+                    /* Cleaner#clean() */
+                    Method cleanMethod = cleanerClass.getMethod("clean");
+                    cleanMethod.invoke(cleaner, null);
+                    return;
+                }
+            }
+        } catch (ReflectiveOperationException e) {
+            // Ignore the Reflection exception.
         }
     }
 
