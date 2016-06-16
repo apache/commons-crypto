@@ -40,7 +40,9 @@ public final class NativeCodeLoader {
     private static final Log LOG = LogFactory.getLog(NativeCodeLoader.class);
 
     private final static boolean nativeCodeLoaded;
-
+    /**
+     * The private constructor of {@Link NativeCodeLoader}.
+     */
     private NativeCodeLoader() {
     }
 
@@ -78,6 +80,11 @@ public final class NativeCodeLoader {
         }
     }
 
+    /**
+     * Finds the native library.
+     *
+     * @return the jar file.
+     */
     static File findNativeLibrary() {
         // Try to load the library in commons-crypto.lib.path */
         String nativeLibraryPath = Utils.getLibPath();
@@ -248,6 +255,14 @@ public final class NativeCodeLoader {
         return version;
     }
 
+    /**
+     * Checks whether in1 and in2 is equal.
+     *
+     * @param in1 the input1.
+     * @param in2 the input2.
+     * @return true if in1 and in2 is equal, else false.
+     * @throws IOException if an I/O error occurs.
+     */
     private static boolean contentsEquals(InputStream in1, InputStream in2)
             throws IOException {
         if (!(in1 instanceof BufferedInputStream)) {
@@ -269,6 +284,12 @@ public final class NativeCodeLoader {
         return ch2 == -1;
     }
 
+    /**
+     * Checks whether the given path has resource.
+     *
+     * @param path the path.
+     * @return the boolean.
+     */
     private static boolean hasResource(String path) {
         return NativeCodeLoader.class.getResource(path) != null;
     }

@@ -63,6 +63,9 @@ public class OSInfo {
      */
     public static final String PPC64 = "ppc64";
 
+    /**
+     * The private constructor of {@Link OSInfo}.
+     */
     private OSInfo() {
     }
 
@@ -104,6 +107,11 @@ public class OSInfo {
         archMapping.put("power_rs64", PPC64);
     }
 
+    /**
+     * The main method.
+     *
+     * @param args the argv.
+     */
     public static void main(String[] args) {
         if (args.length >= 1) {
             if ("--os".equals(args[0])) {

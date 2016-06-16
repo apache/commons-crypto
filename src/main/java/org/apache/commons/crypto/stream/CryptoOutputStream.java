@@ -384,6 +384,11 @@ public class CryptoOutputStream extends OutputStream implements
         output.write(outBuffer);
     }
 
+    /**
+     * Checks whether the stream is closed.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
     protected void checkStream() throws IOException {
         if (closed) {
             throw new IOException("Stream closed");

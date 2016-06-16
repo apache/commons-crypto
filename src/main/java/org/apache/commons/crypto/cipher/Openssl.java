@@ -47,6 +47,14 @@ public final class Openssl {
     private static enum AlgorithmMode {
         AES_CTR, AES_CBC;
 
+        /**
+         * Gets the mode.
+         *
+         * @param algorithm the algorithm.
+         * @param mode the mode.
+         * @return the Algorithm mode.
+         * @throws NoSuchAlgorithmException if the algorithm is not available.
+         */
         static int get(String algorithm, String mode)
                 throws NoSuchAlgorithmException {
             try {
@@ -62,6 +70,13 @@ public final class Openssl {
     private static enum Padding {
         NoPadding, PKCS5Padding;
 
+        /**
+         * Gets the Padding instance.
+         *
+         * @param padding the padding.
+         * @return the value of Padding.
+         * @throws NoSuchPaddingException if the padding is not available.
+         */
         static int get(String padding) throws NoSuchPaddingException {
             try {
                 return Padding.valueOf(padding).ordinal();
@@ -101,6 +116,13 @@ public final class Openssl {
         return loadingFailureReason;
     }
 
+    /**
+     * Constructs a {@Link Openssl} instance based on context, algorithm and padding.
+     *
+     * @param context the context.
+     * @param algorithm the algorithm.
+     * @param padding the padding.
+     */
     private Openssl(long context, int algorithm, int padding) {
         this.context = context;
         this.algorithm = algorithm;
@@ -136,6 +158,13 @@ public final class Openssl {
         final String mode;
         final String padding;
 
+        /**
+         * Constructs a {@Link Transform} based on the algorithm, mode and padding.
+         *
+         * @param algorithm the algorithm
+         * @param mode the mode.
+         * @param padding the padding.
+         */
         public Transform(String algorithm, String mode, String padding) {
             this.algorithm = algorithm;
             this.mode = mode;
@@ -143,6 +172,13 @@ public final class Openssl {
         }
     }
 
+    /**
+     * Gets the tokens of transformation.
+     *
+     * @param transformation the transformation.
+     * @return the {@Link Transform} instance.
+     * @throws NoSuchAlgorithmException if the transformation is null.
+     */
     private static Transform tokenizeTransformation(String transformation)
             throws NoSuchAlgorithmException {
         if (transformation == null) {

@@ -28,6 +28,9 @@ import org.apache.commons.logging.Log;
  */
 public final class IOUtils {
 
+    /**
+     * Teh private constructor of {@Link IOUtils}.
+     */
     private IOUtils() {
     }
 

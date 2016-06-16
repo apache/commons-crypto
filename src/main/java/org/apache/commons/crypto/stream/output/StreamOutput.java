@@ -92,6 +92,11 @@ public class StreamOutput implements Output {
         out.close();
     }
 
+    /**
+     * Gets the output stream.
+     *
+     * @return the output stream.
+     */
     protected OutputStream getOut() {
         return out;
     }
