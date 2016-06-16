@@ -129,7 +129,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoOutputStream(OutputStream out, CryptoCipher cipher,
+    protected CryptoOutputStream(OutputStream out, CryptoCipher cipher,
             int bufferSize, Key key, AlgorithmParameterSpec params)
             throws IOException {
         this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, params);
@@ -145,7 +145,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoOutputStream(WritableByteChannel channel, CryptoCipher cipher,
+    protected CryptoOutputStream(WritableByteChannel channel, CryptoCipher cipher,
             int bufferSize, Key key, AlgorithmParameterSpec params)
             throws IOException {
         this(new ChannelOutput(channel), cipher, bufferSize, key, params);

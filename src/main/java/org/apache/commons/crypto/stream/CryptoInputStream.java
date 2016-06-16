@@ -130,7 +130,7 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoInputStream(InputStream in, CryptoCipher cipher,
+    protected CryptoInputStream(InputStream in, CryptoCipher cipher,
             int bufferSize, Key key, AlgorithmParameterSpec params)
             throws IOException {
         this(new StreamInput(in, bufferSize), cipher, bufferSize, key, params);
@@ -146,7 +146,7 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoInputStream(ReadableByteChannel in, CryptoCipher cipher,
+    protected CryptoInputStream(ReadableByteChannel in, CryptoCipher cipher,
             int bufferSize, Key key, AlgorithmParameterSpec params)
             throws IOException {
         this(new ChannelInput(in), cipher, bufferSize, key, params);
@@ -162,7 +162,7 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoInputStream(Input input, CryptoCipher cipher, int bufferSize,
+    protected CryptoInputStream(Input input, CryptoCipher cipher, int bufferSize,
             Key key, AlgorithmParameterSpec params) throws IOException {
         this.input = input;
         this.cipher = cipher;

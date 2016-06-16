@@ -119,7 +119,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    public CTRCryptoOutputStream(OutputStream out, CryptoCipher cipher,
+    protected CTRCryptoOutputStream(OutputStream out, CryptoCipher cipher,
             int bufferSize, byte[] key, byte[] iv) throws IOException {
         this(out, cipher, bufferSize, key, iv, 0);
     }
@@ -134,7 +134,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    public CTRCryptoOutputStream(WritableByteChannel channel,
+    protected CTRCryptoOutputStream(WritableByteChannel channel,
             CryptoCipher cipher, int bufferSize, byte[] key, byte[] iv)
             throws IOException {
         this(channel, cipher, bufferSize, key, iv, 0);
@@ -150,7 +150,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    public CTRCryptoOutputStream(Output output, CryptoCipher cipher,
+    protected CTRCryptoOutputStream(Output output, CryptoCipher cipher,
             int bufferSize, byte[] key, byte[] iv) throws IOException {
         this(output, cipher, bufferSize, key, iv, 0);
     }
@@ -202,7 +202,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    public CTRCryptoOutputStream(OutputStream out, CryptoCipher cipher,
+    protected CTRCryptoOutputStream(OutputStream out, CryptoCipher cipher,
             int bufferSize, byte[] key, byte[] iv, long streamOffset)
             throws IOException {
         this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, iv,
@@ -220,7 +220,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    public CTRCryptoOutputStream(WritableByteChannel channel,
+    protected CTRCryptoOutputStream(WritableByteChannel channel,
             CryptoCipher cipher, int bufferSize, byte[] key, byte[] iv,
             long streamOffset) throws IOException {
         this(new ChannelOutput(channel), cipher, bufferSize, key, iv,
@@ -238,7 +238,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    public CTRCryptoOutputStream(Output output, CryptoCipher cipher,
+    protected CTRCryptoOutputStream(Output output, CryptoCipher cipher,
             int bufferSize, byte[] key, byte[] iv, long streamOffset)
             throws IOException {
         super(output, cipher, bufferSize, new SecretKeySpec(key, "AES"),
