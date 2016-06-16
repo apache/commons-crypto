@@ -110,19 +110,17 @@ public final class Utils {
         try {
             /* Using reflection to implement sun.nio.ch.DirectBuffer.cleaner()
             .clean(); */
-            Class<?> sunClass = Class.forName("sun.nio.ch.DirectBuffer");
-            Class<?> cleanerClass = Class.forName("sun.misc.Cleaner");
-
+            final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
             Class<?>[] interfaces = buffer.getClass().getInterfaces();
 
             for (Class<?> clazz : interfaces) {
-                if (clazz.getName().equals(sunClass.getName())) {
+                if (clazz.getName().equals(SUN_CLASS)) {
                     final Object[] NO_PARAM = new Object[0];
                     /* DirectBuffer#cleaner() */
-                    Method getCleaner = sunClass.getMethod("cleaner");
+                    Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
                     Object cleaner = getCleaner.invoke(buffer, NO_PARAM);
                     /* Cleaner#clean() */
-                    Method cleanMethod = cleanerClass.getMethod("clean");
+                    Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
                     cleanMethod.invoke(cleaner, NO_PARAM);
                     return;
                 }
