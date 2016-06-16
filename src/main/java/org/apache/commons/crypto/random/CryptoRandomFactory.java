@@ -35,9 +35,9 @@ public class CryptoRandomFactory {
     public final static Logger LOG = LoggerFactory
             .getLogger(CryptoRandomFactory.class);
 
-  /**
-   * The private constructor of {@Link CryptoRandomFactory}.
-   */
+    /**
+     * The private constructor of {@Link CryptoRandomFactory}.
+     */
     private CryptoRandomFactory() {
     }
 

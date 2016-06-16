@@ -197,6 +197,7 @@ public class CryptoInputStream extends InputStream implements
         int n;
         while ((n = read(oneByteBuf, 0, 1)) == 0) {
             /* no op */
+            ;
         }
         return (n == -1) ? -1 : oneByteBuf[0] & 0xff;
     }

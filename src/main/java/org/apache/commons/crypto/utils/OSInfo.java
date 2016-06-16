@@ -168,9 +168,9 @@ public class OSInfo {
                 if (exitCode == 0) {
                     return "armhf";
                 }
-            } catch (IOException e) {
+            } catch (IOException e) { //NOPMD
                 // ignored: fall back to "arm" arch (soft-float ABI)
-            } catch (InterruptedException e) {
+            } catch (InterruptedException e) { //NOPMD
                 // ignored: fall back to "arm" arch (soft-float ABI)
             }
         } else {

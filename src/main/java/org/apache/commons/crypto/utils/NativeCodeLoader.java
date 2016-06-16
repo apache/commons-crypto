@@ -107,13 +107,11 @@ public final class NativeCodeLoader {
         boolean hasNativeLib = hasResource(nativeLibraryPath + "/"
                 + nativeLibraryName);
         if (!hasNativeLib) {
-            if (OSInfo.getOSName().equals("Mac")) {
+            String altName = "libcommons-crypto.jnilib";
+            if (OSInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + "/" + altName)) {
                 // Fix for openjdk7 for Mac
-                String altName = "libcommons-crypto.jnilib";
-                if (hasResource(nativeLibraryPath + "/" + altName)) {
-                    nativeLibraryName = altName;
-                    hasNativeLib = true;
-                }
+                nativeLibraryName = altName;
+                hasNativeLib = true;
             }
         }
 
