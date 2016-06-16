@@ -115,14 +115,15 @@ public final class Utils {
 
             Class<?>[] interfaces = buffer.getClass().getInterfaces();
 
-            for (Class clazz : interfaces) {
+            for (Class<?> clazz : interfaces) {
                 if (clazz.getName().equals(sunClass.getName())) {
+                    final Object[] NO_PARAM = new Object[0];
                     /* DirectBuffer#cleaner() */
                     Method getCleaner = sunClass.getMethod("cleaner");
-                    Object cleaner = getCleaner.invoke(buffer, null);
+                    Object cleaner = getCleaner.invoke(buffer, NO_PARAM);
                     /* Cleaner#clean() */
                     Method cleanMethod = cleanerClass.getMethod("clean");
-                    cleanMethod.invoke(cleaner, null);
+                    cleanMethod.invoke(cleaner, NO_PARAM);
                     return;
                 }
             }
