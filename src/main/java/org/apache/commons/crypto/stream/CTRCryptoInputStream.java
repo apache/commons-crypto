@@ -368,6 +368,11 @@ public class CTRCryptoInputStream extends CryptoInputStream {
         return streamOffset;
     }
 
+    /**
+     * Sets the offset of stream.
+     *
+     * @param streamOffset the stream offset.
+     */
     protected void setStreamOffset(long streamOffset) {
         this.streamOffset = streamOffset;
     }

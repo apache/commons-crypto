@@ -22,7 +22,9 @@ package org.apache.commons.crypto.random;
  * this class is defined in OpensslCryptoRandomNative.h(genereted by javah).
  */
 public class OpensslCryptoRandomNative {
-
+    /**
+     * The private constructor of {@Link OpensslCryptoRandomNative}.
+     */
     private OpensslCryptoRandomNative() {
     }
 

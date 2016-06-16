@@ -59,6 +59,9 @@ public final class Utils {
     private static final int AES_BLOCK_SIZE = CipherTransformation.AES_CTR_NOPADDING
             .getAlgorithmBlockSize();
 
+    /**
+     * The private constructor of {@Link Utils}.
+     */
     private Utils() {
     }
 

@@ -161,6 +161,11 @@ public class ChannelInput implements Input {
         channel.close();
     }
 
+    /**
+     * Gets the skip buffer.
+     *
+     * @return the buffer.
+     */
     private ByteBuffer getSkipBuf() {
         if (buf == null) {
             buf = ByteBuffer.allocate(SKIP_BUFFER_SIZE);

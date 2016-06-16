@@ -47,6 +47,11 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
 
     private int pos = reservoir.length;
 
+    /**
+     * Fills the reservoir.
+     *
+     * @param min the length.
+     */
     private void fillReservoir(int min) {
         if (pos >= reservoir.length - min) {
             try {

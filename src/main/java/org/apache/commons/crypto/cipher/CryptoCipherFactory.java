@@ -36,6 +36,9 @@ public class CryptoCipherFactory {
     private final static Logger LOG = LoggerFactory
             .getLogger(CryptoCipherFactory.class);
 
+    /**
+     * The private Constructor of {@link CryptoCipherFactory}.
+     */
     private CryptoCipherFactory() {
     }
 
@@ -88,7 +91,12 @@ public class CryptoCipherFactory {
         return getInstance(transformation, new Properties());
     }
 
-    // Return OpenSSLCipher if Properties is null or empty by default
+    /**
+     * Returns OpenSSLCipher if Properties is null or empty by default.
+     *
+     * @param props the configuration properties.
+     * @return the OpenSSLCipher instance.
+     */
     private static List<Class<? extends CryptoCipher>> getCipherClasses(
             Properties props) {
         List<Class<? extends CryptoCipher>> result = new ArrayList<Class<? extends CryptoCipher>>();

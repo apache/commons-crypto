@@ -46,6 +46,9 @@ public final class ReflectionUtils {
      */
     private static final Class<?> NEGATIVE_CACHE_SENTINEL = NegativeCacheSentinel.class;
 
+    /**
+     * The private constructor of {@Link ReflectionUtils}.
+     */
     private ReflectionUtils() {
     }
 
