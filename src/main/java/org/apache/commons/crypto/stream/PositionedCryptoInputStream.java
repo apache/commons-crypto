@@ -84,7 +84,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    public PositionedCryptoInputStream(Input input, CryptoCipher cipher,
+    protected PositionedCryptoInputStream(Input input, CryptoCipher cipher,
             int bufferSize, byte[] key, byte[] iv, long streamOffset)
             throws IOException {
         super(input, cipher, bufferSize, key, iv, streamOffset);
