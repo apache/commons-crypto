@@ -33,19 +33,11 @@ NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
 
 all: $(NATIVE_DLL)
 
-$(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.class : $(SRC)/org/apache/commons/crypto/cipher/OpensslNative.java
-	@mkdir -p $(TARGET)/jni-classes
-	$(JAVAC) -source 1.6 -target 1.6 -d $(TARGET)/jni-classes -sourcepath $(SRC) $<
+$(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.h: $(TARGET)/classes/org/apache/commons/crypto/cipher/OpensslNative.class
+	$(JAVAH) -force -classpath $(TARGET)/jni-classes:$(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpensslNative
 
-$(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslCryptoRandomNative.class : $(SRC)/org/apache/commons/crypto/random/OpensslCryptoRandomNative.java
-	@mkdir -p $(TARGET)/jni-classes
-	$(JAVAC) -source 1.6 -target 1.6 -d $(TARGET)/jni-classes -sourcepath $(SRC) $<
-
-$(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.h: $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ org.apache.commons.crypto.cipher.OpensslNative
-
-$(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslCryptoRandomNative.h: $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslCryptoRandomNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes -o $@ org.apache.commons.crypto.random.OpensslCryptoRandomNative
+$(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslCryptoRandomNative.h: $(TARGET)/classes/org/apache/commons/crypto/random/OpensslCryptoRandomNative.class
+	$(JAVAH) -force -classpath $(TARGET)/jni-classes:$(TARGET)/classes -o $@ org.apache.commons.crypto.random.OpensslCryptoRandomNative
 
 $(COMMONS_CRYPTO_OUT)/OpensslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpensslNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.h
 	@mkdir -p $(@D)

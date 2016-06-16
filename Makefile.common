@@ -33,12 +33,7 @@ JAVAC := "$$JAVA_HOME/bin/javac"
 JAVAH := "$$JAVA_HOME/bin/javah"
 
 OSINFO_CLASS := org.apache.commons.crypto.utils.OSInfo
-OSINFO_PROG := lib/org/apache/commons/crypto/utils/OSInfo.class
-
-## building OSInfo.java
-$(info compiling OSInfo.java)
-$(shell mkdir -p lib)
-$(shell $(JAVAC) src/main/java/org/apache/commons/crypto/utils/OSInfo.java -d lib)
+OSINFO_PROG := $(TARGET)/classes/org/apache/commons/crypto/utils/OSInfo.class
 
 OS_NAME := $(shell $(JAVA) -cp lib $(OSINFO_CLASS) --os)
 OS_ARCH := $(shell $(JAVA) -cp lib $(OSINFO_CLASS) --arch)
