@@ -32,7 +32,6 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 
-
 /**
  * General utility methods.
  */
@@ -115,7 +114,7 @@ public final class Utils {
                 }
             }
         } catch (ReflectiveOperationException e) { // NOPMD
-             // Ignore the Reflection exception.
+            // Ignore the Reflection exception.
 
         }
     }
@@ -152,7 +151,7 @@ public final class Utils {
         String cipherClassString = props.getProperty(configName) != null ? props
                 .getProperty(configName, ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT)
                 : System.getProperty(configName,
-            ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
+                ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
         if (cipherClassString.isEmpty()) {
             cipherClassString = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
         }
@@ -167,9 +166,9 @@ public final class Utils {
      * @return the jce provider based on the props.
      */
     public static String getJCEProvider(Properties props) {
-        return props.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) != null ? props
-                .getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) : System
-                .getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
+        return props.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) !=
+            null ? props.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY)
+            : System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
     }
 
     /**
@@ -184,8 +183,8 @@ public final class Utils {
                 .getProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
         if (devPath == null) {
             devPath = System.getProperty(
-                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
-                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
+                    ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
+                    ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
         }
         return devPath;
     }

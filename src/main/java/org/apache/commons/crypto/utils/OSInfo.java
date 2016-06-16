@@ -169,7 +169,7 @@ public class OSInfo {
                     return "armhf";
                 }
             } catch (IOException e) { //NOPMD
-            // ignored: fall back to "arm" arch (soft-float ABI)
+                // ignored: fall back to "arm" arch (soft-float ABI)
             } catch (InterruptedException e) { //NOPMD
                 // ignored: fall back to "arm" arch (soft-float ABI)
             }
