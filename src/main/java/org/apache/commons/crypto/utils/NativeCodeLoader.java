@@ -82,6 +82,8 @@ public final class NativeCodeLoader {
 
     /**
      * Finds the native library.
+     *
+     * @return the jar file.
      */
     static File findNativeLibrary() {
         // Try to load the library in commons-crypto.lib.path */

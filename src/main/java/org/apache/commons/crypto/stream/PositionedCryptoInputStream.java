@@ -260,7 +260,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
      * @param inBuffer the input buffer.
      * @param position the offset from the start of the stream.
      * @param iv the iv.
-     * @return
+     * @return the padding.
      * @throws IOException if an I/O error occurs.
      */
     private byte postDecryption(CipherState state, ByteBuffer inBuffer,
