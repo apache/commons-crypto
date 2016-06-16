@@ -21,7 +21,7 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.fail;
 
 public class TestJavaCryptoRandom extends AbstractRandomTest {
 

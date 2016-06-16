@@ -22,7 +22,7 @@ import java.util.Properties;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class CryptoCipherFactoryTest {
