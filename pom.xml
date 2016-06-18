@@ -289,6 +289,17 @@ The following provides more details on the included cryptographic software:
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${commons.compiler.version}</version>
+          <configuration>
+            <!-- Fix incremental compiler bug, see https://jira.codehaus.org/browse/MCOMPILER-205 etc. -->
+            <excludes>
+              <exclude>**/package-info.java</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
           <version>${maven-antrun-plugin.version}</version>
           <dependencies>
