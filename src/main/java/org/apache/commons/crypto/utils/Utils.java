@@ -275,7 +275,7 @@ public final class Utils {
         int sum = 0;
         while (i-- > 0) {
             // (sum >>> Byte.SIZE) is the carry for addition
-            sum = (initIV[i] & 0xff) + (sum >>> Byte.SIZE);
+            sum = initIV[i] & 0xff + sum >>> Byte.SIZE;
             if (j++ < 8) { // Big-endian, and long is 8 bytes length
                 sum += (byte) counter & 0xff;
                 counter >>>= 8;
