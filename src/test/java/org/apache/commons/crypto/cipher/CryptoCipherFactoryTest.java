@@ -57,7 +57,7 @@ public class CryptoCipherFactoryTest {
                 .getName());
     }
 
-    @Test
+    @Test(expected = GeneralSecurityException.class)
     public void testDisableFallback() throws GeneralSecurityException {
         Properties properties = new Properties();
         properties.setProperty(
@@ -65,11 +65,7 @@ public class CryptoCipherFactoryTest {
                 "InvalidCipherName");
         properties.setProperty(ConfigurationKeys
             .COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY, "false");
-        try {
-            CryptoCipherFactory.getInstance(CipherTransformation.AES_CBC_NOPADDING, properties);
-            fail("Should throw an exception when DisableFallback");
-        } catch (Exception e) {
-            ;
-        }
+
+        CryptoCipherFactory.getInstance(CipherTransformation.AES_CBC_NOPADDING, properties);
     }
 }
