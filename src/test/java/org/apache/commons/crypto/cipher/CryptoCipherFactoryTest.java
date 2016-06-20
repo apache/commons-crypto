@@ -66,8 +66,7 @@ public class CryptoCipherFactoryTest {
         properties.setProperty(ConfigurationKeys
             .COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY, "false");
         try {
-            CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
-                    CipherTransformation.AES_CBC_NOPADDING, properties);
+            CryptoCipherFactory.getInstance(CipherTransformation.AES_CBC_NOPADDING, properties);
             fail("Should throw an exception when DisableFallback");
         } catch (Exception e) {
             ;
