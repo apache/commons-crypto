@@ -25,19 +25,16 @@ import java.util.Random;
 
 import org.apache.commons.crypto.utils.IOUtils;
 import org.apache.commons.crypto.utils.Utils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * A Random implementation that uses random bytes sourced from the operating
  * system.
  */
 public class OsCryptoRandom extends Random implements CryptoRandom {
-    public static final Log LOG = LogFactory.getLog(OsCryptoRandom.class);
 
     private static final long serialVersionUID = 6391500337172057900L;
 
-    private final int RESERVOIR_LENGTH = 8192;
+    private static final int RESERVOIR_LENGTH = 8192;
 
     private String randomDevPath;
 
@@ -131,7 +128,7 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
     @Override
     synchronized public void close() {
         if (stream != null) {
-            IOUtils.cleanup(LOG, stream);
+            IOUtils.cleanup(stream);
             stream = null;
         }
     }

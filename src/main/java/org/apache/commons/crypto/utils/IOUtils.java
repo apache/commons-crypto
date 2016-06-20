@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.crypto.stream.input.Input;
-import org.apache.commons.logging.Log;
 
 /**
  * General utility methods for working with IO.
@@ -85,18 +84,15 @@ public final class IOUtils {
      * Closes the Closeable objects and <b>ignore</b> any {@link IOException} or
      * null pointers. Must only be used for cleanup in exception handlers.
      *
-     * @param log the log to record problems to at debug level. Can be null.
      * @param closeables the objects to close.
      */
-    public static void cleanup(Log log, java.io.Closeable... closeables) {
+    public static void cleanup(java.io.Closeable... closeables) {
         for (java.io.Closeable c : closeables) {
             if (c != null) {
                 try {
                     c.close();
                 } catch (Throwable e) {
-                    if (log != null && log.isDebugEnabled()) {
-                        log.debug("Exception in closing " + c, e);
-                    }
+                    ; // NOPMD
                 }
             }
         }

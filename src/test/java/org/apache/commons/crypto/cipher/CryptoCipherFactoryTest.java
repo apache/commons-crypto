@@ -24,6 +24,7 @@ import org.apache.commons.crypto.conf.ConfigurationKeys;
 
 import org.junit.Assert;
 import org.junit.Test;
+import static junit.framework.Assert.fail;
 
 public class CryptoCipherFactoryTest {
     @Test
@@ -37,7 +38,8 @@ public class CryptoCipherFactoryTest {
     @Test
     public void testEmptyCipher() throws GeneralSecurityException {
         Properties properties = new Properties();
-        properties.put(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY, "");
+        properties.setProperty(
+                ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY, "");
         CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
                 CipherTransformation.AES_CBC_NOPADDING, properties);
         Assert.assertEquals(OpensslCipher.class.getName(), defaultCipher
@@ -47,11 +49,28 @@ public class CryptoCipherFactoryTest {
     @Test
     public void testInvalidCipher() throws GeneralSecurityException {
         Properties properties = new Properties();
-        properties.put(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
+        properties.setProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
                 "InvalidCipherName");
         CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
                 CipherTransformation.AES_CBC_NOPADDING, properties);
         Assert.assertEquals(JceCipher.class.getName(), defaultCipher.getClass()
                 .getName());
+    }
+
+    @Test
+    public void testDisableFallback() throws GeneralSecurityException {
+        Properties properties = new Properties();
+        properties.setProperty(
+                ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
+                "InvalidCipherName");
+        properties.setProperty(ConfigurationKeys
+            .COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY, "false");
+        try {
+            CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
+                    CipherTransformation.AES_CBC_NOPADDING, properties);
+            fail("Should throw an exception when DisableFallback");
+        } catch (Exception e) {
+            ;
+        }
     }
 }
