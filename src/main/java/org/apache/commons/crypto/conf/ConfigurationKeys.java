@@ -130,9 +130,22 @@ public class ConfigurationKeys {
     public static final String COMMONS_CRYPTO_LIB_TEMPDIR_KEY = CONF_PREFIX
             + "lib.tempdir";
 
-  /**
-   * The private constructor of {@Link ConfigurationKeys}.
-   */
+    /**
+     * The configuration key of enable fallback on native failed.
+     */
+    public static final String
+            COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY = CONF_PREFIX +
+            "enable.fallback";
+
+    /**
+     * The default value of enable fallback on native failed.
+     */
+    public static final boolean
+            COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_DEFAULT = true;
+
+    /**
+     * The private constructor of {@Link ConfigurationKeys}.
+     */
     private ConfigurationKeys() {
     }
 }

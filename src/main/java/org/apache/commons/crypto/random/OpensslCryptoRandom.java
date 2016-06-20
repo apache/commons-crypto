@@ -21,9 +21,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.crypto.utils.NativeCodeLoader;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -46,8 +43,6 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class OpensslCryptoRandom extends Random implements CryptoRandom {
     private static final long serialVersionUID = -7828193502768789584L;
-    private static final Log LOG = LogFactory.getLog(OpensslCryptoRandom.class
-            .getName());
 
     /** If native SecureRandom unavailable, use java SecureRandom */
     private final JavaCryptoRandom fallback;
@@ -60,7 +55,7 @@ public class OpensslCryptoRandom extends Random implements CryptoRandom {
                 OpensslCryptoRandomNative.initSR();
                 opensslLoaded = true;
             } catch (Throwable t) {
-                LOG.error("Failed to load Openssl CryptoRandom", t);
+                ; // NOPMD
             }
         }
         nativeEnabled = opensslLoaded;

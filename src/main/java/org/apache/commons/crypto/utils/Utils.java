@@ -275,7 +275,7 @@ public final class Utils {
         int sum = 0;
         while (i-- > 0) {
             // (sum >>> Byte.SIZE) is the carry for addition
-            sum = (initIV[i] & 0xff) + (sum >>> Byte.SIZE);
+            sum = (initIV[i] & 0xff) + (sum >>> Byte.SIZE); // NOPMD
             if (j++ < 8) { // Big-endian, and long is 8 bytes length
                 sum += (byte) counter & 0xff;
                 counter >>>= 8;
@@ -384,5 +384,26 @@ public final class Utils {
             }
         }
         return res;
+    }
+
+    /**
+     * Returns true if Fallback is enabled when native failed.
+     * @param props The <code>Properties</code> class represents a set of
+     *        properties.
+     * @return true if Fallback is enabled when native failed.
+     */
+    public static boolean isFallbackEnable(Properties props) {
+        String enableFallback = props.getProperty(ConfigurationKeys.
+                COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
+        if (enableFallback == null || enableFallback.isEmpty()) {
+            enableFallback = System.getProperty(ConfigurationKeys.
+                    COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
+        }
+        if (enableFallback == null || enableFallback.isEmpty()) {
+            return ConfigurationKeys
+                    .COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_DEFAULT;
+        } else {
+            return Boolean.valueOf(enableFallback);
+        }
     }
 }

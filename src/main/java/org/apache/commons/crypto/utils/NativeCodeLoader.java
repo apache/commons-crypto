@@ -27,17 +27,12 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * A helper to load the native code i.e. libcommons-crypto.so. This handles the
  * fallback to either the bundled libcommons-crypto-Linux-i386-32.so or the
  * default java implementations where appropriate.
  */
 public final class NativeCodeLoader {
-
-    private static final Log LOG = LogFactory.getLog(NativeCodeLoader.class);
 
     private final static boolean nativeCodeLoaded;
     /**
@@ -48,11 +43,9 @@ public final class NativeCodeLoader {
 
     static {
         // Try to load native library and set fallback flag appropriately
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Trying to load the custom-built native-commons-crypto library...");
-        }
-
         boolean nativeLoaded = false;
+
+        //Trying to load the custom-built native-commons-crypto library...");
         try {
             File nativeLibFile = findNativeLibrary();
             if (nativeLibFile != null) {
@@ -62,22 +55,13 @@ public final class NativeCodeLoader {
                 // Load preinstalled library (in the path -Djava.library.path)
                 System.loadLibrary("commons-crypto");
             }
-            LOG.debug("Loaded the native library");
+            // Loaded the native library
             nativeLoaded = true;
         } catch (Throwable t) {
-            // Ignore failure to load
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Failed to load native library with error: " + t);
-                LOG.debug("java.library.path="
-                        + System.getProperty("java.library.path"));
-            }
+            ;// NOPMD: Ignore failure to load
         }
 
         nativeCodeLoaded = nativeLoaded;
-        if (!nativeCodeLoaded) {
-            LOG.warn("Unable to load native library for the platform... "
-                    + "using builtin-java classes where applicable");
-        }
     }
 
     /**

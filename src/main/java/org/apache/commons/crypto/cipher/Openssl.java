@@ -20,14 +20,10 @@ package org.apache.commons.crypto.cipher;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.StringTokenizer;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.crypto.utils.NativeCodeLoader;
 import org.apache.commons.crypto.utils.Utils;
@@ -37,7 +33,6 @@ import org.apache.commons.crypto.utils.Utils;
  * It's flexible to add other crypto algorithms/modes.
  */
 final class Openssl {
-    private static final Log LOG = LogFactory.getLog(Openssl.class.getName());
 
     // Mode constant defined by Openssl JNI
     public static final int ENCRYPT_MODE = 1;
@@ -101,7 +96,6 @@ final class Openssl {
             }
         } catch (Throwable t) {
             loadingFailure = t.getMessage();
-            LOG.debug("Failed to load OpenSSL CryptoCipher.", t);
         } finally {
             loadingFailureReason = loadingFailure;
         }

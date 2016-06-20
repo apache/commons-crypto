@@ -20,20 +20,14 @@ package org.apache.commons.crypto.random;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.apache.commons.crypto.utils.Utils;
 import org.apache.commons.crypto.utils.ReflectionUtils;
-
+import org.apache.commons.crypto.utils.Utils;
 import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
 
 /**
  * This is the factory class used for {@link CryptoRandom}.
  */
 public class CryptoRandomFactory {
-    public final static Logger LOG = LoggerFactory
-            .getLogger(CryptoRandomFactory.class);
 
     /**
      * The private constructor of {@Link CryptoRandomFactory}.
@@ -64,6 +58,7 @@ public class CryptoRandomFactory {
                     .getProperty(COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
         }
 
+        StringBuilder errorMessage = new StringBuilder();
         CryptoRandom random = null;
         if (cryptoRandomClasses != null) {
             for (String klassName : Utils.splitClassNames(cryptoRandomClasses,
@@ -77,13 +72,21 @@ public class CryptoRandomFactory {
                         break;
                     }
                 } catch (ClassCastException e) {
-                    LOG.error("Class {} is not a CryptoCipher.", klassName);
+                    errorMessage.append("Class: [" + klassName + "] is not a " +
+                            "CryptoCipher.");
                 } catch (ClassNotFoundException e) {
-                    LOG.error("CryptoCipher {} not found.", klassName);
+                    errorMessage.append("CryptoCipher: [" + klassName + "] " +
+                            "not " + "found.");
                 }
             }
         }
 
-        return (random == null) ? new JavaCryptoRandom(props) : random;
+        if (random != null) {
+            return random;
+        } else if (Utils.isFallbackEnable(props)) {
+            return  new JavaCryptoRandom(props);
+        } else {
+            throw new GeneralSecurityException(errorMessage.toString());
+        }
     }
 }

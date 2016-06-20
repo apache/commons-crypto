@@ -18,23 +18,16 @@
 package org.apache.commons.crypto.cipher;
 
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the factory class used for creating cipher class
  */
 public class CryptoCipherFactory {
-
-    /** LOG instance for {@link CryptoCipherFactory} */
-    private final static Logger LOG = LoggerFactory
-            .getLogger(CryptoCipherFactory.class);
 
     /**
      * The private Constructor of {@link CryptoCipherFactory}.
@@ -53,28 +46,36 @@ public class CryptoCipherFactory {
      */
     public static CryptoCipher getInstance(CipherTransformation transformation,
             Properties props) throws GeneralSecurityException {
-        List<Class<? extends CryptoCipher>> klasses = getCipherClasses(props);
+
+        List<String> klasses =  Utils.splitClassNames(
+                Utils.getCipherClassString(props), ",");
         CryptoCipher cipher = null;
+
+        StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
         if (klasses != null) {
-            for (Class<? extends CryptoCipher> klass : klasses) {
+            for (String klass : klasses) {
                 try {
-                    cipher = ReflectionUtils.newInstance(klass, props,
-                            transformation);
+                    Class<?> cls = ReflectionUtils.getClassByName(klass);
+                    cipher = ReflectionUtils.newInstance(cls.asSubclass
+                            (CryptoCipher.class), props, transformation);
                     if (cipher != null) {
-                        LOG.debug("Using cipher {} for transformation {}.",
-                                klass.getName(), transformation.getName());
                         break;
                     }
                 } catch (Exception e) {
-                    LOG.error(
-                            "CryptoCipher {} is not available or transformation {} is not "
-                                    + "supported.", klass.getName(),
-                            transformation.getName());
+                    errorMessage.append("{" + klass + "}");
                 }
             }
         }
 
-        return (cipher == null) ? new JceCipher(props, transformation) : cipher;
+        if (cipher != null) {
+            return cipher;
+        } else if (Utils.isFallbackEnable(props)) {
+            return new JceCipher(props,transformation);
+        } else {
+            errorMessage.append(" is not available or transformation " +
+                    transformation.getName() + " is not supported.");
+            throw new GeneralSecurityException(errorMessage.toString());
+        }
     }
 
     /**
@@ -89,31 +90,6 @@ public class CryptoCipherFactory {
     public static CryptoCipher getInstance(CipherTransformation transformation)
             throws GeneralSecurityException {
         return getInstance(transformation, new Properties());
-    }
-
-    /**
-     * Returns OpenSSLCipher if Properties is null or empty by default.
-     *
-     * @param props the configuration properties.
-     * @return the OpenSSLCipher instance.
-     */
-    private static List<Class<? extends CryptoCipher>> getCipherClasses(
-            Properties props) {
-        List<Class<? extends CryptoCipher>> result = new ArrayList<Class<? extends CryptoCipher>>();
-        String cipherClassString = Utils.getCipherClassString(props);
-
-        for (String c : Utils.splitClassNames(cipherClassString, ",")) {
-            try {
-                Class<?> cls = ReflectionUtils.getClassByName(c);
-                result.add(cls.asSubclass(CryptoCipher.class));
-            } catch (ClassCastException e) {
-                LOG.error("Class {} is not a CryptoCipher.", c);
-            } catch (ClassNotFoundException e) {
-                LOG.error("CryptoCipher {} not found.", c);
-            }
-        }
-
-        return result;
     }
 
 }
