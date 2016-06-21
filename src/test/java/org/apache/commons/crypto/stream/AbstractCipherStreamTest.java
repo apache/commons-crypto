@@ -30,22 +30,19 @@ import java.nio.channels.ReadableByteChannel;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.crypto.cipher.*;
+import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.cipher.JceCipher;
+import org.apache.commons.crypto.cipher.OpensslCipher;
 import org.apache.commons.crypto.utils.ReflectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
 public abstract class AbstractCipherStreamTest {
-    private static final Log LOG = LogFactory
-            .getLog(AbstractCipherStreamTest.class);
 
     private final int dataLen = 20000;
     private byte[] data = new byte[dataLen];
@@ -339,15 +336,14 @@ public abstract class AbstractCipherStreamTest {
     private void doReadWriteTestForInputStream(int count,
             String encCipherClass, String decCipherClass, byte[] iv)
             throws IOException {
+        // Created a cipher object of type encCipherClass;
         CryptoCipher encCipher = getCipher(encCipherClass);
-        LOG.debug("Created a cipher object of type: " + encCipherClass);
 
         // Generate data
         SecureRandom random = new SecureRandom();
         byte[] originalData = new byte[count];
         byte[] decryptedData = new byte[count];
         random.nextBytes(originalData);
-        LOG.debug("Generated " + count + " records");
 
         // Encrypt data
         ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
@@ -356,10 +352,9 @@ public abstract class AbstractCipherStreamTest {
         out.write(originalData, 0, originalData.length);
         out.flush();
         out.close();
-        LOG.debug("Finished encrypting data");
 
+        // Created a cipher object of type decCipherClass;
         CryptoCipher decCipher = getCipher(decCipherClass);
-        LOG.debug("Created a cipher object of type: " + decCipherClass);
 
         // Decrypt data
         CryptoInputStream in = getCryptoInputStream(new ByteArrayInputStream(
@@ -396,21 +391,20 @@ public abstract class AbstractCipherStreamTest {
                     expected, in.read());
         } while (expected != -1);
 
-        LOG.debug("SUCCESS! Completed checking " + count + " records");
+        // Completed checking records;
     }
 
     private void doReadWriteTestForReadableByteChannel(int count,
             String encCipherClass, String decCipherClass, byte[] iv)
             throws IOException {
+        // Creates a cipher object of type encCipherClass;
         CryptoCipher encCipher = getCipher(encCipherClass);
-        LOG.debug("Created a cipher object of type: " + encCipherClass);
 
         // Generate data
         SecureRandom random = new SecureRandom();
         byte[] originalData = new byte[count];
         byte[] decryptedData = new byte[count];
         random.nextBytes(originalData);
-        LOG.debug("Generated " + count + " records");
 
         // Encrypt data
         ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
@@ -419,10 +413,9 @@ public abstract class AbstractCipherStreamTest {
         out.write(originalData, 0, originalData.length);
         out.flush();
         out.close();
-        LOG.debug("Finished encrypting data");
 
+        // Creates a cipher object of type decCipherClass
         CryptoCipher decCipher = getCipher(decCipherClass);
-        LOG.debug("Created a cipher object of type: " + decCipherClass);
 
         // Decrypt data
         CryptoInputStream in = getCryptoInputStream(new ByteArrayInputStream(
@@ -459,6 +452,6 @@ public abstract class AbstractCipherStreamTest {
                     expected, in.read());
         } while (expected != -1);
 
-        LOG.debug("SUCCESS! Completed checking " + count + " records");
+        // Completed checking records
     }
 }
