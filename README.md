@@ -43,6 +43,10 @@
 Apache Commons Crypto
 ===================
 
+[![Build Status](https://travis-ci.org/apache/commons-crypto.svg?branch=master)](https://travis-ci.org/apache/commons-crypto)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
 Standard New Instructions). It provides Java API for both cipher level and Java stream level.
 Developers can use it to implement high performance AES encryption/decryption with the minimum
