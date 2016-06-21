@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.apache.commons.crypto.utils.OSInfo;
 import org.apache.commons.crypto.utils.Utils;
 
 /**

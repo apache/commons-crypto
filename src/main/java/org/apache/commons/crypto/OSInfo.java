@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.crypto.utils;
+package org.apache.commons.crypto;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,44 +24,44 @@ import java.util.Locale;
 /**
  * Provides OS name and architecture name.
  */
-public class OSInfo {
+final class OSInfo {
     private final static HashMap<String, String> archMapping = new HashMap<>();
 
     /**
      * The constant string represents for X86 architecture, the value is:
      * {@value #X86}.
      */
-    public static final String X86 = "x86";
+    static final String X86 = "x86";
 
     /**
      * The constant string represents for X86_64 architecture, the value is:
      * {@value #X86_64}.
      */
-    public static final String X86_64 = "x86_64";
+    static final String X86_64 = "x86_64";
 
     /**
      * The constant string represents for IA64_32 architecture, the value is:
      * {@value #IA64_32}.
      */
-    public static final String IA64_32 = "ia64_32";
+    static final String IA64_32 = "ia64_32";
 
     /**
      * The constant string represents for IA64 architecture, the value is:
      * {@value #IA64}.
      */
-    public static final String IA64 = "ia64";
+    static final String IA64 = "ia64";
 
     /**
      * The constant string represents for PPC architecture, the value is:
      * {@value #PPC}.
      */
-    public static final String PPC = "ppc";
+    static final String PPC = "ppc";
 
     /**
      * The constant string represents for PPC64 architecture, the value is:
      * {@value #PPC64}.
      */
-    public static final String PPC64 = "ppc64";
+    static final String PPC64 = "ppc64";
 
     /**
      * The private constructor of {@Link OSInfo}.
@@ -131,7 +131,7 @@ public class OSInfo {
      *
      * @return the current OS's native lib folder.
      */
-    public static String getNativeLibFolderPathForCurrentOS() {
+    static String getNativeLibFolderPathForCurrentOS() {
         return getOSName() + "/" + getArchName();
     }
 
@@ -140,7 +140,7 @@ public class OSInfo {
      *
      * @return the OS name.
      */
-    public static String getOSName() {
+    static String getOSName() {
         return translateOSNameToFolderName(System.getProperty("os.name"));
     }
 
@@ -149,7 +149,7 @@ public class OSInfo {
      *
      * @return the architecture name.
      */
-    public static String getArchName() {
+    static String getArchName() {
         // if running Linux on ARM, need to determine ABI of JVM
         String osArch = System.getProperty("os.arch");
         if (osArch.startsWith("arm")
@@ -188,7 +188,7 @@ public class OSInfo {
      * @param osName the OS name.
      * @return the folder name.
      */
-    static String translateOSNameToFolderName(String osName) {
+    private static String translateOSNameToFolderName(String osName) {
         if (osName.contains("Windows")) {
             return "Windows";
         } else if (osName.contains("Mac")) {
@@ -210,7 +210,7 @@ public class OSInfo {
      * @param archName the architecture name.
      * @return the folder name.
      */
-    static String translateArchNameToFolderName(String archName) {
+    private static String translateArchNameToFolderName(String archName) {
         return archName.replaceAll("\\W", "");
     }
 }
