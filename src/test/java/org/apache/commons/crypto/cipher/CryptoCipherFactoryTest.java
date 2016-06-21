@@ -24,7 +24,6 @@ import org.apache.commons.crypto.conf.ConfigurationKeys;
 
 import org.junit.Assert;
 import org.junit.Test;
-import static junit.framework.Assert.fail;
 
 public class CryptoCipherFactoryTest {
     @Test
