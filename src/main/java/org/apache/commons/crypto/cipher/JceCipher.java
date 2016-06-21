@@ -88,11 +88,8 @@ public class JceCipher implements CryptoCipher {
         Utils.checkNotNull(key);
         Utils.checkNotNull(params);
 
-        int cipherMode = Cipher.DECRYPT_MODE;
-        if (mode == Cipher.ENCRYPT_MODE) {
-            cipherMode = Cipher.ENCRYPT_MODE;
-        }
-        cipher.init(cipherMode, key, params);
+        // Jce uses the javax.crypto.Cipher modes; no need to convert the input
+        cipher.init(mode, key, params);
     }
 
     /**
