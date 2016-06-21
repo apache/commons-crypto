@@ -35,10 +35,10 @@ public class StreamExample {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        CryptoOutputStream cos = new CryptoOutputStream(transform, properties, outputStream, key, iv);
-        cos.write(getUTF8Bytes(input));
-        cos.flush();
-        cos.close();
+        try (CryptoOutputStream cos = new CryptoOutputStream(transform, properties, outputStream, key, iv)) {
+            cos.write(getUTF8Bytes(input));
+            cos.flush();
+        }
 
         // The encrypted data:
         System.out.println("Encrypted: "+Arrays.toString(outputStream.toByteArray()));
@@ -46,15 +46,14 @@ public class StreamExample {
         // Decryption with CryptoInputStream.
         InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
 
-        CryptoInputStream cis = new CryptoInputStream(transform, properties, inputStream, key, iv);
-      
-        byte[] decryptedData  = new byte[1024];
-        int decryptedLen = 0;
-        int i;
-        while((i = cis.read(decryptedData, decryptedLen, decryptedData.length - decryptedLen)) > -1 ) {
-            decryptedLen += i;
+        try (CryptoInputStream cis = new CryptoInputStream(transform, properties, inputStream, key, iv)) {
+            byte[] decryptedData = new byte[1024];
+            int decryptedLen = 0;
+            int i;
+            while ((i = cis.read(decryptedData, decryptedLen, decryptedData.length - decryptedLen)) > -1) {
+                decryptedLen += i;
+            }
+            System.out.println("Decrypted: "+new String(decryptedData, 0, decryptedLen, StandardCharsets.UTF_8));
         }
-        cis.close();
-        System.out.println("Decrypted: "+new String(decryptedData, 0, decryptedLen, StandardCharsets.UTF_8));
     }
 }

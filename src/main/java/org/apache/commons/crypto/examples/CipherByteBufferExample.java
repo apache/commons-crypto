@@ -32,28 +32,30 @@ public class CipherByteBufferExample {
         Properties properties = new Properties();
         //Creates a CryptoCipher instance with the transformation and properties.
         final CipherTransformation transform = CipherTransformation.AES_CBC_PKCS5PADDING;
-        CryptoCipher encipher = Utils.getCipherInstance(transform, properties);
-
+        final ByteBuffer outBuffer;
         final int bufferSize = 1024;
+        final int updateBytes;
+        final int finalBytes;
+        try (CryptoCipher encipher = Utils.getCipherInstance(transform, properties)) {
 
-        ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);
-        ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);
-        inBuffer.put(getUTF8Bytes("hello world!"));
+            ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);
+            outBuffer = ByteBuffer.allocateDirect(bufferSize);
+            inBuffer.put(getUTF8Bytes("hello world!"));
 
-        inBuffer.flip(); // ready for the cipher to read it
-        // Show the data is there
-        System.out.println("inBuffer="+asString(inBuffer));
+            inBuffer.flip(); // ready for the cipher to read it
+            // Show the data is there
+            System.out.println("inBuffer=" + asString(inBuffer));
 
-        // Initializes the cipher with ENCRYPT_MODE,key and iv.
-        encipher.init(Cipher.ENCRYPT_MODE, key, iv);
-        // Continues a multiple-part encryption/decryption operation for byte buffer.
-        final int updateBytes = encipher.update(inBuffer, outBuffer);
-        System.out.println(updateBytes);
+            // Initializes the cipher with ENCRYPT_MODE,key and iv.
+            encipher.init(Cipher.ENCRYPT_MODE, key, iv);
+            // Continues a multiple-part encryption/decryption operation for byte buffer.
+            updateBytes = encipher.update(inBuffer, outBuffer);
+            System.out.println(updateBytes);
 
-        // We should call do final at the end of encryption/decryption.
-        final int finalBytes = encipher.doFinal(inBuffer, outBuffer);
-        System.out.println(finalBytes);
-        encipher.close();
+            // We should call do final at the end of encryption/decryption.
+            finalBytes = encipher.doFinal(inBuffer, outBuffer);
+            System.out.println(finalBytes);
+        }
 
         outBuffer.flip(); // ready for use as decrypt
         byte [] encoded = new byte[updateBytes + finalBytes];
@@ -61,14 +63,14 @@ public class CipherByteBufferExample {
         System.out.println(Arrays.toString(encoded));
 
         // Now reverse the process
-        CryptoCipher decipher = Utils.getCipherInstance(transform, properties);
-        decipher.init(Cipher.DECRYPT_MODE, key, iv);
-        ByteBuffer decoded = ByteBuffer.allocateDirect(bufferSize);
-        decipher.update(outBuffer, decoded);
-        decipher.doFinal(outBuffer, decoded);
-        decipher.close();
-        decoded.flip(); // ready for use
-        System.out.println("decoded="+asString(decoded));
+        try (CryptoCipher decipher = Utils.getCipherInstance(transform, properties)) {
+            decipher.init(Cipher.DECRYPT_MODE, key, iv);
+            ByteBuffer decoded = ByteBuffer.allocateDirect(bufferSize);
+            decipher.update(outBuffer, decoded);
+            decipher.doFinal(outBuffer, decoded);
+            decoded.flip(); // ready for use
+            System.out.println("decoded="+asString(decoded));
+        }
     }
 
 }
