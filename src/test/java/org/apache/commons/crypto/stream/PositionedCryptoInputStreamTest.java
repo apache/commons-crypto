@@ -87,7 +87,7 @@ public class PositionedCryptoInputStreamTest {
         encData = baos.toByteArray();
     }
 
-    public void setUp() throws IOException {
+    public void setUp() {
     }
 
     private PositionedCryptoInputStream getCryptoInputStream(

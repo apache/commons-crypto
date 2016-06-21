@@ -17,12 +17,12 @@
  */
 package org.apache.commons.crypto.cipher;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -64,7 +64,7 @@ public abstract class AbstractCipherTest {
     protected abstract void init();
 
     @Test
-    public void cryptoTest() throws GeneralSecurityException, IOException {
+    public void cryptoTest() throws GeneralSecurityException {
         for (CipherTransformation tran : transformations) {
             /** uses the small data set in {@link TestData} */
             cipherTests = TestData.getTestData(tran);
@@ -99,7 +99,7 @@ public abstract class AbstractCipherTest {
 
     private void byteBufferTest(CipherTransformation transformation,
             byte[] key, byte[] iv, ByteBuffer input, ByteBuffer output)
-            throws GeneralSecurityException, IOException {
+            throws GeneralSecurityException {
         ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
         ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
         CryptoCipher enc, dec;
