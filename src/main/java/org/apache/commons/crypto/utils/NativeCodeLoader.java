@@ -69,7 +69,7 @@ public final class NativeCodeLoader {
      *
      * @return the jar file.
      */
-    static File findNativeLibrary() {
+    private static File findNativeLibrary() {
         // Try to load the library in commons-crypto.lib.path */
         String nativeLibraryPath = Utils.getLibPath();
         String nativeLibraryName = Utils.getLibName();
