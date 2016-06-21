@@ -36,7 +36,7 @@ public final class NativeCodeLoader {
 
     private final static boolean nativeCodeLoaded;
     /**
-     * The private constructor of {@Link NativeCodeLoader}.
+     * The private constructor of {@link NativeCodeLoader}.
      */
     private NativeCodeLoader() {
     }
