@@ -30,7 +30,7 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
  */
 public final class ReflectionUtils {
 
-    private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<ClassLoader, Map<String, WeakReference<Class<?>>>>();
+    private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
 
     private final static ClassLoader classLoader;
 

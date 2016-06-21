@@ -359,7 +359,7 @@ public final class Utils {
      */
     public static List<String> splitClassNames(String clazzNames,
             String separator) {
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         if (clazzNames == null || clazzNames.isEmpty()) {
             return res;
         }

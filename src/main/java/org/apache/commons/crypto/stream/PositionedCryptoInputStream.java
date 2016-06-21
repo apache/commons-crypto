@@ -48,12 +48,12 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     /**
      * DirectBuffer pool
      */
-    private final Queue<ByteBuffer> bufferPool = new ConcurrentLinkedQueue<ByteBuffer>();
+    private final Queue<ByteBuffer> bufferPool = new ConcurrentLinkedQueue<>();
 
     /**
      * CryptoCipher pool
      */
-    private final Queue<CipherState> cipherPool = new ConcurrentLinkedQueue<CipherState>();
+    private final Queue<CipherState> cipherPool = new ConcurrentLinkedQueue<>();
 
     /**
      * properties for constructing a CryptoCipher

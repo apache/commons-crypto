@@ -48,7 +48,7 @@ public abstract class AbstractRandomTest {
     public void testRandomBytesMultiThreaded() throws Exception {
         final int threadCount = 100;
         final CryptoRandom random = getCryptoRandom();
-        final List<Thread> threads = new ArrayList<Thread>(threadCount);
+        final List<Thread> threads = new ArrayList<>(threadCount);
 
         for(int i=0; i< threadCount; i++) {
             Thread t = new Thread(new Runnable() {
