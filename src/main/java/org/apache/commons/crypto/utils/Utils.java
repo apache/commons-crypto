@@ -389,8 +389,7 @@ public final class Utils {
         if (enableFallback == null || enableFallback.isEmpty()) {
             return ConfigurationKeys
                     .COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_DEFAULT;
-        } else {
-            return Boolean.valueOf(enableFallback);
         }
+        return Boolean.valueOf(enableFallback);
     }
 }
