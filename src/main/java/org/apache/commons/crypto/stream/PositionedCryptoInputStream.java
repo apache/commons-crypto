@@ -56,6 +56,11 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     private final Queue<CipherState> cipherPool = new ConcurrentLinkedQueue<CipherState>();
 
     /**
+     * properties for constructing a CryptoCipher
+     */
+    private final Properties props;
+
+    /**
      * Constructs a {@link PositionedCryptoInputStream}.
      *
      * @param props The <code>Properties</code> class represents a set of
@@ -68,8 +73,8 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
      */
     public PositionedCryptoInputStream(Properties props, Input in, byte[] key,
             byte[] iv, long streamOffset) throws IOException {
-        this(in, Utils.getCipherInstance(AES_CTR_NOPADDING, props), Utils
-                .getBufferSize(props), key, iv, streamOffset);
+        this(props, in, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
+                Utils.getBufferSize(props), key, iv, streamOffset);
     }
 
     /**
@@ -83,10 +88,11 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected PositionedCryptoInputStream(Input input, CryptoCipher cipher,
+    protected PositionedCryptoInputStream(Properties props, Input input, CryptoCipher cipher,
             int bufferSize, byte[] key, byte[] iv, long streamOffset)
             throws IOException {
         super(input, cipher, bufferSize, key, iv, streamOffset);
+        this.props = props;
     }
 
     /**
@@ -314,7 +320,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
             CryptoCipher cipher;
             try {
                 cipher = CryptoCipherFactory.getInstance(getCipher()
-                        .getTransformation(), getCipher().getProperties());
+                        .getTransformation(), props);
             } catch (GeneralSecurityException e) {
                 throw new IOException(e);
             }

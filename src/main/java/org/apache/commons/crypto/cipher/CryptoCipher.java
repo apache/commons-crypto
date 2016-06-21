@@ -45,13 +45,6 @@ public interface CryptoCipher extends Closeable {
     CipherTransformation getTransformation();
 
     /**
-     * Gets the properties for this cipher.
-     *
-     * @return the properties for this cipher.
-     */
-    Properties getProperties();
-
-    /**
      * Initializes the cipher with mode, key and iv.
      *
      * @param mode {@link javax.crypto.Cipher#ENCRYPT_MODE} or {@link javax

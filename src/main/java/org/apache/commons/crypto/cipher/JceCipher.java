@@ -37,7 +37,6 @@ import org.apache.commons.crypto.utils.Utils;
  * Implements the {@link CryptoCipher} using JCE provider.
  */
 public class JceCipher implements CryptoCipher {
-    private final Properties props;
     private final CipherTransformation transformation;
     private final Cipher cipher;
 
@@ -50,7 +49,6 @@ public class JceCipher implements CryptoCipher {
      */
     public JceCipher(Properties props, CipherTransformation transformation)
             throws GeneralSecurityException {
-        this.props = props;
         this.transformation = transformation;
 
         String provider = getJCEProvider(props);
@@ -69,16 +67,6 @@ public class JceCipher implements CryptoCipher {
     @Override
     public CipherTransformation getTransformation() {
         return transformation;
-    }
-
-    /**
-     * Gets the properties for the jce cipher.
-     *
-     * @return the properties for this cipher.
-     */
-    @Override
-    public Properties getProperties() {
-        return props;
     }
 
     /**

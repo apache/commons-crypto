@@ -36,7 +36,6 @@ import org.apache.commons.crypto.utils.Utils;
  * Implements the CryptoCipher using JNI into OpenSSL.
  */
 public class OpensslCipher implements CryptoCipher {
-    private final Properties props;
     private final CipherTransformation transformation;
     private final Openssl cipher;
 
@@ -49,7 +48,6 @@ public class OpensslCipher implements CryptoCipher {
      */
     public OpensslCipher(Properties props, CipherTransformation transformation)
             throws GeneralSecurityException {
-        this.props = props;
         this.transformation = transformation;
 
         String loadingFailureReason = Openssl.getLoadingFailureReason();
@@ -68,16 +66,6 @@ public class OpensslCipher implements CryptoCipher {
     @Override
     public CipherTransformation getTransformation() {
         return transformation;
-    }
-
-    /**
-     * Gets the properties for the openssl cipher.
-     *
-     * @return the properties for this cipher.
-     */
-    @Override
-    public Properties getProperties() {
-        return props;
     }
 
     /**

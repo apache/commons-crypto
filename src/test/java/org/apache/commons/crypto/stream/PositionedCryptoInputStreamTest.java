@@ -92,7 +92,7 @@ public class PositionedCryptoInputStreamTest {
 
     private PositionedCryptoInputStream getCryptoInputStream(
             CryptoCipher cipher, int bufferSize) throws IOException {
-        return new PositionedCryptoInputStream(new PositionedInputForTest(
+        return new PositionedCryptoInputStream(props, new PositionedInputForTest(
                 Arrays.copyOf(encData, encData.length)), cipher, bufferSize,
                 key, iv, 0);
     }
