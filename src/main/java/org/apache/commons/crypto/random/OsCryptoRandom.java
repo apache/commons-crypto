@@ -30,7 +30,7 @@ import org.apache.commons.crypto.utils.IOUtils;
  * A Random implementation that uses random bytes sourced from the operating
  * system.
  */
-public class OsCryptoRandom extends Random implements CryptoRandom {
+class OsCryptoRandom extends Random implements CryptoRandom {
 
     private static final long serialVersionUID = 6391500337172057900L;
 

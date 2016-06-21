@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.conf;
 
 import org.apache.commons.crypto.cipher.OpensslCipher;
+import org.apache.commons.crypto.random.CryptoRandomFactory;
 
 /**
  * The ConfigurationKeys contains Configuration keys and default values.
@@ -98,6 +99,12 @@ public class ConfigurationKeys {
      */
     public static final String COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY = CONF_PREFIX
             + "secure.random.classes";
+
+    /**
+     *  The default value for secure random.
+     */
+    public static final String COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_DEFAULT =
+            CryptoRandomFactory.OPENSSL_RANDOM;
 
     /**
      * The configuration key of the buffer size for stream.

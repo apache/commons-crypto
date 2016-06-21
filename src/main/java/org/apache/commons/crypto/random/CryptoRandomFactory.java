@@ -20,9 +20,9 @@ package org.apache.commons.crypto.random;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
 
 /**
  * This is the factory class used for {@link CryptoRandom}.
@@ -36,11 +36,38 @@ public class CryptoRandomFactory {
     }
 
     /**
+     * This implementation of OpenSSL secure random using JNI.
+     */
+    public static final String OPENSSL_RANDOM = "OpensslCryptoRandom";
+
+    /**
+     * A CryptoRandom of Java implementation.
+     */
+    public static final String JAVA_RANDOM = "JavaCryptoRandom";
+
+    /**
+     * A Random implementation that uses random bytes sourced from the operating
+     * system.
+     */
+    public static final String OS_FILE_RANDOM = "OsCryptoRandom";
+
+    /**
+     * Default package path of CryptoRandom.
+     */
+    private static final String RANDOM_PROVIDER_DEFAULT_PACKAGE = CryptoRandomFactory
+        .class.getPackage().getName();
+
+    /**
      * Gets a CryptoRandom instance for specified props.
-     * Uses the COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY from the provided 
+     * Uses the COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY from the provided
      * properties.
+     *
+     * The value of COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY could be {@link
+     * #JAVA_RANDOM}, {@link #OS_FILE_RANDOM}, {@link #OPENSSL_RANDOM} or
+     * full class name of CryptoRandom's implementation.
+     *
      * If it is not set, then it checks the System properties.
-     * Failing that, it defaults to {@link JavaCryptoRandom}
+     * Failing that, it defaults to JavaCryptoRandom
      * The properties are passed to the generated class.
      *
      * @param props the configuration properties.
@@ -51,12 +78,7 @@ public class CryptoRandomFactory {
      */
     public static CryptoRandom getCryptoRandom(Properties props)
             throws GeneralSecurityException {
-        String cryptoRandomClasses = props
-                .getProperty(COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
-        if (cryptoRandomClasses == null) {
-            cryptoRandomClasses = System
-                    .getProperty(COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
-        }
+        String cryptoRandomClasses = getCryptoRandomClassString(props);
 
         StringBuilder errorMessage = new StringBuilder();
         CryptoRandom random = null;
@@ -64,10 +86,17 @@ public class CryptoRandomFactory {
             for (String klassName : Utils.splitClassNames(cryptoRandomClasses,
                     ",")) {
                 try {
-                    final Class<?> klass = ReflectionUtils
-                            .getClassByName(klassName);
-                    random = (CryptoRandom) ReflectionUtils.newInstance(klass,
-                            props);
+                    Class<?> klass;
+                    if (klassName.contains(".")) {
+                        // If the class is not in default package, treat the
+                        // class as full class name and load again.
+                        klass = ReflectionUtils.getClassByName(klassName);
+                    } else {
+                        // Load the class is default package.
+                        klass = ReflectionUtils.getClassByName(
+                            RANDOM_PROVIDER_DEFAULT_PACKAGE + "." + klassName);
+                    }
+                    random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
                     if (random != null) {
                         break;
                     }
@@ -88,5 +117,24 @@ public class CryptoRandomFactory {
         } else {
             throw new GeneralSecurityException(errorMessage.toString());
         }
+    }
+
+    /**
+     * Gets the CryptoRandom class.
+     *
+     * @param props The <code>Properties</code> class represents a set of
+     *        properties.
+     * @return the CryptoRandom class based on the props.
+     */
+    private static String getCryptoRandomClassString(Properties props) {
+        final String configName = ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
+        String cryptoRandomClasses = props.getProperty(configName) != null ? props
+            .getProperty(configName, ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_DEFAULT)
+            : System.getProperty(configName,
+            ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_DEFAULT);
+        if (cryptoRandomClasses.isEmpty()) {
+            cryptoRandomClasses = ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_DEFAULT;
+        }
+        return cryptoRandomClasses;
     }
 }
