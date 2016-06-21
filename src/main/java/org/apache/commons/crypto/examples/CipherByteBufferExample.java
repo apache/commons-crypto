@@ -19,11 +19,8 @@ public class CipherByteBufferExample {
         return input.getBytes(StandardCharsets.UTF_8);
     }
 
-    private static String asString(ByteBuffer buffer, boolean flip) {
+    private static String asString(ByteBuffer buffer) {
         final ByteBuffer copy = buffer.duplicate();
-        if (flip) {
-            copy.flip();
-        }
         final byte[] bytes = new byte[Math.min(copy.remaining(),50)];
         copy.get(bytes);
         return new String(bytes, StandardCharsets.UTF_8);
@@ -42,10 +39,11 @@ public class CipherByteBufferExample {
         ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);
         ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);
         inBuffer.put(getUTF8Bytes("hello world!"));
-        // Show the data is there
-        System.out.println("inBuffer="+asString(inBuffer, true));
 
         inBuffer.flip(); // ready for the cipher to read it
+        // Show the data is there
+        System.out.println("inBuffer="+asString(inBuffer));
+
         // Initializes the cipher with ENCRYPT_MODE,key and iv.
         encipher.init(Cipher.ENCRYPT_MODE, key, iv);
         // Continues a multiple-part encryption/decryption operation for byte buffer.
@@ -69,7 +67,8 @@ public class CipherByteBufferExample {
         decipher.update(outBuffer, decoded);
         decipher.doFinal(outBuffer, decoded);
         decipher.close();
-        System.out.println("decoded="+asString(decoded, true));
+        decoded.flip(); // ready for use
+        System.out.println("decoded="+asString(decoded));
     }
 
 }
