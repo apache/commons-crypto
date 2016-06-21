@@ -158,19 +158,6 @@ public final class Utils {
     }
 
     /**
-     * Gets the Jce provider.
-     *
-     * @param props The <code>Properties</code> class represents a set of
-     *        properties.
-     * @return the jce provider based on the props.
-     */
-    public static String getJCEProvider(Properties props) {
-        return props.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) !=
-            null ? props.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY)
-            : System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
-    }
-
-    /**
      * Gets the random device path.
      *
      * @param props The <code>Properties</code> class represents a set of

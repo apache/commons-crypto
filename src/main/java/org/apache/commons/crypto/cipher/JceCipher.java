@@ -30,6 +30,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -52,7 +53,7 @@ public class JceCipher implements CryptoCipher {
         this.props = props;
         this.transformation = transformation;
 
-        String provider = Utils.getJCEProvider(props);
+        String provider = getJCEProvider(props);
         if (provider == null || provider.isEmpty()) {
             cipher = Cipher.getInstance(transformation.getName());
         } else {
@@ -203,5 +204,18 @@ public class JceCipher implements CryptoCipher {
     @Override
     public void close() {
         // Do nothing
+    }
+
+    /**
+     * Gets the Jce provider.
+     *
+     * @param props The <code>Properties</code> class represents a set of
+     *        properties.
+     * @return the jce provider based on the props.
+     */
+    private static String getJCEProvider(Properties props) {
+        return props.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY) !=
+            null ? props.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY)
+            : System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_JCE_PROVIDER_KEY);
     }
 }
