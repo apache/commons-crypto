@@ -17,8 +17,6 @@
  */
 package org.apache.commons.crypto;
 
-import org.apache.commons.crypto.utils.NativeCodeLoader;
-
 /**
  * The Crypto class provides some diagnostic information about Commons Crypto.
  */

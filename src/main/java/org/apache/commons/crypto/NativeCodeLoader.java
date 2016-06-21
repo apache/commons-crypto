@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.crypto.utils;
+package org.apache.commons.crypto;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -27,12 +27,15 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.UUID;
 
+import org.apache.commons.crypto.utils.OSInfo;
+import org.apache.commons.crypto.utils.Utils;
+
 /**
  * A helper to load the native code i.e. libcommons-crypto.so. This handles the
  * fallback to either the bundled libcommons-crypto-Linux-i386-32.so or the
  * default java implementations where appropriate.
  */
-public final class NativeCodeLoader {
+final class NativeCodeLoader {
 
     private final static boolean nativeCodeLoaded;
     /**
@@ -213,7 +216,7 @@ public final class NativeCodeLoader {
      *
      * @return the version string
      */
-    public static String getVersion() {
+    static String getVersion() {
         URL versionFile = NativeCodeLoader.class
                 .getResource("/META-INF/maven/org.apache.commons.crypto/commons-crypto/pom.properties");
         if (versionFile == null) {
@@ -281,7 +284,7 @@ public final class NativeCodeLoader {
      *
      * @return <code>true</code> if native is loaded, else <code>false</code>.
      */
-    public static boolean isNativeCodeLoaded() {
+    static boolean isNativeCodeLoaded() {
         return nativeCodeLoaded;
     }
 }

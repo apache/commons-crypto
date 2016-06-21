@@ -25,7 +25,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 
-import org.apache.commons.crypto.utils.NativeCodeLoader;
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -91,7 +91,7 @@ final class Openssl {
     static {
         String loadingFailure = null;
         try {
-            if (NativeCodeLoader.isNativeCodeLoaded()) {
+            if (Crypto.isNativeCodeLoaded()) {
                 OpensslNative.initIDs();
             }
         } catch (Throwable t) {
