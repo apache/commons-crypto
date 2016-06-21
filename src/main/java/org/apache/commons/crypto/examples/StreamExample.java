@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -25,7 +24,7 @@ public class StreamExample {
         return input.getBytes(StandardCharsets.UTF_8);
     }
 
-    public static void main(String []args) throws GeneralSecurityException, IOException {
+    public static void main(String []args) throws IOException {
         final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"),"AES");
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
         Properties properties = new Properties();
