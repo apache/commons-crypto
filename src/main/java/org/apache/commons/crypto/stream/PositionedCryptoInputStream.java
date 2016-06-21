@@ -25,8 +25,8 @@ import java.security.InvalidKeyException;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
@@ -36,7 +36,6 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.utils.IOUtils;
 import org.apache.commons.crypto.utils.Utils;
-
 import static org.apache.commons.crypto.cipher.CipherTransformation.AES_CTR_NOPADDING;
 
 /**
@@ -293,7 +292,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
         final long counter = getCounter(position);
         Utils.calculateIV(getInitIV(), counter, iv);
         try {
-            state.getCipher().init(CryptoCipher.DECRYPT_MODE, key,
+            state.getCipher().init(Cipher.DECRYPT_MODE, key,
                     new IvParameterSpec(iv));
         } catch (InvalidKeyException e) {
             throw new IOException(e);

@@ -25,13 +25,14 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.util.Properties;
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.stream.input.StreamInput;
@@ -568,7 +569,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
         final long counter = getCounter(position);
         Utils.calculateIV(initIV, counter, iv);
         try {
-            cipher.init(CryptoCipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+            cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         } catch (InvalidKeyException e) {
             throw new IOException(e);
         } catch (InvalidAlgorithmParameterException e) {

@@ -19,13 +19,13 @@ package org.apache.commons.crypto.cipher;
 
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
-import java.security.Key;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
-
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
@@ -83,7 +83,7 @@ public class OpensslCipher implements CryptoCipher {
     /**
      * Initializes the cipher with mode, key and iv.
      *
-     * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+     * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
      * @param key crypto key for the cipher
      * @param params the algorithm parameters
      * @throws InvalidKeyException If key length is invalid
@@ -96,7 +96,7 @@ public class OpensslCipher implements CryptoCipher {
         Utils.checkNotNull(params);
 
         int cipherMode = Openssl.DECRYPT_MODE;
-        if (mode == ENCRYPT_MODE) {
+        if (mode == Cipher.ENCRYPT_MODE) {
             cipherMode = Openssl.ENCRYPT_MODE;
         }
         byte[] iv;

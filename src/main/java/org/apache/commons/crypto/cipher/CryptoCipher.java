@@ -24,9 +24,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
-
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
@@ -38,18 +36,6 @@ import javax.crypto.ShortBufferException;
  * Use one crypto cipher instance per thread to circumvent this.
  */
 public interface CryptoCipher extends Closeable {
-
-    /**
-     * A constant representing encrypt mode. The mode constant to be used when
-     * calling init method of the CryptoCipher.
-     */
-    int ENCRYPT_MODE = Cipher.ENCRYPT_MODE;
-
-    /**
-     * A constant representing decrypt mode. The mode constant to be used when
-     * calling init method of the CryptoCipher.
-     */
-    int DECRYPT_MODE = Cipher.DECRYPT_MODE;
 
     /**
      * Gets the CipherTransformation for this cipher.
@@ -68,7 +54,8 @@ public interface CryptoCipher extends Closeable {
     /**
      * Initializes the cipher with mode, key and iv.
      *
-     * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+     * @param mode {@link javax.crypto.Cipher#ENCRYPT_MODE} or {@link javax
+     * .crypto.Cipher#DECRYPT_MODE}
      * @param key crypto key for the cipher
      * @param params the algorithm parameters
      * @throws InvalidKeyException if the given key is inappropriate for

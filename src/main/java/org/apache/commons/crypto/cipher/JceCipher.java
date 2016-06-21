@@ -84,7 +84,7 @@ public class JceCipher implements CryptoCipher {
     /**
      * Initializes the cipher with mode, key and iv.
      *
-     * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+     * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
      * @param key crypto key for the cipher
      * @param params the algorithm parameters
      * @throws InvalidAlgorithmParameterException if the given algorithm
@@ -101,7 +101,7 @@ public class JceCipher implements CryptoCipher {
         Utils.checkNotNull(params);
 
         int cipherMode = Cipher.DECRYPT_MODE;
-        if (mode == ENCRYPT_MODE) {
+        if (mode == Cipher.ENCRYPT_MODE) {
             cipherMode = Cipher.ENCRYPT_MODE;
         }
         cipher.init(cipherMode, key, params);

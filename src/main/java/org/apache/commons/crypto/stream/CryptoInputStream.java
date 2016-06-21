@@ -27,12 +27,13 @@ import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
-import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CipherTransformation;
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.stream.input.StreamInput;
@@ -453,7 +454,7 @@ public class CryptoInputStream extends InputStream implements
      */
     protected void initCipher() throws IOException {
         try {
-            cipher.init(CryptoCipher.DECRYPT_MODE, key, params);
+            cipher.init(Cipher.DECRYPT_MODE, key, params);
         } catch (InvalidKeyException e) {
             throw new IOException(e);
         } catch (InvalidAlgorithmParameterException e) {
