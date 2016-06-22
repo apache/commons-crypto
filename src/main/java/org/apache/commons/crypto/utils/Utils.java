@@ -379,7 +379,7 @@ public final class Utils {
      *        properties.
      * @return true if Fallback is enabled when native failed.
      */
-    public static boolean isFallbackEnable(Properties props) {
+    public static boolean isFallbackEnabled(Properties props) {
         String enableFallback = props.getProperty(ConfigurationKeys.
                 COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
         if (enableFallback == null || enableFallback.isEmpty()) {

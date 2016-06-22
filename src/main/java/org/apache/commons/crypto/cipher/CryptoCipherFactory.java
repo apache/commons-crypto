@@ -69,7 +69,7 @@ public class CryptoCipherFactory {
 
         if (cipher != null) {
             return cipher;
-        } else if (Utils.isFallbackEnable(props)) {
+        } else if (Utils.isFallbackEnabled(props)) {
             return new JceCipher(props,transformation);
         } else {
             errorMessage.append(" is not available or transformation " +

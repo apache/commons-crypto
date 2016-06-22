@@ -83,7 +83,7 @@ public class CryptoRandomFactory {
 
         if (random != null) {
             return random;
-        } else if (Utils.isFallbackEnable(props)) {
+        } else if (Utils.isFallbackEnabled(props)) {
             return  new JavaCryptoRandom(props);
         } else {
             throw new GeneralSecurityException(errorMessage.toString());
