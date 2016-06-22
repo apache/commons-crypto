@@ -136,16 +136,16 @@ public class TestData {
             "f0f1f2f3f4f5f6f7f8f9fafbfcfdff01",
             "30c81c46a35ce411e5fbc1191a0a52", "2b0930daa23de94ce87017ba2d8498" };
 
-    private static Map<CipherTransformation, String[]> testData = new HashMap<>();
+    private static Map<String, String[]> testData = new HashMap<>();
 
     static {
-        testData.put(CipherTransformation.AES_CBC_NOPADDING, CBCNoPaddingTests);
-        testData.put(CipherTransformation.AES_CBC_PKCS5PADDING,
+        testData.put("AES/CBC/NoPadding", CBCNoPaddingTests);
+        testData.put("AES/CBC/PKCS5Padding",
                 CBCPKCS5PaddingTests);
-        testData.put(CipherTransformation.AES_CTR_NOPADDING, cipherCTRTests);
+        testData.put("AES/CTR/NoPadding", cipherCTRTests);
     }
 
-    public static String[] getTestData(CipherTransformation transformation) {
+    public static String[] getTestData(String transformation) {
         return testData.get(transformation);
     }
 }

@@ -23,13 +23,12 @@ import java.io.IOException;
 import java.nio.channels.Channels;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
-import org.apache.commons.crypto.cipher.CipherTransformation;
 
 public class CTRCryptoStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() throws IOException {
-        transformation = CipherTransformation.AES_CTR_NOPADDING;
+        transformation = "AES/CTR/NoPadding";
     }
 
     @Override

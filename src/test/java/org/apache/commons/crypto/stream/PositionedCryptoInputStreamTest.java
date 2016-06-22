@@ -19,7 +19,6 @@
 package org.apache.commons.crypto.stream;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
-import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.JceCipher;
 import org.apache.commons.crypto.cipher.OpensslCipher;
 import org.apache.commons.crypto.stream.input.Input;
@@ -56,7 +55,7 @@ public class PositionedCryptoInputStreamTest {
 
     private final String jceCipherClass = JceCipher.class.getName();
     private final String opensslCipherClass = OpensslCipher.class.getName();
-    private CipherTransformation transformation = CipherTransformation.AES_CTR_NOPADDING;
+    private String transformation = "AES/CTR/NoPadding";
 
     @Before
     public void before() throws IOException {

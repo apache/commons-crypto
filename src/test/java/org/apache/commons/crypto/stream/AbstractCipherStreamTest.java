@@ -33,7 +33,6 @@ import java.util.Random;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.JceCipher;
 import org.apache.commons.crypto.cipher.OpensslCipher;
@@ -56,7 +55,7 @@ public abstract class AbstractCipherStreamTest {
 
     private final String jceCipherClass = JceCipher.class.getName();
     private final String opensslCipherClass = OpensslCipher.class.getName();
-    protected CipherTransformation transformation;
+    protected String transformation;
 
     public abstract void setUp() throws IOException;
 

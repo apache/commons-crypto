@@ -19,13 +19,11 @@ package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
-
 public class CBCNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() throws IOException {
-        transformation = CipherTransformation.AES_CBC_NOPADDING;
+        transformation = "AES/CBC/NoPadding";
     }
 
 }

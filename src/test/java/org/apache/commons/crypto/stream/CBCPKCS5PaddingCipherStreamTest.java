@@ -19,12 +19,10 @@ package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
-
 public class CBCPKCS5PaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() throws IOException {
-        transformation = CipherTransformation.AES_CBC_PKCS5PADDING;
+        transformation = "AES/CBC/PKCS5Padding";
     }
 }

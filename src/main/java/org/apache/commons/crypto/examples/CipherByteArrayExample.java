@@ -25,7 +25,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -40,7 +39,7 @@ public class CipherByteArrayExample {
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
         Properties properties = new Properties();
         //Creates a CryptoCipher instance with the transformation and properties.
-        final CipherTransformation transform = CipherTransformation.AES_CBC_PKCS5PADDING;
+        final String transform = "AES/CBC/PKCS5Padding";
         CryptoCipher encipher = Utils.getCipherInstance(transform, properties);
 
         final String sampleInput = "hello world!";

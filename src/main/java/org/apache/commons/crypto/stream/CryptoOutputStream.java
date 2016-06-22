@@ -33,7 +33,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.output.ChannelOutput;
 import org.apache.commons.crypto.stream.output.Output;
@@ -83,7 +82,10 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Constructs a {@link CryptoOutputStream}.
      *
-     * @param transformation the CipherTransformation instance.
+     * @param transformation the name of the transformation, e.g.,
+     * <i>AES/CBC/PKCS5Padding</i>.
+     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
+     * for information about standard transformation names.
      * @param props The <code>Properties</code> class represents a set of
      *        properties.
      * @param out the output stream.
@@ -92,7 +94,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
 
-    public CryptoOutputStream(CipherTransformation transformation,
+    public CryptoOutputStream(String transformation,
             Properties props, OutputStream out, Key key,
             AlgorithmParameterSpec params) throws IOException {
         this(out, Utils.getCipherInstance(transformation, props), Utils
@@ -103,7 +105,10 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Constructs a {@link CryptoOutputStream}.
      *
-     * @param transformation the CipherTransformation instance.
+     * @param transformation the name of the transformation, e.g.,
+     * <i>AES/CBC/PKCS5Padding</i>.
+     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
+     * for information about standard transformation names.
      * @param props The <code>Properties</code> class represents a set of
      *        properties.
      * @param out the WritableByteChannel instance.
@@ -111,7 +116,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoOutputStream(CipherTransformation transformation,
+    public CryptoOutputStream(String transformation,
             Properties props, WritableByteChannel out, Key key,
             AlgorithmParameterSpec params) throws IOException {
         this(out, Utils.getCipherInstance(transformation, props), Utils
@@ -180,7 +185,7 @@ public class CryptoOutputStream extends OutputStream implements
 
         inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
         outBuffer = ByteBuffer.allocateDirect(this.bufferSize
-                + cipher.getTransformation().getAlgorithmBlockSize());
+                + cipher.getBlockSize());
 
         initCipher();
     }

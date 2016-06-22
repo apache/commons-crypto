@@ -31,7 +31,6 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
@@ -169,7 +168,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     public CTRCryptoInputStream(Properties props, InputStream in, byte[] key,
             byte[] iv, long streamOffset) throws IOException {
         this(in, Utils.getCipherInstance(
-                CipherTransformation.AES_CTR_NOPADDING, props), Utils
+                "AES/CTR/NoPadding", props), Utils
                 .getBufferSize(props), key, iv, streamOffset);
     }
 
@@ -187,7 +186,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
     public CTRCryptoInputStream(Properties props, ReadableByteChannel in,
             byte[] key, byte[] iv, long streamOffset) throws IOException {
         this(in, Utils.getCipherInstance(
-                CipherTransformation.AES_CTR_NOPADDING, props), Utils
+                "AES/CTR/NoPadding", props), Utils
                 .getBufferSize(props), key, iv, streamOffset);
     }
 
@@ -535,7 +534,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
      * @return the counter for input stream position.
      */
     protected long getCounter(long position) {
-        return position / cipher.getTransformation().getAlgorithmBlockSize();
+        return position / cipher.getBlockSize();
     }
 
     /**
@@ -545,8 +544,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
      * @return the padding for input stream position.
      */
     protected byte getPadding(long position) {
-        return (byte) (position % cipher.getTransformation()
-                .getAlgorithmBlockSize());
+        return (byte) (position % cipher.getBlockSize());
     }
 
     /**

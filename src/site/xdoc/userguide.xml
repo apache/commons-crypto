@@ -112,7 +112,7 @@
             <td>
               Properties properties = new Properties();<br/>
               //Creates a CryptoCipher instance with the transformation and properties.<br/>
-              CryptoCipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
+              CryptoCipher cipher = Utils.getCipherInstance("AES/CTR/NoPadding", properties);<br/><br/>
               String input = "hello world!";<br/>
               int inputOffset = 0;<br/>
               int inputLen = input.length();<br/>
@@ -136,7 +136,7 @@
             <td>
               Properties properties = new Properties();<br/>
               //Creates a Cipher instance with the transformation and properties.<br/>
-              CryptoCipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
+              CryptoCipher cipher = Utils.getCipherInstance("AES/CTR/NoPadding", properties);<br/><br/>
               int bufferSize = 4096;<br/>
               ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
               ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
@@ -170,7 +170,7 @@
               // Constructs the original OutputStream.<br/>
               OutputStream outputStream = new ByteArrayOutputStream();<br/>
               //Creates a CryptoCipher instance with the transformation and properties.<br/>
-              CryptoCipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
+              CryptoCipher cipher = Utils.getCipherInstance("AES/CTR/NoPadding", properties);<br/><br/>
               //Constructs the instance of CryptoOutputStream.<br/>
               CryptoOutputStream cos = new CryptoOutputStream(outputStream, cipher, bufferSize,<br/>
                                                               new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
@@ -188,7 +188,7 @@
               //Constructs the original InputStream.<br/>
               InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());<br/>
               //Creates a CryptoCipher instance with the transformation and properties.<br/>
-              CryptoCipher cipher = Utils.getCipherInstance(CipherTransformation.AES_CTR_NOPADDING, properties);<br/><br/>
+              CryptoCipher cipher = Utils.getCipherInstance(C"AES/CTR/NoPadding", properties);<br/><br/>
               //Constructs the instance of CryptoInputStream.<br/>
               CryptoInputStream cis = new CryptoInputStream(inputStream, cipher, bufferSize, <br/>
                                                             new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>

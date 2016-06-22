@@ -42,7 +42,7 @@ public abstract class AbstractCipherTest {
     public String[] cipherTests = null;
     Properties props = null;
     String cipherClass = null;
-    CipherTransformation[] transformations = null;
+    String[] transformations = null;
 
     // cipher
     static final byte[] KEY = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
@@ -65,7 +65,7 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void cryptoTest() throws GeneralSecurityException {
-        for (CipherTransformation tran : transformations) {
+        for (String tran : transformations) {
             /** uses the small data set in {@link TestData} */
             cipherTests = TestData.getTestData(tran);
             for (int i = 0; i != cipherTests.length; i += 5) {
@@ -97,7 +97,7 @@ public abstract class AbstractCipherTest {
         }
     }
 
-    private void byteBufferTest(CipherTransformation transformation,
+    private void byteBufferTest(String transformation,
             byte[] key, byte[] iv, ByteBuffer input, ByteBuffer output)
             throws GeneralSecurityException {
         ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
@@ -153,11 +153,11 @@ public abstract class AbstractCipherTest {
     }
 
     /** test byte array whose data is planned in {@link TestData} */
-    private void byteArrayTest(CipherTransformation transformation, byte[] key,
+    private void byteArrayTest(String transformation, byte[] key,
             byte[] iv, byte[] input, byte[] output)
             throws GeneralSecurityException {
         resetCipher(transformation, key, iv);
-        int blockSize = transformation.getAlgorithmBlockSize();
+        int blockSize = enc.getBlockSize();
 
         byte[] temp = new byte[input.length + blockSize];
         int n = enc.doFinal(input, 0, input.length, temp, 0);
@@ -175,13 +175,13 @@ public abstract class AbstractCipherTest {
     }
 
     /** test byte array whose data is randomly generated */
-    private void byteArrayTest(CipherTransformation transformation, byte[] key,
+    private void byteArrayTest(String transformation, byte[] key,
             byte[] iv) throws GeneralSecurityException {
-        int blockSize = transformation.getAlgorithmBlockSize();
+        int blockSize = enc.getBlockSize();
 
         // AES_CBC_NOPADDING only accepts data whose size is the multiple of
         // block size
-        int[] dataLenList = (transformation == CipherTransformation.AES_CBC_NOPADDING) ? new int[] { 10 * 1024 }
+        int[] dataLenList = (transformation.equals("AES/CBC/NoPadding")) ? new int[] { 10 * 1024 }
                 : new int[] { 10 * 1024, 10 * 1024 - 3 };
         for (int dataLen : dataLenList) {
             byte[] plainText = new byte[dataLen];
@@ -232,7 +232,7 @@ public abstract class AbstractCipherTest {
         }
     }
 
-    private void resetCipher(CipherTransformation transformation, byte[] key,
+    private void resetCipher(String transformation, byte[] key,
             byte[] iv) {
         enc = getCipher(transformation);
         dec = getCipher(transformation);
@@ -252,7 +252,7 @@ public abstract class AbstractCipherTest {
         }
     }
 
-    private CryptoCipher getCipher(CipherTransformation transformation) {
+    private CryptoCipher getCipher(String transformation) {
         try {
             return (CryptoCipher) ReflectionUtils.newInstance(
                     ReflectionUtils.getClassByName(cipherClass), props,

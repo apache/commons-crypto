@@ -27,7 +27,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.conf.ConfigurationKeys;
@@ -45,8 +44,7 @@ public final class Utils {
      * @see <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
      *      http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
      */
-    private static final int AES_BLOCK_SIZE = CipherTransformation.AES_CTR_NOPADDING
-            .getAlgorithmBlockSize();
+    private static final int AES_BLOCK_SIZE = 16;
 
     /**
      * The private constructor of {@Link Utils}.
@@ -193,7 +191,7 @@ public final class Utils {
      */
     public static void checkStreamCipher(CryptoCipher cipher)
             throws IOException {
-        if (cipher.getTransformation() != CipherTransformation.AES_CTR_NOPADDING) {
+        if (!cipher.getAlgorithm().equals("AES/CTR/NoPadding")) {
             throw new IOException("AES/CTR/NoPadding is required");
         }
     }
@@ -209,7 +207,7 @@ public final class Utils {
         checkArgument(bufferSize >= MIN_BUFFER_SIZE,
                 "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
         return bufferSize - bufferSize
-                % cipher.getTransformation().getAlgorithmBlockSize();
+                % cipher.getBlockSize();
     }
 
     /**
@@ -259,12 +257,15 @@ public final class Utils {
      *
      * @param props The <code>Properties</code> class represents a set of
      *        properties.
-     * @param transformation the CipherTransformation instance.
+     * @param transformation the name of the transformation, e.g.,
+     * <i>AES/CBC/PKCS5Padding</i>.
+     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
+     * for information about standard transformation names.
      * @return the CryptoCipher instance.
      * @throws IOException if an I/O error occurs.
      */
     public static CryptoCipher getCipherInstance(
-            CipherTransformation transformation, Properties props)
+            String transformation, Properties props)
             throws IOException {
         try {
             return CryptoCipherFactory.getInstance(transformation, props);

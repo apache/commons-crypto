@@ -19,13 +19,11 @@ package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
-
 public class CTRNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() throws IOException {
-        transformation = CipherTransformation.AES_CTR_NOPADDING;
+        transformation = "AES/CTR/NoPadding";
     }
 
 }

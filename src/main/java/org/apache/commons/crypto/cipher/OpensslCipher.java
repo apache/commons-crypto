@@ -36,8 +36,12 @@ import org.apache.commons.crypto.utils.Utils;
  * Implements the CryptoCipher using JNI into OpenSSL.
  */
 public class OpensslCipher implements CryptoCipher {
-    private final CipherTransformation transformation;
+
     private final Openssl cipher;
+
+    private final String transformation;
+
+    private final static int AES_BLOCK_SIZE = 16;
 
     /**
      * Constructs a {@link CryptoCipher} using JNI into OpenSSL
@@ -46,8 +50,7 @@ public class OpensslCipher implements CryptoCipher {
      * @param transformation transformation for OpenSSL cipher
      * @throws GeneralSecurityException if OpenSSL cipher initialize failed
      */
-    public OpensslCipher(Properties props, CipherTransformation  // NOPMD
-        transformation)
+    public OpensslCipher(Properties props, String transformation)
             throws GeneralSecurityException {
         this.transformation = transformation;
 
@@ -56,16 +59,31 @@ public class OpensslCipher implements CryptoCipher {
             throw new RuntimeException(loadingFailureReason);
         }
 
-        cipher = Openssl.getInstance(transformation.getName());
+        cipher = Openssl.getInstance(transformation);
     }
 
     /**
-     * Gets the CipherTransformation for the openssl cipher.
+     * Returns the block size (in bytes).
      *
-     * @return the CipherTransformation for this cipher
+     * @return the block size (in bytes), or 0 if the underlying algorithm is
+     * not a block cipher
      */
     @Override
-    public CipherTransformation getTransformation() {
+    public final int getBlockSize() {
+        return AES_BLOCK_SIZE;
+    }
+
+    /**
+     * Returns the algorithm name of this {@code CryptoCipher} object.
+     *
+     * <p>This is the same name that was specified in one of the
+     * {@code CryptoCipherFactory#getInstance} calls that created this
+     * {@code CryptoCipher} object..
+     *
+     * @return the algorithm name of this {@code CryptoCipher} object.
+     */
+    @Override
+    public String getAlgorithm() {
         return transformation;
     }
 
