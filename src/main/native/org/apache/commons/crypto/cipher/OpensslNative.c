@@ -247,6 +247,11 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_init
     (JNIEnv *env, jclass clazz, jlong ctx, jint mode, jint alg, jint padding,
     jbyteArray key, jbyteArray iv)
 {
+  jlong result = 0L;
+  EVP_CIPHER_CTX *context = CONTEXT(ctx);
+
+  jbyte *jKey = NULL;
+  jbyte *jIv  = NULL;
   int jKeyLen = (*env)->GetArrayLength(env, key);
   int jIvLen = (*env)->GetArrayLength(env, iv);
   if (jKeyLen != KEY_LENGTH_128 && jKeyLen != KEY_LENGTH_192
@@ -254,14 +259,13 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_init
     char str[64] = {0};
     snprintf(str, sizeof(str), "Invalid AES key length: %d bytes", jKeyLen);
     THROW(env, "java/security/InvalidKeyException", str);
-    return (jlong)0;
+    goto cleanup;
   }
   if (jIvLen != IV_LENGTH) {
     THROW(env, "java/security/InvalidAlgorithmParameterException", "Wrong IV length: must be 16 bytes long");
-    return (jlong)0;
+    goto cleanup;
   }
 
-  EVP_CIPHER_CTX *context = CONTEXT(ctx);
   if (context == 0) {
     // Create and initialize a EVP_CIPHER_CTX
     context = dlsym_EVP_CIPHER_CTX_new();
@@ -271,31 +275,27 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_init
     }
   }
 
-  jbyte *jKey = (*env)->GetByteArrayElements(env, key, NULL);
+  jKey = (*env)->GetByteArrayElements(env, key, NULL);
   if (jKey == NULL) {
     THROW(env, "java/lang/InternalError", "Cannot get bytes array for key.");
-    return (jlong)0;
+    goto cleanup;
   }
-  jbyte *jIv = (*env)->GetByteArrayElements(env, iv, NULL);
+  jIv = (*env)->GetByteArrayElements(env, iv, NULL);
   if (jIv == NULL) {
-    (*env)->ReleaseByteArrayElements(env, key, jKey, 0);
     THROW(env, "java/lang/InternalError", "Cannot get bytes array for iv.");
-    return (jlong)0;
+    goto cleanup;
   }
 
   if (!(alg == AES_CTR || alg == AES_CBC)) {
     THROW(env, "java/security/NoSuchAlgorithmException", "The algorithm is not supported.");
-    return (jlong)0;
+    goto cleanup;
   }
 
   int rc = dlsym_EVP_CipherInit_ex(context, getEvpCipher(alg, jKeyLen),  \
       NULL, (unsigned char *)jKey, (unsigned char *)jIv, mode == ENCRYPT_MODE);
-  (*env)->ReleaseByteArrayElements(env, key, jKey, 0);
-  (*env)->ReleaseByteArrayElements(env, iv, jIv, 0);
   if (rc == 0) {
-    dlsym_EVP_CIPHER_CTX_cleanup(context);
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherInit_ex.");
-    return (jlong)0;
+    goto cleanup;
   }
 
   if (padding == NOPADDING) {
@@ -304,7 +304,25 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_init
     dlsym_EVP_CIPHER_CTX_set_padding(context, 1);
   }
 
-  return JLONG(context);
+  // everything is OK,
+  result = JLONG(context);
+
+cleanup:
+  if (result == 0 && context != NULL) {
+    if (CONTEXT(ctx) != NULL) {
+      dlsym_EVP_CIPHER_CTX_cleanup(context);
+    } else {
+      dlsym_EVP_CIPHER_CTX_free(context);
+    }
+  }
+  if (jKey != NULL) {
+    (*env)->ReleaseByteArrayElements(env, key, jKey, 0);
+  }
+  if (jIv != NULL) {
+    (*env)->ReleaseByteArrayElements(env, iv, jIv, 0);
+  }
+
+  return result;
 }
 
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
@@ -371,25 +389,33 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_updat
         "Output buffer is not sufficient.");
     return 0;
   }
-  unsigned char *input_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, input, 0);
-  unsigned char *output_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, output, 0);
+  unsigned char *input_bytes = NULL;
+  unsigned char *output_bytes = NULL;
+  int output_len = 0;
+
+  input_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, input, 0);
+  output_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, output, 0);
   if (input_bytes == NULL || output_bytes == NULL) {
     THROW(env, "java/lang/InternalError", "Cannot get buffer address.");
-    return 0;
+    goto cleanup;
   }
 
-  int output_len = 0;
   int rc = dlsym_EVP_CipherUpdate(context, output_bytes + output_offset, &output_len,  \
       input_bytes + input_offset, input_len);
-
-  (*env)->ReleaseByteArrayElements(env, input, (jbyte *) input_bytes, 0);
-  (*env)->ReleaseByteArrayElements(env, output, (jbyte *) output_bytes, 0);
-
   if (rc == 0) {
     dlsym_EVP_CIPHER_CTX_cleanup(context);
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherUpdate.");
-    return 0;
+    output_len = 0;
   }
+
+cleanup:
+  if (input_bytes != NULL) {
+    (*env)->ReleaseByteArrayElements(env, input, (jbyte *) input_bytes, 0);
+  }
+  if (output_bytes != NULL) {
+    (*env)->ReleaseByteArrayElements(env, output, (jbyte *) output_bytes, 0);
+  }
+
   return output_len;
 }
 
