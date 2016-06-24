@@ -26,6 +26,9 @@ import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 
+/**
+ * Example showing use of the CryptoRandom API
+ */
 public class RandomExample {
 
     /**
@@ -38,21 +41,26 @@ public class RandomExample {
     public static void main(String []args) throws GeneralSecurityException, IOException {
         //Constructs a byte array to store random data.
         byte[] key = new byte[16];
-        byte[] iv = new byte[16];
+        byte[] iv = new byte[32];
+
         Properties properties = new Properties();
         properties.put(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
                 "org.apache.commons.crypto.random.OpensslCryptoRandom"); // TODO replace with alias
+
         //Gets the 'CryptoRandom' instance.
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties);
+
+        // Show the actual class (may be different from the one requested)
         System.out.println(random.getClass().getCanonicalName());
 
-        //Generates random bytes and places them into the byte array.
+        // Generate random bytes and places them into the byte arrays.
         random.nextBytes(key);
         random.nextBytes(iv);
+
         //Closes the CryptoRandom.
         random.close();
 
-        // Show the output
+        // Show the generated output
         System.out.println(Arrays.toString(key));
         System.out.println(Arrays.toString(iv));
     }
