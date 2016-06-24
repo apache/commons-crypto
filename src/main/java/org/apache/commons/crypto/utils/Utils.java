@@ -139,25 +139,6 @@ public final class Utils {
     }
 
     /**
-     * Gets the cipher class.
-     *
-     * @param props The <code>Properties</code> class represents a set of
-     *        properties.
-     * @return the cipher class based on the props.
-     */
-    public static String getCipherClassString(Properties props) {
-        final String configName = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
-        String cipherClassString = props.getProperty(configName) != null ? props
-                .getProperty(configName, ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT)
-                : System.getProperty(configName,
-                ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
-        if (cipherClassString.isEmpty()) {
-            cipherClassString = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
-        }
-        return cipherClassString;
-    }
-
-    /**
      * Gets path of native library.
      *
      * @return the path of native library.

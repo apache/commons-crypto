@@ -21,6 +21,7 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -48,7 +49,7 @@ public class CryptoCipherFactory {
             Properties props) throws GeneralSecurityException {
 
         List<String> klasses =  Utils.splitClassNames(
-                Utils.getCipherClassString(props), ",");
+                getCipherClassString(props), ",");
         CryptoCipher cipher = null;
 
         StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
@@ -92,4 +93,23 @@ public class CryptoCipherFactory {
         return getInstance(transformation, new Properties());
     }
 
+
+    /**
+     * Gets the cipher class.
+     *
+     * @param props The <code>Properties</code> class represents a set of
+     *        properties.
+     * @return the cipher class based on the props.
+     */
+    private static String getCipherClassString(Properties props) {
+        final String configName = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
+        String cipherClassString = props.getProperty(configName) != null ? props
+            .getProperty(configName, ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT)
+            : System.getProperty(configName,
+            ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
+        if (cipherClassString.isEmpty()) {
+            cipherClassString = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
+        }
+        return cipherClassString;
+    }
 }

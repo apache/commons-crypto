@@ -26,7 +26,7 @@ import org.apache.commons.crypto.conf.ConfigurationKeys;
 /**
  * A CryptoRandom of Java implementation.
  */
-public class JavaCryptoRandom implements CryptoRandom {
+class JavaCryptoRandom implements CryptoRandom {
 
     private final SecureRandom instance;
 
