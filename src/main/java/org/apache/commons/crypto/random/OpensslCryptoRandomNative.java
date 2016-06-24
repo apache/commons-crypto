@@ -18,10 +18,13 @@
 package org.apache.commons.crypto.random;
 
 /**
- * JNI interface of {@link CryptoRandom} implementation. The native method in
- * this class is defined in OpensslCryptoRandomNative.h(genereted by javah).
+ * JNI interface of {@link CryptoRandom} implementation for OpenSSL.
+ * The native method in this class is defined in 
+ * OpensslCryptoRandomNative.h (generated at build time by javah)
+ * and implemented in the file
+ * src/main/native/org/apache/commons/crypto/random/OpensslCryptoRandomNative.c
  */
-public class OpensslCryptoRandomNative {
+class OpensslCryptoRandomNative {
     /**
      * The private constructor of {@Link OpensslCryptoRandomNative}.
      */
