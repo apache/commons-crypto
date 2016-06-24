@@ -76,13 +76,13 @@ public class CryptoInputStream extends InputStream implements
      * Input data buffer. The data starts at inBuffer.position() and ends at to
      * inBuffer.limit().
      */
-    protected ByteBuffer inBuffer;
+    ByteBuffer inBuffer;
 
     /**
      * The decrypted data buffer. The data starts at outBuffer.position() and
      * ends at outBuffer.limit().
      */
-    protected ByteBuffer outBuffer;
+    ByteBuffer outBuffer;
 
     /**
      * Constructs a {@link CryptoInputStream}.
