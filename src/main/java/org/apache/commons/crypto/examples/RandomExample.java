@@ -33,7 +33,7 @@ public class RandomExample {
         byte[] key = new byte[16];
         byte[] iv = new byte[16];
         Properties properties = new Properties();
-        properties.put(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
+        properties.put(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
                 "org.apache.commons.crypto.random.OpensslCryptoRandom"); // TODO replace with alias
         //Gets the 'CryptoRandom' instance.
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties);

@@ -58,12 +58,12 @@ public final class Utils {
 
     /**
      * loads system properties when configuration file of the name
-     * {@link ConfigurationKeys#COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE} is found.
+     * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE} is found.
      */
     private static void loadSystemProperties() {
         try {
             InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream(ConfigurationKeys.COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE);
+                    .getResourceAsStream(ConfigurationKeys.SYSTEM_PROPERTIES_FILE);
 
             if (is == null) {
                 return; // no configuration file is found
@@ -81,7 +81,7 @@ public final class Utils {
             }
         } catch (Throwable ex) {
             System.err.println("Could not load '"
-                    + ConfigurationKeys.COMMONS_CRYPTO_SYSTEM_PROPERTIES_FILE
+                    + ConfigurationKeys.SYSTEM_PROPERTIES_FILE
                     + "' from classpath: " + ex.toString());
         }
     }
@@ -125,13 +125,13 @@ public final class Utils {
      * */
     public static int getBufferSize(Properties props) {
         String bufferSizeStr = props
-                .getProperty(ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY);
+                .getProperty(ConfigurationKeys.STREAM_BUFFER_SIZE_KEY);
         if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
             bufferSizeStr = System
-                    .getProperty(ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_KEY);
+                    .getProperty(ConfigurationKeys.STREAM_BUFFER_SIZE_KEY);
         }
         if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
-            return ConfigurationKeys.COMMONS_CRYPTO_STREAM_BUFFER_SIZE_DEFAULT;
+            return ConfigurationKeys.STREAM_BUFFER_SIZE_DEFAULT;
         }
         return Integer.parseInt(bufferSizeStr);
     }
@@ -144,13 +144,13 @@ public final class Utils {
      * @return the cipher class based on the props.
      */
     public static String getCipherClassString(Properties props) {
-        final String configName = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY;
+        final String configName = ConfigurationKeys.CIPHER_CLASSES_KEY;
         String cipherClassString = props.getProperty(configName) != null ? props
-                .getProperty(configName, ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT)
+                .getProperty(configName, ConfigurationKeys.CIPHER_CLASSES_DEFAULT)
                 : System.getProperty(configName,
-                ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT);
+                ConfigurationKeys.CIPHER_CLASSES_DEFAULT);
         if (cipherClassString.isEmpty()) {
-            cipherClassString = ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_DEFAULT;
+            cipherClassString = ConfigurationKeys.CIPHER_CLASSES_DEFAULT;
         }
         return cipherClassString;
     }
@@ -161,7 +161,7 @@ public final class Utils {
      * @return the path of native library.
      */
     public static String getLibPath() {
-        return System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_LIB_PATH_KEY);
+        return System.getProperty(ConfigurationKeys.LIB_PATH_KEY);
     }
 
     /**
@@ -170,7 +170,7 @@ public final class Utils {
      * @return the file name of native library.
      */
     public static String getLibName() {
-        return System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_LIB_NAME_KEY);
+        return System.getProperty(ConfigurationKeys.LIB_NAME_KEY);
     }
 
     /**
@@ -179,7 +179,7 @@ public final class Utils {
      * @return the temp directory.
      */
     public static String getTmpDir() {
-        return System.getProperty(ConfigurationKeys.COMMONS_CRYPTO_LIB_TEMPDIR_KEY,
+        return System.getProperty(ConfigurationKeys.LIB_TEMPDIR_KEY,
                 System.getProperty("java.io.tmpdir"));
     }
 
@@ -364,14 +364,14 @@ public final class Utils {
      */
     public static boolean isFallbackEnabled(Properties props) {
         String enableFallback = props.getProperty(ConfigurationKeys.
-                COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
+            ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
         if (enableFallback == null || enableFallback.isEmpty()) {
             enableFallback = System.getProperty(ConfigurationKeys.
-                    COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
+                ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
         }
         if (enableFallback == null || enableFallback.isEmpty()) {
             return ConfigurationKeys
-                    .COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_DEFAULT;
+                    .ENABLE_FALLBACK_ON_NATIVE_FAILED_DEFAULT;
         }
         return Boolean.valueOf(enableFallback);
     }

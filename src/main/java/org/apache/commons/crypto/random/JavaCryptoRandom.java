@@ -42,8 +42,8 @@ public class JavaCryptoRandom implements CryptoRandom {
         instance = SecureRandom
                 .getInstance(properties
                         .getProperty(
-                                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_KEY,
-                                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
+                                ConfigurationKeys.SECURE_RANDOM_JAVA_ALGORITHM_KEY,
+                                ConfigurationKeys.SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
     }
 
     /**

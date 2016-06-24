@@ -22,7 +22,7 @@ import java.util.Properties;
 
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY;
 
 /**
  * This is the factory class used for {@link CryptoRandom}.
@@ -37,7 +37,7 @@ public class CryptoRandomFactory {
 
     /**
      * Gets a CryptoRandom instance for specified props.
-     * Uses the COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY from the provided 
+     * Uses the SECURE_RANDOM_CLASSES_KEY from the provided
      * properties.
      * If it is not set, then it checks the System properties.
      * Failing that, it defaults to {@link JavaCryptoRandom}
@@ -52,10 +52,10 @@ public class CryptoRandomFactory {
     public static CryptoRandom getCryptoRandom(Properties props)
             throws GeneralSecurityException {
         String cryptoRandomClasses = props
-                .getProperty(COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
+                .getProperty(SECURE_RANDOM_CLASSES_KEY);
         if (cryptoRandomClasses == null) {
             cryptoRandomClasses = System
-                    .getProperty(COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY);
+                    .getProperty(SECURE_RANDOM_CLASSES_KEY);
         }
 
         StringBuilder errorMessage = new StringBuilder();

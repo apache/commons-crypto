@@ -38,7 +38,7 @@ public class CryptoCipherFactoryTest {
     public void testEmptyCipher() throws GeneralSecurityException {
         Properties properties = new Properties();
         properties.setProperty(
-                ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY, "");
+                ConfigurationKeys.CIPHER_CLASSES_KEY, "");
         CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
                 "AES/CBC/NoPadding", properties);
         Assert.assertEquals(OpensslCipher.class.getName(), defaultCipher
@@ -48,7 +48,7 @@ public class CryptoCipherFactoryTest {
     @Test
     public void testInvalidCipher() throws GeneralSecurityException {
         Properties properties = new Properties();
-        properties.setProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
+        properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY,
                 "InvalidCipherName");
         CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
                 "AES/CBC/NoPadding", properties);
@@ -59,11 +59,10 @@ public class CryptoCipherFactoryTest {
     @Test(expected = GeneralSecurityException.class)
     public void testDisableFallback() throws GeneralSecurityException {
         Properties properties = new Properties();
-        properties.setProperty(
-                ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
-                "InvalidCipherName");
+        properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY,
+            "InvalidCipherName");
         properties.setProperty(ConfigurationKeys
-            .COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY, "false");
+            .ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY, "false");
 
         CryptoCipherFactory.getInstance("AES/CBC/NoPadding", properties);
     }

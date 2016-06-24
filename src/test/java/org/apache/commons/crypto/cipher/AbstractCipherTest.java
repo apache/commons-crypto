@@ -57,7 +57,7 @@ public abstract class AbstractCipherTest {
         Utils.checkNotNull(cipherClass);
         Utils.checkNotNull(transformations);
         props = new Properties();
-        props.setProperty(ConfigurationKeys.COMMONS_CRYPTO_CIPHER_CLASSES_KEY,
+        props.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY,
                 cipherClass);
     }
 

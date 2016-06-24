@@ -29,7 +29,7 @@ public class TestOpensslCryptoRandom extends AbstractRandomTest {
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
         Properties props = new Properties();
         props.setProperty(
-                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_CLASSES_KEY,
+                ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
                 OpensslCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         if (!(random instanceof OpensslCryptoRandom)) {

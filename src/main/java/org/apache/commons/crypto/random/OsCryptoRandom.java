@@ -142,11 +142,11 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
      */
     private static String getRandomDevPath(Properties props) {
         String devPath = props
-            .getProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
+            .getProperty(ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
         if (devPath == null) {
             devPath = System.getProperty(
-                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
-                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
+                ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
+                ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
         }
         return devPath;
     }
