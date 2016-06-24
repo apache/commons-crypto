@@ -54,17 +54,17 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
     /**
      * Underlying stream offset.
      */
-    long streamOffset = 0;
+    private long streamOffset = 0;
 
     /**
      * The initial IV.
      */
-    protected final byte[] initIV;
+    private final byte[] initIV;
 
     /**
      * Initialization vector for the cipher.
      */
-    protected byte[] iv;
+    private byte[] iv;
 
     /**
      * Padding = pos%(algorithm blocksize); Padding is put into
