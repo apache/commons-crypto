@@ -21,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.commons.crypto.utils.NativeCodeLoader;
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -50,7 +50,7 @@ public class OpensslCryptoRandom extends Random implements CryptoRandom {
 
     static {
         boolean opensslLoaded = false;
-        if (NativeCodeLoader.isNativeCodeLoaded()) {
+        if (Crypto.isNativeCodeLoaded()) {
             try {
                 OpensslCryptoRandomNative.initSR();
                 opensslLoaded = true;
