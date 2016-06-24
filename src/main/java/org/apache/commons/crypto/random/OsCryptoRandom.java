@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
 
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.IOUtils;
-import org.apache.commons.crypto.utils.Utils;
 
 /**
  * A Random implementation that uses random bytes sourced from the operating
@@ -66,7 +66,7 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
      * @param props the configuration properties.
      */
     public OsCryptoRandom(Properties props) {
-        randomDevPath = Utils.getRandomDevPath(props);
+        randomDevPath = getRandomDevPath(props);
         File randomDevFile = new File(randomDevPath);
 
         try {
@@ -132,4 +132,23 @@ public class OsCryptoRandom extends Random implements CryptoRandom {
             stream = null;
         }
     }
+
+    /**
+     * Gets the random device path.
+     *
+     * @param props The <code>Properties</code> class represents a set of
+     *        properties.
+     * @return the random device path based on the props.
+     */
+    private static String getRandomDevPath(Properties props) {
+        String devPath = props
+            .getProperty(ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
+        if (devPath == null) {
+            devPath = System.getProperty(
+                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
+                ConfigurationKeys.COMMONS_CRYPTO_SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
+        }
+        return devPath;
+    }
+
 }
