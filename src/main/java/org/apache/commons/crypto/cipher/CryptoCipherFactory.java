@@ -44,7 +44,7 @@ public class CryptoCipherFactory {
      *         classes with transformation configured.
      * @throws GeneralSecurityException if cipher initialize failed
      */
-    public static CryptoCipher getInstance(CipherTransformation transformation,
+    public static CryptoCipher getInstance(String transformation,
             Properties props) throws GeneralSecurityException {
 
         List<String> klasses =  Utils.splitClassNames(
@@ -73,7 +73,7 @@ public class CryptoCipherFactory {
             return new JceCipher(props,transformation);
         } else {
             errorMessage.append(" is not available or transformation " +
-                    transformation.getName() + " is not supported.");
+                    transformation + " is not supported.");
             throw new GeneralSecurityException(errorMessage.toString());
         }
     }
@@ -82,12 +82,15 @@ public class CryptoCipherFactory {
      * Gets a cipher for algorithm/mode/padding in config value
      * commons.crypto.cipher.transformation
      *
-     * @param transformation CipherTransformation instance.
+     * @param transformation the name of the transformation, e.g.,
+     * <i>AES/CBC/PKCS5Padding</i>.
+     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
+     * for information about standard transformation names.
      * @return CryptoCipher the cipher object Null value will be returned if no
      *         cipher classes with transformation configured.
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
-    public static CryptoCipher getInstance(CipherTransformation transformation)
+    public static CryptoCipher getInstance(String transformation)
             throws GeneralSecurityException {
         return getInstance(transformation, new Properties());
     }

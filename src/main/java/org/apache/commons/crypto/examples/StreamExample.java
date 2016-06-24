@@ -28,7 +28,6 @@ import java.util.Properties;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.crypto.cipher.CipherTransformation;
 import org.apache.commons.crypto.stream.CryptoInputStream;
 import org.apache.commons.crypto.stream.CryptoOutputStream;
 
@@ -45,7 +44,7 @@ public class StreamExample {
         final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"),"AES");
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
         Properties properties = new Properties();
-        final CipherTransformation transform = CipherTransformation.AES_CBC_PKCS5PADDING;
+        final String transform = "AES/CBC/PKCS5Padding";
 
         String input = "hello world!";
         //Encryption with CryptoOutputStream.

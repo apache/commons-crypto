@@ -37,11 +37,23 @@ import javax.crypto.ShortBufferException;
 public interface CryptoCipher extends Closeable {
 
     /**
-     * Gets the CipherTransformation for this cipher.
+     * Returns the block size (in bytes).
      *
-     * @return the CipherTransformation for this cipher.
+     * @return the block size (in bytes), or 0 if the underlying algorithm is
+     * not a block cipher
      */
-    CipherTransformation getTransformation();
+    int getBlockSize();
+
+    /**
+     * Returns the algorithm name of this {@code CryptoCipher} object.
+     *
+     * <p>This is the same name that was specified in one of the
+     * {@code CryptoCipherFactory#getInstance} calls that created this
+     * {@code CryptoCipher} object..
+     *
+     * @return the algorithm name of this {@code CryptoCipher} object.
+     */
+    String getAlgorithm();
 
     /**
      * Initializes the cipher with mode, key and iv.

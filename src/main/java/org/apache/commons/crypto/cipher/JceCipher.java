@@ -37,7 +37,6 @@ import org.apache.commons.crypto.utils.Utils;
  * Implements the {@link CryptoCipher} using JCE provider.
  */
 public class JceCipher implements CryptoCipher {
-    private final CipherTransformation transformation;
     private final Cipher cipher;
 
     /**
@@ -47,26 +46,39 @@ public class JceCipher implements CryptoCipher {
      * @param transformation transformation for JCE cipher
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
-    public JceCipher(Properties props, CipherTransformation transformation)
+    public JceCipher(Properties props, String transformation)
             throws GeneralSecurityException {
-        this.transformation = transformation;
-
         String provider = getJCEProvider(props);
         if (provider == null || provider.isEmpty()) {
-            cipher = Cipher.getInstance(transformation.getName());
+            cipher = Cipher.getInstance(transformation);
         } else {
-            cipher = Cipher.getInstance(transformation.getName(), provider);
+            cipher = Cipher.getInstance(transformation, provider);
         }
     }
 
     /**
-     * Gets the CipherTransformation for the jce cipher.
+     * Returns the block size (in bytes).
      *
-     * @return the CipherTransformation for this cipher
+     * @return the block size (in bytes), or 0 if the underlying algorithm is
+     * not a block cipher
      */
     @Override
-    public CipherTransformation getTransformation() {
-        return transformation;
+    public final int getBlockSize() {
+        return cipher.getBlockSize();
+    }
+
+    /**
+     * Returns the algorithm name of this {@code CryptoCipher} object.
+     *
+     * <p>This is the same name that was specified in one of the
+     * {@code CryptoCipherFactory#getInstance} calls that created this
+     * {@code CryptoCipher} object..
+     *
+     * @return the algorithm name of this {@code CryptoCipher} object.
+     */
+    @Override
+    public String getAlgorithm() {
+        return cipher.getAlgorithm();
     }
 
     /**

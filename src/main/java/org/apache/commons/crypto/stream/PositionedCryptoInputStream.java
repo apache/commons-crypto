@@ -36,7 +36,6 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.utils.IOUtils;
 import org.apache.commons.crypto.utils.Utils;
-import static org.apache.commons.crypto.cipher.CipherTransformation.AES_CTR_NOPADDING;
 
 /**
  * PositionedCryptoInputStream provides the capability to decrypt the stream
@@ -73,7 +72,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
      */
     public PositionedCryptoInputStream(Properties props, Input in, byte[] key,
             byte[] iv, long streamOffset) throws IOException {
-        this(props, in, Utils.getCipherInstance(AES_CTR_NOPADDING, props),
+        this(props, in, Utils.getCipherInstance("AES/CTR/NoPadding", props),
                 Utils.getBufferSize(props), key, iv, streamOffset);
     }
 
@@ -320,8 +319,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
         if (state == null) {
             CryptoCipher cipher;
             try {
-                cipher = CryptoCipherFactory.getInstance(getCipher()
-                        .getTransformation(), props);
+                cipher = CryptoCipherFactory.getInstance("AES/CTR/NoPadding", props);
             } catch (GeneralSecurityException e) {
                 throw new IOException(e);
             }

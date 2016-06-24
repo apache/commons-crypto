@@ -33,10 +33,10 @@ public class OpensslCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {
-        transformations = new CipherTransformation[] {
-                CipherTransformation.AES_CBC_NOPADDING,
-                CipherTransformation.AES_CBC_PKCS5PADDING,
-                CipherTransformation.AES_CTR_NOPADDING };
+        transformations = new String[] {
+                "AES/CBC/NoPadding",
+                "AES/CBC/PKCS5Padding",
+                "AES/CTR/NoPadding"};
         cipherClass = OpensslCipher.class.getName();
     }
 
@@ -85,7 +85,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     public void testUpdateArguments() throws Exception {
         Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
         Openssl cipher = Openssl
-                .getInstance(CipherTransformation.AES_CTR_NOPADDING.getName());
+                .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
         cipher.init(Openssl.ENCRYPT_MODE, KEY, IV);
@@ -119,7 +119,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     public void testDoFinalArguments() throws Exception {
         Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
         Openssl cipher = Openssl
-                .getInstance(CipherTransformation.AES_CTR_NOPADDING.getName());
+                .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
         cipher.init(Openssl.ENCRYPT_MODE, KEY, IV);
@@ -140,7 +140,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     public void testInvalidKey() throws Exception {
         Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
         Openssl cipher = Openssl
-                .getInstance(CipherTransformation.AES_CTR_NOPADDING.getName());
+                .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
         final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
@@ -158,7 +158,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
     public void testInvalidIV() throws Exception {
         Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
         Openssl cipher = Openssl
-                .getInstance(CipherTransformation.AES_CTR_NOPADDING.getName());
+                .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
         final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,

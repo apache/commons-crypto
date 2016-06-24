@@ -31,10 +31,10 @@ public class JceCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {
-        transformations = new CipherTransformation[] {
-                CipherTransformation.AES_CBC_NOPADDING,
-                CipherTransformation.AES_CBC_PKCS5PADDING,
-                CipherTransformation.AES_CTR_NOPADDING };
+        transformations = new String[] {
+                "AES/CBC/NoPadding",
+                "AES/CBC/PKCS5Padding",
+                "AES/CTR/NoPadding"};
         cipherClass = JceCipher.class.getName();
     }
 
