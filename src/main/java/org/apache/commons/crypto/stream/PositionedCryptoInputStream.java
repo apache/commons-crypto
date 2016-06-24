@@ -80,6 +80,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     /**
      * Constructs a {@link PositionedCryptoInputStream}.
      *
+     * @param props the props of stream
      * @param input the input data.
      * @param cipher the CryptoCipher instance.
      * @param bufferSize the bufferSize.

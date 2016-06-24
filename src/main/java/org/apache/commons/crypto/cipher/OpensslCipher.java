@@ -46,7 +46,8 @@ public class OpensslCipher implements CryptoCipher {
      * @param transformation transformation for OpenSSL cipher
      * @throws GeneralSecurityException if OpenSSL cipher initialize failed
      */
-    public OpensslCipher(Properties props, CipherTransformation transformation)
+    public OpensslCipher(Properties props, CipherTransformation  // NOPMD
+        transformation)
             throws GeneralSecurityException {
         this.transformation = transformation;
 
