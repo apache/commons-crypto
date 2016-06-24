@@ -52,8 +52,8 @@ public class CryptoCipherFactoryTest {
                 "InvalidCipherName");
         CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
                 "AES/CBC/NoPadding", properties);
-        Assert.assertEquals(JceCipher.class.getName(), defaultCipher.getClass()
-                .getName());
+        Assert.assertEquals(JceCipher.class.getName(),
+            defaultCipher.getClass().getName());
     }
 
     @Test(expected = GeneralSecurityException.class)
@@ -66,5 +66,11 @@ public class CryptoCipherFactoryTest {
             .COMMONS_CRYPTO_ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY, "false");
 
         CryptoCipherFactory.getInstance("AES/CBC/NoPadding", properties);
+    }
+
+    @Test(expected = GeneralSecurityException.class)
+    public void testInvalidTransformation() throws GeneralSecurityException {
+      Properties properties = new Properties();
+      CryptoCipherFactory.getInstance("AES/Invalid/NoPadding", properties);
     }
 }
