@@ -17,6 +17,6 @@
  */
 
 /**
- * Utils classes
+ * Crypto classes
  */
-package org.apache.commons.crypto.utils;
+package org.apache.commons.crypto;

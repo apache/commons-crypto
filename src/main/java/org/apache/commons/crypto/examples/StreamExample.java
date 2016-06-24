@@ -36,10 +36,22 @@ import org.apache.commons.crypto.stream.CryptoOutputStream;
  */
 public class StreamExample {
 
+    /**
+     * Converts String to UTF8 bytes
+     *
+     * @param input the input string
+     * @return UTF8 bytes
+     */
     private static byte[] getUTF8Bytes(String input) {
         return input.getBytes(StandardCharsets.UTF_8);
     }
 
+    /**
+     * Main method
+     *
+     * @param args args of main
+     * @throws IOException when stream encryption/decryption failed
+     */
     public static void main(String []args) throws IOException {
         final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"),"AES");
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));

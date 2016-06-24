@@ -30,10 +30,22 @@ import org.apache.commons.crypto.utils.Utils;
 
 public class CipherByteArrayExample {
 
+    /**
+     * Converts String to UTF8 bytes
+     *
+     * @param input the input string
+     * @return UTF8 bytes
+     */
     private static byte[] getUTF8Bytes(String input) {
         return input.getBytes(StandardCharsets.UTF_8);
     }
 
+    /**
+     * Main method
+     *
+     * @param args args of main
+     * @throws Exception when encryption/decryption failed
+     */
     public static void main(String[] args) throws Exception {
         final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"),"AES");
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
