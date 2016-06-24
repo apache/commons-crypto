@@ -28,7 +28,7 @@ import java.nio.channels.WritableByteChannel;
  */
 public class ChannelOutput implements Output {
 
-    private WritableByteChannel channel;
+    private final WritableByteChannel channel;
 
     /**
      * Constructs a
