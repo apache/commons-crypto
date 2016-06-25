@@ -73,7 +73,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     public PositionedCryptoInputStream(Properties props, Input in, byte[] key,
             byte[] iv, long streamOffset) throws IOException {
         this(props, in, Utils.getCipherInstance("AES/CTR/NoPadding", props),
-                Utils.getBufferSize(props), key, iv, streamOffset);
+                CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
     }
 
     /**

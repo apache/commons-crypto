@@ -116,26 +116,6 @@ public final class Utils {
     }
 
     /**
-     * Reads crypto buffer size.
-     *
-     * @param props The <code>Properties</code> class represents a set of
-     *        properties.
-     * @return the buffer size.
-     * */
-    public static int getBufferSize(Properties props) {
-        String bufferSizeStr = props
-                .getProperty(ConfigurationKeys.STREAM_BUFFER_SIZE_KEY);
-        if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
-            bufferSizeStr = System
-                    .getProperty(ConfigurationKeys.STREAM_BUFFER_SIZE_KEY);
-        }
-        if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
-            return ConfigurationKeys.STREAM_BUFFER_SIZE_DEFAULT;
-        }
-        return Integer.parseInt(bufferSizeStr);
-    }
-
-    /**
      * <p>
      * This method is only for Counter (CTR) mode. Generally the CryptoCipher
      * calculates the IV and maintain encryption context internally.For example

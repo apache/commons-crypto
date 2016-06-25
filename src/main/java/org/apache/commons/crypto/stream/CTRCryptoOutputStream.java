@@ -168,8 +168,8 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
     public CTRCryptoOutputStream(Properties props, OutputStream out,
             byte[] key, byte[] iv, long streamOffset) throws IOException {
         this(out, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", props), Utils
-                .getBufferSize(props), key, iv, streamOffset);
+                "AES/CTR/NoPadding", props),
+                CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
     }
 
     /**
@@ -186,8 +186,8 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
     public CTRCryptoOutputStream(Properties props, WritableByteChannel out,
             byte[] key, byte[] iv, long streamOffset) throws IOException {
         this(out, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", props), Utils
-                .getBufferSize(props), key, iv, streamOffset);
+                "AES/CTR/NoPadding", props),
+                CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
     }
 
     /**

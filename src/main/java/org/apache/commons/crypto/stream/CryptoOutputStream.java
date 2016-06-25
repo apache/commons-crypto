@@ -97,8 +97,8 @@ public class CryptoOutputStream extends OutputStream implements
     public CryptoOutputStream(String transformation,
             Properties props, OutputStream out, Key key,
             AlgorithmParameterSpec params) throws IOException {
-        this(out, Utils.getCipherInstance(transformation, props), Utils
-                .getBufferSize(props), key, params);
+        this(out, Utils.getCipherInstance(transformation, props),
+                CryptoInputStream.getBufferSize(props), key, params);
 
     }
 
@@ -119,7 +119,7 @@ public class CryptoOutputStream extends OutputStream implements
     public CryptoOutputStream(String transformation,
             Properties props, WritableByteChannel out, Key key,
             AlgorithmParameterSpec params) throws IOException {
-        this(out, Utils.getCipherInstance(transformation, props), Utils
+        this(out, Utils.getCipherInstance(transformation, props), CryptoInputStream
                 .getBufferSize(props), key, params);
 
     }

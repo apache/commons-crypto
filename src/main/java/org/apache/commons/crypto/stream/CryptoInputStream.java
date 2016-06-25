@@ -33,6 +33,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.stream.input.StreamInput;
@@ -103,8 +104,8 @@ public class CryptoInputStream extends InputStream implements
     public CryptoInputStream(String transformation,
             Properties props, InputStream in, Key key,
             AlgorithmParameterSpec params) throws IOException {
-        this(in, Utils.getCipherInstance(transformation, props), Utils
-                .getBufferSize(props), key, params);
+        this(in, Utils.getCipherInstance(transformation, props),
+                CryptoInputStream.getBufferSize(props), key, params);
     }
 
     /**
@@ -124,7 +125,7 @@ public class CryptoInputStream extends InputStream implements
     public CryptoInputStream(String transformation,
             Properties props, ReadableByteChannel in, Key key,
             AlgorithmParameterSpec params) throws IOException {
-        this(in, Utils.getCipherInstance(transformation, props), Utils
+        this(in, Utils.getCipherInstance(transformation, props), CryptoInputStream
                 .getBufferSize(props), key, params);
     }
 
@@ -568,6 +569,26 @@ public class CryptoInputStream extends InputStream implements
     protected void freeBuffers() {
         Utils.freeDirectBuffer(inBuffer);
         Utils.freeDirectBuffer(outBuffer);
+    }
+
+    /**
+     * Reads crypto buffer size.
+     *
+     * @param props The <code>Properties</code> class represents a set of
+     *        properties.
+     * @return the buffer size.
+     * */
+    static int getBufferSize(Properties props) {
+        String bufferSizeStr = props
+                .getProperty(ConfigurationKeys.STREAM_BUFFER_SIZE_KEY);
+        if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
+            bufferSizeStr = System
+                    .getProperty(ConfigurationKeys.STREAM_BUFFER_SIZE_KEY);
+        }
+        if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
+            return ConfigurationKeys.STREAM_BUFFER_SIZE_DEFAULT;
+        }
+        return Integer.parseInt(bufferSizeStr);
     }
 
     /**
