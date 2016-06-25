@@ -36,7 +36,7 @@ import org.apache.commons.crypto.utils.Utils;
 /**
  * Implements the {@link CryptoCipher} using JCE provider.
  */
-public class JceCipher implements CryptoCipher {
+class JceCipher implements CryptoCipher {
     private final Cipher cipher;
 
     /**

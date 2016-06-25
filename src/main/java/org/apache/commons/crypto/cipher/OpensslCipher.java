@@ -35,7 +35,7 @@ import org.apache.commons.crypto.utils.Utils;
 /**
  * Implements the CryptoCipher using JNI into OpenSSL.
  */
-public class OpensslCipher implements CryptoCipher {
+class OpensslCipher implements CryptoCipher {
 
     private final Openssl cipher;
 
