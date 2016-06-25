@@ -18,9 +18,8 @@
 
 package org.apache.commons.crypto.stream;
 
+import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
-import org.apache.commons.crypto.cipher.JceCipher;
-import org.apache.commons.crypto.cipher.OpensslCipher;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.junit.Assert;
@@ -53,8 +52,6 @@ public class PositionedCryptoInputStreamTest {
     int lengthLess = length - 1;
     int lengthMore = length + 1;
 
-    private final String jceCipherClass = JceCipher.class.getName();
-    private final String opensslCipherClass = OpensslCipher.class.getName();
     private String transformation = "AES/CTR/NoPadding";
 
     @Before
@@ -70,7 +67,7 @@ public class PositionedCryptoInputStreamTest {
         CryptoCipher cipher = null;
         try {
             cipher = (CryptoCipher) ReflectionUtils.newInstance(
-                    ReflectionUtils.getClassByName(jceCipherClass), props,
+                    ReflectionUtils.getClassByName(AbstractCipherTest.JCE_CIPHER_CLASSNAME), props,
                     transformation);
         } catch (ClassNotFoundException cnfe) {
             throw new IOException("Illegal crypto cipher!");
@@ -98,8 +95,8 @@ public class PositionedCryptoInputStreamTest {
 
     @Test
     public void doTest() throws Exception {
-        testCipher(jceCipherClass);
-        testCipher(opensslCipherClass);
+        testCipher(AbstractCipherTest.JCE_CIPHER_CLASSNAME);
+        testCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME);
     }
 
     private void testCipher(String cipherClass) throws Exception {
