@@ -159,12 +159,11 @@ public final class Utils {
      * entry,and returns an list of the entries.
      *
      * @param clazzNames a string consist of a list of the entries joined by a
-     *        delimiter.
+     *        delimiter, may be null or empty in which case an empty list is returned.
      * @param separator a delimiter for the input string.
      * @return a list of class entries.
      */
-    public static List<String> splitClassNames(String clazzNames,
-            String separator) {
+    public static List<String> splitClassNames(String clazzNames, String separator) {
         List<String> res = new ArrayList<>();
         if (clazzNames == null || clazzNames.isEmpty()) {
             return res;
