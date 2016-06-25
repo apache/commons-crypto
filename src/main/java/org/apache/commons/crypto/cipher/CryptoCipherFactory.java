@@ -18,7 +18,6 @@
 package org.apache.commons.crypto.cipher;
 
 import java.security.GeneralSecurityException;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
