@@ -49,7 +49,6 @@ public final class Utils {
      * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE} is found.
      */
     private static void loadSystemProperties() {
-        new Throwable().printStackTrace();
         try {
             InputStream is = Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream(ConfigurationKeys.SYSTEM_PROPERTIES_FILE);
