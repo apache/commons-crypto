@@ -51,33 +51,26 @@ public class CryptoRandomFactory {
      */
     public static CryptoRandom getCryptoRandom(Properties props)
             throws GeneralSecurityException {
-        String cryptoRandomClasses = props
-                .getProperty(SECURE_RANDOM_CLASSES_KEY);
+        String cryptoRandomClasses = props.getProperty(SECURE_RANDOM_CLASSES_KEY);
         if (cryptoRandomClasses == null) {
-            cryptoRandomClasses = System
-                    .getProperty(SECURE_RANDOM_CLASSES_KEY);
+            cryptoRandomClasses = System.getProperty(SECURE_RANDOM_CLASSES_KEY);
         }
 
         StringBuilder errorMessage = new StringBuilder();
         CryptoRandom random = null;
-        if (cryptoRandomClasses != null) {
-            for (String klassName : Utils.splitClassNames(cryptoRandomClasses,
-                    ",")) {
-                try {
-                    final Class<?> klass = ReflectionUtils
-                            .getClassByName(klassName);
-                    random = (CryptoRandom) ReflectionUtils.newInstance(klass,
-                            props);
-                    if (random != null) {
-                        break;
-                    }
-                } catch (ClassCastException e) {
-                    errorMessage.append("Class: [" + klassName + "] is not a " +
-                            "CryptoCipher.");
-                } catch (ClassNotFoundException e) {
-                    errorMessage.append("CryptoCipher: [" + klassName + "] " +
-                            "not " + "found.");
+        for (String klassName : Utils.splitClassNames(cryptoRandomClasses, ",")) {
+            try {
+                final Class<?> klass = ReflectionUtils.getClassByName(klassName);
+                random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
+                if (random != null) {
+                    break;
                 }
+            } catch (ClassCastException e) {
+                errorMessage.append("Class: [" + klassName + "] is not a " +
+                        "CryptoCipher.");
+            } catch (ClassNotFoundException e) {
+                errorMessage.append("CryptoCipher: [" + klassName + "] " +
+                        "not " + "found.");
             }
         }
 
