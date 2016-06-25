@@ -136,34 +136,6 @@ public final class Utils {
     }
 
     /**
-     * Gets path of native library.
-     *
-     * @return the path of native library.
-     */
-    public static String getLibPath() {
-        return System.getProperty(ConfigurationKeys.LIB_PATH_KEY);
-    }
-
-    /**
-     * Gets the file name of native library.
-     *
-     * @return the file name of native library.
-     */
-    public static String getLibName() {
-        return System.getProperty(ConfigurationKeys.LIB_NAME_KEY);
-    }
-
-    /**
-     * Gets the temp directory for extracting crypto library.
-     *
-     * @return the temp directory.
-     */
-    public static String getTmpDir() {
-        return System.getProperty(ConfigurationKeys.LIB_TEMPDIR_KEY,
-                System.getProperty("java.io.tmpdir"));
-    }
-
-    /**
      * <p>
      * This method is only for Counter (CTR) mode. Generally the CryptoCipher
      * calculates the IV and maintain encryption context internally.For example

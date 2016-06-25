@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.apache.commons.crypto.utils.Utils;
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 
 /**
  * A helper to load the native code i.e. libcommons-crypto.so. This handles the
@@ -73,8 +73,8 @@ final class NativeCodeLoader {
      */
     private static File findNativeLibrary() {
         // Try to load the library in commons-crypto.lib.path */
-        String nativeLibraryPath = Utils.getLibPath();
-        String nativeLibraryName = Utils.getLibName();
+        String nativeLibraryPath = NativeCodeLoader.getLibPath();
+        String nativeLibraryName = NativeCodeLoader.getLibName();
 
         // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
         if (nativeLibraryName == null) {
@@ -110,7 +110,7 @@ final class NativeCodeLoader {
 
         // Temporary folder for the native lib. Use the value of
         // commons-crypto.tempdir or java.io.tmpdir
-        String tempFolder = new File(Utils.getTmpDir()).getAbsolutePath();
+        String tempFolder = new File(NativeCodeLoader.getTmpDir()).getAbsolutePath();
 
         // Extract and load a native library inside the jar file
         return extractLibraryFile(nativeLibraryPath, nativeLibraryName,
@@ -285,5 +285,33 @@ final class NativeCodeLoader {
      */
     static boolean isNativeCodeLoaded() {
         return nativeCodeLoaded;
+    }
+
+    /**
+     * Gets the temp directory for extracting crypto library.
+     *
+     * @return the temp directory.
+     */
+    private static String getTmpDir() {
+        return System.getProperty(ConfigurationKeys.LIB_TEMPDIR_KEY,
+                System.getProperty("java.io.tmpdir"));
+    }
+
+    /**
+     * Gets the file name of native library.
+     *
+     * @return the file name of native library.
+     */
+    private static String getLibName() {
+        return System.getProperty(ConfigurationKeys.LIB_NAME_KEY);
+    }
+
+    /**
+     * Gets path of native library.
+     *
+     * @return the path of native library.
+     */
+    private static String getLibPath() {
+        return System.getProperty(ConfigurationKeys.LIB_PATH_KEY);
     }
 }
