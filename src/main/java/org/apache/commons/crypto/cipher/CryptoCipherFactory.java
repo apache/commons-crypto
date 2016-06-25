@@ -31,6 +31,12 @@ import org.apache.commons.crypto.utils.Utils;
 public class CryptoCipherFactory {
 
     /**
+     * The default value for crypto cipher.
+     */
+    private static final String CIPHER_CLASSES_DEFAULT = 
+            OpensslCipher.class.getName();
+
+    /**
      * The private Constructor of {@link CryptoCipherFactory}.
      */
     private CryptoCipherFactory() {
@@ -105,11 +111,11 @@ public class CryptoCipherFactory {
     private static String getCipherClassString(Properties props) {
         final String configName = ConfigurationKeys.CIPHER_CLASSES_KEY;
         String cipherClassString = props.getProperty(configName) != null ? props
-                .getProperty(configName, ConfigurationKeys.CIPHER_CLASSES_DEFAULT)
+                .getProperty(configName, CIPHER_CLASSES_DEFAULT)
                 : System.getProperty(configName,
-                ConfigurationKeys.CIPHER_CLASSES_DEFAULT);
+                CIPHER_CLASSES_DEFAULT);
         if (cipherClassString.isEmpty()) {
-            cipherClassString = ConfigurationKeys.CIPHER_CLASSES_DEFAULT;
+            cipherClassString = CIPHER_CLASSES_DEFAULT;
         }
         return cipherClassString;
     }

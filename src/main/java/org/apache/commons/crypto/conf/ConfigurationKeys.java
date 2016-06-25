@@ -17,8 +17,6 @@
  */
 package org.apache.commons.crypto.conf;
 
-import org.apache.commons.crypto.cipher.OpensslCipher;
-
 /**
  * The ConfigurationKeys contains Configuration keys and default values.
  */
@@ -48,12 +46,6 @@ public class ConfigurationKeys {
      */
     public static final String CIPHER_CLASSES_KEY = CONF_PREFIX
             + "cipher.classes";
-
-    /**
-     * The default value for crypto cipher.
-     */
-    public static final String CIPHER_CLASSES_DEFAULT = OpensslCipher.class
-            .getName();
 
     /**
      * The configuration key of the provider class for JCE cipher.
