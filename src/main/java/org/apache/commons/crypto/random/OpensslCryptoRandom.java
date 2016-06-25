@@ -41,7 +41,7 @@ import org.apache.commons.crypto.utils.Utils;
  * @see <a href="http://en.wikipedia.org/wiki/RdRand">
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
-public class OpensslCryptoRandom extends Random implements CryptoRandom {
+class OpensslCryptoRandom extends Random implements CryptoRandom {
     private static final long serialVersionUID = -7828193502768789584L;
 
     /** If native SecureRandom unavailable, use java SecureRandom */
