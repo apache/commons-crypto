@@ -245,7 +245,7 @@ public class CTRCryptoInputStream extends CryptoInputStream {
         this.initIV = iv.clone();
         this.iv = iv.clone();
 
-        Utils.checkStreamCipher(cipher);
+        CryptoInputStream.checkStreamCipher(cipher);
 
         resetStreamOffset(streamOffset);
     }

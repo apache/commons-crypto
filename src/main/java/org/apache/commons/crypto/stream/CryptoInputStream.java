@@ -84,6 +84,8 @@ public class CryptoInputStream extends InputStream implements
      */
     ByteBuffer outBuffer;
 
+    private static final int MIN_BUFFER_SIZE = 512;
+
     /**
      * Constructs a {@link CryptoInputStream}.
      *
@@ -172,7 +174,7 @@ public class CryptoInputStream extends InputStream implements
             Key key, AlgorithmParameterSpec params) throws IOException {
         this.input = input;
         this.cipher = cipher;
-        this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
+        this.bufferSize = CryptoInputStream.checkBufferSize(cipher, bufferSize);
 
         this.key = key;
         this.params = params;
@@ -566,5 +568,32 @@ public class CryptoInputStream extends InputStream implements
     protected void freeBuffers() {
         Utils.freeDirectBuffer(inBuffer);
         Utils.freeDirectBuffer(outBuffer);
+    }
+
+    /**
+     * Checks whether the cipher is supported streaming.
+     *
+     * @param cipher the {@link CryptoCipher} instance.
+     * @throws IOException if an I/O error occurs.
+     */
+    static void checkStreamCipher(CryptoCipher cipher)
+            throws IOException {
+        if (!cipher.getAlgorithm().equals("AES/CTR/NoPadding")) {
+            throw new IOException("AES/CTR/NoPadding is required");
+        }
+    }
+
+    /**
+     * Checks and floors buffer size.
+     *
+     * @param cipher the {@link CryptoCipher} instance.
+     * @param bufferSize the buffer size.
+     * @return the remaining buffer size.
+     */
+    static int checkBufferSize(CryptoCipher cipher, int bufferSize) {
+        Utils.checkArgument(bufferSize >= CryptoInputStream.MIN_BUFFER_SIZE,
+                "Minimum value of buffer size is " + CryptoInputStream.MIN_BUFFER_SIZE + ".");
+        return bufferSize - bufferSize
+                % cipher.getBlockSize();
     }
 }

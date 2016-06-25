@@ -171,7 +171,7 @@ public class CryptoOutputStream extends OutputStream implements
             throws IOException {
 
         this.output = output;
-        this.bufferSize = Utils.checkBufferSize(cipher, bufferSize);
+        this.bufferSize = CryptoInputStream.checkBufferSize(cipher, bufferSize);
         this.cipher = cipher;
 
         this.key = key;

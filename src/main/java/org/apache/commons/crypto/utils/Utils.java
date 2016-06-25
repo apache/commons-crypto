@@ -36,8 +36,6 @@ import org.apache.commons.crypto.conf.ConfigurationKeys;
  */
 public final class Utils {
 
-    private static final int MIN_BUFFER_SIZE = 512;
-
     /**
      * For AES, the algorithm block is fixed size of 128 bits.
      *
@@ -61,6 +59,7 @@ public final class Utils {
      * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE} is found.
      */
     private static void loadSystemProperties() {
+        new Throwable().printStackTrace();
         try {
             InputStream is = Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream(ConfigurationKeys.SYSTEM_PROPERTIES_FILE);
@@ -162,33 +161,6 @@ public final class Utils {
     public static String getTmpDir() {
         return System.getProperty(ConfigurationKeys.LIB_TEMPDIR_KEY,
                 System.getProperty("java.io.tmpdir"));
-    }
-
-    /**
-     * Checks whether the cipher is supported streaming.
-     *
-     * @param cipher the {@link CryptoCipher} instance.
-     * @throws IOException if an I/O error occurs.
-     */
-    public static void checkStreamCipher(CryptoCipher cipher)
-            throws IOException {
-        if (!cipher.getAlgorithm().equals("AES/CTR/NoPadding")) {
-            throw new IOException("AES/CTR/NoPadding is required");
-        }
-    }
-
-    /**
-     * Checks and floors buffer size.
-     *
-     * @param cipher the {@link CryptoCipher} instance.
-     * @param bufferSize the buffer size.
-     * @return the remaining buffer size.
-     */
-    public static int checkBufferSize(CryptoCipher cipher, int bufferSize) {
-        checkArgument(bufferSize >= MIN_BUFFER_SIZE,
-                "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
-        return bufferSize - bufferSize
-                % cipher.getBlockSize();
     }
 
     /**

@@ -243,7 +243,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
         super(output, cipher, bufferSize, new SecretKeySpec(key, "AES"),
                 new IvParameterSpec(iv));
 
-        Utils.checkStreamCipher(cipher);
+        CryptoInputStream.checkStreamCipher(cipher);
         this.streamOffset = streamOffset;
         this.initIV = iv.clone();
         this.iv = iv.clone();
