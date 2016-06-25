@@ -35,14 +35,6 @@ import org.apache.commons.crypto.conf.ConfigurationKeys;
 public final class Utils {
 
     /**
-     * For AES, the algorithm block is fixed size of 128 bits.
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
-     *      http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
-     */
-    private static final int AES_BLOCK_SIZE = 16;
-
-    /**
      * The private constructor of {@Link Utils}.
      */
     private Utils() {
@@ -80,47 +72,6 @@ public final class Utils {
             System.err.println("Could not load '"
                     + ConfigurationKeys.SYSTEM_PROPERTIES_FILE
                     + "' from classpath: " + ex.toString());
-        }
-    }
-
-    /**
-     * <p>
-     * This method is only for Counter (CTR) mode. Generally the CryptoCipher
-     * calculates the IV and maintain encryption context internally.For example
-     * a Cipher will maintain its encryption context internally when we do
-     * encryption/decryption using the CryptoCipher#update interface.
-     * </p>
-     * <p>
-     * Encryption/Decryption is not always on the entire file. For example, in
-     * Hadoop, a node may only decrypt a portion of a file (i.e. a split). In
-     * these situations, the counter is derived from the file position.
-     * </p>
-     * The IV can be calculated by combining the initial IV and the counter with
-     * a lossless operation (concatenation, addition, or XOR).
-     *
-     * @see <a
-     *      href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">
-     *      http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29</a>
-     *
-     * @param initIV initial IV
-     * @param counter counter for input stream position
-     * @param IV the IV for input stream position
-     */
-    public static void calculateIV(byte[] initIV, long counter, byte[] IV) {
-        checkArgument(initIV.length == AES_BLOCK_SIZE);
-        checkArgument(IV.length == AES_BLOCK_SIZE);
-
-        int i = IV.length; // IV length
-        int j = 0; // counter bytes index
-        int sum = 0;
-        while (i-- > 0) {
-            // (sum >>> Byte.SIZE) is the carry for addition
-            sum = (initIV[i] & 0xff) + (sum >>> Byte.SIZE); // NOPMD
-            if (j++ < 8) { // Big-endian, and long is 8 bytes length
-                sum += (byte) counter & 0xff;
-                counter >>>= 8;
-            }
-            IV[i] = (byte) sum;
         }
     }
 

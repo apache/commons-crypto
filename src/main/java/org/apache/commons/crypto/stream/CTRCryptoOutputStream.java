@@ -325,7 +325,7 @@ public class CTRCryptoOutputStream extends CryptoOutputStream {
         padding = (byte) (streamOffset % cipher.getBlockSize());
         inBuffer.position(padding); // Set proper position for input data.
 
-        Utils.calculateIV(initIV, counter, iv);
+        CTRCryptoInputStream.calculateIV(initIV, counter, iv);
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
         } catch (InvalidKeyException e) {

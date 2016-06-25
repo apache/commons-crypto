@@ -296,7 +296,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     private void resetCipher(CipherState state, long position, byte[] iv)
             throws IOException {
         final long counter = getCounter(position);
-        Utils.calculateIV(getInitIV(), counter, iv);
+        CTRCryptoInputStream.calculateIV(getInitIV(), counter, iv);
         try {
             state.getCipher().init(Cipher.DECRYPT_MODE, key,
                     new IvParameterSpec(iv));
