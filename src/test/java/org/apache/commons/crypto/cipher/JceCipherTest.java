@@ -35,7 +35,7 @@ public class JceCipherTest extends AbstractCipherTest {
                 "AES/CBC/NoPadding",
                 "AES/CBC/PKCS5Padding",
                 "AES/CTR/NoPadding"};
-        cipherClass = JceCipher.class.getName();
+        cipherClass = JCE_CIPHER_CLASSNAME;
     }
 
     @BeforeClass

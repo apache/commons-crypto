@@ -37,7 +37,7 @@ public class OpensslCipherTest extends AbstractCipherTest {
                 "AES/CBC/NoPadding",
                 "AES/CBC/PKCS5Padding",
                 "AES/CTR/NoPadding"};
-        cipherClass = OpensslCipher.class.getName();
+        cipherClass = OPENSSL_CIPHER_CLASSNAME;
     }
 
     @Test(expected = NoSuchAlgorithmException.class, timeout = 120000)

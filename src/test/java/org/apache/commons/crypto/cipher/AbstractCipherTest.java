@@ -37,6 +37,10 @@ import org.junit.Test;
 
 public abstract class AbstractCipherTest {
 
+    public static final String OPENSSL_CIPHER_CLASSNAME = OpensslCipher.class.getName();
+
+    public static final String JCE_CIPHER_CLASSNAME = JceCipher.class.getName();
+
     // data
     public static final int BYTEBUFFER_SIZE = 1000;
     public String[] cipherTests = null;
