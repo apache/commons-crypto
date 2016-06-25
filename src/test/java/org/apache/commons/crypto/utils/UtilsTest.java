@@ -37,4 +37,8 @@ public class UtilsTest {
         clazzNames = Utils.splitClassNames("a, b,", ",");
         Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
     }
+    @Test
+    public void testSplitNull() {
+        Assert.assertEquals(Collections.<String> emptyList(), Utils.splitClassNames(null, ","));
+    }
 }
