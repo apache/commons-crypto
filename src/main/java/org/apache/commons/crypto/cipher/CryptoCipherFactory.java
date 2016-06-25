@@ -54,22 +54,19 @@ public class CryptoCipherFactory {
     public static CryptoCipher getInstance(String transformation,
             Properties props) throws GeneralSecurityException {
 
-        List<String> klasses =  Utils.splitClassNames(getCipherClassString(props), ",");
         CryptoCipher cipher = null;
 
         StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
-        if (klasses != null) {
-            for (String klass : klasses) {
-                try {
-                    Class<?> cls = ReflectionUtils.getClassByName(klass);
-                    cipher = ReflectionUtils.newInstance(cls.asSubclass
-                            (CryptoCipher.class), props, transformation);
-                    if (cipher != null) {
-                        break;
-                    }
-                } catch (Exception e) {
-                    errorMessage.append("{" + klass + "}");
+        for (String klass : Utils.splitClassNames(getCipherClassString(props), ",")) {
+            try {
+                Class<?> cls = ReflectionUtils.getClassByName(klass);
+                cipher = ReflectionUtils.newInstance(cls.asSubclass
+                        (CryptoCipher.class), props, transformation);
+                if (cipher != null) {
+                    break;
                 }
+            } catch (Exception e) {
+                errorMessage.append("{" + klass + "}");
             }
         }
 
