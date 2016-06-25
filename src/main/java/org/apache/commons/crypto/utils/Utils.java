@@ -19,8 +19,6 @@ package org.apache.commons.crypto.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -82,36 +80,6 @@ public final class Utils {
             System.err.println("Could not load '"
                     + ConfigurationKeys.SYSTEM_PROPERTIES_FILE
                     + "' from classpath: " + ex.toString());
-        }
-    }
-
-    /**
-     * Forcibly free the direct buffer.
-     *
-     * @param buffer the bytebuffer to be freed.
-     */
-    public static void freeDirectBuffer(ByteBuffer buffer) {
-        try {
-            /* Using reflection to implement sun.nio.ch.DirectBuffer.cleaner()
-            .clean(); */
-            final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
-            Class<?>[] interfaces = buffer.getClass().getInterfaces();
-
-            for (Class<?> clazz : interfaces) {
-                if (clazz.getName().equals(SUN_CLASS)) {
-                    final Object[] NO_PARAM = new Object[0];
-                    /* DirectBuffer#cleaner() */
-                    Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
-                    Object cleaner = getCleaner.invoke(buffer, NO_PARAM);
-                    /* Cleaner#clean() */
-                    Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
-                    cleanMethod.invoke(cleaner, NO_PARAM);
-                    return;
-                }
-            }
-        } catch (ReflectiveOperationException e) { // NOPMD
-            // Ignore the Reflection exception.
-
         }
     }
 

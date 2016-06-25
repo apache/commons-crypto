@@ -402,8 +402,8 @@ public class CryptoOutputStream extends OutputStream implements
 
     /** Forcibly free the direct buffers. */
     protected void freeBuffers() {
-        Utils.freeDirectBuffer(inBuffer);
-        Utils.freeDirectBuffer(outBuffer);
+        CryptoInputStream.freeDirectBuffer(inBuffer);
+        CryptoInputStream.freeDirectBuffer(outBuffer);
     }
 
     /**
