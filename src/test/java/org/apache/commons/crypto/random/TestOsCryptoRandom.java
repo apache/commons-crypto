@@ -17,12 +17,26 @@
  */
 package org.apache.commons.crypto.random;
 
+import static org.junit.Assert.fail;
+
+import java.security.GeneralSecurityException;
 import java.util.Properties;
+
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 
 public class TestOsCryptoRandom extends AbstractRandomTest {
 
     @Override
-    public CryptoRandom getCryptoRandom() {
-        return new OsCryptoRandom(new Properties());
+    public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
+        Properties props = new Properties();
+        props.setProperty(
+                ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
+                OsCryptoRandom.class.getName());
+        CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+        if (!(random instanceof OsCryptoRandom)) {
+            fail("The CryptoRandom should be: "
+                    + OsCryptoRandom.class.getName());
+        }
+        return random;
     }
 }
