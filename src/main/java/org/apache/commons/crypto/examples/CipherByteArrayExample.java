@@ -28,6 +28,9 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.utils.Utils;
 
+/**
+ * Example showing use of the CryptoCipher API using a byte array
+ */
 public class CipherByteArrayExample {
 
     /**
