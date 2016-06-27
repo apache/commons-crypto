@@ -271,6 +271,41 @@ The following provides more details on the included cryptographic software:
         <target.name>linux-aarch64</target.name>
       </properties>
     </profile>
+    <profile>
+      <id>jacoco</id>
+      <activation>
+        <file>
+          <exists>src/site/resources/profile.jacoco</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/examples/*</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${commons.jacoco.version}</version>
+            <configuration>
+              <excludes>
+                <exclude>**/examples/*</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
   </profiles>
   <licenses>
     <license>
