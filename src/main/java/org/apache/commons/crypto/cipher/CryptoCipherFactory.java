@@ -47,9 +47,9 @@ public class CryptoCipherFactory {
      * @param props  the configuration properties 
      *      (uses ConfigurationKeys.ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY and ConfigurationKeys.CIPHER_CLASSES_KEY)
      * @param transformation  algorithm/mode/padding
-     * @return CryptoCipher the cipher. Null value will be returned if no cipher
-     *         classes with transformation configured.
+     * @return CryptoCipher the cipher
      * @throws GeneralSecurityException if cipher initialize failed
+     * @throws IllegalArgumentException if no classname(s) are provided and fallback is disabled
      */
     public static CryptoCipher getInstance(String transformation,
             Properties props) throws GeneralSecurityException {
@@ -75,6 +75,9 @@ public class CryptoCipherFactory {
         } else if (Utils.isFallbackEnabled(props)) {
             return new JceCipher(props,transformation);
         } else {
+            if (errorMessage.length() == 0) {
+                throw new IllegalArgumentException("No classname(s) provided, and fallback is not enabled");
+            }
             errorMessage.append(" is not available or transformation " +
                     transformation + " is not supported.");
             throw new GeneralSecurityException(errorMessage.toString());
