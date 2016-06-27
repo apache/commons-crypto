@@ -44,10 +44,9 @@ public class CryptoRandomFactory {
      * The properties are passed to the generated class.
      *
      * @param props the configuration properties.
-     * @return CryptoRandom the cryptoRandom object.Null value will be returned
-     *         if no CryptoRandom classes with props.
-     * @throws GeneralSecurityException if fail to create the
-     *         {@link CryptoRandom}.
+     * @return CryptoRandom  the cryptoRandom object.
+     * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
+     * @throws IllegalArgumentException if no classname(s) are provided and fallback is disabled
      */
     public static CryptoRandom getCryptoRandom(Properties props)
             throws GeneralSecurityException {
@@ -66,11 +65,9 @@ public class CryptoRandomFactory {
                     break;
                 }
             } catch (ClassCastException e) {
-                errorMessage.append("Class: [" + klassName + "] is not a " +
-                        "CryptoCipher.");
+                errorMessage.append("Class: [" + klassName + "] is not a CryptoRandom.");
             } catch (ClassNotFoundException e) {
-                errorMessage.append("CryptoCipher: [" + klassName + "] " +
-                        "not " + "found.");
+                errorMessage.append("CryptoRandom: [" + klassName + "] not found.");
             }
         }
 
@@ -79,6 +76,9 @@ public class CryptoRandomFactory {
         } else if (Utils.isFallbackEnabled(props)) {
             return  new JavaCryptoRandom(props);
         } else {
+            if (errorMessage.length() == 0) {
+                throw new IllegalArgumentException("No classname(s) provided, and fallback is not enabled");
+            }
             throw new GeneralSecurityException(errorMessage.toString());
         }
     }
