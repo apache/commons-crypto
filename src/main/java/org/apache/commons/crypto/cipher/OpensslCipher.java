@@ -46,8 +46,8 @@ class OpensslCipher implements CryptoCipher {
     /**
      * Constructs a {@link CryptoCipher} using JNI into OpenSSL
      *
-     * @param props properties for OpenSSL cipher
-     * @param transformation transformation for OpenSSL cipher
+     * @param props  properties for OpenSSL cipher (unused)
+     * @param transformation  transformation for OpenSSL cipher (algorithm/mode/padding)
      * @throws GeneralSecurityException if OpenSSL cipher initialize failed
      */
     public OpensslCipher(Properties props, String transformation) // NOPMD

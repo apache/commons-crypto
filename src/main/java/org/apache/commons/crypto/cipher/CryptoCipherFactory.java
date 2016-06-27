@@ -44,8 +44,9 @@ public class CryptoCipherFactory {
     /**
      * Gets a cipher instance for specified algorithm/mode/padding.
      *
-     * @param props the configuration properties
-     * @param transformation algorithm/mode/padding
+     * @param props  the configuration properties 
+     *      (uses ConfigurationKeys.ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY and ConfigurationKeys.CIPHER_CLASSES_KEY)
+     * @param transformation  algorithm/mode/padding
      * @return CryptoCipher the cipher. Null value will be returned if no cipher
      *         classes with transformation configured.
      * @throws GeneralSecurityException if cipher initialize failed

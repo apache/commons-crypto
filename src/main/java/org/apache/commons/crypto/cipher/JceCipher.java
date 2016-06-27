@@ -42,8 +42,8 @@ class JceCipher implements CryptoCipher {
     /**
      * Constructs a {@link CryptoCipher} based on JCE Cipher {@link Cipher}.
      *
-     * @param props properties for JCE cipher
-     * @param transformation transformation for JCE cipher
+     * @param props  properties for JCE cipher (only uses ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY)
+     * @param transformation  transformation for JCE cipher (algorithm/mode/padding)
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
     public JceCipher(Properties props, String transformation)
