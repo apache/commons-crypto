@@ -61,7 +61,7 @@ public class ConfigurationKeys {
             + "secure.random.device.file.path";
 
     /**
-     * The default value of the file path for secure random device.
+     * The default value ({@value}) of the file path for secure random device.
      */
     public static final String SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT = "/dev/urandom";
 
@@ -72,7 +72,7 @@ public class ConfigurationKeys {
             + "secure.random.java.algorithm";
 
     /**
-     * The default value of the algorithm of secure random.
+     * The default value ({@value}) of the algorithm of secure random.
      */
     public static final String SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT = "SHA1PRNG";
 

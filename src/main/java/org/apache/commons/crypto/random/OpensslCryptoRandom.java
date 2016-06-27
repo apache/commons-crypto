@@ -73,7 +73,8 @@ class OpensslCryptoRandom extends Random implements CryptoRandom {
     /**
      * Constructs a {@link OpensslCryptoRandom}.
      *
-     * @param props the configuration properties.
+     * @param props the configuration properties
+     * Only used to construct the fallback {@link JavaCryptoRandom} instance
      * @throws NoSuchAlgorithmException if no Provider supports a
      *         SecureRandomSpi implementation for the specified algorithm.
      */

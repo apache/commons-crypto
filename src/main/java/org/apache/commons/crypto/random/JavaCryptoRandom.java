@@ -34,6 +34,9 @@ public class JavaCryptoRandom implements CryptoRandom {
      * Constructs a {@link JavaCryptoRandom}.
      *
      * @param properties the configuration properties.
+     * Uses the key {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_KEY}
+     * to get the name of the algorithm, with a default of
+     * {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT}
      * @throws NoSuchAlgorithmException if no Provider supports a
      *         SecureRandomSpi implementation for the specified algorithm.
      */

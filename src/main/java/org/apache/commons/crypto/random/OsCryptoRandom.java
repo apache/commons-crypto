@@ -64,6 +64,9 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      * Constructs a {@link OsCryptoRandom}.
      *
      * @param props the configuration properties.
+     * Uses {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_KEY} to determine the
+     * path to the random device, default is
+     * {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT}
      */
     public OsCryptoRandom(Properties props) {
         randomDevPath = getRandomDevPath(props);
