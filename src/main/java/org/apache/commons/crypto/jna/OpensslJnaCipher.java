@@ -78,7 +78,7 @@ public class OpensslJnaCipher implements CryptoCipher {
     /**
      * Initializes the cipher with mode, key and iv.
      *
-     * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+     * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
      * @param key crypto key for the cipher
      * @param params the algorithm parameters
      * @throws InvalidKeyException If key length is invalid
