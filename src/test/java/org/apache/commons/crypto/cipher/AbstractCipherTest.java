@@ -74,6 +74,45 @@ public abstract class AbstractCipherTest {
     protected abstract void init();
 
     @Test
+    public void closeTestNoInit() throws Exception {
+        CryptoCipher enc = getCipher(transformations[0]);
+        enc.close();
+    }
+
+    @Test
+    public void closeTestAfterInit() throws Exception {
+        CryptoCipher enc = getCipher(transformations[0]);
+        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        enc.close();
+    }
+
+    @Test
+    public void reInitTest() throws Exception {
+        CryptoCipher enc = getCipher(transformations[0]);
+        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        enc.close();
+    }
+
+    @Test
+    public void reInitAfterClose() throws Exception {
+        CryptoCipher enc = getCipher(transformations[0]);
+        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        enc.close();
+        enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        enc.close();
+    }
+
+    @Test
+    public void closeTestRepeat() throws Exception {
+        CryptoCipher enc = getCipher(transformations[0]);
+        enc.close();
+        enc.close(); // repeat the close
+        enc.close();
+    }
+
+    @Test
     public void cryptoTest() throws GeneralSecurityException {
         for (String tran : transformations) {
             /** uses the small data set in {@link TestData} */
