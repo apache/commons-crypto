@@ -36,8 +36,6 @@ class OsCryptoRandom extends Random implements CryptoRandom {
 
     private static final int RESERVOIR_LENGTH = 8192;
 
-    private String randomDevPath;
-
     private transient FileInputStream stream;
 
     private final byte[] reservoir = new byte[RESERVOIR_LENGTH];
@@ -69,8 +67,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      * {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT}
      */
     public OsCryptoRandom(Properties props) {
-        randomDevPath = getRandomDevPath(props);
-        File randomDevFile = new File(randomDevPath);
+        File randomDevFile = new File(getRandomDevPath(props));
 
         try {
             close();
