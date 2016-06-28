@@ -59,7 +59,6 @@
       </subsection>
 
       <subsection name ="Usage">
-        <ol style="list-style-type: decimal">
           <h4>Prerequisites</h4>
           <p>
             Commons Crypto relies on standard JDK 1.7 (or above) and OpenSSL 1.0.1c (or above) for production
@@ -68,36 +67,22 @@
           <h4>Using Commons Crypto in your Apache Maven build</h4>
           <p>
             To build with Apache Maven, add the dependencies listed below to your pom.xml file.
-            <br/>
-            &lt;dependency&gt;<br/>
-            &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;<br/>
-            &lt;artifactId&gt;commons-crypto&lt;/artifactId&gt;<br/>
-            &lt;version&gt;1.0.0&lt;/version&gt;<br/>
-            &lt;/dependency&gt;<br/>
           </p>
+<pre>
+&lt;dependency&gt;<br/>
+    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;<br/>
+    &lt;artifactId&gt;commons-crypto&lt;/artifactId&gt;<br/>
+    &lt;version&gt;1.0.0&lt;/version&gt;<br/>
+&lt;/dependency&gt;<br/>
+</pre>
         <h4>Usage of Random API</h4>
         <p>
           CryptoRandom provides a cryptographically strong random number generators.
           The default implementation will use Intel® Digital Random Number Generator (DRNG)
           for accelerating the random generation.
         </p>
-        <table>
-          <tr>
-            <td>
-              //Constructs a byte array to store random data.<br/>
-              byte[] key = new byte[16];<br/>
-              byte[] iv = new byte[16];<br/>
-              Properties properties = new Properties();<br/>
-              //Gets the 'CryptoRandom' instance.<br/>
-              CryptoRandom CryptoRandom = CryptoRandomFactory.getCryptoRandom(properties);<br/>
-              //Generates random bytes and places them into the byte array.<br/>
-              CryptoRandom.nextBytes(key);<br/>
-              CryptoRandom.nextBytes(iv);<br/>
-              //Closes the CryptoRandom.<br/>
-              CryptoRandom.close();<br/>
-            </td>
-          </tr>
-        </table>
+
+        <a href="xref/org/apache/commons/crypto/examples/RandomExample.html">RandomExample.java</a>
 
         <h4>Usage of Cipher API</h4>
         <p>
@@ -107,51 +92,13 @@
           Intel® AES New Instructions (Intel® AES NI).
         </p>
         <h5>Usage of Byte Array Encryption/Decryption</h5>
-        <table>
-          <tr>
-            <td>
-              Properties properties = new Properties();<br/>
-              //Creates a CryptoCipher instance with the transformation and properties.<br/>
-              CryptoCipher cipher = Utils.getCipherInstance("AES/CTR/NoPadding", properties);<br/><br/>
-              String input = "hello world!";<br/>
-              int inputOffset = 0;<br/>
-              int inputLen = input.length();<br/>
-              byte[] output = new byte[1024];<br/>
-              int outputOffset = 0;<br/>
-              //Initializes the cipher with ENCRYPT_MODE, key and iv.<br/>
-              cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
-              //Continues a multiple-part encryption/decryption operation for byte array.<br/>
-              cipher.update(input.getBytes("UTF-8"), inputOffset, inputLen, output, outputOffset);<br/>
-              //We should call do final at the end of encryption/decryption.<br/>
-              cipher.doFinal(inBuffer, outBuffer);<br/>
-              //Closes the cipher.<br/>
-              cipher.close();
-            </td>
-          </tr>
-        </table>
+
+        <a href="xref/org/apache/commons/crypto/examples/CipherByteArrayExample.html">CipherByteArrayExample.java</a>
 
         <h5>Usage of ByteBuffer Encryption/Decryption</h5>
-        <table>
-          <tr>
-            <td>
-              Properties properties = new Properties();<br/>
-              //Creates a Cipher instance with the transformation and properties.<br/>
-              CryptoCipher cipher = Utils.getCipherInstance("AES/CTR/NoPadding", properties);<br/><br/>
-              int bufferSize = 4096;<br/>
-              ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
-              ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);<br/>
-              inBuffer.put("The data you want to encrypt or decrypt".getBytes("UTF-8"));<br/>
-              //Initializes the cipher with ENCRYPT_MODE,key and iv.<br/>
-              cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
-              //Continues a multiple-part encryption/decryption operation for byte array.<br/>
-              cipher.update(inBuffer, outBuffer);<br/>
-              //We should call do final at the end of encryption/decryption.<br/>
-              cipher.doFinal(inBuffer, outBuffer);<br/>
-              //Closes the cipher.<br/>
-              cipher.close();
-            </td>
-          </tr>
-        </table>
+
+        <a href="xref/org/apache/commons/crypto/examples/CipherByteBufferExample.html">CipherByteBufferExample.java</a>
+
 
         <h4>Usage of Stream API</h4>
         <p>
@@ -159,45 +106,10 @@
           CTRCryptoInputStream, PositionedCryptoInputStream implementations for InputStream and CryptoOutputStream,
           CTRCryptoOutputStream implementations for OutputStream.
         </p>
-        <h5>Usage of stream encryption</h5>
-        <table>
-          <tr>
-            <td>
-              int bufferSize = 4096;<br/>
-              String input = "hello world!";<br/>
-              byte[] decryptedData = new byte[1024];<br/>
-              //Encryption with CryptoOutputStream.<br/>
-              // Constructs the original OutputStream.<br/>
-              OutputStream outputStream = new ByteArrayOutputStream();<br/>
-              //Creates a CryptoCipher instance with the transformation and properties.<br/>
-              CryptoCipher cipher = Utils.getCipherInstance("AES/CTR/NoPadding", properties);<br/><br/>
-              //Constructs the instance of CryptoOutputStream.<br/>
-              CryptoOutputStream cos = new CryptoOutputStream(outputStream, cipher, bufferSize,<br/>
-                                                              new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
-              cos.write(input.getBytes("UTF-8"));<br/>
-              cos.flush();<br/>
-              cos.close();<br/>
-            </td>
-          </tr>
-        </table>
-        <h5>Usage of stream decryption</h5>
-        <table>
-          <tr>
-            <td>
-              // Decryption with CryptoInputStream.<br/>
-              //Constructs the original InputStream.<br/>
-              InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());<br/>
-              //Creates a CryptoCipher instance with the transformation and properties.<br/>
-              CryptoCipher cipher = Utils.getCipherInstance(C"AES/CTR/NoPadding", properties);<br/><br/>
-              //Constructs the instance of CryptoInputStream.<br/>
-              CryptoInputStream cis = new CryptoInputStream(inputStream, cipher, bufferSize, <br/>
-                                                            new SecretKeySpec(key,"AES"), new IvParameterSpec(iv));<br/>
-              int decryptedLen = cis.read(decryptedData, 0, 1024);<br/>
-              cis.close();<br/>
-            </td>
-          </tr>
-        </table>
-        </ol>
+        <h5>Usage of stream encryption/decryption</h5>
+
+        <a href="xref/org/apache/commons/crypto/examples/StreamExample.html">StreamExample.java</a>
+
       </subsection>
     </section>
   </body>
