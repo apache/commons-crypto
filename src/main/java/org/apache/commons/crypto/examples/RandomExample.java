@@ -31,13 +31,6 @@ import org.apache.commons.crypto.random.CryptoRandomFactory;
  */
 public class RandomExample {
 
-    /**
-     * Main method
-     *
-     * @param args args of main
-     * @throws GeneralSecurityException when encryption/decryption failed
-     * @throws IOException when io failed
-     */
     public static void main(String []args) throws GeneralSecurityException, IOException {
         //Constructs a byte array to store random data.
         byte[] key = new byte[16];

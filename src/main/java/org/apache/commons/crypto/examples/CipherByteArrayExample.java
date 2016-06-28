@@ -33,29 +33,16 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class CipherByteArrayExample {
 
-    /**
-     * Converts String to UTF8 bytes
-     *
-     * @param input the input string
-     * @return UTF8 bytes
-     */
-    private static byte[] getUTF8Bytes(String input) {
-        return input.getBytes(StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Main method
-     *
-     * @param args args of main
-     * @throws Exception when encryption/decryption failed
-     */
     public static void main(String[] args) throws Exception {
+
         final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"),"AES");
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
+
         Properties properties = new Properties();
         //Creates a CryptoCipher instance with the transformation and properties.
         final String transform = "AES/CBC/PKCS5Padding";
         CryptoCipher encipher = Utils.getCipherInstance(transform, properties);
+        System.out.println("Cipher:  " + encipher.getClass().getCanonicalName());
 
         final String sampleInput = "hello world!";
         System.out.println("input:  " + sampleInput);
@@ -68,7 +55,7 @@ public class CipherByteArrayExample {
         //Continues a multiple-part encryption/decryption operation for byte array.
         int updateBytes = encipher.update(input, 0, input.length, output, 0);
         System.out.println(updateBytes);
-        //We should call do final at the end of encryption/decryption.
+        //We must call doFinal at the end of encryption/decryption.
         int finalBytes = encipher.doFinal(input, 0, 0, output, updateBytes);
         System.out.println(finalBytes);
         //Closes the cipher.
@@ -83,6 +70,16 @@ public class CipherByteArrayExample {
         decipher.doFinal(output, 0, updateBytes + finalBytes, decoded, 0);
 
         System.out.println("output: " + new String(decoded, StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Converts String to UTF8 bytes
+     *
+     * @param input the input string
+     * @return UTF8 bytes
+     */
+    private static byte[] getUTF8Bytes(String input) {
+        return input.getBytes(StandardCharsets.UTF_8);
     }
 
 }
