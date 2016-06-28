@@ -189,6 +189,7 @@ The following provides more details on the included cryptographic software:
     <commons.release.version>1.0.0</commons.release.version>
     <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
     <commons.rc.version>RC1</commons.rc.version>
+    <jna.version>4.2.2</jna.version>
 
     <!-- properties not related to versioning -->
     <commons.jira.id>CRYPTO</commons.jira.id>
@@ -535,5 +536,10 @@ The following provides more details on the included cryptographic software:
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>${jna.version}</version>
+      </dependency>
   </dependencies>
 </project>

@@ -97,6 +97,7 @@ public class PositionedCryptoInputStreamTest {
     public void doTest() throws Exception {
         testCipher(AbstractCipherTest.JCE_CIPHER_CLASSNAME);
         testCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME);
+        testCipher(AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME);
     }
 
     private void testCipher(String cipherClass) throws Exception {

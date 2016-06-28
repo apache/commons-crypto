@@ -17,6 +17,8 @@
  */
 package org.apache.commons.crypto.cipher;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
@@ -29,6 +31,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
+import org.apache.commons.crypto.jna.OpensslJnaCipher;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 import org.junit.Assert;
@@ -41,12 +44,15 @@ public abstract class AbstractCipherTest {
 
     public static final String JCE_CIPHER_CLASSNAME = JceCipher.class.getName();
 
+    public static final String OPENSSLJNA_CIPHER_CLASSNAME = OpensslJnaCipher.class.getName();
+
     // data
     public static final int BYTEBUFFER_SIZE = 1000;
+
     public String[] cipherTests = null;
     Properties props = null;
-    String cipherClass = null;
-    String[] transformations = null;
+    protected String cipherClass = null;
+    protected String[] transformations = null;
 
     // cipher
     static final byte[] KEY = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
@@ -72,6 +78,7 @@ public abstract class AbstractCipherTest {
         for (String tran : transformations) {
             /** uses the small data set in {@link TestData} */
             cipherTests = TestData.getTestData(tran);
+            assertNotNull(tran, cipherTests);
             for (int i = 0; i != cipherTests.length; i += 5) {
                 byte[] key = DatatypeConverter
                         .parseHexBinary(cipherTests[i + 1]);
