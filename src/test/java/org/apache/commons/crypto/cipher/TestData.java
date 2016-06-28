@@ -22,11 +22,11 @@ import java.util.Map;
 
 public class TestData {
 
-    private static String[] CBCNoPaddingTests = {
+    private static final String[] CBCNoPaddingTests = {
     /*
      * key_len,key,iv,plainText,cipherText
      */
-    "128", "2b7e151628aed2a6abf7158809cf4f3c",
+            "128", "2b7e151628aed2a6abf7158809cf4f3c",
             "000102030405060708090a0b0c0d0e0f",
             "6bc1bee22e409f96e93d7e117393172a",
             "7649abac8119b246cee98e9b12e9197d",
@@ -136,12 +136,11 @@ public class TestData {
             "f0f1f2f3f4f5f6f7f8f9fafbfcfdff01",
             "30c81c46a35ce411e5fbc1191a0a52", "2b0930daa23de94ce87017ba2d8498" };
 
-    private static Map<String, String[]> testData = new HashMap<>();
+    private static final Map<String, String[]> testData = new HashMap<>();
 
     static {
         testData.put("AES/CBC/NoPadding", CBCNoPaddingTests);
-        testData.put("AES/CBC/PKCS5Padding",
-                CBCPKCS5PaddingTests);
+        testData.put("AES/CBC/PKCS5Padding", CBCPKCS5PaddingTests);
         testData.put("AES/CTR/NoPadding", cipherCTRTests);
     }
 
