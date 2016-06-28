@@ -43,7 +43,7 @@ import com.sun.jna.ptr.PointerByReference;
 /**
  * Implements the CryptoCipher using JNA into OpenSSL.
  */
-public class OpensslJnaCipher implements CryptoCipher {
+class OpensslJnaCipher implements CryptoCipher {
 
     private final static int AES_BLOCK_SIZE = 16;
     
