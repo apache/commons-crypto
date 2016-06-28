@@ -30,7 +30,7 @@ import org.apache.commons.crypto.utils.Utils;
 public class CryptoCipherFactory {
 
     /**
-     * The default value for crypto cipher.
+     * The default value (OpensslCipher) for crypto cipher.
      */
     private static final String CIPHER_CLASSES_DEFAULT = 
             OpensslCipher.class.getName();
@@ -47,7 +47,7 @@ public class CryptoCipherFactory {
      * @param props  the configuration properties 
      *      (uses ConfigurationKeys.ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY and ConfigurationKeys.CIPHER_CLASSES_KEY)
      * @param transformation  algorithm/mode/padding
-     * @return CryptoCipher the cipher
+     * @return CryptoCipher  the cipher  (defaults to OpensslCipher if available, else JceCipher)
      * @throws GeneralSecurityException if cipher initialize failed
      * @throws IllegalArgumentException if no classname(s) are provided and fallback is disabled
      */
@@ -92,8 +92,7 @@ public class CryptoCipherFactory {
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @return CryptoCipher the cipher object Null value will be returned if no
-     *         cipher classes with transformation configured.
+     * @return CryptoCipher the cipher object (defaults to OpensslCipher if available, else JceCipher)
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
     public static CryptoCipher getInstance(String transformation)
