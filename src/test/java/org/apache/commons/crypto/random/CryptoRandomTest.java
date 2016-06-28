@@ -24,7 +24,7 @@ import java.util.Properties;
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.junit.Test;
 
-public class TestCryptoRandom {
+public class CryptoRandomTest {
 
     @Test(expected=NullPointerException.class)
     public void testNull() throws Exception {

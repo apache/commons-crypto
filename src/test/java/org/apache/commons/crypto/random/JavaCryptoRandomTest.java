@@ -23,7 +23,7 @@ import java.util.Properties;
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 import static org.junit.Assert.fail;
 
-public class TestJavaCryptoRandom extends AbstractRandomTest {
+public class JavaCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {

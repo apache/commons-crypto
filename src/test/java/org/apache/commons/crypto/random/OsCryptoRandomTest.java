@@ -24,7 +24,7 @@ import java.util.Properties;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 
-public class TestOsCryptoRandom extends AbstractRandomTest {
+public class OsCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
