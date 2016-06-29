@@ -173,8 +173,6 @@ public class CryptoBenchmark {
     private CryptoCipher getCipher(String className) throws Exception {
         Properties properties = new Properties();
         properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY, className);
-        properties.setProperty(ConfigurationKeys.ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY, "false");
-
         CryptoCipher cipher = CryptoCipherFactory.getInstance("AES/CBC/PKCS5Padding", properties);
         Assert.assertEquals(className, cipher.getClass().getCanonicalName());
         return cipher;
