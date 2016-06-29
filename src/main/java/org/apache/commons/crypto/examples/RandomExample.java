@@ -38,7 +38,7 @@ public class RandomExample {
 
         Properties properties = new Properties();
         properties.put(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
-                "org.apache.commons.crypto.random.OpensslCryptoRandom"); // TODO replace with alias
+            CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
 
         //Gets the 'CryptoRandom' instance.
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties);

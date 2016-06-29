@@ -30,6 +30,55 @@ import static org.apache.commons.crypto.conf.ConfigurationKeys.SECURE_RANDOM_CLA
 public class CryptoRandomFactory {
 
     /**
+     * Defines the internal CryptoRandom implementations.
+     * <p>
+     * Usage:
+     * <p>
+     * <code>
+     * props.setProperty(RANDOM_CLASSES_KEY,
+     *  CipherProvider.OPENSSL.getClassName());
+     * </code>
+     */
+    public enum RandomProvider {
+
+        OPENSSL(OpensslCryptoRandom.class),
+        JCE(JavaCryptoRandom.class),
+        OS(OsCryptoRandom.class);
+
+        private final Class<? extends CryptoRandom> klass;
+
+        private final String className;
+
+        /**
+         * Constructs a RandomProvider.
+         *
+         * @param klass the implementation of provider
+         */
+        private RandomProvider(Class<? extends CryptoRandom> klass) {
+            this.klass = klass;
+            this.className = klass.getName();
+        }
+
+        /**
+         * Gets the class name of the provider.
+         *
+         * @return the name of the provider class
+         */
+        public String getClassName() {
+            return className;
+        }
+
+        /**
+         * Gets the implementation class of the provider.
+         *
+         * @return the implementation class of the provider
+         */
+        public Class<? extends CryptoRandom> getImplClass() {
+            return klass;
+        }
+    }
+
+    /**
      * The private constructor of {@Link CryptoRandomFactory}.
      */
     private CryptoRandomFactory() {

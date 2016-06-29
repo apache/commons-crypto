@@ -26,7 +26,9 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.cipher.CryptoCipherFactory.CipherProvider;
 import org.apache.commons.crypto.utils.Utils;
+import static org.apache.commons.crypto.conf.ConfigurationKeys.CIPHER_CLASSES_KEY;
 
 /**
  * Example showing use of the CryptoCipher API using a byte array
@@ -39,6 +41,7 @@ public class CipherByteArrayExample {
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
 
         Properties properties = new Properties();
+        properties.setProperty(CIPHER_CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
         //Creates a CryptoCipher instance with the transformation and properties.
         final String transform = "AES/CBC/PKCS5Padding";
         CryptoCipher encipher = Utils.getCipherInstance(transform, properties);
@@ -48,7 +51,7 @@ public class CipherByteArrayExample {
         System.out.println("input:  " + sampleInput);
 
         byte[] input = getUTF8Bytes(sampleInput);
-        byte[] output = new byte[32]; 
+        byte[] output = new byte[32];
 
         //Initializes the cipher with ENCRYPT_MODE, key and iv.
         encipher.init(Cipher.ENCRYPT_MODE, key, iv);
@@ -63,8 +66,11 @@ public class CipherByteArrayExample {
 
         System.out.println(Arrays.toString(Arrays.copyOf(output, updateBytes+finalBytes)));
 
-        // Now reverse the process
+        // Now reverse the process using a different implementation with the same settings
+        properties.setProperty(CIPHER_CLASSES_KEY, CipherProvider.JCE.getClassName());
         CryptoCipher decipher = Utils.getCipherInstance(transform, properties);
+        System.out.println("Cipher:  " + encipher.getClass().getCanonicalName());
+
         decipher.init(Cipher.DECRYPT_MODE, key, iv);
         byte [] decoded = new byte[32];
         decipher.doFinal(output, 0, updateBytes + finalBytes, decoded, 0);

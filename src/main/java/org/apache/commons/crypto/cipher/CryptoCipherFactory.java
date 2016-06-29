@@ -30,10 +30,56 @@ import org.apache.commons.crypto.utils.Utils;
 public class CryptoCipherFactory {
 
     /**
+     * Defines the internal CryptoCipher implementations.
+     * <p>
+     * Usage:
+     * <p>
+     * <code>
+     * props.setProperty(CIPHER_CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
+     * </code>
+     */
+    public enum CipherProvider {
+
+        OPENSSL(OpensslCipher.class),
+        JCE(JceCipher.class);
+
+        private final Class<? extends CryptoCipher> klass;
+
+        private final String className;
+
+        /**
+         * Constructs a CihpherProvider.
+         *
+         * @param klass the implementation of provider
+         */
+        private CipherProvider(Class<? extends CryptoCipher> klass) {
+            this.klass = klass;
+            this.className = klass.getName();
+        }
+
+        /**
+         * Gets the class name of the provider.
+         *
+         * @return the name of the provider class
+         */
+        public String getClassName() {
+            return className;
+        }
+
+        /**
+         * Gets the implementation class of the provider.
+         *
+         * @return the implementation class of the provider
+         */
+        public Class<? extends CryptoCipher> getImplClass() {
+            return klass;
+        }
+    }
+
+    /**
      * The default value (OpensslCipher) for crypto cipher.
      */
-    private static final String CIPHER_CLASSES_DEFAULT = 
-            OpensslCipher.class.getName();
+    private static final String CIPHER_CLASSES_DEFAULT = CipherProvider.OPENSSL.getClassName();
 
     /**
      * The private Constructor of {@link CryptoCipherFactory}.
@@ -44,7 +90,7 @@ public class CryptoCipherFactory {
     /**
      * Gets a cipher instance for specified algorithm/mode/padding.
      *
-     * @param props  the configuration properties 
+     * @param props  the configuration properties
      *      (uses ConfigurationKeys.ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY and ConfigurationKeys.CIPHER_CLASSES_KEY)
      * @param transformation  algorithm/mode/padding
      * @return CryptoCipher  the cipher  (defaults to OpensslCipher if available, else JceCipher)
@@ -52,7 +98,7 @@ public class CryptoCipherFactory {
      * @throws IllegalArgumentException if no classname(s) are provided and fallback is disabled
      */
     public static CryptoCipher getInstance(String transformation,
-            Properties props) throws GeneralSecurityException {
+                                           Properties props) throws GeneralSecurityException {
 
         CryptoCipher cipher = null;
 
