@@ -123,17 +123,6 @@ public class ConfigurationKeys {
             + "lib.tempdir";
 
     /**
-     * The configuration key of enable fallback on native failed.
-     */
-    public static final String ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY = CONF_PREFIX +
-            "enable.fallback";
-
-    /**
-     * The default value of enable fallback on native failed.
-     */
-    public static final boolean ENABLE_FALLBACK_ON_NATIVE_FAILED_DEFAULT = true;
-
-    /**
      * The private constructor of {@Link ConfigurationKeys}.
      */
     private ConfigurationKeys() {

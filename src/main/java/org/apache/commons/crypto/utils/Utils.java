@@ -178,23 +178,4 @@ public final class Utils {
         return res;
     }
 
-    /**
-     * Returns true if Fallback is enabled when native failed.
-     * @param props The <code>Properties</code> class represents a set of
-     *        properties.
-     * @return true if Fallback is enabled when native failed.
-     */
-    public static boolean isFallbackEnabled(Properties props) {
-        String enableFallback = props.getProperty(ConfigurationKeys.
-            ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
-        if (enableFallback == null || enableFallback.isEmpty()) {
-            enableFallback = System.getProperty(ConfigurationKeys.
-                ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY);
-        }
-        if (enableFallback == null || enableFallback.isEmpty()) {
-            return ConfigurationKeys
-                    .ENABLE_FALLBACK_ON_NATIVE_FAILED_DEFAULT;
-        }
-        return Boolean.valueOf(enableFallback);
-    }
 }

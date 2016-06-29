@@ -20,9 +20,9 @@ package org.apache.commons.crypto.random;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
+import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
-import static org.apache.commons.crypto.conf.ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY;
 
 /**
  * This is the factory class used for {@link CryptoRandom}.
@@ -79,6 +79,13 @@ public class CryptoRandomFactory {
     }
 
     /**
+     * The default value (OpensslCipher) for crypto cipher.
+     */
+    private static final String SECURE_RANDOM_CLASSES_DEFAULT = RandomProvider
+        .OPENSSL.getClassName().concat(",").concat(RandomProvider.JCE
+            .getClassName());
+
+    /**
      * The private constructor of {@Link CryptoRandomFactory}.
      */
     private CryptoRandomFactory() {
@@ -99,14 +106,10 @@ public class CryptoRandomFactory {
      */
     public static CryptoRandom getCryptoRandom(Properties props)
             throws GeneralSecurityException {
-        String cryptoRandomClasses = props.getProperty(SECURE_RANDOM_CLASSES_KEY);
-        if (cryptoRandomClasses == null) {
-            cryptoRandomClasses = System.getProperty(SECURE_RANDOM_CLASSES_KEY);
-        }
-
         StringBuilder errorMessage = new StringBuilder();
         CryptoRandom random = null;
-        for (String klassName : Utils.splitClassNames(cryptoRandomClasses, ",")) {
+        for (String klassName : Utils.splitClassNames(
+            getRandomClassString(props), ",")) {
             try {
                 final Class<?> klass = ReflectionUtils.getClassByName(klassName);
                 random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
@@ -122,13 +125,29 @@ public class CryptoRandomFactory {
 
         if (random != null) {
             return random;
-        } else if (Utils.isFallbackEnabled(props)) {
-            return  new JavaCryptoRandom(props);
         } else {
             if (errorMessage.length() == 0) {
-                throw new IllegalArgumentException("No classname(s) provided, and fallback is not enabled");
+                throw new IllegalArgumentException("No classname(s) provided");
             }
             throw new GeneralSecurityException(errorMessage.toString());
         }
+    }
+
+    /**
+     * Gets the CryptoRandom class.
+     *
+     * @param props The <code>Properties</code> class represents a set of
+     *        properties.
+     * @return the CryptoRandom class based on the props.
+     */
+    private static String getRandomClassString(Properties props) {
+        final String configName = ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY;
+        String randomClassString = props.getProperty(configName) != null ? props
+            .getProperty(configName, SECURE_RANDOM_CLASSES_DEFAULT)
+            : System.getProperty(configName, SECURE_RANDOM_CLASSES_DEFAULT);
+        if (randomClassString.isEmpty()) {
+            randomClassString = SECURE_RANDOM_CLASSES_DEFAULT;
+        }
+        return randomClassString;
     }
 }

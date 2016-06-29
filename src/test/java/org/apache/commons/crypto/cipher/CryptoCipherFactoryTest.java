@@ -45,25 +45,11 @@ public class CryptoCipherFactoryTest {
                 .getClass().getName());
     }
 
-    @Test
+    @Test(expected = GeneralSecurityException.class)
     public void testInvalidCipher() throws GeneralSecurityException {
         Properties properties = new Properties();
         properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY,
                 "InvalidCipherName");
-        CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
-                "AES/CBC/NoPadding", properties);
-        Assert.assertEquals(JceCipher.class.getName(),
-            defaultCipher.getClass().getName());
-    }
-
-    @Test(expected = GeneralSecurityException.class)
-    public void testDisableFallback() throws GeneralSecurityException {
-        Properties properties = new Properties();
-        properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY,
-            "InvalidCipherName");
-        properties.setProperty(ConfigurationKeys
-            .ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY, "false");
-
         CryptoCipherFactory.getInstance("AES/CBC/NoPadding", properties);
     }
 

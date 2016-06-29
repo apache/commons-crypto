@@ -79,7 +79,9 @@ public class CryptoCipherFactory {
     /**
      * The default value (OpensslCipher) for crypto cipher.
      */
-    private static final String CIPHER_CLASSES_DEFAULT = CipherProvider.OPENSSL.getClassName();
+    private static final String CIPHER_CLASSES_DEFAULT = CipherProvider
+            .OPENSSL.getClassName().concat(",").concat(CipherProvider.JCE
+            .getClassName());
 
     /**
      * The private Constructor of {@link CryptoCipherFactory}.
@@ -118,11 +120,9 @@ public class CryptoCipherFactory {
 
         if (cipher != null) {
             return cipher;
-        } else if (Utils.isFallbackEnabled(props)) {
-            return new JceCipher(props,transformation);
         } else {
             if (errorMessage.length() == 0) {
-                throw new IllegalArgumentException("No classname(s) provided, and fallback is not enabled");
+                throw new IllegalArgumentException("No classname(s) provided");
             }
             errorMessage.append(" is not available or transformation " +
                     transformation + " is not supported.");
