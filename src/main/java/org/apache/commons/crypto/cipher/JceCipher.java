@@ -46,6 +46,8 @@ class JceCipher implements CryptoCipher {
      * @param transformation  transformation for JCE cipher (algorithm/mode/padding)
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
+    // N.B. this class is not public/protected so does not appear in the main Javadoc
+    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public JceCipher(Properties props, String transformation)
             throws GeneralSecurityException {
         String provider = getJCEProvider(props);

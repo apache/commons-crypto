@@ -50,6 +50,8 @@ class OpensslCipher implements CryptoCipher {
      * @param transformation  transformation for OpenSSL cipher (algorithm/mode/padding)
      * @throws GeneralSecurityException if OpenSSL cipher initialize failed
      */
+    // N.B. this class is not public/protected so does not appear in the main Javadoc
+    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OpensslCipher(Properties props, String transformation) // NOPMD
             throws GeneralSecurityException {
         this.transformation = transformation;

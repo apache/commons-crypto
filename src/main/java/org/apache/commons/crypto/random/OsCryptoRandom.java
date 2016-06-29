@@ -66,6 +66,8 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      * path to the random device, default is
      * {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT}
      */
+    // N.B. this class is not public/protected so does not appear in the main Javadoc
+    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OsCryptoRandom(Properties props) {
         File randomDevFile = new File(getRandomDevPath(props));
 

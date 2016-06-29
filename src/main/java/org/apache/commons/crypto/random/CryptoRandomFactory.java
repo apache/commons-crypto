@@ -35,14 +35,38 @@ public class CryptoRandomFactory {
      * Usage:
      * <p>
      * <code>
-     * props.setProperty(RANDOM_CLASSES_KEY, RandomProvider.OPENSSL
-     *         .getClassName());
+     * props.setProperty(RANDOM_CLASSES_KEY, RandomProvider.OPENSSL.getClassName());
+     * props.setProperty(...); // if required by the implementation
+     * random = CryptoRandomFactory.getCryptoRandom(transformation, props);
      * </code>
      */
     public enum RandomProvider {
 
+        /**
+         * The OpenSSL Random implementation (using JNI)
+         * <p>
+         * No properties are used for configuration, but they
+         * are passed to the JCE backup implementation (q.v.)
+         */
         OPENSSL(OpensslCryptoRandom.class),
+
+        /**
+         * The SecureRandom implementation from the JVM
+         * <p>
+         * Uses the property with key 
+         * {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_KEY SECURE_RANDOM_JAVA_ALGORITHM_KEY}
+         * with the default of 
+         * {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT}
+         */
         JCE(JavaCryptoRandom.class),
+
+        /**
+         * The OS random device implementation
+         * <p>
+         * Uses {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_KEY} to determine the
+         * path to the random device, default is
+         * {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT}
+         */
         OS(OsCryptoRandom.class);
 
         private final Class<? extends CryptoRandom> klass;

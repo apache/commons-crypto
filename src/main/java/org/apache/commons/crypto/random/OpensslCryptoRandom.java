@@ -78,6 +78,8 @@ class OpensslCryptoRandom extends Random implements CryptoRandom {
      * @throws NoSuchAlgorithmException if no Provider supports a
      *         SecureRandomSpi implementation for the specified algorithm.
      */
+    // N.B. this class is not public/protected so does not appear in the main Javadoc
+    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OpensslCryptoRandom(Properties props)
             throws NoSuchAlgorithmException {
         //fallback needs to be initialized here in any case cause even if

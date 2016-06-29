@@ -36,11 +36,25 @@ public class CryptoCipherFactory {
      * <p>
      * <code>
      * props.setProperty(CIPHER_CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
+     * props.setProperty(...); // if required by the implementation
+     * cipher = CryptoCipherFactory.getInstance(transformation, props);
      * </code>
      */
     public enum CipherProvider {
 
+        /**
+         * The OpenSSL cipher implementation (using JNI)
+         * <p>
+         * This implementation does not use any properties
+         */
         OPENSSL(OpensslCipher.class),
+        
+        /**
+         * The JCE cipher implementation from the JVM
+         * <p>
+         * uses {@link ConfigurationKeys#CIPHER_JCE_PROVIDER_KEY}) as the provider name.
+         * This is optional
+         */
         JCE(JceCipher.class);
 
         private final Class<? extends CryptoCipher> klass;
