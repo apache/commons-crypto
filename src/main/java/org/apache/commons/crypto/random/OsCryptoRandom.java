@@ -25,6 +25,7 @@ import java.util.Random;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.IOUtils;
+import org.apache.commons.crypto.utils.Utils;
 
 /**
  * A Random implementation that uses random bytes sourced from the operating
@@ -141,7 +142,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      * @return the random device path based on the props.
      */
     private static String getRandomDevPath(Properties props) {
-        String devPath = props
+        String devPath = Utils.getProperties(props)
             .getProperty(ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
         if (devPath == null) {
             devPath = System.getProperty(

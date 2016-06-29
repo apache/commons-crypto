@@ -142,9 +142,8 @@ public class CryptoRandomFactory {
      */
     private static String getRandomClassString(Properties props) {
         final String configName = ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY;
-        String randomClassString = props.getProperty(configName) != null ? props
-            .getProperty(configName, SECURE_RANDOM_CLASSES_DEFAULT)
-            : System.getProperty(configName, SECURE_RANDOM_CLASSES_DEFAULT);
+        String randomClassString = Utils.getProperties(props)
+            .getProperty(configName, SECURE_RANDOM_CLASSES_DEFAULT);
         if (randomClassString.isEmpty()) {
             randomClassString = SECURE_RANDOM_CLASSES_DEFAULT;
         }
