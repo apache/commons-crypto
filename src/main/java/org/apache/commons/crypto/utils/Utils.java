@@ -34,45 +34,70 @@ import org.apache.commons.crypto.conf.ConfigurationKeys;
  */
 public final class Utils {
 
+    private static class DefaultPropertiesHolder {
+        static final Properties DEFAULT_PROPERTIES = createDefaultProperties();
+     }
+     
     /**
      * The private constructor of {@Link Utils}.
      */
     private Utils() {
     }
 
-    static {
-        loadSystemProperties();
-    }
-
     /**
-     * loads system properties when configuration file of the name
+     * Loads system properties when configuration file of the name
      * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE} is found.
      */
-    private static void loadSystemProperties() {
+    private static Properties createDefaultProperties() {
+        // default to system
+        Properties defaultedProps = new Properties(System.getProperties());
         try {
             InputStream is = Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream(ConfigurationKeys.SYSTEM_PROPERTIES_FILE);
 
             if (is == null) {
-                return; // no configuration file is found
+                return defaultedProps; // no configuration file is found
             }
             // Load property file
-            Properties props = new Properties();
-            props.load(is);
+            Properties fileProps = new Properties();
+            fileProps.load(is);
             is.close();
-            Enumeration<?> names = props.propertyNames();
+            Enumeration<?> names = fileProps.propertyNames();
             while (names.hasMoreElements()) {
                 String name = (String) names.nextElement();
-                if (name.startsWith(ConfigurationKeys.CONF_PREFIX) && System.getProperty(name) == null) {
-                    System.setProperty(name, props.getProperty(name));
+                // ensure System properties override ones in the file so one can override the file on the command line
+                if (System.getProperty(name) == null) {
+                    defaultedProps.setProperty(name, fileProps.getProperty(name));
                 }
             }
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             System.err.println("Could not load '"
                     + ConfigurationKeys.SYSTEM_PROPERTIES_FILE
                     + "' from classpath: " + ex.toString());
         }
+        return defaultedProps;
     }
+
+    /**
+     * Gets a properties instance that defaults to the System Properties
+     * plus any other properties found in the file 
+     * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE SYSTEM_PROPERTIES_FILE}  
+     * @return a Properties instance with defaults
+     */
+    public static Properties getDefaultProperties() {
+        return new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
+     }
+
+    /**
+     * Gets the properties merged with default properties.
+     * @param newProp  User-defined properties
+     * @return User-defined properties with the default properties
+     */
+    public static Properties getProperties(Properties newProp) {
+        Properties properties = new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
+        properties.putAll(newProp);
+        return properties;
+     }
 
     /**
      * Helper method to create a CryptoCipher instance and throws only
