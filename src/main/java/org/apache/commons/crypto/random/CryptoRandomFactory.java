@@ -58,7 +58,7 @@ public class CryptoRandomFactory {
          * with the default of 
          * {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT}
          */
-        JCE(JavaCryptoRandom.class),
+        JAVA(JavaCryptoRandom.class),
 
         /**
          * The OS random device implementation
@@ -106,7 +106,7 @@ public class CryptoRandomFactory {
      * The default value (OpensslCryptoRandom,JavaCryptoRandom) for crypto cipher.
      */
     private static final String SECURE_RANDOM_CLASSES_DEFAULT = RandomProvider
-        .OPENSSL.getClassName().concat(",").concat(RandomProvider.JCE
+        .OPENSSL.getClassName().concat(",").concat(RandomProvider.JAVA
             .getClassName());
 
     /**
