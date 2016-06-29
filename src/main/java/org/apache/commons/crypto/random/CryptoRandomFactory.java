@@ -35,8 +35,8 @@ public class CryptoRandomFactory {
      * Usage:
      * <p>
      * <code>
-     * props.setProperty(RANDOM_CLASSES_KEY,
-     *  CipherProvider.OPENSSL.getClassName());
+     * props.setProperty(RANDOM_CLASSES_KEY, RandomProvider.OPENSSL
+     *         .getClassName());
      * </code>
      */
     public enum RandomProvider {
