@@ -211,8 +211,7 @@ class JceCipher implements CryptoCipher {
      * @return the jce provider based on the props.
      */
     private static String getJCEProvider(Properties props) {
-        return props.getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY) !=
-            null ? props.getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY)
-            : System.getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY);
+        return Utils.getProperties(props)
+            .getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY);
     }
 }

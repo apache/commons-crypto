@@ -92,8 +92,7 @@ public class CryptoCipherFactory {
     /**
      * Gets a cipher instance for specified algorithm/mode/padding.
      *
-     * @param props  the configuration properties
-     *      (uses ConfigurationKeys.ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY and ConfigurationKeys.CIPHER_CLASSES_KEY)
+     * @param props the configuration properties (uses ConfigurationKeys.CIPHER_CLASSES_KEY)
      * @param transformation  algorithm/mode/padding
      * @return CryptoCipher  the cipher  (defaults to OpensslCipher if available, else JceCipher)
      * @throws GeneralSecurityException if cipher initialize failed
@@ -155,10 +154,8 @@ public class CryptoCipherFactory {
      */
     private static String getCipherClassString(Properties props) {
         final String configName = ConfigurationKeys.CIPHER_CLASSES_KEY;
-        String cipherClassString = props.getProperty(configName) != null ? props
-                .getProperty(configName, CIPHER_CLASSES_DEFAULT)
-                : System.getProperty(configName,
-                CIPHER_CLASSES_DEFAULT);
+        String cipherClassString = Utils.getProperties(props).getProperty
+            (configName, CIPHER_CLASSES_DEFAULT);
         if (cipherClassString.isEmpty()) {
             cipherClassString = CIPHER_CLASSES_DEFAULT;
         }
