@@ -167,12 +167,8 @@ public class CryptoCipherFactory {
      * @return the cipher class based on the props.
      */
     private static String getCipherClassString(Properties props) {
-        final String configName = ConfigurationKeys.CIPHER_CLASSES_KEY;
-        String cipherClassString = props.getProperty(configName) != null ? props
-                .getProperty(configName, CIPHER_CLASSES_DEFAULT)
-                : System.getProperty(configName,
-                CIPHER_CLASSES_DEFAULT);
-        if (cipherClassString.isEmpty()) {
+        String cipherClassString = props.getProperty(ConfigurationKeys.CIPHER_CLASSES_KEY, CIPHER_CLASSES_DEFAULT);
+        if (cipherClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
             cipherClassString = CIPHER_CLASSES_DEFAULT;
         }
         return cipherClassString;

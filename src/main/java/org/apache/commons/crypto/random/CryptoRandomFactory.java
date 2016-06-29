@@ -165,11 +165,8 @@ public class CryptoRandomFactory {
      * @return the CryptoRandom class based on the props.
      */
     private static String getRandomClassString(Properties props) {
-        final String configName = ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY;
-        String randomClassString = props.getProperty(configName) != null ? props
-            .getProperty(configName, SECURE_RANDOM_CLASSES_DEFAULT)
-            : System.getProperty(configName, SECURE_RANDOM_CLASSES_DEFAULT);
-        if (randomClassString.isEmpty()) {
+        String randomClassString = props.getProperty(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY, SECURE_RANDOM_CLASSES_DEFAULT);
+        if (randomClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
             randomClassString = SECURE_RANDOM_CLASSES_DEFAULT;
         }
         return randomClassString;

@@ -50,7 +50,7 @@ class JceCipher implements CryptoCipher {
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public JceCipher(Properties props, String transformation)
             throws GeneralSecurityException {
-        String provider = getJCEProvider(props);
+        final String provider = props.getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY);
         if (provider == null || provider.isEmpty()) {
             cipher = Cipher.getInstance(transformation);
         } else {
@@ -203,18 +203,5 @@ class JceCipher implements CryptoCipher {
     @Override
     public void close() {
         // Do nothing
-    }
-
-    /**
-     * Gets the Jce provider.
-     *
-     * @param props The <code>Properties</code> class represents a set of
-     *        properties.
-     * @return the jce provider based on the props.
-     */
-    private static String getJCEProvider(Properties props) {
-        return props.getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY) !=
-            null ? props.getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY)
-            : System.getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY);
     }
 }

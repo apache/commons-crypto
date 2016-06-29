@@ -69,7 +69,9 @@ class OsCryptoRandom extends Random implements CryptoRandom {
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OsCryptoRandom(Properties props) {
-        File randomDevFile = new File(getRandomDevPath(props));
+        File randomDevFile = new File(
+                props.getProperty(ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_KEY, 
+                                  ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT));
 
         try {
             close();
@@ -133,24 +135,6 @@ class OsCryptoRandom extends Random implements CryptoRandom {
             IOUtils.cleanup(stream);
             stream = null;
         }
-    }
-
-    /**
-     * Gets the random device path.
-     *
-     * @param props The <code>Properties</code> class represents a set of
-     *        properties.
-     * @return the random device path based on the props.
-     */
-    private static String getRandomDevPath(Properties props) {
-        String devPath = props
-            .getProperty(ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_KEY);
-        if (devPath == null) {
-            devPath = System.getProperty(
-                ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_KEY,
-                ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT);
-        }
-        return devPath;
     }
 
 }
