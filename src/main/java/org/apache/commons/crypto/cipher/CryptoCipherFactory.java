@@ -92,12 +92,11 @@ public class CryptoCipherFactory {
     /**
      * Gets a cipher instance for specified algorithm/mode/padding.
      *
-     * @param props  the configuration properties
-     *      (uses ConfigurationKeys.ENABLE_FALLBACK_ON_NATIVE_FAILED_KEY and ConfigurationKeys.CIPHER_CLASSES_KEY)
+     * @param props  the configuration properties (uses ConfigurationKeys.CIPHER_CLASSES_KEY)
      * @param transformation  algorithm/mode/padding
-     * @return CryptoCipher  the cipher  (defaults to OpensslCipher if available, else JceCipher)
+     * @return CryptoCipher  the cipher  (defaults to OpensslCipher)
      * @throws GeneralSecurityException if cipher initialize failed
-     * @throws IllegalArgumentException if no classname(s) are provided and fallback is disabled
+     * @throws IllegalArgumentException if no classname(s)
      */
     public static CryptoCipher getInstance(String transformation,
                                            Properties props) throws GeneralSecurityException {

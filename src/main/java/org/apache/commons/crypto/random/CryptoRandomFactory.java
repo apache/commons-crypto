@@ -79,7 +79,7 @@ public class CryptoRandomFactory {
     }
 
     /**
-     * The default value (OpensslCipher) for crypto cipher.
+     * The default value (OpensslCryptoRandom,JavaCryptoRandom) for crypto cipher.
      */
     private static final String SECURE_RANDOM_CLASSES_DEFAULT = RandomProvider
         .OPENSSL.getClassName().concat(",").concat(RandomProvider.JCE
@@ -96,13 +96,13 @@ public class CryptoRandomFactory {
      * Uses the SECURE_RANDOM_CLASSES_KEY from the provided
      * properties.
      * If it is not set, then it checks the System properties.
-     * Failing that, it defaults to {@link JavaCryptoRandom}
+     * Failing that, it defaults to OpensslCryptoRandom,JavaCryptoRandom
      * The properties are passed to the generated class.
      *
      * @param props the configuration properties.
      * @return CryptoRandom  the cryptoRandom object.
      * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
-     * @throws IllegalArgumentException if no classname(s) are provided and fallback is disabled
+     * @throws IllegalArgumentException if no classname(s) are provided
      */
     public static CryptoRandom getCryptoRandom(Properties props)
             throws GeneralSecurityException {
