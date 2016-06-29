@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
@@ -40,38 +39,46 @@ public final class Utils {
     private Utils() {
     }
 
-    static {
-        loadSystemProperties();
+    private static class DefaultPropertiesHolder {
+        static final Properties instance = getDefaultProperties();
     }
 
     /**
-     * loads system properties when configuration file of the name
+     * Loads system properties when configuration file of the name
      * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE} is found.
+     * 
+     * @return the default properties
      */
-    private static void loadSystemProperties() {
+    private static Properties getDefaultProperties() {
+        // default to system
+        Properties props = new Properties(System.getProperties());
         try {
             InputStream is = Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream(ConfigurationKeys.SYSTEM_PROPERTIES_FILE);
 
             if (is == null) {
-                return; // no configuration file is found
+                return props; // no configuration file is found
             }
             // Load property file
-            Properties props = new Properties();
             props.load(is);
             is.close();
-            Enumeration<?> names = props.propertyNames();
-            while (names.hasMoreElements()) {
-                String name = (String) names.nextElement();
-                if (name.startsWith(ConfigurationKeys.CONF_PREFIX) && System.getProperty(name) == null) {
-                    System.setProperty(name, props.getProperty(name));
-                }
-            }
         } catch (Throwable ex) {
             System.err.println("Could not load '"
                     + ConfigurationKeys.SYSTEM_PROPERTIES_FILE
                     + "' from classpath: " + ex.toString());
         }
+        return props;
+    }
+
+    /**
+     * Gets the properties merged with default properties.
+     * @param newProp User-defined properties
+     * @return User-defined properties merged with defaults.
+     */
+    public static Properties getProperties(Properties newProp) {
+        Properties properties = new Properties(DefaultPropertiesHolder.instance);
+        properties.putAll(newProp);
+        return properties;
     }
 
     /**
