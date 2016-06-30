@@ -19,7 +19,7 @@ package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
 
-public class CTRNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
+public class CtrNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() throws IOException {

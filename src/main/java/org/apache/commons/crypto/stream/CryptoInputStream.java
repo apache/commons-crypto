@@ -356,7 +356,7 @@ public class CryptoInputStream extends InputStream implements
     /**
      * Overrides the {@link InputStream#markSupported()}.
      *
-     * @return false,the {@link CTRCryptoInputStream} don't support the mark
+     * @return false,the {@link CtrCryptoInputStream} don't support the mark
      *         method.
      */
     @Override

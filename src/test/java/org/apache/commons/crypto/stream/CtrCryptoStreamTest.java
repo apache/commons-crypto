@@ -24,7 +24,7 @@ import java.nio.channels.Channels;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 
-public class CTRCryptoStreamTest extends AbstractCipherStreamTest {
+public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() throws IOException {
@@ -32,24 +32,24 @@ public class CTRCryptoStreamTest extends AbstractCipherStreamTest {
     }
 
     @Override
-    protected CTRCryptoInputStream getCryptoInputStream(
+    protected CtrCryptoInputStream getCryptoInputStream(
             ByteArrayInputStream bais, CryptoCipher cipher, int bufferSize,
             byte[] iv, boolean withChannel) throws IOException {
         if (withChannel) {
-            return new CTRCryptoInputStream(Channels.newChannel(bais), cipher,
+            return new CtrCryptoInputStream(Channels.newChannel(bais), cipher,
                     bufferSize, key, iv);
         }
-        return new CTRCryptoInputStream(bais, cipher, bufferSize, key, iv);
+        return new CtrCryptoInputStream(bais, cipher, bufferSize, key, iv);
     }
 
     @Override
-    protected CTRCryptoOutputStream getCryptoOutputStream(
+    protected CtrCryptoOutputStream getCryptoOutputStream(
             ByteArrayOutputStream baos, CryptoCipher cipher, int bufferSize,
             byte[] iv, boolean withChannel) throws IOException {
         if (withChannel) {
-            return new CTRCryptoOutputStream(Channels.newChannel(baos), cipher,
+            return new CtrCryptoOutputStream(Channels.newChannel(baos), cipher,
                     bufferSize, key, iv);
         }
-        return new CTRCryptoOutputStream(baos, cipher, bufferSize, key, iv);
+        return new CtrCryptoOutputStream(baos, cipher, bufferSize, key, iv);
     }
 }

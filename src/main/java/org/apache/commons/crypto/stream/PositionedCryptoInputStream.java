@@ -42,7 +42,7 @@ import org.apache.commons.crypto.utils.Utils;
  * starting at random position as well as provides the foundation for positioned
  * read for decrypting. This needs a stream cipher mode such as AES CTR mode.
  */
-public class PositionedCryptoInputStream extends CTRCryptoInputStream {
+public class PositionedCryptoInputStream extends CtrCryptoInputStream {
 
     /**
      * DirectBuffer pool
@@ -296,7 +296,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     private void resetCipher(CipherState state, long position, byte[] iv)
             throws IOException {
         final long counter = getCounter(position);
-        CTRCryptoInputStream.calculateIV(getInitIV(), counter, iv);
+        CtrCryptoInputStream.calculateIV(getInitIV(), counter, iv);
         try {
             state.getCipher().init(Cipher.DECRYPT_MODE, key,
                     new IvParameterSpec(iv));
