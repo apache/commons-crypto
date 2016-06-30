@@ -25,7 +25,7 @@ import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * This is the factory class used for {@link CryptoRandom}.
+ * This is the factory class used for creating {@link CryptoRandom} instances
  */
 public class CryptoRandomFactory {
 
@@ -34,11 +34,11 @@ public class CryptoRandomFactory {
      * <p>
      * Usage:
      * <p>
-     * <code>
+     * <blockquote><pre>
      * props.setProperty(RANDOM_CLASSES_KEY, RandomProvider.OPENSSL.getClassName());
      * props.setProperty(...); // if required by the implementation
      * random = CryptoRandomFactory.getCryptoRandom(transformation, props);
-     * </code>
+     * </pre></blockquote>
      */
     public enum RandomProvider {
 
@@ -46,8 +46,9 @@ public class CryptoRandomFactory {
          * The OpenSSL Random implementation (using JNI)
          * <p>
          * No properties are used for configuration, but they
-         * are passed to the JCE backup implementation (q.v.)
+         * are passed to the {@link RandomProvider#JAVA} backup implementation
          */
+        // Please ensure the property description agrees with the implementation
         OPENSSL(OpenSslCryptoRandom.class),
 
         /**
@@ -58,26 +59,23 @@ public class CryptoRandomFactory {
          * with the default of 
          * {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT}
          */
+        // Please ensure the property description agrees with the implementation
         JAVA(JavaCryptoRandom.class),
 
         /**
-         * The OS random device implementation
+         * The OS random device implementation. May not be available on some OSes.
          * <p>
          * Uses {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_KEY} to determine the
          * path to the random device, default is
          * {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT}
          */
+        // Please ensure the property description agrees with the implementation
         OS(OsCryptoRandom.class);
 
         private final Class<? extends CryptoRandom> klass;
 
         private final String className;
 
-        /**
-         * Constructs a RandomProvider.
-         *
-         * @param klass the implementation of provider
-         */
         private RandomProvider(Class<? extends CryptoRandom> klass) {
             this.klass = klass;
             this.className = klass.getName();

@@ -25,7 +25,7 @@ import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * This is the factory class used for creating cipher class
+ * This is the factory class used for creating {@link CryptoCipher} instances.
  */
 public class CryptoCipherFactory {
 
@@ -34,11 +34,11 @@ public class CryptoCipherFactory {
      * <p>
      * Usage:
      * <p>
-     * <code>
+     * <blockquote><pre>
      * props.setProperty(CIPHER_CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
      * props.setProperty(...); // if required by the implementation
      * cipher = CryptoCipherFactory.getInstance(transformation, props);
-     * </code>
+     * </pre></blockquote>
      */
     public enum CipherProvider {
 
@@ -47,25 +47,22 @@ public class CryptoCipherFactory {
          * <p>
          * This implementation does not use any properties
          */
+        // Please ensure the property description agrees with the implementation
         OPENSSL(OpenSslCipher.class),
         
         /**
          * The JCE cipher implementation from the JVM
          * <p>
-         * uses {@link ConfigurationKeys#CIPHER_JCE_PROVIDER_KEY}) as the provider name.
-         * This is optional
+         * uses the property {@link ConfigurationKeys#CIPHER_JCE_PROVIDER_KEY}
+         * to define the provider name, if present.
          */
+        // Please ensure the property description agrees with the implementation
         JCE(JceCipher.class);
 
         private final Class<? extends CryptoCipher> klass;
 
         private final String className;
 
-        /**
-         * Constructs a CihpherProvider.
-         *
-         * @param klass the implementation of provider
-         */
         private CipherProvider(Class<? extends CryptoCipher> klass) {
             this.klass = klass;
             this.className = klass.getName();
@@ -74,7 +71,7 @@ public class CryptoCipherFactory {
         /**
          * Gets the class name of the provider.
          *
-         * @return the name of the provider class
+         * @return the fully qualified name of the provider class
          */
         public String getClassName() {
             return className;
@@ -91,7 +88,7 @@ public class CryptoCipherFactory {
     }
 
     /**
-     * The default value (OpenSslCipher,JceCipher) for crypto cipher.
+     * The default value (OPENSSL,JCE) for crypto cipher.
      */
     private static final String CIPHER_CLASSES_DEFAULT = 
             CipherProvider.OPENSSL.getClassName()
