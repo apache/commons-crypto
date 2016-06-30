@@ -101,16 +101,29 @@ public class CryptoRandomFactory {
     }
 
     /**
-     * The default value (OpenSslCryptoRandom,JavaCryptoRandom) for crypto cipher.
+     * The default value (OPENSSL,JAVA) used when creating a {@link CryptoCipher}.
      */
-    private static final String SECURE_RANDOM_CLASSES_DEFAULT = RandomProvider
-        .OPENSSL.getClassName().concat(",").concat(RandomProvider.JAVA
-            .getClassName());
+    private static final String SECURE_RANDOM_CLASSES_DEFAULT = 
+        RandomProvider.OPENSSL.getClassName()
+        .concat(",")
+        .concat(RandomProvider.JAVA.getClassName());
 
     /**
      * The private constructor of {@link CryptoRandomFactory}.
      */
     private CryptoRandomFactory() {
+    }
+
+    /**
+     * Gets a CryptoRandom instance using the default implementation
+     * as defined by {@link #SECURE_RANDOM_CLASSES_DEFAULT}
+     *
+     * @return CryptoRandom  the cryptoRandom object.
+     * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
+     */
+    public static CryptoRandom getCryptoRandom() throws GeneralSecurityException {
+        Properties properties = new Properties();
+        return getCryptoRandom(properties);
     }
 
     /**
