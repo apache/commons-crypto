@@ -38,7 +38,6 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.utils.Utils;
 
 import com.sun.jna.NativeLong;
-import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
@@ -49,7 +48,7 @@ class OpensslJnaCipher implements CryptoCipher {
     private final static int AES_BLOCK_SIZE = 16;
     
     private PointerByReference algo;
-    private PointerByReference context;
+    private final PointerByReference context;
     private final AlgorithmMode algMode;
     private final int padding;
     private final String transformation;
@@ -120,9 +119,6 @@ class OpensslJnaCipher implements CryptoCipher {
             }
         }
         
-        if (context != null && Pointer.NULL == context.getValue()) {
-            context = OpensslNativeJna.EVP_CIPHER_CTX_new();
-        }
         int retVal = OpensslNativeJna.EVP_CipherInit_ex(context, algo, null, key.getEncoded(), iv, cipherMode);
         throwOnError(retVal);
         OpensslNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
@@ -237,10 +233,9 @@ class OpensslJnaCipher implements CryptoCipher {
      */
     @Override
     public void close() {
-        if(context != null && Pointer.NULL != context.getValue()) {
+        if(context != null) {
             OpensslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             OpensslNativeJna.EVP_CIPHER_CTX_free(context);
-            context.setValue(Pointer.NULL);
         }
     }
     
