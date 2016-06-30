@@ -47,6 +47,8 @@ public final class Utils {
     /**
      * Loads system properties when configuration file of the name
      * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE} is found.
+     *
+     * @return the default properties
      */
     private static Properties createDefaultProperties() {
         // default to system

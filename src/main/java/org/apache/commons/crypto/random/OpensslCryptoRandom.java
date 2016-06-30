@@ -54,8 +54,7 @@ class OpensslCryptoRandom extends Random implements CryptoRandom {
             try {
                 OpensslCryptoRandomNative.initSR();
                 opensslLoaded = true;
-            } catch (Throwable t) {
-                // NOPMD
+            } catch (Throwable t) {// NOPMD
             }
         }
         nativeEnabled = opensslLoaded;

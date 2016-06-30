@@ -205,7 +205,7 @@ public class CryptoInputStream extends InputStream implements
     @Override
     public int read() throws IOException {
         int n;
-        while ((n = read(oneByteBuf, 0, 1)) == 0) {
+        while ((n = read(oneByteBuf, 0, 1)) == 0) { //NOPMD
             /* no op */
         }
         return (n == -1) ? -1 : oneByteBuf[0] & 0xff;
@@ -597,7 +597,6 @@ public class CryptoInputStream extends InputStream implements
             }
         } catch (ReflectiveOperationException e) { // NOPMD
             // Ignore the Reflection exception.
-    
         }
     }
 
