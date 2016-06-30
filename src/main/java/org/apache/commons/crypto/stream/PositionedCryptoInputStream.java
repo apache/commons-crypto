@@ -238,14 +238,14 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
             ByteBuffer outByteBuffer) throws IOException {
         int inputSize = inByteBuffer.remaining();
         try {
-            int n = state.getCipher().update(inByteBuffer, outByteBuffer);
+            int n = state.getCryptoCipher().update(inByteBuffer, outByteBuffer);
             if (n < inputSize) {
                 /**
                  * Typically code will not get here. CryptoCipher#update will
                  * consume all input data and put result in outBuffer.
                  * CryptoCipher#doFinal will reset the cipher context.
                  */
-                state.getCipher().doFinal(inByteBuffer, outByteBuffer);
+                state.getCryptoCipher().doFinal(inByteBuffer, outByteBuffer);
                 state.reset(true);
             }
         } catch (ShortBufferException e) {
@@ -298,7 +298,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         final long counter = getCounter(position);
         CtrCryptoInputStream.calculateIV(getInitIV(), counter, iv);
         try {
-            state.getCipher().init(Cipher.DECRYPT_MODE, key,
+            state.getCryptoCipher().init(Cipher.DECRYPT_MODE, key,
                     new IvParameterSpec(iv));
         } catch (InvalidKeyException e) {
             throw new IOException(e);
@@ -391,7 +391,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     }
 
     private class CipherState {
-        private CryptoCipher cipher;
+        private CryptoCipher cryptoCipher;
         private boolean reset;
 
         /**
@@ -400,7 +400,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
          * @param cipher the CryptoCipher instance.
          */
         public CipherState(CryptoCipher cipher) {
-            this.cipher = cipher;
+            this.cryptoCipher = cipher;
             this.reset = false;
         }
 
@@ -409,8 +409,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
          *
          * @return the cipher.
          */
-        public CryptoCipher getCipher() {
-            return cipher;
+        public CryptoCipher getCryptoCipher() {
+            return cryptoCipher;
         }
 
         /**
