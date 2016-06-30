@@ -34,15 +34,17 @@ public class ConfigurationKeys {
             + "properties";
 
     /**
-     * The configuration key of implementation class for crypto cipher. The
-     * values of CIPHER_CLASSES_KEY can be
-     * "org.apache.commons.crypto.cipher.JceCipher" or
-     * "org.apache.commons.crypto.cipher.OpenSslCipher". Or it can be a comma
-     * separated list. The "org.apache.commons.crypto.cipher.JceCipher" use jce
-     * provider to implement CryptoCipher and the
-     * "org.apache.commons.crypto.cipher.OpenSslCipher" use jni into OpenSSL to
-     * implement. Note that for each value,the first value which can be created
-     * without exception will be used (priority by order).
+     * The configuration key of the CryptoCipher implementation class.
+     * <p>
+     * The value of CIPHER_CLASSES_KEY needs to be the full name of a
+     * class that implements the 
+     * {@link org.apache.commons.crypto.cipher.CryptoCipher CryptoCipher} interface
+     * The internal classes are listed in the enum 
+     * {@link org.apache.commons.crypto.cipher.CryptoCipherFactory.CipherProvider CipherProvider}
+     * which can be used to obtain the full class name.
+     * <p>
+     * The value can also be a comma-separated list of class names in 
+     * order of descending priority.
      */
     public static final String CIPHER_CLASSES_KEY = CONF_PREFIX
             + "cipher.classes";
@@ -77,16 +79,17 @@ public class ConfigurationKeys {
     public static final String SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT = "SHA1PRNG";
 
     /**
-     * The configuration key of the implementation class for secure random. The
-     * values of SECURE_RANDOM_CLASSES_KEY can be
-     * "org.apache.commons.crypto.random.JavaCryptoRandom" or
-     * "org.apache.commons.crypto.random.OpenSslCryptoRandom". Or it takes a
-     * comma separated list. The
-     * "org.apache.commons.crypto.random.JavaCryptoRandom" use java to implement
-     * {@link org.apache.commons.crypto.random.CryptoRandom} and the
-     * "org.apache.commons.crypto.random.OpenSslCryptoRandom" use jni into
-     * OpenSSL to implement. Note that for each value,the first value which can
-     * be created without exception will be used (priority by order).
+     * The configuration key of the CryptoRandom implementation class.
+     * <p> 
+     * The value of SECURE_RANDOM_CLASSES_KEY needs to be the full name of a
+     * class that implements the 
+     * {@link org.apache.commons.crypto.random.CryptoRandom CryptoRandom} interface
+     * The internal classes are listed in the enum 
+     * {@link org.apache.commons.crypto.random.CryptoRandomFactory.RandomProvider RandomProvider}
+     * which can be used to obtain the full class name.
+     * <p>
+     * The value can also be a comma-separated list of class names in 
+     * order of descending priority.
      */
     public static final String SECURE_RANDOM_CLASSES_KEY = CONF_PREFIX
             + "secure.random.classes";
