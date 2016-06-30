@@ -26,7 +26,7 @@ import org.apache.commons.crypto.random.AbstractRandomTest;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.fail;
 
 public class OpensslJnaCryptoRandomTest extends AbstractRandomTest {
 
