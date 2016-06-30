@@ -32,13 +32,36 @@ import org.apache.commons.crypto.random.CryptoRandomFactory;
 public class RandomExample {
 
     public static void main(String []args) throws GeneralSecurityException, IOException {
+        exampleWithdefaultHardwareRandom();
+        exampleWithUserDefinedRandom();
+    }
+
+    public static void exampleWithdefaultHardwareRandom()
+            throws GeneralSecurityException, IOException {
         //Constructs a byte array to store random data.
         byte[] key = new byte[16];
-        byte[] iv = new byte[32];
+
+        //Gets the 'CryptoRandom' instance.
+        CryptoRandom random = CryptoRandomFactory.getCryptoRandom();
+
+        // Generate random bytes and places them into the byte arrays.
+        random.nextBytes(key);
+
+        //Closes the CryptoRandom.
+        random.close();
+
+        // Show the generated output
+        System.out.println(Arrays.toString(key));
+    }
+
+    public static void exampleWithUserDefinedRandom()
+            throws GeneralSecurityException, IOException {
+        //Constructs a byte array to store random data.
+        byte[] key = new byte[16];
 
         Properties properties = new Properties();
         properties.put(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
-            CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
+                CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
 
         //Gets the 'CryptoRandom' instance.
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties);
@@ -48,13 +71,12 @@ public class RandomExample {
 
         // Generate random bytes and places them into the byte arrays.
         random.nextBytes(key);
-        random.nextBytes(iv);
 
         //Closes the CryptoRandom.
         random.close();
 
+        System.out.println("");
         // Show the generated output
         System.out.println(Arrays.toString(key));
-        System.out.println(Arrays.toString(iv));
     }
 }

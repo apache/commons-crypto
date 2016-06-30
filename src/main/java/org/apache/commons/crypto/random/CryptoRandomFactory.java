@@ -168,6 +168,20 @@ public class CryptoRandomFactory {
     }
 
     /**
+     * Get a OpenSSL CryptoRandom by default.
+     *
+     * @return CryptoRandom  the cryptoRandom object.
+     * @throws GeneralSecurityException if OpenSSL is unavailable
+     */
+    public static CryptoRandom getCryptoRandom()
+            throws GeneralSecurityException {
+        Properties properties = new Properties();
+        properties.put(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
+                RandomProvider.OPENSSL.getClassName());
+        return getCryptoRandom(properties);
+    }
+
+    /**
      * Gets the CryptoRandom class.
      *
      * @param props The <code>Properties</code> class represents a set of
