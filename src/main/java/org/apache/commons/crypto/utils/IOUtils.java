@@ -92,7 +92,7 @@ public final class IOUtils {
                 try {
                     c.close();
                 } catch (Throwable e) {
-                    ; // NOPMD
+                    // NOPMD
                 }
             }
         }

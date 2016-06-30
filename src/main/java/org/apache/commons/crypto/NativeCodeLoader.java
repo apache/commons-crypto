@@ -60,7 +60,7 @@ final class NativeCodeLoader {
             // Loaded the native library
             nativeLoaded = true;
         } catch (Throwable t) {
-            ;// NOPMD: Ignore failure to load
+            // NOPMD: Ignore failure to load
         }
 
         nativeCodeLoaded = nativeLoaded;
