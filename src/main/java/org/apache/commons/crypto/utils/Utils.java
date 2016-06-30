@@ -118,7 +118,7 @@ public final class Utils {
             String transformation, Properties props)
             throws IOException {
         try {
-            return CryptoCipherFactory.getInstance(transformation, props);
+            return CryptoCipherFactory.getCryptoCipher(transformation, props);
         } catch (GeneralSecurityException e) {
             throw new IOException(e);
         }

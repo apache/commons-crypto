@@ -173,7 +173,7 @@ public class CryptoBenchmark {
     private CryptoCipher getCipher(String className) throws Exception {
         Properties properties = new Properties();
         properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY, className);
-        CryptoCipher cipher = CryptoCipherFactory.getInstance("AES/CBC/PKCS5Padding", properties);
+        CryptoCipher cipher = CryptoCipherFactory.getCryptoCipher("AES/CBC/PKCS5Padding", properties);
         Assert.assertEquals(className, cipher.getClass().getCanonicalName());
         return cipher;
     }

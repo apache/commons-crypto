@@ -319,7 +319,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
         if (state == null) {
             CryptoCipher cipher;
             try {
-                cipher = CryptoCipherFactory.getInstance("AES/CTR/NoPadding", props);
+                cipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props);
             } catch (GeneralSecurityException e) {
                 throw new IOException(e);
             }

@@ -113,7 +113,7 @@ public class CryptoCipherFactory {
      * @throws GeneralSecurityException if cipher initialize failed
      * @throws IllegalArgumentException if no classname(s)
      */
-    public static CryptoCipher getInstance(String transformation,
+    public static CryptoCipher getCryptoCipher(String transformation,
                                            Properties props) throws GeneralSecurityException {
 
         CryptoCipher cipher = null;
@@ -154,9 +154,9 @@ public class CryptoCipherFactory {
      * @return CryptoCipher the cipher object (defaults to OpensslCipher if available, else JceCipher)
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
-    public static CryptoCipher getInstance(String transformation)
+    public static CryptoCipher getCryptoCipher(String transformation)
             throws GeneralSecurityException {
-        return getInstance(transformation, new Properties());
+        return getCryptoCipher(transformation, new Properties());
     }
 
     /**

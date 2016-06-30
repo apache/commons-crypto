@@ -29,7 +29,7 @@ public class CryptoCipherFactoryTest {
     @Test
     public void testDefaultCipher() throws GeneralSecurityException {
         CryptoCipher defaultCipher = CryptoCipherFactory
-                .getInstance("AES/CBC/NoPadding");
+                .getCryptoCipher("AES/CBC/NoPadding");
         Assert.assertEquals(OpensslCipher.class.getName(), defaultCipher
                 .getClass().getName());
     }
@@ -39,7 +39,7 @@ public class CryptoCipherFactoryTest {
         Properties properties = new Properties();
         properties.setProperty(
                 ConfigurationKeys.CIPHER_CLASSES_KEY, "");
-        CryptoCipher defaultCipher = CryptoCipherFactory.getInstance(
+        CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
                 "AES/CBC/NoPadding", properties);
         Assert.assertEquals(OpensslCipher.class.getName(), defaultCipher
                 .getClass().getName());
@@ -50,12 +50,12 @@ public class CryptoCipherFactoryTest {
         Properties properties = new Properties();
         properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY,
                 "InvalidCipherName");
-        CryptoCipherFactory.getInstance("AES/CBC/NoPadding", properties);
+        CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties);
     }
 
     @Test(expected = GeneralSecurityException.class)
     public void testInvalidTransformation() throws GeneralSecurityException {
       Properties properties = new Properties();
-      CryptoCipherFactory.getInstance("AES/Invalid/NoPadding", properties);
+      CryptoCipherFactory.getCryptoCipher("AES/Invalid/NoPadding", properties);
     }
 }
