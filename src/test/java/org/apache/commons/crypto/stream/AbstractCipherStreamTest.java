@@ -105,34 +105,33 @@ public abstract class AbstractCipherStreamTest {
 
     private void doSkipTest(String cipherClass, boolean withChannel)
             throws IOException {
-        InputStream in = getCryptoInputStream(
+        try (InputStream in = getCryptoInputStream(
                 new ByteArrayInputStream(encData), getCipher(cipherClass),
-                defaultBufferSize, iv, withChannel);
-        byte[] result = new byte[dataLen];
-        int n1 = readAll(in, result, 0, dataLen / 3);
+                defaultBufferSize, iv, withChannel)) {
+            byte[] result = new byte[dataLen];
+            int n1 = readAll(in, result, 0, dataLen / 3);
 
-        long skipped = in.skip(dataLen / 3);
-        int n2 = readAll(in, result, 0, dataLen);
+            long skipped = in.skip(dataLen / 3);
+            int n2 = readAll(in, result, 0, dataLen);
 
-        Assert.assertEquals(dataLen, n1 + skipped + n2);
-        byte[] readData = new byte[n2];
-        System.arraycopy(result, 0, readData, 0, n2);
-        byte[] expectedData = new byte[n2];
-        System.arraycopy(data, dataLen - n2, expectedData, 0, n2);
-        Assert.assertArrayEquals(readData, expectedData);
+            Assert.assertEquals(dataLen, n1 + skipped + n2);
+            byte[] readData = new byte[n2];
+            System.arraycopy(result, 0, readData, 0, n2);
+            byte[] expectedData = new byte[n2];
+            System.arraycopy(data, dataLen - n2, expectedData, 0, n2);
+            Assert.assertArrayEquals(readData, expectedData);
 
-        try {
-            skipped = in.skip(-3);
-            Assert.fail("Skip Negative length should fail.");
-        } catch (IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().contains("Negative skip length"));
+            try {
+                skipped = in.skip(-3);
+                Assert.fail("Skip Negative length should fail.");
+            } catch (IllegalArgumentException e) {
+                Assert.assertTrue(e.getMessage().contains("Negative skip length"));
+            }
+
+            // Skip after EOF
+            skipped = in.skip(3);
+            Assert.assertEquals(skipped, 0);
         }
-
-        // Skip after EOF
-        skipped = in.skip(3);
-        Assert.assertEquals(skipped, 0);
-
-        in.close();
     }
 
     private void doByteBufferRead(String cipherClass, boolean withChannel)
@@ -219,12 +218,12 @@ public abstract class AbstractCipherStreamTest {
 
         out.flush();
 
-        InputStream in = getCryptoInputStream(
+        try (InputStream in = getCryptoInputStream(
                 new ByteArrayInputStream(encData), getCipher(cipherClass),
-                defaultBufferSize, iv, withChannel);
-        buf = ByteBuffer.allocate(dataLen + 100);
-        byteBufferReadCheck(in, buf, 0);
-        in.close();
+                defaultBufferSize, iv, withChannel)) {
+            buf = ByteBuffer.allocate(dataLen + 100);
+            byteBufferReadCheck(in, buf, 0);
+        }
     }
 
     private void byteBufferReadCheck(InputStream in, ByteBuffer buf, int bufPos)
@@ -252,12 +251,12 @@ public abstract class AbstractCipherStreamTest {
         }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OutputStream out = new CryptoOutputStream(baos, cipher,
+        try (OutputStream out = new CryptoOutputStream(baos, cipher,
                 defaultBufferSize, new SecretKeySpec(key, "AES"),
-                new IvParameterSpec(iv));
-        out.write(data);
-        out.flush();
-        out.close();
+                new IvParameterSpec(iv))) {
+            out.write(data);
+            out.flush();
+        }
         encData = baos.toByteArray();
     }
 
@@ -356,11 +355,11 @@ public abstract class AbstractCipherStreamTest {
 
         // Encrypt data
         ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-        CryptoOutputStream out = getCryptoOutputStream(encryptedData,
-                encCipher, defaultBufferSize, iv, false);
-        out.write(originalData, 0, originalData.length);
-        out.flush();
-        out.close();
+        try (CryptoOutputStream out = getCryptoOutputStream(encryptedData,
+                encCipher, defaultBufferSize, iv, false)) {
+            out.write(originalData, 0, originalData.length);
+            out.flush();
+        }
 
         // Created a cipher object of type decCipherClass;
         CryptoCipher decCipher = getCipher(decCipherClass);
@@ -417,11 +416,11 @@ public abstract class AbstractCipherStreamTest {
 
         // Encrypt data
         ByteArrayOutputStream encryptedData = new ByteArrayOutputStream();
-        CryptoOutputStream out = getCryptoOutputStream(encryptedData,
-                encCipher, defaultBufferSize, iv, true);
-        out.write(originalData, 0, originalData.length);
-        out.flush();
-        out.close();
+        try (CryptoOutputStream out = getCryptoOutputStream(encryptedData,
+                encCipher, defaultBufferSize, iv, true)) {
+            out.write(originalData, 0, originalData.length);
+            out.flush();
+        }
 
         // Creates a cipher object of type decCipherClass
         CryptoCipher decCipher = getCipher(decCipherClass);
