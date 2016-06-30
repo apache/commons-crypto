@@ -32,12 +32,12 @@ public final class ReflectionUtils {
 
     private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
 
-    private final static ClassLoader classLoader;
+    private static final ClassLoader CLASSLOADER;
 
     static {
         ClassLoader threadClassLoader = Thread.currentThread()
                 .getContextClassLoader();
-        classLoader = (threadClassLoader != null) ? threadClassLoader
+        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader
                 : CryptoCipher.class.getClassLoader();
     }
 
@@ -119,11 +119,11 @@ public final class ReflectionUtils {
         Map<String, WeakReference<Class<?>>> map;
 
         synchronized (CACHE_CLASSES) {
-            map = CACHE_CLASSES.get(classLoader);
+            map = CACHE_CLASSES.get(CLASSLOADER);
             if (map == null) {
                 map = Collections
                         .synchronizedMap(new WeakHashMap<String, WeakReference<Class<?>>>());
-                CACHE_CLASSES.put(classLoader, map);
+                CACHE_CLASSES.put(CLASSLOADER, map);
             }
         }
 
@@ -135,7 +135,7 @@ public final class ReflectionUtils {
 
         if (clazz == null) {
             try {
-                clazz = Class.forName(name, true, classLoader);
+                clazz = Class.forName(name, true, CLASSLOADER);
             } catch (ClassNotFoundException e) {
                 // Leave a marker that the class isn't found
                 map.put(name, new WeakReference<Class<?>>(
