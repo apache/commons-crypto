@@ -63,8 +63,8 @@ public interface CryptoCipher extends Closeable {
     /**
      * Initializes the cipher with mode, key and iv.
      *
-     * @param mode {@link javax.crypto.Cipher#ENCRYPT_MODE} or {@link javax
-     * .crypto.Cipher#DECRYPT_MODE}
+     * @param mode {@link javax.crypto.Cipher#ENCRYPT_MODE} or 
+     *             {@link javax.crypto.Cipher#DECRYPT_MODE}
      * @param key crypto key for the cipher
      * @param params the algorithm parameters
      * @throws InvalidKeyException if the given key is inappropriate for
