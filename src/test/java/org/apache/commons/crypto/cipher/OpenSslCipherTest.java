@@ -29,7 +29,7 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-public class OpensslCipherTest extends AbstractCipherTest {
+public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {

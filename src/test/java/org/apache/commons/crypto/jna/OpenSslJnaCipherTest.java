@@ -21,7 +21,7 @@ package org.apache.commons.crypto.jna;
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.jna.OpenSslJnaCipher;
 
-public class OpensslJnaCipherTest extends AbstractCipherTest {
+public class OpenSslJnaCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {

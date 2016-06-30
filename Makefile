@@ -20,7 +20,7 @@ include Makefile.common
 MVN:=mvn
 
 COMMONS_CRYPTO_OUT:=$(TARGET)/$(commons-crypto)-$(os_arch)
-COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpensslCryptoRandom.o OpensslNative.o)
+COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpensslCryptoRandom.o OpenSslNative.o)
 
 ifeq ($(OS_NAME),SunOS)
   TAR:= gtar
@@ -33,17 +33,17 @@ NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
 
 all: $(NATIVE_DLL)
 
-$(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.h: $(TARGET)/classes/org/apache/commons/crypto/cipher/OpensslNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes:$(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpensslNative
+$(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h: $(TARGET)/classes/org/apache/commons/crypto/cipher/OpenSslNative.class
+	$(JAVAH) -force -classpath $(TARGET)/jni-classes:$(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpenSslNative
 
-$(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslCryptoRandomNative.h: $(TARGET)/classes/org/apache/commons/crypto/random/OpensslCryptoRandomNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes:$(TARGET)/classes -o $@ org.apache.commons.crypto.random.OpensslCryptoRandomNative
+$(TARGET)/jni-classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.h: $(TARGET)/classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.class
+	$(JAVAH) -force -classpath $(TARGET)/jni-classes:$(TARGET)/classes -o $@ org.apache.commons.crypto.random.OpenSslCryptoRandomNative
 
-$(COMMONS_CRYPTO_OUT)/OpensslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpensslNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpensslNative.h
+$(COMMONS_CRYPTO_OUT)/OpenSslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpenSslNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(COMMONS_CRYPTO_OUT)/OpensslCryptoRandom.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpensslCryptoRandomNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpensslCryptoRandomNative.h
+$(COMMONS_CRYPTO_OUT)/OpensslCryptoRandom.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 

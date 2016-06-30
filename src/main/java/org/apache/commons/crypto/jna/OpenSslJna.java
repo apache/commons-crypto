@@ -23,7 +23,7 @@ import org.apache.commons.crypto.random.CryptoRandom;
 /**
  * Public class to give access to the package protected class objects
  */
-public final class OpensslJna {
+public final class OpenSslJna {
 
     public static Class<? extends CryptoCipher> getCipherClass() {
         return OpenSslJnaCipher.class;

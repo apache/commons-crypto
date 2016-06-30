@@ -92,7 +92,7 @@ final class OpenSsl {
         String loadingFailure = null;
         try {
             if (Crypto.isNativeCodeLoaded()) {
-                OpensslNative.initIDs();
+                OpenSslNative.initIDs();
             }
         } catch (Exception t) {
             loadingFailure = t.getMessage();
@@ -142,7 +142,7 @@ final class OpenSsl {
         int algorithmMode = AlgorithmMode.get(transform.algorithm,
                 transform.mode);
         int padding = Padding.get(transform.padding);
-        long context = OpensslNative.initContext(algorithmMode, padding);
+        long context = OpenSslNative.initContext(algorithmMode, padding);
         return new OpenSsl(context, algorithmMode, padding);
     }
 
@@ -205,7 +205,7 @@ final class OpenSsl {
      * @param iv crypto iv
      */
     public void init(int mode, byte[] key, byte[] iv) {
-        context = OpensslNative
+        context = OpenSslNative
                 .init(context, mode, algorithm, padding, key, iv);
     }
 
@@ -242,7 +242,7 @@ final class OpenSsl {
         checkState();
         Utils.checkArgument(input.isDirect() && output.isDirect(),
                 "Direct buffers are required.");
-        int len = OpensslNative.update(context, input, input.position(),
+        int len = OpenSslNative.update(context, input, input.position(),
                 input.remaining(), output, output.position(),
                 output.remaining());
         input.position(input.limit());
@@ -266,7 +266,7 @@ final class OpenSsl {
     public int update(byte[] input, int inputOffset, int inputLen,
             byte[] output, int outputOffset) throws ShortBufferException {
         checkState();
-        return OpensslNative.updateByteArray(context, input, inputOffset,
+        return OpenSslNative.updateByteArray(context, input, inputOffset,
                 inputLen, output, outputOffset, output.length - outputOffset);
     }
 
@@ -313,7 +313,7 @@ final class OpenSsl {
             IllegalBlockSizeException, BadPaddingException {
         checkState();
         Utils.checkArgument(output.isDirect(), "Direct buffer is required.");
-        int len = OpensslNative.doFinal(context, output, output.position(),
+        int len = OpenSslNative.doFinal(context, output, output.position(),
                 output.remaining());
         output.position(output.position() + len);
         return len;
@@ -341,14 +341,14 @@ final class OpenSsl {
             throws ShortBufferException, IllegalBlockSizeException,
             BadPaddingException {
         checkState();
-        return OpensslNative.doFinalByteArray(context, output, outputOffset,
+        return OpenSslNative.doFinalByteArray(context, output, outputOffset,
                 output.length - outputOffset);
     }
 
     /** Forcibly clean the context. */
     public void clean() {
         if (context != 0) {
-            OpensslNative.clean(context);
+            OpenSslNative.clean(context);
             context = 0;
         }
     }

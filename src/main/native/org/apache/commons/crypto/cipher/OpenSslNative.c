@@ -27,7 +27,7 @@
 #undef JNIEXPORT
 #endif
 #define JNIEXPORT __attribute__((__visibility__("default")))
-#include "OpensslNative.h"
+#include "OpenSslNative.h"
 
 #ifdef UNIX
 static EVP_CIPHER_CTX * (*dlsym_EVP_CIPHER_CTX_new)(void);
@@ -112,7 +112,7 @@ static void loadAes(JNIEnv *env)
 #endif
 }
 
-JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_initIDs
+JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initIDs
     (JNIEnv *env, jclass clazz)
 {
   char msg[1000];
@@ -182,7 +182,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_initI
   }
 }
 
-JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_initContext
+JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initContext
     (JNIEnv *env, jclass clazz, jint alg, jint padding)
 {
   if (alg != AES_CTR && alg != AES_CBC) {
@@ -243,7 +243,7 @@ static EVP_CIPHER * getEvpCipher(int alg, int keyLen)
   return cipher;
 }
 
-JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_init
+JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
     (JNIEnv *env, jclass clazz, jlong ctx, jint mode, jint alg, jint padding,
     jbyteArray key, jbyteArray iv)
 {
@@ -350,7 +350,7 @@ static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
   }
 }
 
-JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_update
+JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_update
     (JNIEnv *env, jclass clazz, jlong ctx, jobject input, jint input_offset,
     jint input_len, jobject output, jint output_offset, jint max_output_len)
 {
@@ -379,7 +379,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_updat
   return output_len;
 }
 
-JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_updateByteArray
+JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updateByteArray
     (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray input, jint input_offset,
     jint input_len, jbyteArray output, jint output_offset, jint max_output_len)
 {
@@ -435,7 +435,7 @@ static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
   }
 }
 
-JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_doFinal
+JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFinal
     (JNIEnv *env, jclass clazz, jlong ctx, jobject output, jint offset,
     jint max_output_len)
 {
@@ -461,7 +461,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_doFin
   return output_len;
 }
 
-JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_doFinalByteArray
+JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFinalByteArray
     (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray output, jint offset,
      jint max_output_len)
 {
@@ -490,7 +490,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_doFin
   return output_len;
 }
 
-JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpensslNative_clean
+JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_clean
     (JNIEnv *env, jclass clazz, jlong ctx)
 {
   EVP_CIPHER_CTX *context = CONTEXT(ctx);

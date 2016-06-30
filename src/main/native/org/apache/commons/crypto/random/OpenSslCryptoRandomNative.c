@@ -38,7 +38,7 @@
 #undef JNIEXPORT
 #endif
 #define JNIEXPORT __attribute__((__visibility__("default")))
-#include "OpensslCryptoRandomNative.h"
+#include "OpenSslCryptoRandomNative.h"
 
 #ifdef UNIX
 static void * (*dlsym_CRYPTO_malloc) (int, const char *, int);
@@ -91,7 +91,7 @@ static ENGINE * openssl_rand_init(void);
 static void openssl_rand_clean(ENGINE *eng, int clean_locks);
 static int openssl_rand_bytes(unsigned char *buf, int num);
 
-JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpensslCryptoRandomNative_initSR
+JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_initSR
     (JNIEnv *env, jclass clazz)
 {
   char msg[1000];
@@ -165,7 +165,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpensslCryptoRandom
   openssl_rand_init();
 }
 
-JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpensslCryptoRandomNative_nextRandBytes___3B
+JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_nextRandBytes___3B
     (JNIEnv *env, jobject object, jbyteArray bytes)
 {
   if (NULL == bytes) {

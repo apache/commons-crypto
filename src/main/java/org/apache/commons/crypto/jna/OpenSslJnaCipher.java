@@ -71,7 +71,7 @@ class OpenSslJnaCipher implements CryptoCipher {
         }
 
         padding = Padding.get(transform.padding);
-        context = OpensslNativeJna.EVP_CIPHER_CTX_new();
+        context = OpenSslNativeJna.EVP_CIPHER_CTX_new();
 
     }
 
@@ -89,9 +89,9 @@ class OpenSslJnaCipher implements CryptoCipher {
             throws InvalidKeyException, InvalidAlgorithmParameterException {
         Utils.checkNotNull(key);
         Utils.checkNotNull(params);
-        int cipherMode = OpensslNativeJna.OOSL_JNA_DECRYPT_MODE;
+        int cipherMode = OpenSslNativeJna.OOSL_JNA_DECRYPT_MODE;
         if (mode == Cipher.ENCRYPT_MODE) {
-            cipherMode = OpensslNativeJna.OOSL_JNA_ENCRYPT_MODE;
+            cipherMode = OpenSslNativeJna.OOSL_JNA_ENCRYPT_MODE;
         }
         byte[] iv;
         if (params instanceof IvParameterSpec) {
@@ -104,24 +104,24 @@ class OpenSslJnaCipher implements CryptoCipher {
         
        if(algMode == AlgorithmMode.AES_CBC) {
             switch(key.getEncoded().length) {
-                case 16: algo = OpensslNativeJna.EVP_aes_128_cbc(); break;
-                case 24: algo = OpensslNativeJna.EVP_aes_192_cbc(); break;
-                case 32: algo = OpensslNativeJna.EVP_aes_256_cbc(); break;
+                case 16: algo = OpenSslNativeJna.EVP_aes_128_cbc(); break;
+                case 24: algo = OpenSslNativeJna.EVP_aes_192_cbc(); break;
+                case 32: algo = OpenSslNativeJna.EVP_aes_256_cbc(); break;
                 default: throw new InvalidKeyException("keysize unsupported ("+key.getEncoded().length+")");
             }
 
         } else {
             switch(key.getEncoded().length) {
-                case 16: algo = OpensslNativeJna.EVP_aes_128_ctr(); break;
-                case 24: algo = OpensslNativeJna.EVP_aes_192_ctr(); break;
-                case 32: algo = OpensslNativeJna.EVP_aes_256_ctr(); break;
+                case 16: algo = OpenSslNativeJna.EVP_aes_128_ctr(); break;
+                case 24: algo = OpenSslNativeJna.EVP_aes_192_ctr(); break;
+                case 32: algo = OpenSslNativeJna.EVP_aes_256_ctr(); break;
                 default: throw new InvalidKeyException("keysize unsupported ("+key.getEncoded().length+")");
             }
         }
         
-        int retVal = OpensslNativeJna.EVP_CipherInit_ex(context, algo, null, key.getEncoded(), iv, cipherMode);
+        int retVal = OpenSslNativeJna.EVP_CipherInit_ex(context, algo, null, key.getEncoded(), iv, cipherMode);
         throwOnError(retVal);
-        OpensslNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
+        OpenSslNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
     }
 
     /**
@@ -138,7 +138,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     public int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
             throws ShortBufferException {
         int[] outlen = new int[1];
-        int retVal = OpensslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining());
+        int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining());
         throwOnError(retVal);
         int len = outlen[0];
         inBuffer.position(inBuffer.limit());
@@ -191,7 +191,7 @@ class OpenSslJnaCipher implements CryptoCipher {
             BadPaddingException {
         int uptLen = update(inBuffer, outBuffer);
         int[] outlen = new int[1];
-        int retVal = OpensslNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
+        int retVal = OpenSslNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
         throwOnError(retVal);
         int len = uptLen + outlen[0];
         outBuffer.position(outBuffer.position() + outlen[0]);
@@ -234,18 +234,18 @@ class OpenSslJnaCipher implements CryptoCipher {
     @Override
     public void close() {
         if(context != null) {
-            OpensslNativeJna.EVP_CIPHER_CTX_cleanup(context);
-            OpensslNativeJna.EVP_CIPHER_CTX_free(context);
+            OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
+            OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
         }
     }
     
     private void throwOnError(int retVal) {  
         if(retVal != 1) {
-            NativeLong err = OpensslNativeJna.ERR_peek_error();
-            String errdesc = OpensslNativeJna.ERR_error_string(err, null);
+            NativeLong err = OpenSslNativeJna.ERR_peek_error();
+            String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
             
             if(context != null) {
-                OpensslNativeJna.EVP_CIPHER_CTX_cleanup(context);
+                OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             }
             throw new RuntimeException("return code "+retVal+" from openssl. Err code is "+err+": "+errdesc);
         }

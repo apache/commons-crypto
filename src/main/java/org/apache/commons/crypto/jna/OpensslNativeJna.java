@@ -24,7 +24,7 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
 
-class OpensslNativeJna {
+class OpenSslNativeJna {
 
     static final int OPENSSL_INIT_ENGINE_RDRAND = 0x00000200;
 

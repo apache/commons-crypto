@@ -31,7 +31,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
-import org.apache.commons.crypto.jna.OpensslJna;
+import org.apache.commons.crypto.jna.OpenSslJna;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 import org.junit.Assert;
@@ -44,7 +44,7 @@ public abstract class AbstractCipherTest {
 
     public static final String JCE_CIPHER_CLASSNAME = JceCipher.class.getName();
 
-    public static final String OPENSSLJNA_CIPHER_CLASSNAME = OpensslJna.getCipherClass().getName();
+    public static final String OPENSSLJNA_CIPHER_CLASSNAME = OpenSslJna.getCipherClass().getName();
 
     // data
     public static final int BYTEBUFFER_SIZE = 1000;

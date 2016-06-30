@@ -28,7 +28,7 @@ import org.apache.commons.crypto.random.CryptoRandomFactory;
 
 import static org.junit.Assert.fail;
 
-public class OpensslJnaCryptoRandomTest extends AbstractRandomTest {
+public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
