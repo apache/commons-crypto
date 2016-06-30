@@ -75,9 +75,8 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void closeTestNoInit() throws Exception {
-        try (CryptoCipher enc = getCipher(transformations[0])) {
-            // nothing
-        }
+        CryptoCipher enc = getCipher(transformations[0]);
+        enc.close();
     }
 
     @Test
