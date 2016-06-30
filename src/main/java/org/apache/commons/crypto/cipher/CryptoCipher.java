@@ -30,9 +30,6 @@ import javax.crypto.ShortBufferException;
 /**
  * The interface of cryptographic cipher for encryption and decryption.
  *
- * <p><strong>Note that this implementation is not synchronized.</strong>
- * Multiple threads must not access a crypto cipher instance concurrently.
- * Use one crypto cipher instance per thread to circumvent this.
  * <p>
  * Note that implementations must provide a constructor that has 2 parameters:
  * <br>
