@@ -149,12 +149,11 @@ public class CryptoRandomFactory {
 
         if (random != null) {
             return random;
-        } else {
-            if (errorMessage.length() == 0) {
-                throw new IllegalArgumentException("No classname(s) provided");
-            }
-            throw new GeneralSecurityException(errorMessage.toString());
         }
+        if (errorMessage.length() == 0) {
+            throw new IllegalArgumentException("No classname(s) provided");
+        }
+        throw new GeneralSecurityException(errorMessage.toString());
     }
 
     /**

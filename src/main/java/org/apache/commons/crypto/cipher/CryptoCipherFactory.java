@@ -133,14 +133,13 @@ public class CryptoCipherFactory {
 
         if (cipher != null) {
             return cipher;
-        } else {
-            if (errorMessage.length() == 0) {
-                throw new IllegalArgumentException("No classname(s) provided");
-            }
-            errorMessage.append(" is not available or transformation " +
-                    transformation + " is not supported.");
-            throw new GeneralSecurityException(errorMessage.toString());
         }
+        if (errorMessage.length() == 0) {
+            throw new IllegalArgumentException("No classname(s) provided");
+        }
+        errorMessage.append(" is not available or transformation " +
+                transformation + " is not supported.");
+        throw new GeneralSecurityException(errorMessage.toString());
     }
 
     /**
