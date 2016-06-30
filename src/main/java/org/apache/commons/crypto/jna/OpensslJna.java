@@ -26,10 +26,10 @@ import org.apache.commons.crypto.random.CryptoRandom;
 public final class OpensslJna {
 
     public static Class<? extends CryptoCipher> getCipherClass() {
-        return OpensslJnaCipher.class;
+        return OpenSslJnaCipher.class;
     }
 
     public static Class<? extends CryptoRandom> getRandomClass() {
-        return OpensslJnaCryptoRandom.class;
+        return OpenSslJnaCryptoRandom.class;
     }
 }

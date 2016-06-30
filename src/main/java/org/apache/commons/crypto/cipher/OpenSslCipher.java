@@ -35,9 +35,9 @@ import org.apache.commons.crypto.utils.Utils;
 /**
  * Implements the CryptoCipher using JNI into OpenSSL.
  */
-class OpensslCipher implements CryptoCipher {
+class OpenSslCipher implements CryptoCipher {
 
-    private final Openssl cipher;
+    private final OpenSsl cipher;
 
     private final String transformation;
 
@@ -52,16 +52,16 @@ class OpensslCipher implements CryptoCipher {
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OpensslCipher(Properties props, String transformation) // NOPMD
+    public OpenSslCipher(Properties props, String transformation) // NOPMD
             throws GeneralSecurityException {
         this.transformation = transformation;
 
-        String loadingFailureReason = Openssl.getLoadingFailureReason();
+        String loadingFailureReason = OpenSsl.getLoadingFailureReason();
         if (loadingFailureReason != null) {
             throw new RuntimeException(loadingFailureReason);
         }
 
-        cipher = Openssl.getInstance(transformation);
+        cipher = OpenSsl.getInstance(transformation);
     }
 
     /**
@@ -104,9 +104,9 @@ class OpensslCipher implements CryptoCipher {
         Utils.checkNotNull(key);
         Utils.checkNotNull(params);
 
-        int cipherMode = Openssl.DECRYPT_MODE;
+        int cipherMode = OpenSsl.DECRYPT_MODE;
         if (mode == Cipher.ENCRYPT_MODE) {
-            cipherMode = Openssl.ENCRYPT_MODE;
+            cipherMode = OpenSsl.ENCRYPT_MODE;
         }
         byte[] iv;
         if (params instanceof IvParameterSpec) {
@@ -213,7 +213,7 @@ class OpensslCipher implements CryptoCipher {
     }
 
     /**
-     * Closes the OpenSSL cipher. Clean the Openssl native context.
+     * Closes the OpenSSL cipher. Clean the OpenSsl native context.
      */
     @Override
     public void close() {

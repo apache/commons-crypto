@@ -37,10 +37,10 @@ public class ConfigurationKeys {
      * The configuration key of implementation class for crypto cipher. The
      * values of CIPHER_CLASSES_KEY can be
      * "org.apache.commons.crypto.cipher.JceCipher" or
-     * "org.apache.commons.crypto.cipher.OpensslCipher". Or it can be a comma
+     * "org.apache.commons.crypto.cipher.OpenSslCipher". Or it can be a comma
      * separated list. The "org.apache.commons.crypto.cipher.JceCipher" use jce
      * provider to implement CryptoCipher and the
-     * "org.apache.commons.crypto.cipher.OpensslCipher" use jni into openssl to
+     * "org.apache.commons.crypto.cipher.OpenSslCipher" use jni into openssl to
      * implement. Note that for each value,the first value which can be created
      * without exception will be used (priority by order).
      */
@@ -80,11 +80,11 @@ public class ConfigurationKeys {
      * The configuration key of the implementation class for secure random. The
      * values of SECURE_RANDOM_CLASSES_KEY can be
      * "org.apache.commons.crypto.random.JavaCryptoRandom" or
-     * "org.apache.commons.crypto.random.OpensslCryptoRandom". Or it takes a
+     * "org.apache.commons.crypto.random.OpenSslCryptoRandom". Or it takes a
      * comma separated list. The
      * "org.apache.commons.crypto.random.JavaCryptoRandom" use java to implement
      * {@link org.apache.commons.crypto.random.CryptoRandom} and the
-     * "org.apache.commons.crypto.random.OpensslCryptoRandom" use jni into
+     * "org.apache.commons.crypto.random.OpenSslCryptoRandom" use jni into
      * openssl to implement. Note that for each value,the first value which can
      * be created without exception will be used (priority by order).
      */

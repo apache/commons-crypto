@@ -48,7 +48,7 @@ public class CryptoRandomFactory {
          * No properties are used for configuration, but they
          * are passed to the JCE backup implementation (q.v.)
          */
-        OPENSSL(OpensslCryptoRandom.class),
+        OPENSSL(OpenSslCryptoRandom.class),
 
         /**
          * The SecureRandom implementation from the JVM
@@ -103,7 +103,7 @@ public class CryptoRandomFactory {
     }
 
     /**
-     * The default value (OpensslCryptoRandom,JavaCryptoRandom) for crypto cipher.
+     * The default value (OpenSslCryptoRandom,JavaCryptoRandom) for crypto cipher.
      */
     private static final String SECURE_RANDOM_CLASSES_DEFAULT = RandomProvider
         .OPENSSL.getClassName().concat(",").concat(RandomProvider.JAVA
@@ -120,7 +120,7 @@ public class CryptoRandomFactory {
      * Uses the SECURE_RANDOM_CLASSES_KEY from the provided
      * properties.
      * If it is not set, then it checks the System properties.
-     * Failing that, it defaults to OpensslCryptoRandom,JavaCryptoRandom
+     * Failing that, it defaults to OpenSslCryptoRandom,JavaCryptoRandom
      * The properties are passed to the generated class.
      *
      * @param props the configuration properties.

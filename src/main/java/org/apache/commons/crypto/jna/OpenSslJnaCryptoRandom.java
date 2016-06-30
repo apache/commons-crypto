@@ -45,19 +45,19 @@ import com.sun.jna.ptr.PointerByReference;
  * @see <a href="http://en.wikipedia.org/wiki/RdRand">
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
-class OpensslJnaCryptoRandom extends Random implements CryptoRandom {
+class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     private static final long serialVersionUID = -7128193502768749585L;
     private final boolean rdrandEnabled;
     private PointerByReference rdrandEngine;
 
     /**
-     * Constructs a {@link OpensslJnaCryptoRandom}.
+     * Constructs a {@link OpenSslJnaCryptoRandom}.
      *
      * @param props the configuration properties (not used)
      * @throws NoSuchAlgorithmException if no Provider supports a
      *         SecureRandomSpi implementation for the specified algorithm.
      */
-    public OpensslJnaCryptoRandom(Properties props)
+    public OpenSslJnaCryptoRandom(Properties props)
             throws NoSuchAlgorithmException {
 
         boolean rdrandLoaded = false;
@@ -95,7 +95,7 @@ class OpensslJnaCryptoRandom extends Random implements CryptoRandom {
     @Override
     public void nextBytes(byte[] bytes) {
         
-        synchronized (OpensslJnaCryptoRandom.class) {
+        synchronized (OpenSslJnaCryptoRandom.class) {
             //this method is synchronized for now
             //to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
             
@@ -113,7 +113,7 @@ class OpensslJnaCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link OpensslJnaCryptoRandom}. For {@link OpensslJnaCryptoRandom},
+     * Overrides {@link OpenSslJnaCryptoRandom}. For {@link OpenSslJnaCryptoRandom},
      * we don't need to set seed.
      *
      * @param seed the initial seed.

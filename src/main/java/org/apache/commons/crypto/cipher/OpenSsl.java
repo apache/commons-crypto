@@ -32,9 +32,9 @@ import org.apache.commons.crypto.utils.Utils;
  * OpenSSL cryptographic wrapper using JNI. Currently only AES-CTR is supported.
  * It's flexible to add other crypto algorithms/modes.
  */
-final class Openssl {
+final class OpenSsl {
 
-    // Mode constant defined by Openssl JNI
+    // Mode constant defined by OpenSsl JNI
     public static final int ENCRYPT_MODE = 1;
     public static final int DECRYPT_MODE = 0;
 
@@ -102,7 +102,7 @@ final class Openssl {
     }
 
     /**
-     * Gets the failure reason when loading Openssl native.
+     * Gets the failure reason when loading OpenSsl native.
      *
      * @return the failure reason.
      */
@@ -111,39 +111,39 @@ final class Openssl {
     }
 
     /**
-     * Constructs a {@link Openssl} instance based on context, algorithm and padding.
+     * Constructs a {@link OpenSsl} instance based on context, algorithm and padding.
      *
      * @param context the context.
      * @param algorithm the algorithm.
      * @param padding the padding.
      */
-    private Openssl(long context, int algorithm, int padding) {
+    private OpenSsl(long context, int algorithm, int padding) {
         this.context = context;
         this.algorithm = algorithm;
         this.padding = padding;
     }
 
     /**
-     * Return an <code>OpensslCipher</code> object that implements the specified
+     * Return an <code>OpenSslCipher</code> object that implements the specified
      * transformation.
      *
      * @param transformation the name of the transformation, e.g.,
      *        AES/CTR/NoPadding.
-     * @return OpensslCipher an <code>OpensslCipher</code> object
+     * @return OpenSslCipher an <code>OpenSslCipher</code> object
      * @throws NoSuchAlgorithmException if <code>transformation</code> is null,
-     *         empty, in an invalid format, or if Openssl doesn't implement the
+     *         empty, in an invalid format, or if OpenSsl doesn't implement the
      *         specified algorithm.
      * @throws NoSuchPaddingException if <code>transformation</code> contains a
      *         padding scheme that is not available.
      */
-    public static Openssl getInstance(String transformation)
+    public static OpenSsl getInstance(String transformation)
             throws NoSuchAlgorithmException, NoSuchPaddingException {
         Transform transform = tokenizeTransformation(transformation);
         int algorithmMode = AlgorithmMode.get(transform.algorithm,
                 transform.mode);
         int padding = Padding.get(transform.padding);
         long context = OpensslNative.initContext(algorithmMode, padding);
-        return new Openssl(context, algorithmMode, padding);
+        return new OpenSsl(context, algorithmMode, padding);
     }
 
     /** Nested class for algorithm, mode and padding. */

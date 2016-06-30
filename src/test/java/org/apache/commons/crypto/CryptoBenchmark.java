@@ -53,13 +53,13 @@ import org.openjdk.jmh.annotations.Warmup;
 public class CryptoBenchmark {
 
     // TODO replace these with the appropriate public fields/methods when these have been set up
-    private static final String RANDOM_OPENSSL_JNA = "org.apache.commons.crypto.jna.OpensslJnaCryptoRandom";
+    private static final String RANDOM_OPENSSL_JNA = "org.apache.commons.crypto.jna.OpenSslJnaCryptoRandom";
     private static final String RANDOM_JAVA        = "org.apache.commons.crypto.random.JavaCryptoRandom";
     private static final String RANDOM_OS          = "org.apache.commons.crypto.random.OsCryptoRandom";
-    private static final String RANDOM_OPENSSL     = "org.apache.commons.crypto.random.OpensslCryptoRandom";
+    private static final String RANDOM_OPENSSL     = "org.apache.commons.crypto.random.OpenSslCryptoRandom";
 
-    private static final String CIPHER_OPENSSL_JNA = "org.apache.commons.crypto.jna.OpensslJnaCipher";
-    private static final String CIPHER_OPENSSL     = "org.apache.commons.crypto.cipher.OpensslCipher";
+    private static final String CIPHER_OPENSSL_JNA = "org.apache.commons.crypto.jna.OpenSslJnaCipher";
+    private static final String CIPHER_OPENSSL     = "org.apache.commons.crypto.cipher.OpenSslCipher";
     private static final String CIPHER_JCE         = "org.apache.commons.crypto.cipher.JceCipher";
 
     private static final byte[] KEY = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,

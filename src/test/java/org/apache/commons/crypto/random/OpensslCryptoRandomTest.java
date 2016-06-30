@@ -30,11 +30,11 @@ public class OpensslCryptoRandomTest extends AbstractRandomTest {
         Properties props = new Properties();
         props.setProperty(
                 ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
-                OpensslCryptoRandom.class.getName());
+                OpenSslCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        if (!(random instanceof OpensslCryptoRandom)) {
+        if (!(random instanceof OpenSslCryptoRandom)) {
             fail("The CryptoRandom should be: "
-                    + OpensslCryptoRandom.class.getName());
+                    + OpenSslCryptoRandom.class.getName());
         }
         return random;
     }

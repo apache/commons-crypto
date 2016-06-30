@@ -43,7 +43,7 @@ public class CryptoRandomFactoryTest {
     public void testDefaultRandom() throws GeneralSecurityException {
         Properties props = new Properties();
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        Assert.assertEquals(OpensslCryptoRandom.class.getName(),
+        Assert.assertEquals(OpenSslCryptoRandom.class.getName(),
             random.getClass().getName());
     }
 

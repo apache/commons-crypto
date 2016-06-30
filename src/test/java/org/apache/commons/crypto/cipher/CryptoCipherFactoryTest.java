@@ -30,7 +30,7 @@ public class CryptoCipherFactoryTest {
     public void testDefaultCipher() throws GeneralSecurityException {
         CryptoCipher defaultCipher = CryptoCipherFactory
                 .getCryptoCipher("AES/CBC/NoPadding");
-        Assert.assertEquals(OpensslCipher.class.getName(), defaultCipher
+        Assert.assertEquals(OpenSslCipher.class.getName(), defaultCipher
                 .getClass().getName());
     }
 
@@ -41,7 +41,7 @@ public class CryptoCipherFactoryTest {
                 ConfigurationKeys.CIPHER_CLASSES_KEY, "");
         CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
                 "AES/CBC/NoPadding", properties);
-        Assert.assertEquals(OpensslCipher.class.getName(), defaultCipher
+        Assert.assertEquals(OpenSslCipher.class.getName(), defaultCipher
                 .getClass().getName());
     }
 

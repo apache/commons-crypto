@@ -41,7 +41,7 @@ import org.apache.commons.crypto.utils.Utils;
  * @see <a href="http://en.wikipedia.org/wiki/RdRand">
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
-class OpensslCryptoRandom extends Random implements CryptoRandom {
+class OpenSslCryptoRandom extends Random implements CryptoRandom {
     private static final long serialVersionUID = -7828193502768789584L;
 
     /** If native SecureRandom unavailable, use java SecureRandom */
@@ -70,7 +70,7 @@ class OpensslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Constructs a {@link OpensslCryptoRandom}.
+     * Constructs a {@link OpenSslCryptoRandom}.
      *
      * @param props the configuration properties
      * Only used to construct the fallback {@link JavaCryptoRandom} instance
@@ -79,7 +79,7 @@ class OpensslCryptoRandom extends Random implements CryptoRandom {
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OpensslCryptoRandom(Properties props)
+    public OpenSslCryptoRandom(Properties props)
             throws NoSuchAlgorithmException {
         //fallback needs to be initialized here in any case cause even if
         //nativeEnabled is true OpensslCryptoRandomNative.nextRandBytes may fail
@@ -99,7 +99,7 @@ class OpensslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link OpensslCryptoRandom}. For {@link OpensslCryptoRandom},
+     * Overrides {@link OpenSslCryptoRandom}. For {@link OpenSslCryptoRandom},
      * we don't need to set seed.
      *
      * @param seed the initial seed.

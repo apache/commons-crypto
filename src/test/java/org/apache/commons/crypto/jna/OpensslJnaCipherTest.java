@@ -19,7 +19,7 @@
 package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
-import org.apache.commons.crypto.jna.OpensslJnaCipher;
+import org.apache.commons.crypto.jna.OpenSslJnaCipher;
 
 public class OpensslJnaCipherTest extends AbstractCipherTest {
 
@@ -30,7 +30,7 @@ public class OpensslJnaCipherTest extends AbstractCipherTest {
                 "AES/CBC/PKCS5Padding",
                 "AES/CTR/NoPadding"
                 };
-        cipherClass = OpensslJnaCipher.class.getName();
+        cipherClass = OpenSslJnaCipher.class.getName();
     }
 
     @Override

@@ -47,7 +47,7 @@ public class CryptoCipherFactory {
          * <p>
          * This implementation does not use any properties
          */
-        OPENSSL(OpensslCipher.class),
+        OPENSSL(OpenSslCipher.class),
         
         /**
          * The JCE cipher implementation from the JVM
@@ -91,7 +91,7 @@ public class CryptoCipherFactory {
     }
 
     /**
-     * The default value (OpensslCipher,JceCipher) for crypto cipher.
+     * The default value (OpenSslCipher,JceCipher) for crypto cipher.
      */
     private static final String CIPHER_CLASSES_DEFAULT = 
             CipherProvider.OPENSSL.getClassName()
@@ -109,7 +109,7 @@ public class CryptoCipherFactory {
      *
      * @param props  the configuration properties (uses ConfigurationKeys.CIPHER_CLASSES_KEY)
      * @param transformation  algorithm/mode/padding
-     * @return CryptoCipher  the cipher  (defaults to OpensslCipher)
+     * @return CryptoCipher  the cipher  (defaults to OpenSslCipher)
      * @throws GeneralSecurityException if cipher initialize failed
      * @throws IllegalArgumentException if no classname(s)
      */
@@ -151,7 +151,7 @@ public class CryptoCipherFactory {
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @return CryptoCipher the cipher object (defaults to OpensslCipher if available, else JceCipher)
+     * @return CryptoCipher the cipher object (defaults to OpenSslCipher if available, else JceCipher)
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
     public static CryptoCipher getCryptoCipher(String transformation)

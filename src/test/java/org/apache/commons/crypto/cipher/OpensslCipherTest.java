@@ -42,10 +42,10 @@ public class OpensslCipherTest extends AbstractCipherTest {
 
     @Test(expected = NoSuchAlgorithmException.class, timeout = 120000)
     public void testInvalidAlgorithm() throws Exception {
-        Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
+        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
 
         try {
-            Openssl.getInstance("AES2/CTR/NoPadding");
+            OpenSsl.getInstance("AES2/CTR/NoPadding");
             Assert.fail("Should specify correct algorithm.");
         } catch (NoSuchAlgorithmException e) {
             Assert.assertTrue(e.getMessage().contains(
@@ -56,10 +56,10 @@ public class OpensslCipherTest extends AbstractCipherTest {
 
     @Test(expected = NoSuchPaddingException.class, timeout = 120000)
     public void testInvalidPadding() throws Exception {
-        Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
+        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
 
         try {
-            Openssl.getInstance("AES/CTR/NoPadding2");
+            OpenSsl.getInstance("AES/CTR/NoPadding2");
             Assert.fail("Should specify correct padding.");
         } catch (NoSuchPaddingException e) {
             Assert.assertTrue(e.getMessage().contains(
@@ -71,8 +71,8 @@ public class OpensslCipherTest extends AbstractCipherTest {
     @Test(expected = NoSuchAlgorithmException.class, timeout = 120000)
     public void testInvalidMode() throws Exception {
         try {
-            Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
-            Openssl.getInstance("AES/CTR2/NoPadding");
+            Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+            OpenSsl.getInstance("AES/CTR2/NoPadding");
             Assert.fail("java.security.NoSuchAlgorithmException should be thrown.");
         } catch (NoSuchAlgorithmException e) {
             Assert.assertTrue(e.getMessage().contains(
@@ -83,12 +83,12 @@ public class OpensslCipherTest extends AbstractCipherTest {
 
     @Test(timeout = 120000)
     public void testUpdateArguments() throws Exception {
-        Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
-        Openssl cipher = Openssl
+        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
-        cipher.init(Openssl.ENCRYPT_MODE, KEY, IV);
+        cipher.init(OpenSsl.ENCRYPT_MODE, KEY, IV);
 
         // Require direct buffers
         ByteBuffer input = ByteBuffer.allocate(1024);
@@ -117,12 +117,12 @@ public class OpensslCipherTest extends AbstractCipherTest {
 
     @Test(timeout = 120000)
     public void testDoFinalArguments() throws Exception {
-        Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
-        Openssl cipher = Openssl
+        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
-        cipher.init(Openssl.ENCRYPT_MODE, KEY, IV);
+        cipher.init(OpenSsl.ENCRYPT_MODE, KEY, IV);
 
         // Require direct buffer
         ByteBuffer output = ByteBuffer.allocate(1024);
@@ -138,15 +138,15 @@ public class OpensslCipherTest extends AbstractCipherTest {
 
     @Test(expected = InvalidKeyException.class, timeout = 120000)
     public void testInvalidKey() throws Exception {
-        Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
-        Openssl cipher = Openssl
+        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
         final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
         try {
-            cipher.init(Openssl.ENCRYPT_MODE, invalidKey, IV);
+            cipher.init(OpenSsl.ENCRYPT_MODE, invalidKey, IV);
             Assert.fail("java.security.InvalidKeyException should be thrown.");
         } catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("Invalid AES key length: " + invalidKey.length + " bytes"));
@@ -156,15 +156,15 @@ public class OpensslCipherTest extends AbstractCipherTest {
 
     @Test(expected = InvalidAlgorithmParameterException.class, timeout = 120000)
     public void testInvalidIV() throws Exception {
-        Assume.assumeTrue(Openssl.getLoadingFailureReason() == null);
-        Openssl cipher = Openssl
+        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
         final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
         try {
-            cipher.init(Openssl.ENCRYPT_MODE, KEY, invalidIV);
+            cipher.init(OpenSsl.ENCRYPT_MODE, KEY, invalidIV);
             Assert.fail("java.security.InvalidAlgorithmParameterException should be thrown.");
         } catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("Wrong IV length: must be 16 bytes long"));

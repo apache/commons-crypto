@@ -43,7 +43,7 @@ import com.sun.jna.ptr.PointerByReference;
 /**
  * Implements the CryptoCipher using JNA into OpenSSL.
  */
-class OpensslJnaCipher implements CryptoCipher {
+class OpenSslJnaCipher implements CryptoCipher {
 
     private final static int AES_BLOCK_SIZE = 16;
     
@@ -60,7 +60,7 @@ class OpensslJnaCipher implements CryptoCipher {
      * @param transformation transformation for OpenSSL cipher
      * @throws GeneralSecurityException if OpenSSL cipher initialize failed
      */
-    public OpensslJnaCipher(Properties props, String transformation)
+    public OpenSslJnaCipher(Properties props, String transformation)
             throws GeneralSecurityException {
         this.transformation = transformation;
         Transform transform = tokenizeTransformation(transformation);
@@ -229,7 +229,7 @@ class OpensslJnaCipher implements CryptoCipher {
     }
 
     /**
-     * Closes the OpenSSL cipher. Clean the Openssl native context.
+     * Closes the OpenSSL cipher. Clean the OpenSsl native context.
      */
     @Override
     public void close() {
