@@ -82,18 +82,18 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void closeTestAfterInit() throws Exception {
-        CryptoCipher enc = getCipher(transformations[0]);
-        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-        enc.close();
+        try (CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        }
     }
 
     @Test
     public void reInitTest() throws Exception {
-        CryptoCipher enc = getCipher(transformations[0]);
-        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-        enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-        enc.close();
+        try (CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        }
     }
 
     @Test
