@@ -180,11 +180,11 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     }
     
     private void throwOnError(int retVal) {  
-        if(retVal != 1) {
+        if (retVal != 1) {
             NativeLong err = OpenSslNativeJna.ERR_peek_error();
             String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
             close();
-            throw new RuntimeException("return code "+retVal+" from OpenSSL. Err code is "+err+": "+errdesc);
+            throw new RuntimeException("return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
         }
     }
 }

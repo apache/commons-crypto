@@ -103,19 +103,21 @@ class OpenSslJnaCipher implements CryptoCipher {
         }
         
        if(algMode == AlgorithmMode.AES_CBC) {
-            switch(key.getEncoded().length) {
+            switch (key.getEncoded().length) {
                 case 16: algo = OpenSslNativeJna.EVP_aes_128_cbc(); break;
                 case 24: algo = OpenSslNativeJna.EVP_aes_192_cbc(); break;
                 case 32: algo = OpenSslNativeJna.EVP_aes_256_cbc(); break;
-                default: throw new InvalidKeyException("keysize unsupported ("+key.getEncoded().length+")");
+            default:
+                throw new InvalidKeyException("keysize unsupported (" + key.getEncoded().length + ")");
             }
 
         } else {
-            switch(key.getEncoded().length) {
+            switch (key.getEncoded().length) {
                 case 16: algo = OpenSslNativeJna.EVP_aes_128_ctr(); break;
                 case 24: algo = OpenSslNativeJna.EVP_aes_192_ctr(); break;
                 case 32: algo = OpenSslNativeJna.EVP_aes_256_ctr(); break;
-                default: throw new InvalidKeyException("keysize unsupported ("+key.getEncoded().length+")");
+            default:
+                throw new InvalidKeyException("keysize unsupported (" + key.getEncoded().length + ")");
             }
         }
         
@@ -162,7 +164,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     @Override
     public int update(byte[] input, int inputOffset, int inputLen,
             byte[] output, int outputOffset) throws ShortBufferException {
-        ByteBuffer outputBuf = ByteBuffer.wrap(output, outputOffset, output.length-outputOffset);
+        ByteBuffer outputBuf = ByteBuffer.wrap(output, outputOffset, output.length - outputOffset);
         ByteBuffer inputBuf = ByteBuffer.wrap(input, inputOffset, inputLen);
         return update(inputBuf, outputBuf);
     }
@@ -233,18 +235,18 @@ class OpenSslJnaCipher implements CryptoCipher {
      */
     @Override
     public void close() {
-        if(context != null) {
+        if (context != null) {
             OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
         }
     }
     
     private void throwOnError(int retVal) {  
-        if(retVal != 1) {
+        if (retVal != 1) {
             NativeLong err = OpenSslNativeJna.ERR_peek_error();
             String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
             
-            if(context != null) {
+            if (context != null) {
                 OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             }
             throw new RuntimeException("return code "+retVal+" from OpenSSL. Err code is "+err+": "+errdesc);
@@ -293,14 +295,11 @@ class OpenSslJnaCipher implements CryptoCipher {
     private static enum AlgorithmMode {
         AES_CTR, AES_CBC;
 
-        static AlgorithmMode get(String algorithm, String mode)
-                throws NoSuchAlgorithmException {
+        static AlgorithmMode get(String algorithm, String mode) throws NoSuchAlgorithmException {
             try {
                 return AlgorithmMode.valueOf(algorithm + "_" + mode);
             } catch (Exception e) {
-                throw new NoSuchAlgorithmException(
-                        "Doesn't support algorithm: " + algorithm
-                                + " and mode: " + mode);
+                throw new NoSuchAlgorithmException("Doesn't support algorithm: " + algorithm + " and mode: " + mode);
             }
         }
     }
@@ -312,8 +311,7 @@ class OpenSslJnaCipher implements CryptoCipher {
             try {
                 return Padding.valueOf(padding).ordinal();
             } catch (Exception e) {
-                throw new NoSuchPaddingException("Doesn't support padding: "
-                        + padding);
+                throw new NoSuchPaddingException("Doesn't support padding: " + padding);
             }
         }
     }
