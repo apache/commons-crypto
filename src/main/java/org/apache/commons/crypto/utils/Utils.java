@@ -39,7 +39,7 @@ public final class Utils {
      }
      
     /**
-     * The private constructor of {@Link Utils}.
+     * The private constructor of {@link Utils}.
      */
     private Utils() {
     }

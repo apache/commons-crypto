@@ -123,7 +123,7 @@ public class ConfigurationKeys {
             + "lib.tempdir";
 
     /**
-     * The private constructor of {@Link ConfigurationKeys}.
+     * The private constructor of {@link ConfigurationKeys}.
      */
     private ConfigurationKeys() {
     }

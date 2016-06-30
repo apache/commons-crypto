@@ -395,7 +395,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
         private boolean reset;
 
         /**
-         * The constructor of {@Link CipherState}.
+         * The constructor of {@link CipherState}.
          *
          * @param cipher the CryptoCipher instance.
          */

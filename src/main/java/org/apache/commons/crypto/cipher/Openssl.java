@@ -111,7 +111,7 @@ final class Openssl {
     }
 
     /**
-     * Constructs a {@Link Openssl} instance based on context, algorithm and padding.
+     * Constructs a {@link Openssl} instance based on context, algorithm and padding.
      *
      * @param context the context.
      * @param algorithm the algorithm.
@@ -153,7 +153,7 @@ final class Openssl {
         final String padding;
 
         /**
-         * Constructs a {@Link Transform} based on the algorithm, mode and padding.
+         * Constructs a {@link Transform} based on the algorithm, mode and padding.
          *
          * @param algorithm the algorithm
          * @param mode the mode.
@@ -170,7 +170,7 @@ final class Openssl {
      * Gets the tokens of transformation.
      *
      * @param transformation the transformation.
-     * @return the {@Link Transform} instance.
+     * @return the {@link Transform} instance.
      * @throws NoSuchAlgorithmException if the transformation is null.
      */
     private static Transform tokenizeTransformation(String transformation)

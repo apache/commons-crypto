@@ -26,7 +26,7 @@ package org.apache.commons.crypto.random;
  */
 class OpensslCryptoRandomNative {
     /**
-     * The private constructor of {@Link OpensslCryptoRandomNative}.
+     * The private constructor of {@link OpensslCryptoRandomNative}.
      */
     private OpensslCryptoRandomNative() {
     }

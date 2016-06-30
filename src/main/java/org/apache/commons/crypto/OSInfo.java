@@ -64,7 +64,7 @@ final class OSInfo {
     static final String PPC64 = "ppc64";
 
     /**
-     * The private constructor of {@Link OSInfo}.
+     * The private constructor of {@link OSInfo}.
      */
     private OSInfo() {
     }

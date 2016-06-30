@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
 class OpensslNative {
 
   /**
-   * The private constructor of {@Link OpensslNative}.
+   * The private constructor of {@link OpensslNative}.
    */
     private OpensslNative() {
     }

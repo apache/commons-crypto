@@ -110,7 +110,7 @@ public class CryptoRandomFactory {
             .getClassName());
 
     /**
-     * The private constructor of {@Link CryptoRandomFactory}.
+     * The private constructor of {@link CryptoRandomFactory}.
      */
     private CryptoRandomFactory() {
     }
