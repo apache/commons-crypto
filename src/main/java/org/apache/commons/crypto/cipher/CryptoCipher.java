@@ -33,6 +33,11 @@ import javax.crypto.ShortBufferException;
  * <p><strong>Note that this implementation is not synchronized.</strong>
  * Multiple threads must not access a crypto cipher instance concurrently.
  * Use one crypto cipher instance per thread to circumvent this.
+ * <p>
+ * Note that implementations must provide a constructor that has 2 parameters:
+ * <br>
+ * a Properties instance and a String (transformation)
+ * 
  */
 public interface CryptoCipher extends Closeable {
 

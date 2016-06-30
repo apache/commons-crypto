@@ -21,6 +21,8 @@ import java.io.Closeable;
 
 /**
  * The interface for CryptoRandom.
+ * <p>
+ * Note that implementations must provide a constructor that takes a Properties instance
  */
 public interface CryptoRandom extends Closeable {
 
