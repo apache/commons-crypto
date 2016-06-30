@@ -24,7 +24,7 @@ import java.util.Properties;
 import java.util.Random;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
-import org.apache.commons.crypto.utils.IOUtils;
+import org.apache.commons.crypto.utils.IoUtils;
 
 /**
  * A Random implementation that uses random bytes sourced from the operating
@@ -50,7 +50,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
     private void fillReservoir(int min) {
         if (pos >= reservoir.length - min) {
             try {
-                IOUtils.readFully(stream, reservoir, 0, reservoir.length);
+                IoUtils.readFully(stream, reservoir, 0, reservoir.length);
             } catch (IOException e) {
                 throw new RuntimeException("failed to fill reservoir", e);
             }
@@ -132,7 +132,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
     @Override
     synchronized public void close() {
         if (stream != null) {
-            IOUtils.cleanup(stream);
+            IoUtils.cleanup(stream);
             stream = null;
         }
     }

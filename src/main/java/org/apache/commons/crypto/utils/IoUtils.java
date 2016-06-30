@@ -25,12 +25,12 @@ import org.apache.commons.crypto.stream.input.Input;
 /**
  * General utility methods for working with IO.
  */
-public final class IOUtils {
+public final class IoUtils {
 
     /**
-     * Teh private constructor of {@link IOUtils}.
+     * Teh private constructor of {@link IoUtils}.
      */
-    private IOUtils() {
+    private IoUtils() {
     }
 
     /**

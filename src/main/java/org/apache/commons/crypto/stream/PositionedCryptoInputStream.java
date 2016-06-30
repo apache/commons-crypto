@@ -34,7 +34,7 @@ import javax.crypto.spec.IvParameterSpec;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.input.Input;
-import org.apache.commons.crypto.utils.IOUtils;
+import org.apache.commons.crypto.utils.IoUtils;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -133,7 +133,7 @@ public class PositionedCryptoInputStream extends CTRCryptoInputStream {
     public void readFully(long position, byte[] buffer, int offset, int length)
             throws IOException {
         checkStream();
-        IOUtils.readFully(input, position, buffer, offset, length);
+        IoUtils.readFully(input, position, buffer, offset, length);
         if (length > 0) {
             // This operation does not change the current offset of the file
             decrypt(position, buffer, offset, length);
