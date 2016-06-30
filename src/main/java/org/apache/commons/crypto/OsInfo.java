@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * Provides OS name and architecture name.
  */
-final class OSInfo {
+final class OsInfo {
     private final static HashMap<String, String> archMapping = new HashMap<>();
 
     /**
@@ -64,9 +64,9 @@ final class OSInfo {
     static final String PPC64 = "ppc64";
 
     /**
-     * The private constructor of {@link OSInfo}.
+     * The private constructor of {@link OsInfo}.
      */
-    private OSInfo() {
+    private OsInfo() {
     }
 
     static {

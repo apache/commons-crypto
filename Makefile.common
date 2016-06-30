@@ -32,8 +32,8 @@ JAVA  := "$$JAVA_HOME/bin/java"
 JAVAC := "$$JAVA_HOME/bin/javac"
 JAVAH := "$$JAVA_HOME/bin/javah"
 
-OSINFO_CLASS := org.apache.commons.crypto.OSInfo
-OSINFO_PROG := $(TARGET)/classes/org/apache/commons/crypto/OSInfo.class
+OSINFO_CLASS := org.apache.commons.crypto.OsInfo
+OSINFO_PROG := $(TARGET)/classes/org/apache/commons/crypto/OsInfo.class
 
 OS_NAME := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS) --os)
 OS_ARCH := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS) --arch)

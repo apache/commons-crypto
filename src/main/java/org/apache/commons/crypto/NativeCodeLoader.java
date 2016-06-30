@@ -88,12 +88,12 @@ final class NativeCodeLoader {
 
         // Load an OS-dependent native library inside a jar file
         nativeLibraryPath = "/org/apache/commons/crypto/native/"
-                + OSInfo.getNativeLibFolderPathForCurrentOS();
+                + OsInfo.getNativeLibFolderPathForCurrentOS();
         boolean hasNativeLib = hasResource(nativeLibraryPath + "/"
                 + nativeLibraryName);
         if (!hasNativeLib) {
             String altName = "libcommons-crypto.jnilib";
-            if (OSInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + "/" + altName)) {
+            if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + "/" + altName)) {
                 // Fix for openjdk7 for Mac
                 nativeLibraryName = altName;
                 hasNativeLib = true;
@@ -103,7 +103,7 @@ final class NativeCodeLoader {
         if (!hasNativeLib) {
             String errorMessage = String.format(
                     "no native library is found for os.name=%s and os.arch=%s",
-                    OSInfo.getOSName(), OSInfo.getArchName());
+                    OsInfo.getOSName(), OsInfo.getArchName());
             throw new RuntimeException(errorMessage);
         }
 
