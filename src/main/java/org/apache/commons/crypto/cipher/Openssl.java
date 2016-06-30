@@ -94,7 +94,7 @@ final class Openssl {
             if (Crypto.isNativeCodeLoaded()) {
                 OpensslNative.initIDs();
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             loadingFailure = t.getMessage();
         } finally {
             loadingFailureReason = loadingFailure;

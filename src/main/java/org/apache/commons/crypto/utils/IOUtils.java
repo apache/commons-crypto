@@ -91,7 +91,7 @@ public final class IOUtils {
             if (c != null) {
                 try {
                     c.close();
-                } catch (Throwable e) { // NOPMD
+                } catch (IOException e) { // NOPMD
                 }
             }
         }
