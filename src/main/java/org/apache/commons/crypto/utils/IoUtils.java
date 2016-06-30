@@ -28,7 +28,7 @@ import org.apache.commons.crypto.stream.input.Input;
 public final class IoUtils {
 
     /**
-     * Teh private constructor of {@link IoUtils}.
+     * The private constructor of {@link IoUtils}.
      */
     private IoUtils() {
     }
