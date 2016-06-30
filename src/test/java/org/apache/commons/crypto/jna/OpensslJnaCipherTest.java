@@ -19,7 +19,6 @@
 package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
-import org.apache.commons.crypto.jna.OpensslJnaCipher;
 
 public class OpensslJnaCipherTest extends AbstractCipherTest {
 
@@ -33,13 +32,4 @@ public class OpensslJnaCipherTest extends AbstractCipherTest {
         cipherClass = OpensslJnaCipher.class.getName();
     }
 
-    @Override
-    public void closeTestRepeat() {
-        System.err.println("closeTestRepeat() Causes JVM crash");
-    }
-
-    @Override
-    public void reInitAfterClose() {
-        System.err.println("reInitAfterClose() Causes JVM crash");
-    }
 }
