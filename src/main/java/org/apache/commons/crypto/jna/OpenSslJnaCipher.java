@@ -247,7 +247,7 @@ class OpenSslJnaCipher implements CryptoCipher {
             if(context != null) {
                 OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             }
-            throw new RuntimeException("return code "+retVal+" from openssl. Err code is "+err+": "+errdesc);
+            throw new RuntimeException("return code "+retVal+" from OpenSSL. Err code is "+err+": "+errdesc);
         }
     }
 

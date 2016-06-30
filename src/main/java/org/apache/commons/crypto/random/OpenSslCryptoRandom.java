@@ -135,7 +135,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link java.lang.AutoCloseable#close()}. Closes openssl context
+     * Overrides {@link java.lang.AutoCloseable#close()}. Closes OpenSSL context
      * if native enabled.
      */
     @Override

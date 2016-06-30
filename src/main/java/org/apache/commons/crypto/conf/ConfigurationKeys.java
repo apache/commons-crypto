@@ -40,7 +40,7 @@ public class ConfigurationKeys {
      * "org.apache.commons.crypto.cipher.OpenSslCipher". Or it can be a comma
      * separated list. The "org.apache.commons.crypto.cipher.JceCipher" use jce
      * provider to implement CryptoCipher and the
-     * "org.apache.commons.crypto.cipher.OpenSslCipher" use jni into openssl to
+     * "org.apache.commons.crypto.cipher.OpenSslCipher" use jni into OpenSSL to
      * implement. Note that for each value,the first value which can be created
      * without exception will be used (priority by order).
      */
@@ -85,7 +85,7 @@ public class ConfigurationKeys {
      * "org.apache.commons.crypto.random.JavaCryptoRandom" use java to implement
      * {@link org.apache.commons.crypto.random.CryptoRandom} and the
      * "org.apache.commons.crypto.random.OpenSslCryptoRandom" use jni into
-     * openssl to implement. Note that for each value,the first value which can
+     * OpenSSL to implement. Note that for each value,the first value which can
      * be created without exception will be used (priority by order).
      */
     public static final String SECURE_RANDOM_CLASSES_KEY = CONF_PREFIX
