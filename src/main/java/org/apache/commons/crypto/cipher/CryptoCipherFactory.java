@@ -91,11 +91,12 @@ public class CryptoCipherFactory {
     }
 
     /**
-     * The default value (OpensslCipher) for crypto cipher.
+     * The default value (OpensslCipher,JceCipher) for crypto cipher.
      */
-    private static final String CIPHER_CLASSES_DEFAULT = CipherProvider
-            .OPENSSL.getClassName().concat(",").concat(CipherProvider.JCE
-            .getClassName());
+    private static final String CIPHER_CLASSES_DEFAULT = 
+            CipherProvider.OPENSSL.getClassName()
+            .concat(",")
+            .concat(CipherProvider.JCE.getClassName());
 
     /**
      * The private Constructor of {@link CryptoCipherFactory}.
