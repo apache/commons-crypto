@@ -75,12 +75,14 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void closeTestNoInit() throws Exception {
+        // This test deliberately does not use try with resources in order to control the sequence of operations exactly
         CryptoCipher enc = getCipher(transformations[0]);
         enc.close();
     }
 
     @Test
     public void closeTestAfterInit() throws Exception {
+        // This test deliberately does not use try with resources in order to control the sequence of operations exactly
         CryptoCipher enc = getCipher(transformations[0]);
         enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
         enc.close();
@@ -88,6 +90,7 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void reInitTest() throws Exception {
+        // This test deliberately does not use try with resources in order to control the sequence of operations exactly
         CryptoCipher enc = getCipher(transformations[0]);
         enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
         enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
@@ -97,6 +100,7 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void reInitAfterClose() throws Exception {
+        // This test deliberately does not use try with resources in order to control the sequence of operations exactly
         CryptoCipher enc = getCipher(transformations[0]);
         enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
         enc.close();
@@ -106,6 +110,7 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void closeTestRepeat() throws Exception {
+        // This test deliberately does not use try with resources in order to control the sequence of operations exactly
         CryptoCipher enc = getCipher(transformations[0]);
         enc.close();
         enc.close(); // repeat the close
