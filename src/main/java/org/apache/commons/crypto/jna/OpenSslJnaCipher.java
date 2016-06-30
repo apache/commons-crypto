@@ -295,14 +295,11 @@ class OpenSslJnaCipher implements CryptoCipher {
     private static enum AlgorithmMode {
         AES_CTR, AES_CBC;
 
-        static AlgorithmMode get(String algorithm, String mode)
-                throws NoSuchAlgorithmException {
+        static AlgorithmMode get(String algorithm, String mode) throws NoSuchAlgorithmException {
             try {
                 return AlgorithmMode.valueOf(algorithm + "_" + mode);
             } catch (Exception e) {
-                throw new NoSuchAlgorithmException(
-                        "Doesn't support algorithm: " + algorithm
-                                + " and mode: " + mode);
+                throw new NoSuchAlgorithmException("Doesn't support algorithm: " + algorithm + " and mode: " + mode);
             }
         }
     }
@@ -314,8 +311,7 @@ class OpenSslJnaCipher implements CryptoCipher {
             try {
                 return Padding.valueOf(padding).ordinal();
             } catch (Exception e) {
-                throw new NoSuchPaddingException("Doesn't support padding: "
-                        + padding);
+                throw new NoSuchPaddingException("Doesn't support padding: " + padding);
             }
         }
     }
