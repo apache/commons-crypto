@@ -18,12 +18,12 @@
 package org.apache.commons.crypto;
 
 /**
- * The Crypto class provides some diagnostic information about Commons Crypto.
+ * Provides diagnostic information about Commons Crypto.
  */
 public final class Crypto {
 
     /**
-     * Accessor to the currently active version of Apache Commons Crypto.
+     * Gets the currently active version of Apache Commons Crypto.
      * 
      * @return the version
      */
