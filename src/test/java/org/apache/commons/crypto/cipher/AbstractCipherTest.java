@@ -236,7 +236,7 @@ public abstract class AbstractCipherTest {
 
         // AES_CBC_NOPADDING only accepts data whose size is the multiple of
         // block size
-        int[] dataLenList = (transformation.equals("AES/CBC/NoPadding")) ? new int[] { 10 * 1024 }
+        int[] dataLenList = transformation.equals("AES/CBC/NoPadding") ? new int[] { 10 * 1024 }
                 : new int[] { 10 * 1024, 10 * 1024 - 3 };
         for (int dataLen : dataLenList) {
             byte[] plainText = new byte[dataLen];
