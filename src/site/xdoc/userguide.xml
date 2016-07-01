@@ -82,7 +82,7 @@
           for accelerating the random generation.
         </p>
 
-        <a href="xref/org/apache/commons/crypto/examples/RandomExample.html">RandomExample.java</a>
+        <a href="xref-test/org/apache/commons/crypto/examples/RandomExample.html">RandomExample.java</a>
 
         <h4>Usage of Cipher API</h4>
         <p>
@@ -93,11 +93,11 @@
         </p>
         <h5>Usage of Byte Array Encryption/Decryption</h5>
 
-        <a href="xref/org/apache/commons/crypto/examples/CipherByteArrayExample.html">CipherByteArrayExample.java</a>
+        <a href="xref-test/org/apache/commons/crypto/examples/CipherByteArrayExample.html">CipherByteArrayExample.java</a>
 
         <h5>Usage of ByteBuffer Encryption/Decryption</h5>
 
-        <a href="xref/org/apache/commons/crypto/examples/CipherByteBufferExample.html">CipherByteBufferExample.java</a>
+        <a href="xref-test/org/apache/commons/crypto/examples/CipherByteBufferExample.html">CipherByteBufferExample.java</a>
 
 
         <h4>Usage of Stream API</h4>
@@ -108,7 +108,7 @@
         </p>
         <h5>Usage of stream encryption/decryption</h5>
 
-        <a href="xref/org/apache/commons/crypto/examples/StreamExample.html">StreamExample.java</a>
+        <a href="xref-test/org/apache/commons/crypto/examples/StreamExample.html">StreamExample.java</a>
 
       </subsection>
     </section>
