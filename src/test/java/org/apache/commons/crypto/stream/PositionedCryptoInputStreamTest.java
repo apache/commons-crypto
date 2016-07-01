@@ -83,9 +83,6 @@ public class PositionedCryptoInputStreamTest {
         encData = baos.toByteArray();
     }
 
-    public void setUp() {
-    }
-
     private PositionedCryptoInputStream getCryptoInputStream(
             CryptoCipher cipher, int bufferSize) throws IOException {
         return new PositionedCryptoInputStream(props, new PositionedInputForTest(
