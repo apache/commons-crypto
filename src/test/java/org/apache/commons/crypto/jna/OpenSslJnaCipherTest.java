@@ -18,10 +18,10 @@
 
 package org.apache.commons.crypto.jna;
 
-import org.apache.commons.crypto.cipher.AbstractCipherTest;
+import org.apache.commons.crypto.cipher.OpenSslCipherTest;
 import org.apache.commons.crypto.jna.OpenSslJnaCipher;
 
-public class OpenSslJnaCipherTest extends AbstractCipherTest {
+public class OpenSslJnaCipherTest extends OpenSslCipherTest {
 
     @Override
     public void init() {
