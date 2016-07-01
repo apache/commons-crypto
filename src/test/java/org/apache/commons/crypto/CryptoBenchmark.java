@@ -54,13 +54,13 @@ public class CryptoBenchmark {
 
     // TODO replace these with the appropriate public fields/methods when these have been set up
     private static final String RANDOM_OPENSSL_JNA = "org.apache.commons.crypto.jna.OpenSslJnaCryptoRandom";
-    private static final String RANDOM_JAVA        = "org.apache.commons.crypto.random.JavaCryptoRandom";
-    private static final String RANDOM_OS          = "org.apache.commons.crypto.random.OsCryptoRandom";
-    private static final String RANDOM_OPENSSL     = "org.apache.commons.crypto.random.OpenSslCryptoRandom";
+    private static final String RANDOM_JAVA        = CryptoRandomFactory.RandomProvider.JAVA.getClassName();
+    private static final String RANDOM_OS          = CryptoRandomFactory.RandomProvider.OS.getClassName();
+    private static final String RANDOM_OPENSSL     = CryptoRandomFactory.RandomProvider.OPENSSL.getClassName();
 
     private static final String CIPHER_OPENSSL_JNA = "org.apache.commons.crypto.jna.OpenSslJnaCipher";
-    private static final String CIPHER_OPENSSL     = "org.apache.commons.crypto.cipher.OpenSslCipher";
-    private static final String CIPHER_JCE         = "org.apache.commons.crypto.cipher.JceCipher";
+    private static final String CIPHER_OPENSSL     = CryptoCipherFactory.CipherProvider.OPENSSL.getClassName();
+    private static final String CIPHER_JCE         = CryptoCipherFactory.CipherProvider.JCE.getClassName();
 
     private static final byte[] KEY = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
             0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16 };
