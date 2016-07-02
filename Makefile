@@ -52,7 +52,7 @@ $(COMMONS_CRYPTO_OUT)/$(LIBNAME): $(COMMONS_CRYPTO_OBJ)
 	$(STRIP) $@
 
 clean:
-	rm -rf $(TARGET)
+	rm -rf $(TARGET)/jni-classes
 	rm -rf $(COMMONS_CRYPTO_OUT)
 
 native: $(NATIVE_DLL)
