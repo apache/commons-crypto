@@ -30,11 +30,18 @@ endif
 
 # Windows uses different path separators
 ifeq ($(OS_NAME),Windows)
+  # Classpath separator
   SEP := ;
+  DELTREE := DEL /S/Q
+  # The separator used for file paths
+  FSEP := \\
 else
   SEP := :
+  DELTREE := rm -rf
+  FSEP := /
 endif
-
+# Note that some Windows commands (e.g. javah) accept both / and \ as separators
+# We use the subst function to fix the paths for commands that don't accept /
 
 NATIVE_TARGET_DIR:=$(TARGET)/classes/org/apache/commons/crypto/native/$(OS_NAME)/$(OS_ARCH)
 NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
@@ -60,8 +67,8 @@ $(COMMONS_CRYPTO_OUT)/$(LIBNAME): $(COMMONS_CRYPTO_OBJ)
 	$(STRIP) $@
 
 clean:
-	rm -rf $(TARGET)/jni-classes
-	rm -rf $(COMMONS_CRYPTO_OUT)
+	$(DELTREE) $(subst /,$(FSEP),$(TARGET)/jni-classes)
+	$(DELTREE) $(subst /,$(FSEP),$(COMMONS_CRYPTO_OUT))
 
 native: $(NATIVE_DLL)
 
