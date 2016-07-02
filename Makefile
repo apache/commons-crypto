@@ -32,7 +32,7 @@ endif
 ifeq ($(OS_NAME),Windows)
   # Classpath separator
   SEP := ;
-  DELTREE := DEL /S/Q
+  DELTREE := CMD /C DEL /S/Q
   # The separator used for file paths
   FSEP := \\
 else
