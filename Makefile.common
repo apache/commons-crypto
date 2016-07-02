@@ -22,7 +22,10 @@
 TARGET:=target
 SRC:=src/main/java
 SRC_NATIVE:=src/main/native
-include $(TARGET)/classes/org/apache/commons/crypto/VERSION
+
+ifndef VERSION
+$(error Set VERSION environment variable)
+endif
 
 ifndef JAVA_HOME
 $(error Set JAVA_HOME environment variable)
