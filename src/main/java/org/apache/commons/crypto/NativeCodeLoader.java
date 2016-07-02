@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
+import org.apache.commons.crypto.utils.IoUtils;
 
 /**
  * A helper to load the native code i.e. libcommons-crypto.so. This handles the
@@ -156,10 +157,8 @@ final class NativeCodeLoader {
 
                 writer.close();
 
-                if (reader != null) {
-                    reader.close();
-                    reader = null;
-                }
+                IoUtils.cleanup(reader);
+                reader = null;
             }
 
             // Set executable (x) flag to enable Java to load the native library
@@ -198,13 +197,7 @@ final class NativeCodeLoader {
             e.printStackTrace(System.err);
             return null;
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            IoUtils.cleanup(reader);
         }
     }
 
