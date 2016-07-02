@@ -43,13 +43,6 @@ OS_ARCH := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS) --arch)
 LIB_FOLDER := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS))
 IBM_JDK_LIB := lib/inc_ibm
 
-# Windows uses different path separators
-ifeq ($(OS_NAME),Windows)
-  sep := ;
-else
-  sep := :
-endif
-
 commons-crypto := commons-crypto-$(VERSION)
 
 
