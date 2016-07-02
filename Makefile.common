@@ -80,7 +80,7 @@ CROSS_PREFIX :=
 Default_CC           := $(CROSS_PREFIX)gcc
 Default_CXX          := $(CROSS_PREFIX)g++
 Default_STRIP        := $(CROSS_PREFIX)strip
-Default_CFLAGS     := -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden
+Default_CFLAGS       := -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden
 Default_CXXFLAGS     := -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden
 Default_LINKFLAGS    := -shared -static
 Default_LIBNAME      := libcommons-crypto.so
