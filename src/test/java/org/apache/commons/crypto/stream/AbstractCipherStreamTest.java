@@ -47,8 +47,8 @@ public abstract class AbstractCipherStreamTest {
     private byte[] encData;
     private Properties props = new Properties();
     protected byte[] key = new byte[16];
-    private byte[] iv = new byte[16];
-    private int count = 10000;
+    protected byte[] iv = new byte[16];
+    protected int count = 10000;
     protected static int defaultBufferSize = 8192;
     protected static int smallBufferSize = 1024;
 
@@ -71,11 +71,9 @@ public abstract class AbstractCipherStreamTest {
     public void testSkip() throws Exception {
         doSkipTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, false);
         doSkipTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, false);
-        doSkipTest(AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, false);
 
         doSkipTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, true);
         doSkipTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, true);
-        doSkipTest(AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, true);
     }
 
     /** Test byte buffer read with different buffer size. */
@@ -83,11 +81,9 @@ public abstract class AbstractCipherStreamTest {
     public void testByteBufferRead() throws Exception {
         doByteBufferRead(AbstractCipherTest.JCE_CIPHER_CLASSNAME, false);
         doByteBufferRead(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, false);
-        doByteBufferRead(AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, false);
 
         doByteBufferRead(AbstractCipherTest.JCE_CIPHER_CLASSNAME, true);
         doByteBufferRead(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, true);
-        doByteBufferRead(AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, true);
     }
 
     /** Test byte buffer write. */
@@ -96,14 +92,12 @@ public abstract class AbstractCipherStreamTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         doByteBufferWrite(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, false);
         doByteBufferWrite(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, false);
-        doByteBufferWrite(AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, baos, false);
 
         doByteBufferWrite(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, true);
         doByteBufferWrite(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, true);
-        doByteBufferWrite(AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, baos, true);
     }
 
-    private void doSkipTest(String cipherClass, boolean withChannel)
+    protected void doSkipTest(String cipherClass, boolean withChannel)
             throws IOException {
         try (InputStream in = getCryptoInputStream(
                 new ByteArrayInputStream(encData), getCipher(cipherClass),
@@ -134,7 +128,7 @@ public abstract class AbstractCipherStreamTest {
         }
     }
 
-    private void doByteBufferRead(String cipherClass, boolean withChannel)
+    protected void doByteBufferRead(String cipherClass, boolean withChannel)
             throws Exception {
         // Default buffer size, initial buffer position is 0
         InputStream in = getCryptoInputStream(
@@ -194,7 +188,7 @@ public abstract class AbstractCipherStreamTest {
         in.close();
     }
 
-    private void doByteBufferWrite(String cipherClass,
+    protected void doByteBufferWrite(String cipherClass,
             ByteArrayOutputStream baos, boolean withChannel) throws Exception {
         baos.reset();
         CryptoOutputStream out = getCryptoOutputStream(baos,
@@ -313,28 +307,21 @@ public abstract class AbstractCipherStreamTest {
     public void testReadWrite() throws Exception {
         doReadWriteTest(0, AbstractCipherTest.JCE_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
         doReadWriteTest(0, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, iv);
-        doReadWriteTest(0, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, iv);
         doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
         doReadWriteTest(count, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, iv);
-        doReadWriteTest(count, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, iv);
         doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, iv);
-        doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, iv);
         doReadWriteTest(count, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
-        doReadWriteTest(count, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
         // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
         for (int i = 0; i < 8; i++) {
             iv[8 + i] = (byte) 0xff;
         }
         doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
         doReadWriteTest(count, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, iv);
-        doReadWriteTest(count, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, iv);
         doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, iv);
-        doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, iv);
         doReadWriteTest(count, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
-        doReadWriteTest(count, AbstractCipherTest.OPENSSLJNA_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
     }
 
-    private void doReadWriteTest(int count, String encCipherClass,
+    protected void doReadWriteTest(int count, String encCipherClass,
             String decCipherClass, byte[] iv) throws IOException {
         doReadWriteTestForInputStream(count, encCipherClass, decCipherClass, iv);
         doReadWriteTestForReadableByteChannel(count, encCipherClass,
