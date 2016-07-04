@@ -194,7 +194,6 @@ final class NativeCodeLoader {
 
             return new File(targetFolder, extractedLibFileName);
         } catch (IOException e) {
-            e.printStackTrace(System.err);
             return null;
         } finally {
             IoUtils.cleanup(reader);
@@ -225,8 +224,7 @@ final class NativeCodeLoader {
                 }
                 version = version.trim().replaceAll("[^0-9M\\.]", "");
             }
-        } catch (IOException e) {
-            System.err.println(e);
+        } catch (IOException e) { // NOPMD
         }
         return version;
     }
