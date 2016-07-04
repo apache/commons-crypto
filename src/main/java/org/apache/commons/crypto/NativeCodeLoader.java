@@ -209,10 +209,6 @@ final class NativeCodeLoader {
     static String getVersion() {
         URL versionFile = NativeCodeLoader.class
                 .getResource("/META-INF/maven/org.apache.commons.crypto/commons-crypto/pom.properties");
-        if (versionFile == null) {
-            versionFile = NativeCodeLoader.class
-                    .getResource("/org/apache/commons/crypto/VERSION");
-        }
         String version = "unknown";
         try {
             if (versionFile != null) {
