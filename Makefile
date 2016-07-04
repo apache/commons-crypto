@@ -17,16 +17,8 @@
 #
 include Makefile.common
 
-MVN:=mvn
-
 COMMONS_CRYPTO_OUT:=$(TARGET)/$(commons-crypto)-$(os_arch)
 COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpensslCryptoRandom.o OpenSslNative.o)
-
-ifeq ($(OS_NAME),SunOS)
-  TAR:= gtar
-else
-  TAR:= tar
-endif
 
 # Windows uses different path separators
 ifeq ($(OS_NAME),Windows)
