@@ -31,7 +31,6 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
-import org.apache.commons.crypto.jna.OpenSslJna;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 import org.junit.Assert;
