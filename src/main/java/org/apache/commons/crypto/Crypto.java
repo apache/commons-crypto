@@ -34,7 +34,7 @@ public final class Crypto {
     /**
      * Checks whether the native code has been successfully loaded for the platform.
      * 
-     * @return true if the native code has been loaded successful.
+     * @return true if the native code has been loaded successfully.
      */
     public static boolean isNativeCodeLoaded() {
         return NativeCodeLoader.isNativeCodeLoaded();
