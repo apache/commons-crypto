@@ -106,4 +106,13 @@ public class CryptoRandomFactoryTest {
         }
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void testNoClasses() throws Exception {
+        final Properties props = new Properties();
+        // An empty string currently means use the default
+        // However the splitter drops empty fields
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, ",");
+        CryptoRandomFactory.getCryptoRandom(props);
+    }
+
 }

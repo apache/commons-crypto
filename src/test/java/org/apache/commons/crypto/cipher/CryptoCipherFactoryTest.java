@@ -63,4 +63,14 @@ public class CryptoCipherFactoryTest {
       Properties properties = new Properties();
       CryptoCipherFactory.getCryptoCipher("AES/Invalid/NoPadding", properties);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNoCipher() throws Exception {
+        Properties properties = new Properties();
+        // An empty string currently means use the default
+        // However the splitter drops empty fields
+        properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ",");
+        CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties);
+    }
+
 }

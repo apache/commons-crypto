@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.random;
 
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.crypto.Crypto;
@@ -181,10 +182,13 @@ public class CryptoRandomFactory {
      */
     public static CryptoRandom getCryptoRandom(Properties props)
             throws GeneralSecurityException {
+        final List<String> names = Utils.splitClassNames(getRandomClassString(props), ",");
+        if (names.size() == 0) {
+            throw new IllegalArgumentException("No classname(s) provided");
+        }
         StringBuilder errorMessage = new StringBuilder();
         CryptoRandom random = null;
-        for (String klassName : Utils.splitClassNames(
-            getRandomClassString(props), ",")) {
+        for (String klassName : names) {
             try {
                 final Class<?> klass = ReflectionUtils.getClassByName(klassName);
                 random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
@@ -202,9 +206,6 @@ public class CryptoRandomFactory {
 
         if (random != null) {
             return random;
-        }
-        if (errorMessage.length() == 0) {
-            throw new IllegalArgumentException("No classname(s) provided");
         }
         throw new GeneralSecurityException(errorMessage.toString());
     }

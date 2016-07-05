@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.cipher;
 
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.crypto.Crypto;
@@ -130,15 +131,19 @@ public class CryptoCipherFactory {
      * @param transformation  algorithm/mode/padding
      * @return CryptoCipher  the cipher  (defaults to OpenSslCipher)
      * @throws GeneralSecurityException if cipher initialize failed
-     * @throws IllegalArgumentException if no classname(s)
+     * @throws IllegalArgumentException if no classname(s) were provided
      */
     public static CryptoCipher getCryptoCipher(String transformation,
                                            Properties props) throws GeneralSecurityException {
 
+        final List<String> names = Utils.splitClassNames(getCipherClassString(props), ",");
+        if (names.size() == 0) {
+            throw new IllegalArgumentException("No classname(s) provided");            
+        }
         CryptoCipher cipher = null;
 
         StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
-        for (String klass : Utils.splitClassNames(getCipherClassString(props), ",")) {
+        for (String klass : names) {
             try {
                 Class<?> cls = ReflectionUtils.getClassByName(klass);
                 cipher = ReflectionUtils.newInstance(cls.asSubclass
@@ -153,9 +158,6 @@ public class CryptoCipherFactory {
 
         if (cipher != null) {
             return cipher;
-        }
-        if (errorMessage.length() == 0) {
-            throw new IllegalArgumentException("No classname(s) provided");
         }
         errorMessage.append(" is not available or transformation " +
                 transformation + " is not supported.");
