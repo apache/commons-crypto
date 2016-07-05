@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.IoUtils;
+import org.apache.commons.crypto.utils.Utils;
 
 /**
  * A helper to load the native code i.e. libcommons-crypto.so. This handles the
@@ -38,6 +39,7 @@ import org.apache.commons.crypto.utils.IoUtils;
 final class NativeCodeLoader {
 
     private final static boolean nativeCodeLoaded;
+
     /**
      * The private constructor of {@link NativeCodeLoader}.
      */
@@ -72,9 +74,12 @@ final class NativeCodeLoader {
      * @return the jar file.
      */
     private static File findNativeLibrary() {
+        // Get the properties once
+        final Properties props = Utils.getDefaultProperties();
+
         // Try to load the library in commons-crypto.lib.path */
-        String nativeLibraryPath = NativeCodeLoader.getLibPath();
-        String nativeLibraryName = NativeCodeLoader.getLibName();
+        String nativeLibraryPath = props.getProperty(ConfigurationKeys.LIB_PATH_KEY);
+        String nativeLibraryName = props.getProperty(ConfigurationKeys.LIB_NAME_KEY);
 
         // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
         if (nativeLibraryName == null) {
@@ -110,7 +115,8 @@ final class NativeCodeLoader {
 
         // Temporary folder for the native lib. Use the value of
         // commons-crypto.tempdir or java.io.tmpdir
-        String tempFolder = new File(NativeCodeLoader.getTmpDir()).getAbsolutePath();
+        String tempFolder = new File(props.getProperty(ConfigurationKeys.LIB_TEMPDIR_KEY,
+        System.getProperty("java.io.tmpdir"))).getAbsolutePath();
 
         // Extract and load a native library inside the jar file
         return extractLibraryFile(nativeLibraryPath, nativeLibraryName,
@@ -271,33 +277,5 @@ final class NativeCodeLoader {
      */
     static boolean isNativeCodeLoaded() {
         return nativeCodeLoaded;
-    }
-
-    /**
-     * Gets the temp directory for extracting crypto library.
-     *
-     * @return the temp directory.
-     */
-    private static String getTmpDir() {
-        return System.getProperty(ConfigurationKeys.LIB_TEMPDIR_KEY,
-                System.getProperty("java.io.tmpdir"));
-    }
-
-    /**
-     * Gets the file name of native library.
-     *
-     * @return the file name of native library.
-     */
-    private static String getLibName() {
-        return System.getProperty(ConfigurationKeys.LIB_NAME_KEY);
-    }
-
-    /**
-     * Gets path of native library.
-     *
-     * @return the path of native library.
-     */
-    private static String getLibPath() {
-        return System.getProperty(ConfigurationKeys.LIB_PATH_KEY);
     }
 }
