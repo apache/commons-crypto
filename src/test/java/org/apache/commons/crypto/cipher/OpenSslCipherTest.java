@@ -33,6 +33,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {
+        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         transformations = new String[] {
                 "AES/CBC/NoPadding",
                 "AES/CBC/PKCS5Padding",
@@ -70,8 +71,8 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Test(expected = NoSuchAlgorithmException.class, timeout = 120000)
     public void testInvalidMode() throws Exception {
+        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         try {
-            Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
             OpenSsl.getInstance("AES/CTR2/NoPadding");
             Assert.fail("java.security.NoSuchAlgorithmException should be thrown.");
         } catch (NoSuchAlgorithmException e) {
