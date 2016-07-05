@@ -79,4 +79,31 @@ public class CryptoRandomFactoryTest {
         CryptoRandomFactory.getCryptoRandom(properties);
     }
 
+    @Test
+    public void testAbstractRandom() {
+        Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());
+        try {
+            CryptoRandomFactory.getCryptoRandom(props);
+            Assert.fail("Expected GeneralSecurityException");
+        } catch (GeneralSecurityException e) {
+            final String message = e.getMessage();
+            Assert.assertTrue(message, message.contains("InstantiationException"));
+        }
+
+    }
+
+    @Test
+    public void testDummmyRandom() throws GeneralSecurityException {
+        Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, DummyRandom.class.getName());
+        try {
+            CryptoRandomFactory.getCryptoRandom(props);
+            Assert.fail("Expected GeneralSecurityException");
+        } catch (GeneralSecurityException e) {
+            final String message = e.getMessage();
+            Assert.assertTrue(message, message.contains("NoSuchMethodException"));
+        }
+    }
+
 }

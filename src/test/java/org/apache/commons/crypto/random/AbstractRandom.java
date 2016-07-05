@@ -17,9 +17,15 @@
  */
 package org.apache.commons.crypto.random;
 
+import java.util.Properties;
+
 /**
  * For testing class creation
  */
 abstract class AbstractRandom implements CryptoRandom {
 
+    // Should fail to instantiate, as it is an abstract class
+    AbstractRandom(Properties props) {
+        
+    }
 }

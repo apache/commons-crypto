@@ -21,6 +21,11 @@ import java.io.IOException;
 
 class DummyRandom implements CryptoRandom {
 
+    // Should fail with NoSuchMethodException
+    DummyRandom() {
+        
+    }
+
     @Override
     public void close() throws IOException {
     }
