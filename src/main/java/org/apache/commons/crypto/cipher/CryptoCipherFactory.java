@@ -20,7 +20,7 @@ package org.apache.commons.crypto.cipher;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -30,12 +30,34 @@ import org.apache.commons.crypto.utils.Utils;
 public class CryptoCipherFactory {
 
     /**
+     * The configuration key of the provider class for JCE cipher.
+     */
+    public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX
+            + "cipher.jce.provider";
+    /**
+     * The configuration key of the CryptoCipher implementation class.
+     * <p>
+     * The value of CLASSES_KEY needs to be the full name of a
+     * class that implements the
+     * {@link org.apache.commons.crypto.cipher.CryptoCipher CryptoCipher} interface
+     * The internal classes are listed in the enum
+     * {@link CipherProvider CipherProvider}
+     * which can be used to obtain the full class name.
+     * <p>
+     * The value can also be a comma-separated list of class names in
+     * order of descending priority.
+     */
+
+    public static final String CLASSES_KEY = Crypto.CONF_PREFIX
+            + "cipher.classes";
+
+    /**
      * Defines the internal CryptoCipher implementations.
      * <p>
      * Usage:
      * <p>
      * <blockquote><pre>
-     * props.setProperty(CIPHER_CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
+     * props.setProperty(CryptoCipherFactory.CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
      * props.setProperty(...); // if required by the implementation
      * cipher = CryptoCipherFactory.getInstance(transformation, props);
      * </pre></blockquote>
@@ -49,11 +71,11 @@ public class CryptoCipherFactory {
          */
         // Please ensure the property description agrees with the implementation
         OPENSSL(OpenSslCipher.class),
-        
+
         /**
          * The JCE cipher implementation from the JVM
          * <p>
-         * uses the property {@link ConfigurationKeys#CIPHER_JCE_PROVIDER_KEY}
+         * uses the property {@link #JCE_PROVIDER_KEY}
          * to define the provider name, if present.
          */
         // Please ensure the property description agrees with the implementation
@@ -90,7 +112,7 @@ public class CryptoCipherFactory {
     /**
      * The default value (OPENSSL,JCE) for crypto cipher.
      */
-    private static final String CIPHER_CLASSES_DEFAULT = 
+    private static final String CLASSES_DEFAULT =
             CipherProvider.OPENSSL.getClassName()
             .concat(",")
             .concat(CipherProvider.JCE.getClassName());
@@ -104,7 +126,7 @@ public class CryptoCipherFactory {
     /**
      * Gets a cipher instance for specified algorithm/mode/padding.
      *
-     * @param props  the configuration properties (uses ConfigurationKeys.CIPHER_CLASSES_KEY)
+     * @param props  the configuration properties - uses {@link #CLASSES_KEY}
      * @param transformation  algorithm/mode/padding
      * @return CryptoCipher  the cipher  (defaults to OpenSslCipher)
      * @throws GeneralSecurityException if cipher initialize failed
@@ -164,9 +186,9 @@ public class CryptoCipherFactory {
      * @return the cipher class based on the props.
      */
     private static String getCipherClassString(Properties props) {
-        String cipherClassString = props.getProperty(ConfigurationKeys.CIPHER_CLASSES_KEY, CIPHER_CLASSES_DEFAULT);
+        String cipherClassString = props.getProperty(CryptoCipherFactory.CLASSES_KEY, CLASSES_DEFAULT);
         if (cipherClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
-            cipherClassString = CIPHER_CLASSES_DEFAULT;
+            cipherClassString = CLASSES_DEFAULT;
         }
         return cipherClassString;
     }

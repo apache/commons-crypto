@@ -20,7 +20,6 @@ package org.apache.commons.crypto.random;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class CryptoRandomFactoryTest {
     @Test
     public void testEmpty() throws Exception {
         final Properties props = new Properties();
-        props.setProperty(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY, "");
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, "");
         CryptoRandomFactory.getCryptoRandom(props);
     }
 
@@ -51,7 +50,7 @@ public class CryptoRandomFactoryTest {
     public void testGetOSRandom() throws GeneralSecurityException {
         Properties props = new Properties();
         props.setProperty(
-            ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
+            CryptoRandomFactory.CLASSES_KEY,
             CryptoRandomFactory.RandomProvider.OS.getClassName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
 
@@ -63,7 +62,7 @@ public class CryptoRandomFactoryTest {
     public void testFullClassName() throws GeneralSecurityException {
         Properties props = new Properties();
         props.setProperty(
-            ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
+            CryptoRandomFactory.CLASSES_KEY,
             OsCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
 
@@ -75,7 +74,7 @@ public class CryptoRandomFactoryTest {
     public void testInvalidRandom() throws GeneralSecurityException {
         Properties properties = new Properties();
         properties.setProperty(
-            ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
+            CryptoRandomFactory.CLASSES_KEY,
             "InvalidCipherName");
         CryptoRandomFactory.getCryptoRandom(properties);
     }

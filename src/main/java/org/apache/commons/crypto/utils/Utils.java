@@ -25,9 +25,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 
 /**
  * General utility methods.
@@ -37,7 +37,14 @@ public final class Utils {
     private static class DefaultPropertiesHolder {
         static final Properties DEFAULT_PROPERTIES = createDefaultProperties();
      }
-     
+
+    /**
+     * The filename of configuration file.
+     * TODO is there any need for it to have the CONF_PREFIX?
+     */
+    private static final String SYSTEM_PROPERTIES_FILE = Crypto.CONF_PREFIX
+            + "properties";
+
     /**
      * The private constructor of {@link Utils}.
      */
@@ -46,7 +53,7 @@ public final class Utils {
 
     /**
      * Loads system properties when configuration file of the name
-     * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE} is found.
+     * {@link #SYSTEM_PROPERTIES_FILE} is found.
      *
      * @return the default properties
      */
@@ -55,7 +62,7 @@ public final class Utils {
         Properties defaultedProps = new Properties(System.getProperties());
         try {
             InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream(ConfigurationKeys.SYSTEM_PROPERTIES_FILE);
+                    .getResourceAsStream(SYSTEM_PROPERTIES_FILE);
 
             if (is == null) {
                 return defaultedProps; // no configuration file is found
@@ -74,7 +81,7 @@ public final class Utils {
             }
         } catch (Exception ex) {
             System.err.println("Could not load '"
-                    + ConfigurationKeys.SYSTEM_PROPERTIES_FILE
+                    + SYSTEM_PROPERTIES_FILE
                     + "' from classpath: " + ex.toString());
         }
         return defaultedProps;
@@ -83,7 +90,7 @@ public final class Utils {
     /**
      * Gets a properties instance that defaults to the System Properties
      * plus any other properties found in the file 
-     * {@link ConfigurationKeys#SYSTEM_PROPERTIES_FILE SYSTEM_PROPERTIES_FILE}  
+     * {@link #SYSTEM_PROPERTIES_FILE}
      * @return a Properties instance with defaults
      */
     public static Properties getDefaultProperties() {

@@ -18,9 +18,32 @@
 package org.apache.commons.crypto;
 
 /**
- * Provides diagnostic information about Commons Crypto.
+ * Provides diagnostic information about Commons Crypto and keys for native class loading
  */
 public final class Crypto {
+
+    /**
+     * The prefix of all crypto configuration keys
+     */
+    public static final String CONF_PREFIX = "commons.crypto.";
+
+    // native lib related configuration keys
+    /**
+     * The configuration key of the path for loading crypto library.
+     */
+    public static final String LIB_PATH_KEY = Crypto.CONF_PREFIX
+            + "lib.path";
+    /**
+     * The configuration key of the file name for loading crypto library.
+     */
+    public static final String LIB_NAME_KEY = Crypto.CONF_PREFIX
+            + "lib.name";
+    /**
+     * The configuration key of temp directory for extracting crypto library.
+     * Defaults to "java.io.tempdir" if not found.
+     */
+    public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX
+            + "lib.tempdir";
 
     /**
      * Gets the currently active version of Apache Commons Crypto.
@@ -39,4 +62,5 @@ public final class Crypto {
     public static boolean isNativeCodeLoaded() {
         return NativeCodeLoader.isNativeCodeLoaded();
     }
+
 }

@@ -21,8 +21,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Properties;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
-
 /**
  * A CryptoRandom of Java implementation.
  */
@@ -34,9 +32,9 @@ class JavaCryptoRandom implements CryptoRandom {
      * Constructs a {@link JavaCryptoRandom}.
      *
      * @param properties the configuration properties.
-     * Uses the key {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_KEY}
+     * Uses the key {@link CryptoRandomFactory#SECURE_RANDOM_JAVA_ALGORITHM_KEY}
      * to get the name of the algorithm, with a default of
-     * {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT}
+     * {@link CryptoRandomFactory#JAVA_ALGORITHM_DEFAULT}
      * @throws NoSuchAlgorithmException if no Provider supports a
      *         SecureRandomSpi implementation for the specified algorithm.
      */
@@ -47,8 +45,8 @@ class JavaCryptoRandom implements CryptoRandom {
         instance = SecureRandom
                 .getInstance(properties
                         .getProperty(
-                                ConfigurationKeys.SECURE_RANDOM_JAVA_ALGORITHM_KEY,
-                                ConfigurationKeys.SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT));
+                                CryptoRandomFactory.JAVA_ALGORITHM_KEY,
+                                CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT));
     }
 
     /**

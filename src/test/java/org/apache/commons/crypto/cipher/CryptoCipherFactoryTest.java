@@ -20,8 +20,6 @@ package org.apache.commons.crypto.cipher;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,7 +36,7 @@ public class CryptoCipherFactoryTest {
     public void testEmptyCipher() throws GeneralSecurityException {
         Properties properties = new Properties();
         properties.setProperty(
-                ConfigurationKeys.CIPHER_CLASSES_KEY, "");
+                CryptoCipherFactory.CLASSES_KEY, "");
         CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
                 "AES/CBC/NoPadding", properties);
         Assert.assertEquals(OpenSslCipher.class.getName(), defaultCipher
@@ -48,7 +46,7 @@ public class CryptoCipherFactoryTest {
     @Test(expected = GeneralSecurityException.class)
     public void testInvalidCipher() throws GeneralSecurityException {
         Properties properties = new Properties();
-        properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY,
+        properties.setProperty(CryptoCipherFactory.CLASSES_KEY,
                 "InvalidCipherName");
         CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties);
     }

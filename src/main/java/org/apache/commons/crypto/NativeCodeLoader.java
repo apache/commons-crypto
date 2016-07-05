@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.IoUtils;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -78,8 +77,8 @@ final class NativeCodeLoader {
         final Properties props = Utils.getDefaultProperties();
 
         // Try to load the library in commons-crypto.lib.path */
-        String nativeLibraryPath = props.getProperty(ConfigurationKeys.LIB_PATH_KEY);
-        String nativeLibraryName = props.getProperty(ConfigurationKeys.LIB_NAME_KEY);
+        String nativeLibraryPath = props.getProperty(Crypto.LIB_PATH_KEY);
+        String nativeLibraryName = props.getProperty(Crypto.LIB_NAME_KEY);
 
         // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
         if (nativeLibraryName == null) {
@@ -115,7 +114,7 @@ final class NativeCodeLoader {
 
         // Temporary folder for the native lib. Use the value of
         // commons-crypto.tempdir or java.io.tmpdir
-        String tempFolder = new File(props.getProperty(ConfigurationKeys.LIB_TEMPDIR_KEY,
+        String tempFolder = new File(props.getProperty(Crypto.LIB_TEMPDIR_KEY,
         System.getProperty("java.io.tmpdir"))).getAbsolutePath();
 
         // Extract and load a native library inside the jar file

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.IoUtils;
 
 /**
@@ -62,16 +61,16 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      * Constructs a {@link OsCryptoRandom}.
      *
      * @param props the configuration properties.
-     * Uses {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_KEY} to determine the
+     * Uses {@link CryptoRandomFactory#DEVICE_FILE_PATH_KEY} to determine the
      * path to the random device, default is
-     * {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT}
+     * {@link CryptoRandomFactory#DEVICE_FILE_PATH_DEFAULT}
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OsCryptoRandom(Properties props) {
         File randomDevFile = new File(
-                props.getProperty(ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_KEY, 
-                                  ConfigurationKeys.SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT));
+                props.getProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY,
+                                  CryptoRandomFactory.DEVICE_FILE_PATH_DEFAULT));
 
         try {
             close();

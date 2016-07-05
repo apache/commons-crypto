@@ -30,7 +30,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 import org.junit.Assert;
@@ -64,7 +63,7 @@ public abstract class AbstractCipherTest {
         Utils.checkNotNull(cipherClass);
         Utils.checkNotNull(transformations);
         props = new Properties();
-        props.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY,
+        props.setProperty(CryptoCipherFactory.CLASSES_KEY,
                 cipherClass);
     }
 

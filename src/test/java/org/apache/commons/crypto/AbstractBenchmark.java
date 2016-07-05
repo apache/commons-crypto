@@ -26,7 +26,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.junit.Assert;
@@ -66,7 +65,7 @@ public abstract class AbstractBenchmark {
 
     protected CryptoRandom getRandom(String className) throws Exception {
         Properties props = new Properties();
-        props.setProperty(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY, className);
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, className);
         final CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props);
         Assert.assertEquals(className, cryptoRandom.getClass().getCanonicalName());
         return cryptoRandom;
@@ -74,7 +73,7 @@ public abstract class AbstractBenchmark {
 
     protected CryptoCipher getCipher(String className) throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(ConfigurationKeys.CIPHER_CLASSES_KEY, className);
+        properties.setProperty(CryptoCipherFactory.CLASSES_KEY, className);
         CryptoCipher cipher = CryptoCipherFactory.getCryptoCipher("AES/CBC/PKCS5Padding", properties);
         Assert.assertEquals(className, cipher.getClass().getCanonicalName());
         return cipher;

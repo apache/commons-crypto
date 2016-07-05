@@ -22,7 +22,6 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 
@@ -37,7 +36,7 @@ public class RandomExample {
         byte[] iv = new byte[32];
 
         Properties properties = new Properties();
-        properties.put(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
+        properties.put(CryptoRandomFactory.CLASSES_KEY,
             CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
 
         //Gets the 'CryptoRandom' instance.

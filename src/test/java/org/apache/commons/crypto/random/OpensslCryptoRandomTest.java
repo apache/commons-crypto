@@ -20,7 +20,6 @@ package org.apache.commons.crypto.random;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import static org.junit.Assert.fail;
 
 public class OpensslCryptoRandomTest extends AbstractRandomTest {
@@ -29,7 +28,7 @@ public class OpensslCryptoRandomTest extends AbstractRandomTest {
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
         Properties props = new Properties();
         props.setProperty(
-                ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY,
+                CryptoRandomFactory.CLASSES_KEY,
                 OpenSslCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         if (!(random instanceof OpenSslCryptoRandom)) {

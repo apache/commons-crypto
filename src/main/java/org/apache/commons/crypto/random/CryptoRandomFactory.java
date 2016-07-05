@@ -20,7 +20,7 @@ package org.apache.commons.crypto.random;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -29,13 +29,53 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class CryptoRandomFactory {
 
+    // security random related configuration keys
+    /**
+     * The configuration key of the file path for secure random device.
+     */
+    public static final String DEVICE_FILE_PATH_KEY = Crypto.CONF_PREFIX
+            + "secure.random.device.file.path";
+
+    /**
+     * The default value ({@value}) of the file path for secure random device.
+     */
+    // Note: this is public mainly for use by the Javadoc
+    public static final String DEVICE_FILE_PATH_DEFAULT = "/dev/urandom";
+
+    /**
+     * The configuration key of the algorithm of secure random.
+     */
+    public static final String JAVA_ALGORITHM_KEY = Crypto.CONF_PREFIX
+            + "secure.random.java.algorithm";
+
+    /**
+     * The default value ({@value}) of the algorithm of secure random.
+     */
+    // Note: this is public mainly for use by the Javadoc
+    public static final String JAVA_ALGORITHM_DEFAULT = "SHA1PRNG";
+
+    /**
+     * The configuration key of the CryptoRandom implementation class.
+     * <p>
+     * The value of the CLASSES_KEY needs to be the full name of a
+     * class that implements the
+     * {@link org.apache.commons.crypto.random.CryptoRandom CryptoRandom} interface
+     * The internal classes are listed in the enum
+     * {@link RandomProvider RandomProvider}
+     * which can be used to obtain the full class name.
+     * <p>
+     * The value can also be a comma-separated list of class names in
+     * order of descending priority.
+     */
+    public static final String CLASSES_KEY = Crypto.CONF_PREFIX
+            + "secure.random.classes";
     /**
      * Defines the internal CryptoRandom implementations.
      * <p>
      * Usage:
      * <p>
      * <blockquote><pre>
-     * props.setProperty(RANDOM_CLASSES_KEY, RandomProvider.OPENSSL.getClassName());
+     * props.setProperty(CryptoRandomFactory.CLASSES_KEY, RandomProvider.OPENSSL.getClassName());
      * props.setProperty(...); // if required by the implementation
      * random = CryptoRandomFactory.getCryptoRandom(transformation, props);
      * </pre></blockquote>
@@ -54,10 +94,10 @@ public class CryptoRandomFactory {
         /**
          * The SecureRandom implementation from the JVM
          * <p>
-         * Uses the property with key 
-         * {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_KEY SECURE_RANDOM_JAVA_ALGORITHM_KEY}
-         * with the default of 
-         * {@link ConfigurationKeys#SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT SECURE_RANDOM_JAVA_ALGORITHM_DEFAULT}
+         * Uses the property with key
+         * {@link #JAVA_ALGORITHM_KEY}
+         * with the default of
+         * {@link #JAVA_ALGORITHM_DEFAULT}
          */
         // Please ensure the property description agrees with the implementation
         JAVA(JavaCryptoRandom.class),
@@ -65,9 +105,9 @@ public class CryptoRandomFactory {
         /**
          * The OS random device implementation. May not be available on some OSes.
          * <p>
-         * Uses {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_KEY} to determine the
+         * Uses {@link #DEVICE_FILE_PATH_KEY} to determine the
          * path to the random device, default is
-         * {@link ConfigurationKeys#SECURE_RANDOM_DEVICE_FILE_PATH_DEFAULT}
+         * {@link #DEVICE_FILE_PATH_DEFAULT}
          */
         // Please ensure the property description agrees with the implementation
         OS(OsCryptoRandom.class);
@@ -103,7 +143,7 @@ public class CryptoRandomFactory {
     /**
      * The default value (OPENSSL,JAVA) used when creating a {@link CryptoCipher}.
      */
-    private static final String SECURE_RANDOM_CLASSES_DEFAULT = 
+    private static final String CLASSES_DEFAULT =
         RandomProvider.OPENSSL.getClassName()
         .concat(",")
         .concat(RandomProvider.JAVA.getClassName());
@@ -116,7 +156,7 @@ public class CryptoRandomFactory {
 
     /**
      * Gets a CryptoRandom instance using the default implementation
-     * as defined by {@link #SECURE_RANDOM_CLASSES_DEFAULT}
+     * as defined by {@link #CLASSES_DEFAULT}
      *
      * @return CryptoRandom  the cryptoRandom object.
      * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
@@ -175,9 +215,9 @@ public class CryptoRandomFactory {
      * @return the CryptoRandom class based on the props.
      */
     private static String getRandomClassString(Properties props) {
-        String randomClassString = props.getProperty(ConfigurationKeys.SECURE_RANDOM_CLASSES_KEY, SECURE_RANDOM_CLASSES_DEFAULT);
+        String randomClassString = props.getProperty(CryptoRandomFactory.CLASSES_KEY, CLASSES_DEFAULT);
         if (randomClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
-            randomClassString = SECURE_RANDOM_CLASSES_DEFAULT;
+            randomClassString = CLASSES_DEFAULT;
         }
         return randomClassString;
     }

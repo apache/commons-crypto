@@ -30,7 +30,6 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -42,7 +41,7 @@ class JceCipher implements CryptoCipher {
     /**
      * Constructs a {@link CryptoCipher} based on JCE Cipher {@link Cipher}.
      *
-     * @param props  properties for JCE cipher (only uses {@link ConfigurationKeys#CIPHER_JCE_PROVIDER_KEY})
+     * @param props  properties for JCE cipher (only uses {@link CryptoCipherFactory#JCE_PROVIDER_KEY})
      * @param transformation  transformation for JCE cipher (algorithm/mode/padding)
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
@@ -50,7 +49,7 @@ class JceCipher implements CryptoCipher {
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public JceCipher(Properties props, String transformation)
             throws GeneralSecurityException {
-        final String provider = props.getProperty(ConfigurationKeys.CIPHER_JCE_PROVIDER_KEY);
+        final String provider = props.getProperty(CryptoCipherFactory.JCE_PROVIDER_KEY);
         if (provider == null || provider.isEmpty()) {
             cipher = Cipher.getInstance(transformation);
         } else {

@@ -33,8 +33,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.CryptoCipher;
-import org.apache.commons.crypto.conf.ConfigurationKeys;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.stream.input.StreamInput;
@@ -50,6 +50,12 @@ import org.apache.commons.crypto.utils.Utils;
 public class CryptoInputStream extends InputStream implements
         ReadableByteChannel {
     private final byte[] oneByteBuf = new byte[1];
+
+    /**
+     * The configuration key of the buffer size for stream.
+     */
+    public static final String STREAM_BUFFER_SIZE_KEY = Crypto.CONF_PREFIX
+            + "stream.buffer.size";
 
     /** The CryptoCipher instance. */
     final CryptoCipher cipher;
@@ -85,6 +91,12 @@ public class CryptoInputStream extends InputStream implements
      * ends at outBuffer.limit().
      */
     ByteBuffer outBuffer;
+
+    // stream related configuration keys
+    /**
+     * The default value of the buffer size for stream.
+     */
+    private static final int STREAM_BUFFER_SIZE_DEFAULT = 8192;
 
     private static final int MIN_BUFFER_SIZE = 512;
 
@@ -608,9 +620,9 @@ public class CryptoInputStream extends InputStream implements
      * @return the buffer size.
      * */
     static int getBufferSize(Properties props) {
-        String bufferSizeStr = props.getProperty(ConfigurationKeys.STREAM_BUFFER_SIZE_KEY);
+        String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY);
         if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
-            return ConfigurationKeys.STREAM_BUFFER_SIZE_DEFAULT;
+            return CryptoInputStream.STREAM_BUFFER_SIZE_DEFAULT;
         }
         return Integer.parseInt(bufferSizeStr);
     }
