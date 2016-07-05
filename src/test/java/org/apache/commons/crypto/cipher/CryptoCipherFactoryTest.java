@@ -28,19 +28,26 @@ public class CryptoCipherFactoryTest {
     public void testDefaultCipher() throws GeneralSecurityException {
         CryptoCipher defaultCipher = CryptoCipherFactory
                 .getCryptoCipher("AES/CBC/NoPadding");
-        Assert.assertEquals(OpenSslCipher.class.getName(), defaultCipher
-                .getClass().getName());
+        final String name = defaultCipher.getClass().getName();
+        if (OpenSsl.getLoadingFailureReason() == null) {
+            Assert.assertEquals(OpenSslCipher.class.getName(), name);
+        } else {
+            Assert.assertEquals(JceCipher.class.getName(), name);
+        }
     }
 
     @Test
     public void testEmptyCipher() throws GeneralSecurityException {
         Properties properties = new Properties();
-        properties.setProperty(
-                CryptoCipherFactory.CLASSES_KEY, "");
+        properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ""); // TODO should this really mean use the default?
         CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
                 "AES/CBC/NoPadding", properties);
-        Assert.assertEquals(OpenSslCipher.class.getName(), defaultCipher
-                .getClass().getName());
+        final String name = defaultCipher.getClass().getName();
+        if (OpenSsl.getLoadingFailureReason() == null) {
+            Assert.assertEquals(OpenSslCipher.class.getName(), name);
+        } else {
+            Assert.assertEquals(JceCipher.class.getName(), name);
+        }
     }
 
     @Test(expected = GeneralSecurityException.class)
