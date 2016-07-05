@@ -195,6 +195,8 @@ public class CryptoRandomFactory {
                 errorMessage.append("Class: [" + klassName + "] is not a CryptoRandom.");
             } catch (ClassNotFoundException e) {
                 errorMessage.append("CryptoRandom: [" + klassName + "] not found.");
+            } catch (Exception e) {
+                errorMessage.append("CryptoRandom: [" + klassName + "] failed with " + e.getMessage());
             }
         }
 
