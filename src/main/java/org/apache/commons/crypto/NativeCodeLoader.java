@@ -39,6 +39,8 @@ final class NativeCodeLoader {
 
     private final static boolean nativeCodeLoaded;
 
+    private static final Throwable loadingError;
+
     /**
      * The private constructor of {@link NativeCodeLoader}.
      */
@@ -46,10 +48,17 @@ final class NativeCodeLoader {
     }
 
     static {
-        // Try to load native library and set fallback flag appropriately
-        boolean nativeLoaded = false;
+        loadingError = loadLibrary(); // will be null if loaded OK
 
-        //Trying to load the custom-built native-commons-crypto library...");
+        nativeCodeLoaded = loadingError == null;
+    }
+
+    /**
+     * Loads the library if possible.
+     * 
+     * @return null if successrul, otherwise the Throwable that was caught
+     */
+    static Throwable loadLibrary() {
         try {
             File nativeLibFile = findNativeLibrary();
             if (nativeLibFile != null) {
@@ -59,12 +68,12 @@ final class NativeCodeLoader {
                 // Load preinstalled library (in the path -Djava.library.path)
                 System.loadLibrary("commons-crypto");
             }
-            // Loaded the native library
-            nativeLoaded = true;
-        } catch (Exception t) {  // NOPMD: Ignore failure to load
+            return null; // OK
+        } catch (Exception t) {
+            return t;
+        } catch (UnsatisfiedLinkError t) {
+            return t;
         }
-
-        nativeCodeLoaded = nativeLoaded;
     }
 
     /**
@@ -276,5 +285,14 @@ final class NativeCodeLoader {
      */
     static boolean isNativeCodeLoaded() {
         return nativeCodeLoaded;
+    }
+
+    /**
+     * Gets the error cause if loading failed.
+     * 
+     * @return null, unless loading failed
+     */
+    static Throwable getLoadingError() {
+        return loadingError;
     }
 }

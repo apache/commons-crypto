@@ -63,4 +63,12 @@ public final class Crypto {
         return NativeCodeLoader.isNativeCodeLoaded();
     }
 
+    /**
+     * The loading error throwable, if loading failed.
+     * 
+     * @return null, unless loading failed.
+     */
+    public static Throwable getLoadingError() {
+        return NativeCodeLoader.getLoadingError();
+    }
 }
