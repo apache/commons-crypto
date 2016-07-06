@@ -67,10 +67,10 @@ public class CryptoRandomFactoryTest {
         Properties props = new Properties();
         props.setProperty(
             CryptoRandomFactory.CLASSES_KEY,
-            OsCryptoRandom.class.getName());
+            JavaCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
 
-        Assert.assertEquals(OsCryptoRandom.class.getName(), random.getClass()
+        Assert.assertEquals(JavaCryptoRandom.class.getName(), random.getClass()
             .getName());
     }
 
