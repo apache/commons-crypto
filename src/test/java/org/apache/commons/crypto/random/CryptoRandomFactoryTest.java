@@ -43,7 +43,7 @@ public class CryptoRandomFactoryTest {
         Properties props = new Properties();
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         final String name = random.getClass().getName();
-        if (OpenSslCryptoRandom.isNativeCodeEnabled()) {
+        if (OpenSslCryptoRandom.isNativeCodeLoaded()) {
             Assert.assertEquals(OpenSslCryptoRandom.class.getName(), name);
         } else {
             Assert.assertEquals(JavaCryptoRandom.class.getName(), name);
