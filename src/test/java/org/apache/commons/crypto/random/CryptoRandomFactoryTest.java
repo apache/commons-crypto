@@ -42,8 +42,12 @@ public class CryptoRandomFactoryTest {
     public void testDefaultRandom() throws GeneralSecurityException {
         Properties props = new Properties();
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        Assert.assertEquals(OpenSslCryptoRandom.class.getName(),
-            random.getClass().getName());
+        final String name = random.getClass().getName();
+        if (OpenSslCryptoRandom.isNativeCodeEnabled()) {
+            Assert.assertEquals(OpenSslCryptoRandom.class.getName(), name);
+        } else {
+            Assert.assertEquals(JavaCryptoRandom.class.getName(), name);
+        }
     }
 
     @Test
