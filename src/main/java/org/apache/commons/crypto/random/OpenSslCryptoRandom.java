@@ -17,7 +17,7 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.security.NoSuchAlgorithmException;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
 import java.util.Random;
 
@@ -44,8 +44,6 @@ import org.apache.commons.crypto.utils.Utils;
 class OpenSslCryptoRandom extends Random implements CryptoRandom {
     private static final long serialVersionUID = -7828193502768789584L;
 
-    /** If native SecureRandom unavailable, use java SecureRandom */
-    private final JavaCryptoRandom fallback;
     private static final boolean nativeEnabled;
 
     static {
@@ -72,18 +70,18 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     /**
      * Constructs a {@link OpenSslCryptoRandom}.
      *
-     * @param props the configuration properties
-     * Only used to construct the fallback {@link JavaCryptoRandom} instance
-     * @throws NoSuchAlgorithmException if no Provider supports a
-     *         SecureRandomSpi implementation for the specified algorithm.
+     * @param props the configuration properties (unused)
+     * @throws GeneralSecurityException if native library load failed or can't generate
+     * random byte.
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OpenSslCryptoRandom(Properties props)
-            throws NoSuchAlgorithmException {
-        //fallback needs to be initialized here in any case cause even if
-        //nativeEnabled is true OpenSslCryptoRandomNative.nextRandBytes may fail
-        fallback = new JavaCryptoRandom(props);
+    public OpenSslCryptoRandom(Properties props) //NOPMD
+            throws GeneralSecurityException {
+        if (!nativeEnabled || !OpenSslCryptoRandomNative.nextRandBytes(new byte[1])) {
+            throw new GeneralSecurityException("Native library load failed or" +
+                " can't generate random byte.");
+        }
     }
 
     /**
@@ -94,7 +92,8 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     @Override
     public void nextBytes(byte[] bytes) {
         if (!nativeEnabled || !OpenSslCryptoRandomNative.nextRandBytes(bytes)) {
-            fallback.nextBytes(bytes);
+            throw new IllegalArgumentException("Native library load failed or" +
+                " can't generate random byte.");
         }
     }
 
@@ -140,8 +139,5 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      */
     @Override
     public void close() {
-        if (fallback != null) {
-            fallback.close();
-        }
     }
 }
