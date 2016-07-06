@@ -41,8 +41,6 @@ class OpenSslCipher implements CryptoCipher {
 
     private final String transformation;
 
-    private final static int AES_BLOCK_SIZE = 16;
-
     /**
      * Constructs a {@link CryptoCipher} using JNI into OpenSSL
      *
@@ -72,7 +70,7 @@ class OpenSslCipher implements CryptoCipher {
      */
     @Override
     public final int getBlockSize() {
-        return AES_BLOCK_SIZE;
+        return CryptoCipherFactory.AES_BLOCK_SIZE;
     }
 
     /**

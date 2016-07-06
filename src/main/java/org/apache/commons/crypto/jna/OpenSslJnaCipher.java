@@ -35,6 +35,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.utils.Utils;
 
 import com.sun.jna.NativeLong;
@@ -45,8 +46,6 @@ import com.sun.jna.ptr.PointerByReference;
  */
 class OpenSslJnaCipher implements CryptoCipher {
 
-    private final static int AES_BLOCK_SIZE = 16;
-    
     private PointerByReference algo;
     private final PointerByReference context;
     private final AlgorithmMode algMode;
@@ -318,7 +317,7 @@ class OpenSslJnaCipher implements CryptoCipher {
 
     @Override
     public int getBlockSize() {
-        return AES_BLOCK_SIZE;
+        return CryptoCipherFactory.AES_BLOCK_SIZE;
     }
 
     @Override

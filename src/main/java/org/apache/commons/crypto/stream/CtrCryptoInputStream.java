@@ -32,6 +32,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.stream.input.StreamInput;
@@ -78,14 +79,6 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * Flag to mark whether the cipher has been reset
      */
     private boolean cipherReset = false;
-
-    /**
-     * For AES, the algorithm block is fixed size of 128 bits.
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
-     *      http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
-     */
-    private static final int AES_BLOCK_SIZE = 16;
 
     /**
      * Constructs a {@link CtrCryptoInputStream}.
@@ -653,8 +646,8 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @param IV the IV for input stream position
      */
     static void calculateIV(byte[] initIV, long counter, byte[] IV) {
-        Utils.checkArgument(initIV.length == CtrCryptoInputStream.AES_BLOCK_SIZE);
-        Utils.checkArgument(IV.length == CtrCryptoInputStream.AES_BLOCK_SIZE);
+        Utils.checkArgument(initIV.length == CryptoCipherFactory.AES_BLOCK_SIZE);
+        Utils.checkArgument(IV.length == CryptoCipherFactory.AES_BLOCK_SIZE);
     
         int i = IV.length; // IV length
         int j = 0; // counter bytes index
