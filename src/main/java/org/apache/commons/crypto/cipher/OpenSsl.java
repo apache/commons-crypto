@@ -137,9 +137,13 @@ final class OpenSsl {
      *         specified algorithm.
      * @throws NoSuchPaddingException if <code>transformation</code> contains a
      *         padding scheme that is not available.
+     * @throws IllegalStateException if native code cannot be initialised
      */
     public static OpenSsl getInstance(String transformation)
             throws NoSuchAlgorithmException, NoSuchPaddingException {
+        if (loadingFailureReason != null) {
+            throw new IllegalStateException(loadingFailureReason);
+        }
         Transform transform = tokenizeTransformation(transformation);
         int algorithmMode = AlgorithmMode.get(transform.algorithm,
                 transform.mode);
