@@ -93,6 +93,8 @@ final class OpenSsl {
         try {
             if (Crypto.isNativeCodeLoaded()) {
                 OpenSslNative.initIDs();
+            } else {
+                loadingFailure = Crypto.getLoadingError().getMessage();
             }
         } catch (Exception t) {
             loadingFailure = t.getMessage();
@@ -104,7 +106,7 @@ final class OpenSsl {
     /**
      * Gets the failure reason when loading OpenSsl native.
      *
-     * @return the failure reason.
+     * @return the failure reason; null if it was loaded and initialised successfully
      */
     public static String getLoadingFailureReason() {
         return loadingFailureReason;
