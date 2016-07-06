@@ -22,10 +22,14 @@ import static org.junit.Assert.fail;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
+import org.junit.Assume;
+
 public class OsCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
+        // Windows does not have a /dev/random device
+        Assume.assumeTrue(!System.getProperty("os.name").contains("Windows"));
         Properties props = new Properties();
         props.setProperty(
                 CryptoRandomFactory.CLASSES_KEY,
