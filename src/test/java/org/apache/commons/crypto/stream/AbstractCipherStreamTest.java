@@ -33,6 +33,7 @@ import java.util.Random;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.utils.ReflectionUtils;
@@ -99,6 +100,11 @@ public abstract class AbstractCipherStreamTest {
 
     protected void doSkipTest(String cipherClass, boolean withChannel)
             throws IOException {
+        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(cipherClass)) {
+            if (!Crypto.isNativeCodeLoaded()) {
+                return; // Skip this test if no JNI
+            }
+        }
         try (InputStream in = getCryptoInputStream(
                 new ByteArrayInputStream(encData), getCipher(cipherClass),
                 defaultBufferSize, iv, withChannel)) {
@@ -130,6 +136,11 @@ public abstract class AbstractCipherStreamTest {
 
     protected void doByteBufferRead(String cipherClass, boolean withChannel)
             throws Exception {
+        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(cipherClass)) {
+            if (!Crypto.isNativeCodeLoaded()) {
+                return; // Skip this test if no JNI
+            }
+        }
         // Default buffer size, initial buffer position is 0
         InputStream in = getCryptoInputStream(
                 new ByteArrayInputStream(encData), getCipher(cipherClass),
@@ -190,6 +201,11 @@ public abstract class AbstractCipherStreamTest {
 
     protected void doByteBufferWrite(String cipherClass,
             ByteArrayOutputStream baos, boolean withChannel) throws Exception {
+        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(cipherClass)) {
+            if (!Crypto.isNativeCodeLoaded()) {
+                return; // Skip this test if no JNI
+            }
+        }
         baos.reset();
         CryptoOutputStream out = getCryptoOutputStream(baos,
                 getCipher(cipherClass), defaultBufferSize, iv, withChannel);
@@ -331,6 +347,13 @@ public abstract class AbstractCipherStreamTest {
     private void doReadWriteTestForInputStream(int count,
             String encCipherClass, String decCipherClass, byte[] iv)
             throws IOException {
+        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(encCipherClass) 
+                || 
+            AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(decCipherClass)) {
+            if (!Crypto.isNativeCodeLoaded()) {
+                return; // Skip this test if no JNI
+            }
+        }
         // Created a cipher object of type encCipherClass;
         CryptoCipher encCipher = getCipher(encCipherClass);
 
@@ -392,6 +415,13 @@ public abstract class AbstractCipherStreamTest {
     private void doReadWriteTestForReadableByteChannel(int count,
             String encCipherClass, String decCipherClass, byte[] iv)
             throws IOException {
+        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(encCipherClass) 
+                || 
+            AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(decCipherClass)) {
+            if (!Crypto.isNativeCodeLoaded()) {
+                return; // Skip this test if no JNI
+            }
+        }
         // Creates a cipher object of type encCipherClass;
         CryptoCipher encCipher = getCipher(encCipherClass);
 

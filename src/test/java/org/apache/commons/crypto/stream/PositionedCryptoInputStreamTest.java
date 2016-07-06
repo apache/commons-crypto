@@ -18,11 +18,13 @@
 
 package org.apache.commons.crypto.stream;
 
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -91,8 +93,13 @@ public class PositionedCryptoInputStreamTest {
     }
 
     @Test
-    public void doTest() throws Exception {
+    public void doTestJCE() throws Exception {
         testCipher(AbstractCipherTest.JCE_CIPHER_CLASSNAME);
+    }
+
+    @Test
+    public void doTestJNI() throws Exception {
+        Assume.assumeTrue(Crypto.isNativeCodeLoaded());
         testCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME);
     }
 
