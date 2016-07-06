@@ -21,6 +21,7 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class CryptoRandomFactoryTest {
@@ -52,6 +53,8 @@ public class CryptoRandomFactoryTest {
 
     @Test
     public void testGetOSRandom() throws GeneralSecurityException {
+        // Windows does not have a /dev/random device
+        Assume.assumeTrue(!System.getProperty("os.name").contains("Windows"));
         Properties props = new Properties();
         props.setProperty(
             CryptoRandomFactory.CLASSES_KEY,
