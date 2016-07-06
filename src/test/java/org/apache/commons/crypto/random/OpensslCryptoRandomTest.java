@@ -20,12 +20,16 @@ package org.apache.commons.crypto.random;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
+import org.apache.commons.crypto.Crypto;
+import org.junit.Assume;
+
 import static org.junit.Assert.fail;
 
 public class OpensslCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
+        Assume.assumeTrue(Crypto.isNativeCodeLoaded());
         Properties props = new Properties();
         props.setProperty(
                 CryptoRandomFactory.CLASSES_KEY,
