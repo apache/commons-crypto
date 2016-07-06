@@ -30,7 +30,7 @@ public class CryptoCipherFactoryTest {
         CryptoCipher defaultCipher = CryptoCipherFactory
                 .getCryptoCipher("AES/CBC/NoPadding");
         final String name = defaultCipher.getClass().getName();
-        if (Crypto.isNativeCodeLoaded() && OpenSsl.getLoadingFailureReason() == null) {
+        if (OpenSsl.getLoadingFailureReason() == null) {
             Assert.assertEquals(OpenSslCipher.class.getName(), name);
         } else {
             Assert.assertEquals(JceCipher.class.getName(), name);
@@ -44,7 +44,7 @@ public class CryptoCipherFactoryTest {
         CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
                 "AES/CBC/NoPadding", properties);
         final String name = defaultCipher.getClass().getName();
-        if (Crypto.isNativeCodeLoaded() && OpenSsl.getLoadingFailureReason() == null) {
+        if (OpenSsl.getLoadingFailureReason() == null) {
             Assert.assertEquals(OpenSslCipher.class.getName(), name);
         } else {
             Assert.assertEquals(JceCipher.class.getName(), name);
