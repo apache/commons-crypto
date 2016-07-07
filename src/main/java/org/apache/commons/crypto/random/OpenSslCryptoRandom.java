@@ -17,7 +17,7 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.security.NoSuchAlgorithmException;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
 import java.util.Random;
 
@@ -44,46 +44,55 @@ import org.apache.commons.crypto.utils.Utils;
 class OpenSslCryptoRandom extends Random implements CryptoRandom {
     private static final long serialVersionUID = -7828193502768789584L;
 
-    /** If native SecureRandom unavailable, use java SecureRandom */
-    private final JavaCryptoRandom fallback;
     private static final boolean nativeEnabled;
+
+    private static final Exception initException;
 
     static {
         boolean opensslLoaded = false;
+        Exception except = null;
         if (Crypto.isNativeCodeLoaded()) {
             try {
                 OpenSslCryptoRandomNative.initSR();
                 opensslLoaded = true;
-            } catch (Exception t) {// NOPMD
+            } catch (Exception t) {
+                except = t;
             }
         }
         nativeEnabled = opensslLoaded;
+        initException = except;
     }
 
     /**
-     * Judges whether loading native library successfully.
+     * Judges whether native library was successfully loaded and initialised.
      *
-     * @return true if loading library successfully.
+     * @return true if library was loaded and initialised
      */
-    public static boolean isNativeCodeLoaded() {
+    public static boolean isNativeCodeEnabled() {
         return nativeEnabled;
     }
 
     /**
      * Constructs a {@link OpenSslCryptoRandom}.
      *
-     * @param props the configuration properties
-     * Only used to construct the fallback {@link JavaCryptoRandom} instance
-     * @throws NoSuchAlgorithmException if no Provider supports a
-     *         SecureRandomSpi implementation for the specified algorithm.
+     * @param props the configuration properties - not used
+     * @throws GeneralSecurityException if the native library could not be initialised successfully
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OpenSslCryptoRandom(Properties props)
-            throws NoSuchAlgorithmException {
-        //fallback needs to be initialized here in any case cause even if
-        //nativeEnabled is true OpenSslCryptoRandomNative.nextRandBytes may fail
-        fallback = new JavaCryptoRandom(props);
+    public OpenSslCryptoRandom(Properties props) throws GeneralSecurityException {
+        if (!nativeEnabled) {
+            if (initException != null) {
+                throw new GeneralSecurityException("Native library could not be initialised", initException);
+            } else {
+                throw new GeneralSecurityException("Native library is not loaded");
+            }
+        } else {
+            // Check that nextRandBytes works (is this really needed?)
+            if (!OpenSslCryptoRandomNative.nextRandBytes(new byte[1])) {
+                throw new GeneralSecurityException("Check of nextRandBytes failed");
+            }
+        }
     }
 
     /**
@@ -93,8 +102,10 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      */
     @Override
     public void nextBytes(byte[] bytes) {
-        if (!nativeEnabled || !OpenSslCryptoRandomNative.nextRandBytes(bytes)) {
-            fallback.nextBytes(bytes);
+        // Constructor ensures that native is enabled here
+        if (!OpenSslCryptoRandomNative.nextRandBytes(bytes)) {
+            // Assume it's a problem with the argument, rather than an internal issue
+            throw new IllegalArgumentException("The nextRandBytes method failed");
         }
     }
 
@@ -135,13 +146,10 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link java.lang.AutoCloseable#close()}. Closes OpenSSL context
-     * if native enabled.
+     * Overrides {@link java.lang.AutoCloseable#close()}.
+     * Does nothing.
      */
     @Override
     public void close() {
-        if (fallback != null) {
-            fallback.close();
-        }
     }
 }
