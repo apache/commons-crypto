@@ -31,6 +31,18 @@ import org.junit.Test;
 public class NativeCodeLoaderTest {
 
     @Test
+    public void test() {
+        if (NativeCodeLoader.isNativeCodeLoaded()) {
+            // TODO display versions once available
+            System.out.println("** INFO: Native (JNI) code loaded successfully");
+        } else {
+            System.out.println("** WARN: Native (JNI) code was not loaded: " 
+                + NativeCodeLoader.getLoadingError());
+        }
+        assertNotNull(NativeCodeLoader.getVersion());
+    }
+
+    @Test
     public void testGetVersion() {
         assertNotNull(NativeCodeLoader.getVersion());
     }
