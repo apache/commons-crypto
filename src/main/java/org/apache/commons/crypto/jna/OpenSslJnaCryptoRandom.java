@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.jna;
 
 import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 import java.util.Random;
@@ -54,11 +55,13 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      * Constructs a {@link OpenSslJnaCryptoRandom}.
      *
      * @param props the configuration properties (not used)
-     * @throws NoSuchAlgorithmException if no Provider supports a
-     *         SecureRandomSpi implementation for the specified algorithm.
+     * @throws GeneralSecurityException  if could not enable JNA access
      */
     public OpenSslJnaCryptoRandom(Properties props)
-            throws NoSuchAlgorithmException {
+            throws GeneralSecurityException {
+        if (!OpenSslJna.isEnabled()) {
+            throw new GeneralSecurityException("Could not enable JNA access", OpenSslJna.initialisationError());
+        }
 
         boolean rdrandLoaded = false;
         try {

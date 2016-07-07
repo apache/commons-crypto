@@ -61,6 +61,9 @@ class OpenSslJnaCipher implements CryptoCipher {
      */
     public OpenSslJnaCipher(Properties props, String transformation)
             throws GeneralSecurityException {
+        if (!OpenSslJna.isEnabled()) {
+            throw new GeneralSecurityException("Could not enable JNA access", OpenSslJna.initialisationError());
+        }
         this.transformation = transformation;
         Transform transform = tokenizeTransformation(transformation);
         algMode = AlgorithmMode.get(transform.algorithm, transform.mode);

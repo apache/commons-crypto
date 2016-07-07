@@ -32,4 +32,13 @@ public final class OpenSslJna {
     public static Class<? extends CryptoRandom> getRandomClass() {
         return OpenSslJnaCryptoRandom.class;
     }
+
+    public static boolean isEnabled() {
+        return OpenSslNativeJna.INIT_OK;
+    }
+
+    public static Throwable initialisationError() {
+        return OpenSslNativeJna.INIT_ERROR;
+    }
+
 }

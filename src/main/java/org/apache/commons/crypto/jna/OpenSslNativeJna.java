@@ -31,9 +31,25 @@ class OpenSslNativeJna {
     static final int OOSL_JNA_ENCRYPT_MODE = 1;
     static final int OOSL_JNA_DECRYPT_MODE = 0;
 
+    static final boolean INIT_OK;
+ 
+    static final Throwable INIT_ERROR;
+
     static {
-        Native.register("crypto");
-        ERR_load_crypto_strings();
+        boolean ok = false;
+        Throwable thrown = null;
+        try {
+            Native.register("crypto");
+            ERR_load_crypto_strings();
+            ok = true;
+        } catch (Exception e) {
+            thrown = e;
+        } catch (UnsatisfiedLinkError e) {
+            thrown = e;
+        } finally {
+            INIT_OK = ok;
+            INIT_ERROR = thrown;
+        }
     }
 
     //misc
