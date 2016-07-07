@@ -18,12 +18,19 @@
 package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.stream.PositionedCryptoInputStreamTest;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  *
  */
 public class PositionedCryptoInputStreamJnaTest extends PositionedCryptoInputStreamTest {
+
+    @Before
+    public void init() {
+        Assume.assumeTrue(OpenSslJna.isEnabled());
+    }
 
     @Test
     public void doTest() throws Exception {

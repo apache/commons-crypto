@@ -21,11 +21,18 @@ import java.io.ByteArrayOutputStream;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.stream.AbstractCipherStreamTest;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTest {
 
     private static final String CIPHER_OPENSSL_JNA = OpenSslJna.getCipherClass().getName();
+
+    @Before
+    public void init() {
+        Assume.assumeTrue(OpenSslJna.isEnabled());
+    }
 
     /** Test skip. */
     @Test(timeout = 120000)

@@ -20,11 +20,13 @@ package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.cipher.OpenSslCipherTest;
 import org.apache.commons.crypto.jna.OpenSslJnaCipher;
+import org.junit.Assume;
 
 public class OpenSslJnaCipherTest extends OpenSslCipherTest {
 
     @Override
     public void init() {
+        Assume.assumeTrue(OpenSslJna.isEnabled());
         transformations = new String[] {
                 "AES/CBC/NoPadding",
                 "AES/CBC/PKCS5Padding",

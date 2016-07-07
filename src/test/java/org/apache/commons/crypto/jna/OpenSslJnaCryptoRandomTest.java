@@ -24,10 +24,17 @@ import org.apache.commons.crypto.jna.OpenSslJnaCryptoRandom;
 import org.apache.commons.crypto.random.AbstractRandomTest;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
+import org.junit.Assume;
+import org.junit.Before;
 
 import static org.junit.Assert.fail;
 
 public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
+
+    @Before
+    public void init() {
+        Assume.assumeTrue(OpenSslJna.isEnabled());
+    }
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
