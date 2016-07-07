@@ -47,6 +47,8 @@ Maven build goals:
 * Clean                     : mvn clean
 * Compile                   : mvn compile
 * Run tests                 : mvn test
+* Run benchmarks            : mvn clean test -Pbenchmark
+* Run test; no JNI build    : mvn clean test -Dmaven.antrun.skip
 * Create JAR                : mvn package
 * Run findbugs              : mvn compile -Pfindbugs
 * Run checkstyle            : mvn compile checkstyle:checkstyle
