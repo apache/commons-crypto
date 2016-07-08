@@ -35,6 +35,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
     }
 
     /** Test skip. */
+    @Override
     @Test(timeout = 120000)
     public void testSkip() throws Exception {
         doSkipTest(CIPHER_OPENSSL_JNA, false);
@@ -43,6 +44,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
     }
 
     /** Test byte buffer read with different buffer size. */
+    @Override
     @Test(timeout = 120000)
     public void testByteBufferRead() throws Exception {
         doByteBufferRead(CIPHER_OPENSSL_JNA, false);
@@ -51,6 +53,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
     }
 
     /** Test byte buffer write. */
+    @Override
     @Test(timeout = 120000)
     public void testByteBufferWrite() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -59,6 +62,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
         doByteBufferWrite(CIPHER_OPENSSL_JNA, baos, true);
     }
 
+    @Override
     @Test
     public void testReadWrite() throws Exception {
         doReadWriteTest(0, CIPHER_OPENSSL_JNA, CIPHER_OPENSSL_JNA, iv);
