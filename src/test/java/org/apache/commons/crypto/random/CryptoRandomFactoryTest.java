@@ -101,7 +101,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testDummmyRandom() throws GeneralSecurityException {
+    public void testDummmyRandom() {
         Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, DummyRandom.class.getName());
         try {
