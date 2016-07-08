@@ -47,29 +47,29 @@ public abstract class AbstractRandomTest {
     @Test(timeout = 120000)
     public void testRandomBytesMultiThreaded() throws Exception {
         final int threadCount = 100;
-        final CryptoRandom random = getCryptoRandom();
-        final List<Thread> threads = new ArrayList<>(threadCount);
+        try (final CryptoRandom random = getCryptoRandom()) {
+            final List<Thread> threads = new ArrayList<>(threadCount);
 
-        for (int i = 0; i < threadCount; i++) {
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    checkRandomBytes(random, 10);
-                    checkRandomBytes(random, 1000);
-                    checkRandomBytes(random, 100000);
-                }
-            });
-            t.start();
-            threads.add(t);
-        }
-
-        for (Thread t : threads) {
-            if (!t.getState().equals(State.NEW)) {
-                t.join();
+            for (int i = 0; i < threadCount; i++) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkRandomBytes(random, 10);
+                        checkRandomBytes(random, 1000);
+                        checkRandomBytes(random, 100000);
+                    }
+                });
+                t.start();
+                threads.add(t);
             }
-        }
 
-        random.close();
+            for (Thread t : threads) {
+                if (!t.getState().equals(State.NEW)) {
+                    t.join();
+                }
+            }
+
+        }
     }
 
     /**
