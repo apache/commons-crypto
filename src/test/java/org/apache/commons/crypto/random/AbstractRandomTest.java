@@ -50,7 +50,7 @@ public abstract class AbstractRandomTest {
         final CryptoRandom random = getCryptoRandom();
         final List<Thread> threads = new ArrayList<>(threadCount);
 
-        for(int i=0; i< threadCount; i++) {
+        for (int i = 0; i < threadCount; i++) {
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -63,8 +63,8 @@ public abstract class AbstractRandomTest {
             threads.add(t);
         }
 
-        for(Thread t: threads) {
-            if(!t.getState().equals(State.NEW)) {
+        for (Thread t : threads) {
+            if (!t.getState().equals(State.NEW)) {
                 t.join();
             }
         }
