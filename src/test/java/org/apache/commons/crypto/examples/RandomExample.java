@@ -40,17 +40,16 @@ public class RandomExample {
             CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
 
         // Gets the 'CryptoRandom' instance.
-        CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties);
+        try (CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
 
-        // Show the actual class (may be different from the one requested)
-        System.out.println(random.getClass().getCanonicalName());
+            // Show the actual class (may be different from the one requested)
+            System.out.println(random.getClass().getCanonicalName());
 
-        // Generate random bytes and places them into the byte arrays.
-        random.nextBytes(key);
-        random.nextBytes(iv);
+            // Generate random bytes and places them into the byte arrays.
+            random.nextBytes(key);
+            random.nextBytes(iv);
 
-        // Closes the CryptoRandom.
-        random.close();
+        }
 
         // Show the generated output
         System.out.println(Arrays.toString(key));
