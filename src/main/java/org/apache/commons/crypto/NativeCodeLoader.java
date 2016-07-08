@@ -206,7 +206,7 @@ final class NativeCodeLoader {
                 }
             }
 
-            return new File(targetFolder, extractedLibFileName);
+            return extractedLibFile;
         } catch (IOException e) {
             return null;
         } finally {
