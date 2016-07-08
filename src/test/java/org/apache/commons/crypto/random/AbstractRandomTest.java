@@ -32,16 +32,16 @@ public abstract class AbstractRandomTest {
 
     @Test(timeout = 120000)
     public void testRandomBytes() throws Exception {
-        CryptoRandom random = getCryptoRandom();
-        // len = 16
-        checkRandomBytes(random, 16);
-        // len = 32
-        checkRandomBytes(random, 32);
-        // len = 128
-        checkRandomBytes(random, 128);
-        // len = 256
-        checkRandomBytes(random, 256);
-        random.close();
+        try (CryptoRandom random = getCryptoRandom()) {
+            // len = 16
+            checkRandomBytes(random, 16);
+            // len = 32
+            checkRandomBytes(random, 32);
+            // len = 128
+            checkRandomBytes(random, 128);
+            // len = 256
+            checkRandomBytes(random, 256);
+        }
     }
 
     @Test(timeout = 120000)
