@@ -46,15 +46,6 @@ public final class Crypto {
             + "lib.tempdir";
 
     /**
-     * Gets the currently active version of Apache Commons Crypto.
-     * 
-     * @return the version
-     */
-    public static String getVersion() {
-        return NativeCodeLoader.getVersion();
-    }
-
-    /**
      * Checks whether the native code has been successfully loaded for the platform.
      * 
      * @return true if the native code has been loaded successfully.
