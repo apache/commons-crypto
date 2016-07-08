@@ -20,7 +20,6 @@ package org.apache.commons.crypto.cipher;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.apache.commons.crypto.Crypto;
 import org.junit.Assert;
 import org.junit.Test;
 
