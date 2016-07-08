@@ -22,13 +22,10 @@ COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpensslCryptoRandom.o Ope
 
 # Windows uses different path separators
 ifeq ($(OS_NAME),Windows)
-  # Classpath separator
-  SEP := ;
   DELTREE := CMD /C DEL /S/Q
   # The separator used for file paths
   FSEP := \\
 else
-  SEP := :
   DELTREE := rm -rf
   FSEP := /
 endif
@@ -41,10 +38,10 @@ NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
 all: $(NATIVE_DLL)
 
 $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h: $(TARGET)/classes/org/apache/commons/crypto/cipher/OpenSslNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes$(SEP)$(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpenSslNative
+	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpenSslNative
 
 $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.h: $(TARGET)/classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.class
-	$(JAVAH) -force -classpath $(TARGET)/jni-classes$(SEP)$(TARGET)/classes -o $@ org.apache.commons.crypto.random.OpenSslCryptoRandomNative
+	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.random.OpenSslCryptoRandomNative
 
 $(COMMONS_CRYPTO_OUT)/OpenSslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpenSslNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h
 	@mkdir -p $(@D)
