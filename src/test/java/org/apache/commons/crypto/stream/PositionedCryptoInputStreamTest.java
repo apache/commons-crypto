@@ -113,35 +113,34 @@ public class PositionedCryptoInputStreamTest {
     // when there are multiple positioned read actions and one read action,
     // they will not interfere each other.
     private void doMultipleReadTest(String cipherClass) throws Exception {
-        PositionedCryptoInputStream in = getCryptoInputStream(
-                getCipher(cipherClass), bufferSize);
-        int position = 0;
-        while (in.available() > 0) {
-            ByteBuffer buf = ByteBuffer.allocate(length);
-            byte[] bytes1 = new byte[length];
-            byte[] bytes2 = new byte[lengthLess];
-            // do the read and position read
-            int pn1 = in.read(position, bytes1, 0, length);
-            int n = in.read(buf);
-            int pn2 = in.read(position, bytes2, 0, lengthLess);
+        try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+            int position = 0;
+            while (in.available() > 0) {
+                ByteBuffer buf = ByteBuffer.allocate(length);
+                byte[] bytes1 = new byte[length];
+                byte[] bytes2 = new byte[lengthLess];
+                // do the read and position read
+                int pn1 = in.read(position, bytes1, 0, length);
+                int n = in.read(buf);
+                int pn2 = in.read(position, bytes2, 0, lengthLess);
 
-            // verify the result
-            if (pn1 > 0) {
-                compareByteArray(testData, position, bytes1, pn1);
-            }
+                // verify the result
+                if (pn1 > 0) {
+                    compareByteArray(testData, position, bytes1, pn1);
+                }
 
-            if (pn2 > 0) {
-                compareByteArray(testData, position, bytes2, pn2);
-            }
+                if (pn2 > 0) {
+                    compareByteArray(testData, position, bytes2, pn2);
+                }
 
-            if (n > 0) {
-                compareByteArray(testData, position, buf.array(), n);
-                position += n;
-            } else {
-                break;
+                if (n > 0) {
+                    compareByteArray(testData, position, buf.array(), n);
+                    position += n;
+                } else {
+                    break;
+                }
             }
         }
-        in.close();
     }
 
     private void doPositionedReadTests(String cipherClass) throws Exception {
@@ -190,20 +189,19 @@ public class PositionedCryptoInputStreamTest {
 
     private void testSeekLoop(String cipherClass, int position, int length,
             int bufferSize) throws Exception {
-        PositionedCryptoInputStream in = getCryptoInputStream(
-                getCipher(cipherClass), bufferSize);
-        while (in.available() > 0) {
-            in.seek(position);
-            ByteBuffer buf = ByteBuffer.allocate(length);
-            int n = in.read(buf);
-            if (n > 0) {
-                compareByteArray(testData, position, buf.array(), n);
-                position += n;
-            } else {
-                break;
+        try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+            while (in.available() > 0) {
+                in.seek(position);
+                ByteBuffer buf = ByteBuffer.allocate(length);
+                int n = in.read(buf);
+                if (n > 0) {
+                    compareByteArray(testData, position, buf.array(), n);
+                    position += n;
+                } else {
+                    break;
+                }
             }
         }
-        in.close();
     }
 
     // test for the out of index position, eg, -1.
@@ -221,47 +219,45 @@ public class PositionedCryptoInputStreamTest {
 
     private void testPositionedReadLoop(String cipherClass, int position,
             int length, int bufferSize, int total) throws Exception {
-        PositionedCryptoInputStream in = getCryptoInputStream(
-                getCipher(cipherClass), bufferSize);
-        // do the position read until the end of data
-        while (position < total) {
-            byte[] bytes = new byte[length];
-            int n = in.read(position, bytes, 0, length);
-            if (n >= 0) {
-                compareByteArray(testData, position, bytes, n);
-                position += n;
-            } else {
-                break;
+        try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+            // do the position read until the end of data
+            while (position < total) {
+                byte[] bytes = new byte[length];
+                int n = in.read(position, bytes, 0, length);
+                if (n >= 0) {
+                    compareByteArray(testData, position, bytes, n);
+                    position += n;
+                } else {
+                    break;
+                }
             }
         }
-        in.close();
     }
 
     // test for the out of index position, eg, -1.
     private void testPositionedReadNone(String cipherClass, int position,
             int length, int bufferSize) throws Exception {
-        PositionedCryptoInputStream in = getCryptoInputStream(
-                getCipher(cipherClass), bufferSize);
-        byte[] bytes = new byte[length];
-        int n = in.read(position, bytes, 0, length);
-        Assert.assertEquals(n, -1);
-        in.close();
+        try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+            byte[] bytes = new byte[length];
+            int n = in.read(position, bytes, 0, length);
+            Assert.assertEquals(n, -1);
+        }
     }
 
     private void testReadFullyLoop(String cipherClass, int position,
             int length, int bufferSize, int total) throws Exception {
-        PositionedCryptoInputStream in = getCryptoInputStream(
-                getCipher(cipherClass), bufferSize);
+        try (PositionedCryptoInputStream in = getCryptoInputStream(
+                getCipher(cipherClass), bufferSize)) {
 
-        // do the position read full until remain < length
-        while (position + length <= total) {
-            byte[] bytes = new byte[length];
-            in.readFully(position, bytes, 0, length);
-            compareByteArray(testData, position, bytes, length);
-            position += length;
+            // do the position read full until remain < length
+            while (position + length <= total) {
+                byte[] bytes = new byte[length];
+                in.readFully(position, bytes, 0, length);
+                compareByteArray(testData, position, bytes, length);
+                position += length;
+            }
+
         }
-
-        in.close();
     }
 
     // test for the End of file reached before reading fully
