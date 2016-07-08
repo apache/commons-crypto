@@ -84,14 +84,12 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
         if (!nativeEnabled) {
             if (initException != null) {
                 throw new GeneralSecurityException("Native library could not be initialised", initException);
-            } else {
-                throw new GeneralSecurityException("Native library is not loaded");
             }
-        } else {
-            // Check that nextRandBytes works (is this really needed?)
-            if (!OpenSslCryptoRandomNative.nextRandBytes(new byte[1])) {
-                throw new GeneralSecurityException("Check of nextRandBytes failed");
-            }
+            throw new GeneralSecurityException("Native library is not loaded");
+        }
+        // Check that nextRandBytes works (is this really needed?)
+        if (!OpenSslCryptoRandomNative.nextRandBytes(new byte[1])) {
+            throw new GeneralSecurityException("Check of nextRandBytes failed");
         }
     }
 
