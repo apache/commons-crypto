@@ -46,7 +46,6 @@ static EVP_CIPHER * (*dlsym_EVP_aes_128_ctr)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_256_cbc)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_192_cbc)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_128_cbc)(void);
-static void *openssl;
 #endif
 
 #ifdef WINDOWS
@@ -82,10 +81,15 @@ static __dlsym_EVP_aes_128_ctr dlsym_EVP_aes_128_ctr;
 static __dlsym_EVP_aes_256_cbc dlsym_EVP_aes_256_cbc;
 static __dlsym_EVP_aes_192_cbc dlsym_EVP_aes_192_cbc;
 static __dlsym_EVP_aes_128_cbc dlsym_EVP_aes_128_cbc;
-static HMODULE openssl;
 #endif
 
-static void loadAes(JNIEnv *env)
+#ifdef UNIX
+static void loadAes(JNIEnv *env, void *openssl)
+#endif
+
+#ifdef WINDOWS
+static void loadAes(JNIEnv *env, HMODULE openssl)
+#endif
 {
 #ifdef UNIX
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_ctr, env, openssl, "EVP_aes_256_ctr");
@@ -117,11 +121,11 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
 {
   char msg[1000];
 #ifdef UNIX
-  openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
 #endif
 
 #ifdef WINDOWS
-  openssl = LoadLibrary(COMMONS_CRYPTO_OPENSSL_LIBRARY);
+  HMODULE openssl = LoadLibrary(COMMONS_CRYPTO_OPENSSL_LIBRARY);
 #endif
 
   if (!openssl) {
@@ -172,7 +176,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
                       env, openssl, "EVP_CipherFinal_ex");
 #endif
 
-  loadAes(env);
+  loadAes(env, openssl);
   jthrowable jthr = (*env)->ExceptionOccurred(env);
   if (jthr) {
     (*env)->DeleteLocalRef(env, jthr);
