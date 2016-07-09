@@ -23,6 +23,7 @@ import java.util.Locale;
 
 /**
  * Provides OS name and architecture name.
+ * Used by the JNI make process to get information from the build environment.
  */
 final class OsInfo {
     private final static HashMap<String, String> archMapping = new HashMap<>();
