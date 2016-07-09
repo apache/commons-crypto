@@ -104,8 +104,14 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 #endif
 
   if (!openssl) {
+#ifdef UNIX
     snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
         dlerror());
+#endif
+#ifdef WINDOWS
+    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+    		GetLastError());
+#endif
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
   }
