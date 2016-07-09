@@ -190,14 +190,7 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
   ret = expr; \
 } while ((ret == -1) && (errno == EINTR));
 
-#ifdef UNIX
 #include "config.h"
-#endif
-
-#ifdef WINDOWS
-#include "config.h"
-#include "winutils.h"
-#endif
 
 #include <openssl/aes.h>
 #include <openssl/evp.h>
