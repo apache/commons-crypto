@@ -31,7 +31,6 @@ checkpoint
 derby.log
 dist/
 unit-tests.log
-/lib/
 src/main/resources/com/intel/chimera/native/
 src/main/resources/com/intel/chimera/native/*
 .externalToolBuilders/*
