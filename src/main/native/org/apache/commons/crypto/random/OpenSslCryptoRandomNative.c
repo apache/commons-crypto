@@ -100,7 +100,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 #endif
 
 #ifdef WINDOWS
-  HMODULE openssl = LoadLibrary(COMMONS_CRYPTO_OPENSSL_LIBRARY);
+  HMODULE openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
 #endif
 
   if (!openssl) {
