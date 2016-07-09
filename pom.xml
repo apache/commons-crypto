@@ -39,7 +39,7 @@ Features
 2. Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encyrption/decryption.
 3. Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
 4. JNI-based implementation to achieve comparable performance to the native C++ version based on OpenSsl.
-5. Portable across various operating systems (currently only Linux);
+5. Portable across various operating systems (currently only Linux/MacOSX);
    Apache Commons Crypto loads the library according to your machine environment (it checks system properties, `os.name` and `os.arch`).
 6. Simple usage. Add the commons-crypto-(version).jar file to your classpath.
 
