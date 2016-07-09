@@ -149,8 +149,8 @@ final class NativeCodeLoader {
         // loaders
         // can read the libcommons-crypto multiple times.
         String uuid = UUID.randomUUID().toString();
-        String extractedLibFileName = String.format("commons-crypto-%s-%s-%s",
-                getVersion(), uuid, libraryFileName);
+        String extractedLibFileName = String.format("commons-crypto-%s-%s",
+                uuid, libraryFileName);
         File extractedLibFile = new File(targetFolder, extractedLibFileName);
 
         InputStream reader = null;
@@ -212,31 +212,6 @@ final class NativeCodeLoader {
         } finally {
             IoUtils.cleanup(reader);
         }
-    }
-
-    /**
-     * Gets the version by reading pom.properties embedded in jar. This version
-     * data is used as a suffix of a dll file extracted from the jar.
-     *
-     * @return the version string
-     */
-    static String getVersion() {
-        URL versionFile = NativeCodeLoader.class
-                .getResource("/META-INF/maven/org.apache.commons.crypto/commons-crypto/pom.properties");
-        String version = "unknown";
-        if (versionFile != null) {
-            Properties versionData = new Properties();
-            try {
-                versionData.load(versionFile.openStream());
-                version = versionData.getProperty("version", version);
-                if (version.equals("unknown")) {
-                    version = versionData.getProperty("VERSION", version);
-                }
-                version = version.trim().replaceAll("[^0-9M\\.]", "");
-            } catch (IOException e) { // NOPMD
-            }
-        }
-        return version;
     }
 
     /**
