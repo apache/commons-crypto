@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.random;
 
+import java.lang.reflect.InvocationTargetException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
@@ -120,6 +121,23 @@ public class CryptoRandomFactoryTest {
         // However the splitter drops empty fields
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, ",");
         CryptoRandomFactory.getCryptoRandom(props);
+    }
+
+    @Test
+    public void testFailingRandom() {
+        Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());
+        try {
+            CryptoRandomFactory.getCryptoRandom(props);
+            Assert.fail("Expected GeneralSecurityException");
+        } catch (GeneralSecurityException e) {
+            Throwable cause = e.getCause();
+            Assert.assertEquals(RuntimeException.class, cause.getClass());
+            cause = cause.getCause();
+            Assert.assertEquals(InvocationTargetException.class, cause.getClass());
+            cause = cause.getCause();
+            Assert.assertEquals(UnsatisfiedLinkError.class, cause.getClass());
+        }
     }
 
 }

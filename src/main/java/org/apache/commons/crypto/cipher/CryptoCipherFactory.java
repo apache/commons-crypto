@@ -148,6 +148,7 @@ public class CryptoCipherFactory {
             throw new IllegalArgumentException("No classname(s) provided");            
         }
         CryptoCipher cipher = null;
+        Exception lastException = null;
 
         StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
         for (String klass : names) {
@@ -159,6 +160,7 @@ public class CryptoCipherFactory {
                     break;
                 }
             } catch (Exception e) {
+                lastException = e;
                 errorMessage.append("{" + klass + "}");
             }
         }
@@ -168,7 +170,7 @@ public class CryptoCipherFactory {
         }
         errorMessage.append(" is not available or transformation " +
                 transformation + " is not supported.");
-        throw new GeneralSecurityException(errorMessage.toString());
+        throw new GeneralSecurityException(errorMessage.toString(), lastException);
     }
 
     /**
