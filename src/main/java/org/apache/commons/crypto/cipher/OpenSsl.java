@@ -86,20 +86,20 @@ final class OpenSsl {
     private final int algorithm;
     private final int padding;
 
-    private static final String loadingFailureReason;
+    private static final Throwable loadingFailureReason;
 
     static {
-        String loadingFailure = null;
+        Throwable loadingFailure = null;
         try {
             if (Crypto.isNativeCodeLoaded()) {
                 OpenSslNative.initIDs();
             } else {
-                loadingFailure = Crypto.getLoadingError().getMessage();
+                loadingFailure = Crypto.getLoadingError();
             }
         } catch (Exception t) {
-            loadingFailure = t.getMessage();
+            loadingFailure = t;
         } catch (UnsatisfiedLinkError t) {
-            loadingFailure = t.getMessage();            
+            loadingFailure = t;            
         } finally {
             loadingFailureReason = loadingFailure;
         }
@@ -110,7 +110,7 @@ final class OpenSsl {
      *
      * @return the failure reason; null if it was loaded and initialised successfully
      */
-    public static String getLoadingFailureReason() {
+    public static Throwable getLoadingFailureReason() {
         return loadingFailureReason;
     }
 
