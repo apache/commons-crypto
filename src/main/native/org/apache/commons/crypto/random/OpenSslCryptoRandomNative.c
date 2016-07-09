@@ -62,7 +62,7 @@ typedef void * (__cdecl *__dlsym_CRYPTO_malloc) (int, const char *, int);
 typedef void (__cdecl *__dlsym_CRYPTO_free) (void *);
 typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
 typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback)  \
-              (void (*)(int, int, char *, int);
+              (void (*)(int, int, char *, int));
 typedef void (__cdecl *__dlsym_ENGINE_load_rdrand) (void);
 typedef ENGINE * (__cdecl *__dlsym_ENGINE_by_id) (const char *);
 typedef int (__cdecl *__dlsym_ENGINE_init) (ENGINE *);
