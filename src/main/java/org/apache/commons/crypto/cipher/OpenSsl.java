@@ -98,6 +98,8 @@ final class OpenSsl {
             }
         } catch (Exception t) {
             loadingFailure = t.getMessage();
+        } catch (UnsatisfiedLinkError t) {
+            loadingFailure = t.getMessage();            
         } finally {
             loadingFailureReason = loadingFailure;
         }
