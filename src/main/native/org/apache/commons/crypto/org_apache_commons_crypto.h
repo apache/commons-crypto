@@ -133,7 +133,9 @@ void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
 #include <stdio.h>
 #include <jni.h>
 
+#if !defined(__MINGW32__) /* does not appear to be needed on MinGW */
 #define snprintf(a, b ,c, d) _snprintf_s((a), (b), _TRUNCATE, (c), (d))
+#endif
 
 /* A helper macro to dlsym the requisite dynamic symbol and bail-out on error. */
 #define LOAD_DYNAMIC_SYMBOL(func_type, func_ptr, env, handle, symbol) \
