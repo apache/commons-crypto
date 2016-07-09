@@ -189,7 +189,6 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
 } while ((ret == -1) && (errno == EINTR));
 
 #ifdef UNIX
-#include <dlfcn.h>
 #include "config.h"
 #endif
 
