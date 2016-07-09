@@ -25,7 +25,7 @@ import org.junit.Assume;
 
 import static org.junit.Assert.fail;
 
-public class OpensslCryptoRandomTest extends AbstractRandomTest {
+public class OpenSslCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
