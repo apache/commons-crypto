@@ -21,20 +21,10 @@
 
 #include "org_apache_commons_crypto.h"
 
-#ifdef UNIX
-#include <dlfcn.h>
-#include "config.h"
-#endif
-
-#ifdef WINDOWS
-#include "winutils.h"
-#endif
-
 #define UNUSED(x) ((void)(x))
 
 #include <openssl/crypto.h>
 #include <openssl/engine.h>
 #include <openssl/rand.h>
-#include <openssl/err.h>
 
 #endif //ORG_APACHE_COMMONS_CRYPTO_RANDOM_H
