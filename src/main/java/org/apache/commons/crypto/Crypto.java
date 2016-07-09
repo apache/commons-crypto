@@ -17,6 +17,11 @@
  */
 package org.apache.commons.crypto;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Properties;
+
 /**
  * Provides diagnostic information about Commons Crypto and keys for native class loading
  */
@@ -45,6 +50,23 @@ public final class Crypto {
     public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX
             + "lib.tempdir";
 
+    private static class ComponentPropertiesHolder {
+        static final Properties PROPERTIES = getComponentProperties();
+
+        private static Properties getComponentProperties() {
+            URL url = Crypto.class.getResource("/org/apache/commons/crypto/component.properties");
+            if (url != null) {
+                Properties versionData = new Properties();
+                try (InputStream openStream = url.openStream()) {
+                    versionData.load(openStream);
+                    return versionData;
+                } catch (IOException e) {
+                }
+            }
+            return new Properties(); // make sure field is not null
+        }
+     }
+
     /**
      * Checks whether the native code has been successfully loaded for the platform.
      * 
@@ -62,4 +84,33 @@ public final class Crypto {
     public static Throwable getLoadingError() {
         return NativeCodeLoader.getLoadingError();
     }
+
+    /**
+     * Gets the component version of Apache Commons Crypto.
+     * <p>
+     * This implementation relies on the VERSION properties file which
+     * must be set up with the correct contents by the build process.
+     * This is done automatically by Maven.
+     *
+     * @return the version; may be null if not found
+     */
+    public static String getComponentVersion() {
+        // Note: the component properties file allows the method to work without needing the jar
+        return ComponentPropertiesHolder.PROPERTIES.getProperty("VERSION");
+    }
+
+    /**
+     * Gets the component version of Apache Commons Crypto.
+     * <p>
+     * This implementation relies on the VERSION properties file which
+     * must be set up with the correct contents by the build process.
+     * This is done automatically by Maven.
+     *
+     * @return the version; may be null if not found
+     */
+    public static String getComponentName() {
+        // Note: the component properties file allows the method to work without needing the jar
+        return ComponentPropertiesHolder.PROPERTIES.getProperty("NAME");
+    }
+
 }
