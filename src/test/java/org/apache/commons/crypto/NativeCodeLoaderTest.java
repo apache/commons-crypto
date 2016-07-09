@@ -39,12 +39,12 @@ public class NativeCodeLoaderTest {
             System.out.println("** WARN: Native (JNI) code was not loaded: " 
                 + NativeCodeLoader.getLoadingError());
         }
-        assertNotNull(NativeCodeLoader.getVersion());
+        assertNotNull(NativeCodeLoader.getCryptoVersion());
     }
 
     @Test
     public void testGetVersion() {
-        assertNotNull(NativeCodeLoader.getVersion());
+        assertNotNull(NativeCodeLoader.getCryptoVersion());
     }
 
     @Test

@@ -150,7 +150,7 @@ final class NativeCodeLoader {
         // can read the libcommons-crypto multiple times.
         String uuid = UUID.randomUUID().toString();
         String extractedLibFileName = String.format("commons-crypto-%s-%s-%s",
-                getVersion(), uuid, libraryFileName);
+                getCryptoVersion(), uuid, libraryFileName);
         File extractedLibFile = new File(targetFolder, extractedLibFileName);
 
         InputStream reader = null;
@@ -220,7 +220,7 @@ final class NativeCodeLoader {
      *
      * @return the version string
      */
-    static String getVersion() {
+    static String getCryptoVersion() {
         URL versionFile = NativeCodeLoader.class
                 .getResource("/META-INF/maven/org.apache.commons.crypto/commons-crypto/pom.properties");
         String version = "unknown";
