@@ -20,7 +20,7 @@
 #define __CONFIG_H
 
 #if defined(WINDOWS)
-    #define COMMONS_CRYPTO_OPENSSL_LIBRARY "libcrypto.dll"
+    #define COMMONS_CRYPTO_OPENSSL_LIBRARY L"libcrypto.dll"
 #elif defined(MAC_OS)
     #define COMMONS_CRYPTO_OPENSSL_LIBRARY "libcrypto.dylib"
 #else
