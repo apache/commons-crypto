@@ -440,6 +440,18 @@ The following provides more details on the included cryptographic software:
     </pluginManagement>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <!-- Helper application -->
+              <Main-Class>org.apache.commons.crypto.Crypto</Main-Class>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.7</version>
         <executions>

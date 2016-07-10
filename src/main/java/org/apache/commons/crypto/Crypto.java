@@ -20,7 +20,11 @@ package org.apache.commons.crypto;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
+
+import org.apache.commons.crypto.cipher.CryptoCipherFactory;
+import org.apache.commons.crypto.random.CryptoRandomFactory;
 
 /**
  * Provides diagnostic information about Commons Crypto and keys for native class loading
@@ -113,4 +117,25 @@ public final class Crypto {
         return ComponentPropertiesHolder.PROPERTIES.getProperty("NAME");
     }
 
+    public static void main(String args[]) throws Exception {
+        System.out.println(getComponentName() + " " + getComponentVersion());
+        if (isNativeCodeLoaded()) {
+            System.out.println("Native code loaded OK, version: TBA"); // TODO get VERSION from native code
+            {
+                Properties props = new Properties();
+                props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
+                CryptoRandomFactory.getCryptoRandom(props);
+                System.out.println("Random instance created OK");
+            }
+            System.out.println("OpenSSL library loaded OK, version: TBA"); // TODO get SSLeay() etc. from library
+            {
+                Properties props = new Properties();
+                props.setProperty(CryptoCipherFactory.CLASSES_KEY, CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
+                CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props);
+                System.out.println("Cipher instance created OK");
+            }
+        } else {
+            System.out.println("Native load failed: " + getLoadingError());            
+        }
+    }
 }
