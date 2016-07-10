@@ -480,6 +480,7 @@ The following provides more details on the included cryptographic software:
                          classpathref="maven.plugin.classpath"/>
                 <exec executable="make" failonerror="true" dir="${project.basedir}">
                   <env key="VERSION" value="${project.version}"/>
+                  <env key="PROJECT_NAME" value="${project.name}"/>
                   <!-- For debugging: -->
                   <!-- <arg value="-d"/> -->
                   <arg value="${target.name}"/>

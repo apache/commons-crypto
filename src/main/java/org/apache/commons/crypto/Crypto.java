@@ -119,19 +119,26 @@ public final class Crypto {
     public static void main(String args[]) throws Exception {
         System.out.println(getComponentName() + " " + getComponentVersion());
         if (isNativeCodeLoaded()) {
-            System.out.println("Native code loaded OK, version: TBA"); // TODO get VERSION from native code
+            System.out.println("Native code loaded OK " + OpenSslInfoNative.NativeVersion());
+            System.out.println("Native Name " + OpenSslInfoNative.NativeName());
+            System.out.println("Native Built " + OpenSslInfoNative.NativeTimeStamp());
+            System.out.println("OpenSSL library loaded OK, version: 0x" + Long.toHexString(OpenSslInfoNative.SSLeay()));
+            System.out.println(OpenSslInfoNative.SSLeayVersion(0));
             {
                 Properties props = new Properties();
                 props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
                 CryptoRandomFactory.getCryptoRandom(props);
                 System.out.println("Random instance created OK");
             }
-            System.out.println("OpenSSL library loaded OK, version: TBA"); // TODO get SSLeay() etc. from library
             {
                 Properties props = new Properties();
                 props.setProperty(CryptoCipherFactory.CLASSES_KEY, CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
                 CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props);
                 System.out.println("Cipher instance created OK");
+            }
+            System.out.println("Additional SSLeay_version(n) details:");
+            for(int j=1;j<6;j++) {
+                System.out.println(j+": "+ OpenSslInfoNative.SSLeayVersion(j));
             }
         } else {
             System.out.println("Native load failed: " + getLoadingError());            
