@@ -239,7 +239,10 @@ class OpenSslJnaCipher implements CryptoCipher {
     public void close() {
         if (context != null) {
             OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
-            OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
+            // Freeing the context multiple times causes a JVM crash
+            // A work-round is to only free it at finalize time
+            // TODO is that sufficient?
+//            OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
         }
     }
     
@@ -328,4 +331,9 @@ class OpenSslJnaCipher implements CryptoCipher {
         return transformation;
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
+        super.finalize();
+    }
 }
