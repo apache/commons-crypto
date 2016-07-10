@@ -20,7 +20,6 @@ package org.apache.commons.crypto;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
