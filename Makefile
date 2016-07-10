@@ -18,7 +18,7 @@
 include Makefile.common
 
 COMMONS_CRYPTO_OUT:=$(TARGET)/$(commons-crypto)-$(os_arch)
-COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpensslCryptoRandom.o OpenSslNative.o)
+COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpenSslCryptoRandomNative.o OpenSslNative.o)
 
 # Windows uses different path separators
 ifeq ($(OS_NAME),Windows)
@@ -47,7 +47,7 @@ $(COMMONS_CRYPTO_OUT)/OpenSslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(COMMONS_CRYPTO_OUT)/OpensslCryptoRandom.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.h
+$(COMMONS_CRYPTO_OUT)/OpenSslCryptoRandomNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
