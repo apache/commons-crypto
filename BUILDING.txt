@@ -3,7 +3,7 @@ Build instructions for Apache Commons Crypto
 ----------------------------------------------------------------------------------
 Requirements:
 
-* Unix System (Linux or Mac)
+* Unix System (Linux or Mac), or Windows with MinGW
 * JDK 1.7 or above (environment variable JAVA_HOME must be set)
 * Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy
   Files (if running unit tests)
