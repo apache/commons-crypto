@@ -61,7 +61,7 @@
    -->
 
   <body>
-    <release version="1.0.0" date="2016-06-06" description="Feature and bug fix release">
+    <release version="1.0.0" date="2016-07-??" description="Initial release">
       <action issue="CRYPTO-68" type="add" dev="britter" >Enable common code quality reports.</action>
       <action issue="CRYPTO-65" type="fix" dev="britter" due-to="sebb">Warnings compiling on MacOSX - JNIEXPORT redefined.</action>
       <action issue="CRYPTO-11" type="add" dev="Ke Jia" due-to="Ke Jia, Jerry Chen">User guide documentation .</action>
