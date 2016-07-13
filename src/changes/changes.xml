@@ -61,7 +61,16 @@
    -->
 
   <body>
-    <release version="1.0.0" date="2016-07-??" description="Initial release">
+    <release version="1.0.0" date="2016-07-??" description="
+Initial release
+ ===============
+
+The initial release is known to build on Linux, MacOS/X and Windows (using MinGW).
+
+It may build on other systems.
+
+Please note that the JNA interface to OpenSSL is a preliminary release.
+ It is relatively slow, but may be of use on systems which aren't yet supported by the JNI code.">
       <action issue="CRYPTO-68" type="add" dev="britter" >Enable common code quality reports.</action>
       <action issue="CRYPTO-65" type="fix" dev="britter" due-to="sebb">Warnings compiling on MacOSX - JNIEXPORT redefined.</action>
       <action issue="CRYPTO-11" type="add" dev="Ke Jia" due-to="Ke Jia, Jerry Chen">User guide documentation .</action>
