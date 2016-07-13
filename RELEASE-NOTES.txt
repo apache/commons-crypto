@@ -1,0 +1,92 @@
+              Apache Commons Crypto 1.0.0
+                  RELEASE NOTES
+
+The Apache Commons Crypto team is pleased to announce the release of Apache Commons Crypto 1.0.0
+
+Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
+Standard New Instructions). It provides Java API for both cipher level and Java stream level.
+Developers can use it to implement high performance AES encryption/decryption with the minimum
+code and effort. Please note that Crypto doesn't implement the cryptographic algorithm such as
+AES directly. It wraps to Openssl or JCE which implement the algorithms.
+
+Features
+--------
+
+1. Cipher API for low level cryptographic operations.
+2. Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encyrption/decryption.
+3. Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
+4. JNI-based implementation to achieve comparable performance to the native C++ version based on OpenSsl.
+5. Portable across various operating systems (currently only Linux/MacOSX);
+Apache Commons Crypto loads the library according to your machine environment (it checks system properties, `os.name` and `os.arch`).
+6. Simple usage. Add the commons-crypto-(version).jar file to your classpath.
+
+
+Export restrictions
+-------------------
+
+This distribution includes cryptographic software.
+The country in which you currently reside may have restrictions
+on the import, possession, use, and/or re-export to another country,
+of encryption software. BEFORE using any encryption software,
+please check your country's laws, regulations and policies
+concerning the import, possession, or use, and re-export of
+encryption software, to see if this is permitted.
+See <http://www.wassenaar.org/> for more information.
+
+The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS),
+has classified this software as Export Commodity Control Number (ECCN) 5D002.C.1,
+which includes information security software using or performing
+cryptographic functions with asymmetric algorithms.
+The form and manner of this Apache Software Foundation distribution makes
+it eligible for export under the License Exception
+ENC Technology Software Unrestricted (TSU) exception
+(see the BIS Export Administration Regulations, Section 740.13)
+for both object code and source code.
+
+The following provides more details on the included cryptographic software:
+
+* Commons Crypto use [Java Cryptography Extension](http://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html) provided by Java
+* Commons Crypto link to and use [OpenSSL](https://www.openssl.org/) ciphers
+
+Initial release
+
+Changes in this version include:
+
+New features:
+o CRYPTO-68:   Enable common code quality reports.
+o CRYPTO-11:   User guide documentation . Thanks to Ke Jia, Jerry Chen.
+o CRYPTO-12:   Rename CryptoInputStream to CipherInputStream and CryptoOutputStream to CipherOutputStream . Thanks to Xianda Ke.
+o CRYPTO-13:   The API differences between apache.commons.crypto and JCE . Thanks to Xianda Ke.
+o CRYPTO-40:   Remove the full qualified package name for shadowed classes . Thanks to Xianda Ke, Jerry Chen.
+o CRYPTO-42:   Remove the header files required for cross platform compilation . Thanks to Dian Fu, Jerry Chen.
+o CRYPTO-45:   Document how to build Commons Crypto . Thanks to Dian Fu, Benedikt Ritter.
+o CRYPTO-48:   Setup site build as defined in commons-parent pom . Thanks to Benedikt Ritter, Dapeng Sun.
+
+Fixed Bugs:
+o CRYPTO-65:   Warnings compiling on MacOSX - JNIEXPORT redefined. Thanks to sebb.
+o CRYPTO-29:   Make sure Cipher.ENCRYPT_MODE is consistent with JDK . Thanks to Dian Fu, Sebb.
+o CRYPTO-30:   Mutable fields should be private . Thanks to Ferdinand Xu, Sebb.
+o CRYPTO-34:   JavaSecureRandom should throw Exception if it cannot create the instance . Thanks to Dapeng Sun, Sebb.
+o CRYPTO-47:   Fix build of MAC_OS . Thanks to Dapeng Sun.
+o CRYPTO-49:   CRYPTO-1 Fix build of X86 . Thanks to Dapeng Sun.
+o CRYPTO-57:   Fix build on Mac OS Thanks to Benedikt Ritter.
+o CRYPTO-61:   Fix possible NPE in OpensslCryptoRandom Thanks to Hendrik Saly.
+o CRYPTO-54:   US Export classification and ECCN registration for encryption Thanks to Stian Soiland-Reyes, Jerry Chen, Benedikt Ritter, Gary Gregory.
+
+Changes:
+o CRYPTO-26:   Utility classes should not have public constructors . Thanks to Dapeng Sun.
+o CRYPTO-28:   Update the README.md of Apache Commons Crypto . Thanks to Ferdinand Xu, Ke Jia.
+o CRYPTO-3:    Change default cipher as OpensslCipher . Thanks to ferdinand xu.
+o CRYPTO-31:   Make fields final wherever possible . Thanks to Ferdinand Xu, Sebb.
+o CRYPTO-33:   SecureRandom shadows JVM class . Thanks to Xianda Ke, Sebb.
+o CRYPTO-38:   Always use blocks . Thanks to Dapeng Sun, Gary Gregory.
+o CRYPTO-7:    Rename source code in Chimera to Apache name space . Thanks to ferdinand xu.
+o CRYPTO-62:   Add multithreaded related tests Thanks to Hendrik Saly.
+
+
+Historical list of changes: http://commons.apache.org/proper/commons-crypto/changes-report.html
+
+For complete information on Apache Commons Crypto, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Crypto website:
+
+http://commons.apache.org/proper/commons-crypto/
