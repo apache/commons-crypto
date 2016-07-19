@@ -24,7 +24,7 @@
 #if !defined ORG_APACHE_COMMONS_CRYPTO_H
 #define ORG_APACHE_COMMONS_CRYPTO_H
 
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #undef UNIX
 #define WINDOWS
 #else
