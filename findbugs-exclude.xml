@@ -55,5 +55,10 @@
     <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"/>
   </Match>
 
+  <Match>
+    <Class name="org.apache.commons.crypto.NativeCodeLoader" />
+    <Method name="extractLibraryFile" />
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" />
+  </Match>
 </FindBugsFilter>
 

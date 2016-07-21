@@ -17,17 +17,15 @@
  */
 package org.apache.commons.crypto.random;
 
-import static org.junit.Assert.fail;
-
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
-
-import junit.framework.Assert;
+import static org.junit.Assert.fail;
 
 public class OsCryptoRandomTest extends AbstractRandomTest {
 

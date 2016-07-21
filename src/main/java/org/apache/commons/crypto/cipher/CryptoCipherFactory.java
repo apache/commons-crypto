@@ -56,7 +56,6 @@ public class CryptoCipherFactory {
      * Defines the internal CryptoCipher implementations.
      * <p>
      * Usage:
-     * <p>
      * <blockquote><pre>
      * props.setProperty(CryptoCipherFactory.CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
      * props.setProperty(...); // if required by the implementation

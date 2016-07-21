@@ -63,7 +63,7 @@ public final class Crypto {
                 try (InputStream openStream = url.openStream()) {
                     versionData.load(openStream);
                     return versionData;
-                } catch (IOException e) {
+                } catch (IOException e) {  // NOPMD
                 }
             }
             return new Properties(); // make sure field is not null

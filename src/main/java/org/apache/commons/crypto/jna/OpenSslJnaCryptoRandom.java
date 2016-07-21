@@ -57,7 +57,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      * @param props the configuration properties (not used)
      * @throws GeneralSecurityException  if could not enable JNA access
      */
-    public OpenSslJnaCryptoRandom(Properties props)
+    public OpenSslJnaCryptoRandom(Properties props) //NOPMD
             throws GeneralSecurityException {
         if (!OpenSslJna.isEnabled()) {
             throw new GeneralSecurityException("Could not enable JNA access", OpenSslJna.initialisationError());

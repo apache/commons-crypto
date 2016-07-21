@@ -82,7 +82,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OpenSslCryptoRandom(Properties props) throws GeneralSecurityException {
+    public OpenSslCryptoRandom(Properties props) throws GeneralSecurityException { // NOPMD
         if (!nativeEnabled) {
             if (initException != null) {
                 throw new GeneralSecurityException("Native library could not be initialised", initException);

@@ -59,7 +59,7 @@ class OpenSslJnaCipher implements CryptoCipher {
      * @param transformation transformation for OpenSSL cipher
      * @throws GeneralSecurityException if OpenSSL cipher initialize failed
      */
-    public OpenSslJnaCipher(Properties props, String transformation)
+    public OpenSslJnaCipher(Properties props, String transformation) // NOPMD
             throws GeneralSecurityException {
         if (!OpenSslJna.isEnabled()) {
             throw new GeneralSecurityException("Could not enable JNA access", OpenSslJna.initialisationError());

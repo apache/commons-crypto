@@ -74,7 +74,6 @@ public class CryptoRandomFactory {
      * Defines the internal CryptoRandom implementations.
      * <p>
      * Usage:
-     * <p>
      * <blockquote><pre>
      * props.setProperty(CryptoRandomFactory.CLASSES_KEY, RandomProvider.OPENSSL.getClassName());
      * props.setProperty(...); // if required by the implementation
