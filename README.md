@@ -61,7 +61,7 @@ Features
 2. Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encyrption/decryption.
 3. Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
 4. JNI-based implementation to achieve comparable performance to the native C++ version based on OpenSsl.
-5. Portable across various operating systems (currently only Linux);
+5. Portable across various operating systems (currently only Linux/MacOSX/Windows);
    Apache Commons Crypto loads the library according to your machine environment (it checks system properties, `os.name` and `os.arch`).
 6. Simple usage. Add the commons-crypto-(version).jar file to your classpath.
 
@@ -96,7 +96,7 @@ The following provides more details on the included cryptographic software:
 Documentation
 -------------
 
-More information can be found on the [Apache Commons Crypto homepage](https://commons.apache.org/proper/commons-crypto).
+More information can be found on the [homepage](https://commons.apache.org/proper/commons-crypto).
 The [JavaDoc](https://commons.apache.org/proper/commons-crypto/javadocs/api-release) can be browsed.
 Questions related to the usage of Apache Commons Crypto should be posted to the [user mailing list][ml].
 
@@ -117,7 +117,7 @@ Alternatively you can pull it from the central Maven repositories:
 Contributing
 ------------
 
-We accept Pull Requests via GitHub. The [developer mailing list][ml] is the main channel of communication for contributors.
+We accept PRs via github. The [developer mailing list][ml] is the main channel of communication for contributors.
 There are some guidelines which will make applying PRs easier for us:
 + No tabs! Please use spaces for indentation.
 + Respect the code style.
@@ -129,9 +129,7 @@ You can learn more about contributing via GitHub in our [contribution guidelines
 
 License
 -------
-This code is under the [Apache Licence v2](https://www.apache.org/licenses/LICENSE-2.0).
-
-See the `NOTICE.txt` file for required notices and attributions.
+Code is under the [Apache Licence v2](https://www.apache.org/licenses/LICENSE-2.0.txt).
 
 Donations
 ---------
@@ -141,8 +139,8 @@ Additional Resources
 --------------------
 
 + [Apache Commons Homepage](https://commons.apache.org/)
-+ [Apache Bugtracker (JIRA)](https://issues.apache.org/jira/browse/@JIRA_ID@)
++ [Apache Bugtracker (JIRA)](https://issues.apache.org/jira/)
 + [Apache Commons Twitter Account](https://twitter.com/ApacheCommons)
-+ `#apache-commons` IRC channel on `irc.freenode.org`
++ #apachecommons IRC channel on freenode.org
 
 [ml]:https://commons.apache.org/mail-lists.html

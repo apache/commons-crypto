@@ -1,7 +1,7 @@
-              Apache Commons Crypto 1.0.0
+              Apache Commons Crypto 1.0.0-SNAPSHOT
                   RELEASE NOTES
 
-The Apache Commons Crypto team is pleased to announce the release of Apache Commons Crypto 1.0.0
+The Apache Commons Crypto team is pleased to announce the release of Apache Commons Crypto 1.0.0-SNAPSHOT
 
 Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
 Standard New Instructions). It provides Java API for both cipher level and Java stream level.
