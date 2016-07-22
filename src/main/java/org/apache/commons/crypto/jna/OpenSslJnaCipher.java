@@ -245,8 +245,11 @@ class OpenSslJnaCipher implements CryptoCipher {
 //            OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
         }
     }
-    
-    private void throwOnError(int retVal) {  
+
+    /**
+     * @param retVal the result value of error.
+     */
+    private void throwOnError(int retVal) {
         if (retVal != 1) {
             NativeLong err = OpenSslNativeJna.ERR_peek_error();
             String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
@@ -265,6 +268,12 @@ class OpenSslJnaCipher implements CryptoCipher {
         final String mode;
         final String padding;
 
+        /**
+         * Constructor of Transform.
+         * @param algorithm the algorithm name
+         * @param mode the mode name
+         * @param padding the padding name
+         */
         public Transform(String algorithm, String mode, String padding) {
             this.algorithm = algorithm;
             this.mode = mode;
@@ -272,6 +281,12 @@ class OpenSslJnaCipher implements CryptoCipher {
         }
     }
 
+    /**
+     * Tokenize the transformation.
+     * @param transformation current transformation
+     * @return the Transform
+     * @throws NoSuchAlgorithmException if the algorithm is not supported
+     */
     private static Transform tokenizeTransformation(String transformation)
             throws NoSuchAlgorithmException {
         if (transformation == null) {
@@ -296,10 +311,19 @@ class OpenSslJnaCipher implements CryptoCipher {
         return new Transform(parts[0], parts[1], parts[2]);
     }
     
-    /** Currently only support AES/CTR/NoPadding. */
+    /**
+     * AlgorithmMode of JNA.  Currently only support AES/CTR/NoPadding.
+     */
     private static enum AlgorithmMode {
         AES_CTR, AES_CBC;
 
+        /**
+         * Gets the AlgorithmMode instance.
+         * @param algorithm the algorithm name
+         * @param mode the mode name
+         * @return the AlgorithmMode instance
+         * @throws NoSuchAlgorithmException if the algorithm is not support
+         */
         static AlgorithmMode get(String algorithm, String mode) throws NoSuchAlgorithmException {
             try {
                 return AlgorithmMode.valueOf(algorithm + "_" + mode);
@@ -309,9 +333,19 @@ class OpenSslJnaCipher implements CryptoCipher {
         }
     }
 
+    /**
+     * Padding of JNA.
+     */
     private static enum Padding {
         NoPadding, PKCS5Padding;
 
+        /**
+         * Gets the Padding instance.
+         *
+         * @param padding the padding name
+         * @return the AlgorithmMode instance
+         * @throws NoSuchPaddingException if the algorithm is not support
+         */
         static int get(String padding) throws NoSuchPaddingException {
             try {
                 return Padding.valueOf(padding).ordinal();

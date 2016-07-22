@@ -56,6 +56,11 @@ public final class Crypto {
     private static class ComponentPropertiesHolder {
         static final Properties PROPERTIES = getComponentProperties();
 
+        /**
+         * Get component properties from component.properties.
+         *
+         * @return Properties contains project version.
+         */
         private static Properties getComponentProperties() {
             URL url = Crypto.class.getResource("/org/apache/commons/crypto/component.properties");
             if (url != null) {
@@ -116,6 +121,11 @@ public final class Crypto {
         return ComponentPropertiesHolder.PROPERTIES.getProperty("NAME");
     }
 
+    /**
+     * The Main of Crypto
+     * @param args don't use the args
+     * @throws Exception if getCryptoRandom or getCryptoCipher get error.
+     */
     public static void main(String args[]) throws Exception {
         System.out.println(getComponentName() + " " + getComponentVersion());
         if (isNativeCodeLoaded()) {

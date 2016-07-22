@@ -164,7 +164,10 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
         //OpenSslNativeJna.CRYPTO_set_locking_callback(null);
         //LOCK.unlock();
     }
-    
+
+    /**
+     * Closes the rdrand engine.
+     */
     private void closeRdrandEngine() {
         
         if(rdrandEngine != null) {
@@ -181,7 +184,10 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     public boolean isRdrandEnabled() {
         return rdrandEnabled;
     }
-    
+
+    /**
+     * @param retVal the result value of error.
+     */
     private void throwOnError(int retVal) {  
         if (retVal != 1) {
             NativeLong err = OpenSslNativeJna.ERR_peek_error();

@@ -85,6 +85,10 @@ public class CryptoCipherFactory {
 
         private final String className;
 
+        /**
+         * The private constructor.
+         * @param klass the Class of CryptoCipher
+         */
         private CipherProvider(Class<? extends CryptoCipher> klass) {
             this.klass = klass;
             this.className = klass.getName();

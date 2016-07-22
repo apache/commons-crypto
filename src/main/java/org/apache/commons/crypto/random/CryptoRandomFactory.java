@@ -116,6 +116,10 @@ public class CryptoRandomFactory {
 
         private final String className;
 
+        /**
+         * The private constructor.
+         * @param klass the Class of CryptoRandom
+         */
         private RandomProvider(Class<? extends CryptoRandom> klass) {
             this.klass = klass;
             this.className = klass.getName();
