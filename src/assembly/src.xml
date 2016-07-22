@@ -34,10 +34,15 @@
                 <include>RELEASE-NOTES.txt</include>
                 <include>findbugs-exclude.xml</include>
                 <include>pom.xml</include>
+                <include>checkstyle.xml</include>
+                <include>CONTRIBUTING.md</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>src</directory>
+        </fileSet>
+        <fileSet>
+            <directory>lib</directory>
         </fileSet>
     </fileSets>
 </assembly>
