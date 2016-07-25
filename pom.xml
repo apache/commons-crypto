@@ -69,7 +69,7 @@ The following provides more details on the included cryptographic software:
 * Commons Crypto link to and use [OpenSSL](https://www.openssl.org/) ciphers
 
   </description>
-  <version>1.0.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <name>Apache Commons Crypto</name>
   <inceptionYear>2016</inceptionYear>
   <url>http://commons.apache.org/proper/commons-crypto/</url>
@@ -87,7 +87,7 @@ The following provides more details on the included cryptographic software:
     <url>
       https://git-wip-us.apache.org/repos/asf?p=commons-crypto.git
     </url>
-    <tag>CRYPTO-1.0.0-RC1</tag>
+    <tag>HEAD</tag>
   </scm>
   <ciManagement>
     <system>Jenkins</system>
