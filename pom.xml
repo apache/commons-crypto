@@ -12,10 +12,7 @@
   See the License for the specific language governing permissions and
   limitations under the License. See accompanying LICENSE file.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
@@ -72,7 +69,7 @@ The following provides more details on the included cryptographic software:
 * Commons Crypto link to and use [OpenSSL](https://www.openssl.org/) ciphers
 
   </description>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Apache Commons Crypto</name>
   <inceptionYear>2016</inceptionYear>
   <url>http://commons.apache.org/proper/commons-crypto/</url>
@@ -90,6 +87,7 @@ The following provides more details on the included cryptographic software:
     <url>
       https://git-wip-us.apache.org/repos/asf?p=commons-crypto.git
     </url>
+    <tag>CRYPTO-1.0.0-RC1</tag>
   </scm>
   <ciManagement>
     <system>Jenkins</system>
@@ -476,14 +474,13 @@ The following provides more details on the included cryptographic software:
             </goals>
             <configuration>
               <target name="make">
-                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                         classpathref="maven.plugin.classpath"/>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                 <exec executable="make" failonerror="true" dir="${project.basedir}">
-                  <env key="VERSION" value="${project.version}"/>
-                  <env key="PROJECT_NAME" value="${project.name}"/>
+                  <env key="VERSION" value="${project.version}" />
+                  <env key="PROJECT_NAME" value="${project.name}" />
                   <!-- For debugging: -->
-                  <!-- <arg value="-d"/> -->
-                  <arg value="${target.name}"/>
+                  <!-- <arg value="-d" /> -->
+                  <arg value="${target.name}" />
                 </exec>
               </target>
             </configuration>
