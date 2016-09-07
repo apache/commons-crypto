@@ -20,13 +20,14 @@ package org.apache.commons.crypto.random;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Properties;
+import java.util.Random;
 
 /**
  * A CryptoRandom of Java implementation.
  */
-class JavaCryptoRandom implements CryptoRandom {
+class JavaCryptoRandom extends Random implements CryptoRandom {
 
-    private final SecureRandom instance;
+    private SecureRandom instance;
 
     /**
      * Constructs a {@link JavaCryptoRandom}.
@@ -40,13 +41,16 @@ class JavaCryptoRandom implements CryptoRandom {
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public JavaCryptoRandom(Properties properties)
-            throws NoSuchAlgorithmException {
+    public JavaCryptoRandom(Properties properties) {
+      try {
         instance = SecureRandom
                 .getInstance(properties
                         .getProperty(
                                 CryptoRandomFactory.JAVA_ALGORITHM_KEY,
                                 CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT));
+      } catch (NoSuchAlgorithmException e) {
+        instance = new SecureRandom();
+      }
     }
 
     /**
