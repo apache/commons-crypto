@@ -232,6 +232,68 @@ class OpenSslJnaCipher implements CryptoCipher {
         return doFinal(inputBuf, outputBuf);
     }
 
+
+
+    /**
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the opensslEngine when operating in
+     * modes such as AEAD (GCM).  If this opensslEngine is operating in
+     * either GCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
+     *
+     * @param aad the buffer containing the Additional Authentication Data
+     *
+     * @throws IllegalArgumentException if the {@code aad}
+     * byte array is null
+     * @throws IllegalStateException if this opensslEngine is in a wrong state
+     * (e.g., has not been initialized), does not accept AAD, or if
+     * operating in either GCM mode and one of the {@code update}
+     * methods has already been called for the active
+     * encryption/decryption operation
+     * @throws UnsupportedOperationException if the implementation {@code opensslEngine}
+     * doesn't support this operation.
+     */
+    @Override
+    public void updateAAD(byte[] aad) throws IllegalArgumentException,
+            IllegalStateException, UnsupportedOperationException {
+        //TODO: implement GCM mode using Jna
+        throw new UnsupportedOperationException("This is unsupported in Jna Cipher");
+    }
+
+    /**
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the opensslEngine when operating in
+     * modes such as AEAD (GCM).  If this opensslEngine is operating in
+     * either GCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
+     *
+     * @param aad the buffer containing the Additional Authentication Data
+     *
+     * @throws IllegalArgumentException if the {@code aad}
+     * byte array is null
+     * @throws IllegalStateException if this opensslEngine is in a wrong state
+     * (e.g., has not been initialized), does not accept AAD, or if
+     * operating in either GCM mode and one of the {@code update}
+     * methods has already been called for the active
+     * encryption/decryption operation
+     * @throws UnsupportedOperationException if the implementation {@code opensslEngine}
+     * doesn't support this operation.
+     */
+    @Override
+    public void updateAAD(ByteBuffer aad) throws IllegalArgumentException,
+            IllegalStateException, UnsupportedOperationException {
+        //TODO: implement GCM mode using Jna
+        throw new UnsupportedOperationException("This is unsupported in Jna Cipher");
+    }
+
+
+
     /**
      * Closes the OpenSSL cipher. Clean the OpenSsl native context.
      */
