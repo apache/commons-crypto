@@ -37,16 +37,17 @@ import org.apache.commons.crypto.utils.Utils;
  */
 class OpenSslCipher implements CryptoCipher {
 
-    private final OpenSsl cipher;
+    private final OpenSsl openSslEngine;
+    private boolean initialized = false;
 
     private final String transformation;
 
     /**
      * Constructs a {@link CryptoCipher} using JNI into OpenSSL
      *
-     * @param props  properties for OpenSSL cipher (unused)
-     * @param transformation  transformation for OpenSSL cipher (algorithm/mode/padding)
-     * @throws GeneralSecurityException if OpenSSL cipher initialize failed
+     * @param props  properties for OpenSSL openSslEngine (unused)
+     * @param transformation  transformation for OpenSSL openSslEngine (algorithm/mode/padding)
+     * @throws GeneralSecurityException if OpenSSL openSslEngine initialize failed
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
@@ -59,14 +60,14 @@ class OpenSslCipher implements CryptoCipher {
             throw new RuntimeException(loadingFailureReason);
         }
 
-        cipher = OpenSsl.getInstance(transformation);
+        openSslEngine = OpenSsl.getInstance(transformation);
     }
 
     /**
      * Returns the block size (in bytes).
      *
      * @return the block size (in bytes), or 0 if the underlying algorithm is
-     * not a block cipher
+     * not a block openSslEngine
      */
     @Override
     public final int getBlockSize() {
@@ -88,10 +89,10 @@ class OpenSslCipher implements CryptoCipher {
     }
 
     /**
-     * Initializes the cipher with mode, key and iv.
+     * Initializes the openSslEngine with mode, key and iv.
      *
      * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
-     * @param key crypto key for the cipher
+     * @param key crypto key for the openSslEngine
      * @param params the algorithm parameters
      * @throws InvalidKeyException If key length is invalid
      * @throws InvalidAlgorithmParameterException if IV length is wrong
@@ -106,20 +107,13 @@ class OpenSslCipher implements CryptoCipher {
         if (mode == Cipher.ENCRYPT_MODE) {
             cipherMode = OpenSsl.ENCRYPT_MODE;
         }
-        byte[] iv;
-        if (params instanceof IvParameterSpec) {
-            iv = ((IvParameterSpec) params).getIV();
-        } else {
-            // other AlgorithmParameterSpec such as GCMParameterSpec is not
-            // supported now.
-            throw new InvalidAlgorithmParameterException("Illegal parameters");
-        }
-        cipher.init(cipherMode, key.getEncoded(), iv);
+        openSslEngine.init(cipherMode, key.getEncoded(), params);
+        initialized = true;
     }
 
     /**
      * Continues a multiple-part encryption/decryption operation. The data is
-     * encrypted or decrypted, depending on how this cipher was initialized.
+     * encrypted or decrypted, depending on how this openSslEngine was initialized.
      *
      * @param inBuffer the input ByteBuffer
      * @param outBuffer the output ByteBuffer
@@ -130,12 +124,12 @@ class OpenSslCipher implements CryptoCipher {
     @Override
     public int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
             throws ShortBufferException {
-        return cipher.update(inBuffer, outBuffer);
+        return openSslEngine.update(inBuffer, outBuffer);
     }
 
     /**
      * Continues a multiple-part encryption/decryption operation. The data is
-     * encrypted or decrypted, depending on how this cipher was initialized.
+     * encrypted or decrypted, depending on how this openSslEngine was initialized.
      *
      * @param input the input byte array
      * @param inputOffset the offset in input where the input starts
@@ -149,24 +143,24 @@ class OpenSslCipher implements CryptoCipher {
     @Override
     public int update(byte[] input, int inputOffset, int inputLen,
             byte[] output, int outputOffset) throws ShortBufferException {
-        return cipher
+        return openSslEngine
                 .update(input, inputOffset, inputLen, output, outputOffset);
     }
 
     /**
      * Encrypts or decrypts data in a single-part operation, or finishes a
      * multiple-part operation. The data is encrypted or decrypted, depending on
-     * how this cipher was initialized.
+     * how this openSslEngine was initialized.
      *
      * @param inBuffer the input ByteBuffer
      * @param outBuffer the output ByteBuffer
      * @return int number of bytes stored in <code>output</code>
-     * @throws BadPaddingException if this cipher is in decryption mode, and
+     * @throws BadPaddingException if this openSslEngine is in decryption mode, and
      *         (un)padding has been requested, but the decrypted data is not
      *         bounded by the appropriate padding bytes
-     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
+     * @throws IllegalBlockSizeException if this openSslEngine is a block openSslEngine, no
      *         padding has been requested (only in encryption mode), and the
-     *         total input length of the data processed by this cipher is not a
+     *         total input length of the data processed by this openSslEngine is not a
      *         multiple of block size; or if this encryption algorithm is unable
      *         to process the input data provided.
      * @throws ShortBufferException if the given output buffer is too small to
@@ -176,8 +170,7 @@ class OpenSslCipher implements CryptoCipher {
     public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
             throws ShortBufferException, IllegalBlockSizeException,
             BadPaddingException {
-        int n = cipher.update(inBuffer, outBuffer);
-        return n + cipher.doFinal(outBuffer);
+        return openSslEngine.doFinal(inBuffer, outBuffer);
     }
 
     /**
@@ -192,12 +185,12 @@ class OpenSslCipher implements CryptoCipher {
      * @return the number of bytes stored in output
      * @throws ShortBufferException if the given output byte array is too small
      *         to hold the result
-     * @throws BadPaddingException if this cipher is in decryption mode, and
+     * @throws BadPaddingException if this openSslEngine is in decryption mode, and
      *         (un)padding has been requested, but the decrypted data is not
      *         bounded by the appropriate padding bytes
-     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
+     * @throws IllegalBlockSizeException if this openSslEngine is a block openSslEngine, no
      *         padding has been requested (only in encryption mode), and the
-     *         total input length of the data processed by this cipher is not a
+     *         total input length of the data processed by this openSslEngine is not a
      *         multiple of block size; or if this encryption algorithm is unable
      *         to process the input data provided.
      */
@@ -205,16 +198,95 @@ class OpenSslCipher implements CryptoCipher {
     public int doFinal(byte[] input, int inputOffset, int inputLen,
             byte[] output, int outputOffset) throws ShortBufferException,
             IllegalBlockSizeException, BadPaddingException {
-        int n = cipher.update(input, inputOffset, inputLen, output,
-                outputOffset);
-        return n + cipher.doFinal(output, outputOffset + n);
+        return openSslEngine.doFinal(input, inputOffset, inputLen, output,outputOffset);
+    }
+
+
+    /**
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the opensslEngine when operating in
+     * modes such as AEAD (GCM).  If this opensslEngine is operating in
+     * either GCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
+     *
+     * @param aad the buffer containing the Additional Authentication Data
+     *
+     * @throws IllegalArgumentException if the {@code aad}
+     * byte array is null
+     * @throws IllegalStateException if this opensslEngine is in a wrong state
+     * (e.g., has not been initialized), does not accept AAD, or if
+     * operating in either GCM mode and one of the {@code update}
+     * methods has already been called for the active
+     * encryption/decryption operation
+     * @throws UnsupportedOperationException if the implementation {@code opensslEngine}
+     * doesn't support this operation.
+     */
+    @Override
+    public void updateAAD(byte[] aad) throws IllegalArgumentException,
+            IllegalStateException, UnsupportedOperationException {
+        if (aad == null) {
+            throw new IllegalArgumentException("aad buffer is null");
+        }
+        if (!initialized) {
+            throw new IllegalStateException("Cipher not initialized");
+        }
+        if (aad.length == 0) {
+            return;
+        }
+
+        openSslEngine.updateAAD(aad);
     }
 
     /**
-     * Closes the OpenSSL cipher. Clean the OpenSsl native context.
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the opensslEngine when operating in
+     * modes such as AEAD (GCM).  If this opensslEngine is operating in
+     * either GCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
+     *
+     * @param aad the buffer containing the Additional Authentication Data
+     *
+     * @throws IllegalArgumentException if the {@code aad}
+     * byte array is null
+     * @throws IllegalStateException if this opensslEngine is in a wrong state
+     * (e.g., has not been initialized), does not accept AAD, or if
+     * operating in either GCM mode and one of the {@code update}
+     * methods has already been called for the active
+     * encryption/decryption operation
+     * @throws UnsupportedOperationException if the implementation {@code opensslEngine}
+     * doesn't support this operation.
+     */
+    @Override
+    public void updateAAD(ByteBuffer aad) throws IllegalArgumentException,
+            IllegalStateException, UnsupportedOperationException {
+        if (aad == null) {
+            throw new IllegalArgumentException("aad buffer is null");
+        }
+        if (!initialized) {
+            throw new IllegalStateException("Cipher not initialized");
+        }
+
+        int aadLen = aad.limit() - aad.position();
+        if (aadLen == 0) {
+            return;
+        }
+        byte[] aadBytes = new byte[aadLen];
+        aad.get(aadBytes);
+        openSslEngine.updateAAD(aadBytes);
+    }
+
+
+    /**
+     * Closes the OpenSSL openSslEngine. Clean the OpenSsl native context.
      */
     @Override
     public void close() {
-        cipher.clean();
+        openSslEngine.clean();
     }
 }
