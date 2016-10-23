@@ -388,7 +388,9 @@ public class CryptoOutputStream extends OutputStream implements
         outBuffer.flip();
 
         // write to output
-        output.write(outBuffer);
+        while (outBuffer.hasRemaining()) {
+            output.write(outBuffer);
+        }
     }
 
     /**
