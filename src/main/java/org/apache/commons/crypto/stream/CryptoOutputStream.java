@@ -50,19 +50,19 @@ public class CryptoOutputStream extends OutputStream implements
     private final byte[] oneByteBuf = new byte[1];
 
     /** The output. */
-    Output output;
+    protected Output output;
 
     /** the CryptoCipher instance */
-    final CryptoCipher cipher;
+    protected final CryptoCipher cipher;
 
     /** The buffer size. */
-    final int bufferSize;
+    private final int bufferSize;
 
     /** Crypto key for the cipher. */
-    final Key key;
+    protected final Key key;
 
     /** the algorithm parameters */
-    final AlgorithmParameterSpec params;
+    private final AlgorithmParameterSpec params;
 
     /** Flag to mark whether the output stream is closed. */
     private boolean closed;
@@ -71,13 +71,13 @@ public class CryptoOutputStream extends OutputStream implements
      * Input data buffer. The data starts at inBuffer.position() and ends at
      * inBuffer.limit().
      */
-    ByteBuffer inBuffer;
+    protected ByteBuffer inBuffer;
 
     /**
      * Encrypted data buffer. The data starts at outBuffer.position() and ends
      * at outBuffer.limit().
      */
-    ByteBuffer outBuffer;
+    protected ByteBuffer outBuffer;
 
     /**
      * Constructs a {@link CryptoOutputStream}.

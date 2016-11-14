@@ -47,12 +47,12 @@ public class PositionedCryptoInputStreamTest {
     private Properties props = new Properties();
     private byte[] key = new byte[16];
     private byte[] iv = new byte[16];
-    int bufferSize = 2048;
-    int bufferSizeLess = bufferSize - 1;
-    int bufferSizeMore = bufferSize + 1;
-    int length = 1024;
-    int lengthLess = length - 1;
-    int lengthMore = length + 1;
+    private int bufferSize = 2048;
+    private int bufferSizeLess = bufferSize - 1;
+    private int bufferSizeMore = bufferSize + 1;
+    private int length = 1024;
+    private int lengthLess = length - 1;
+    private int lengthMore = length + 1;
 
     private String transformation = "AES/CTR/NoPadding";
 
