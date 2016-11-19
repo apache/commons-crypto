@@ -255,8 +255,12 @@ public class CryptoInputStream extends InputStream implements
             return n;
         }
         // No data in the out buffer, try read new data and decrypt it
-        int nd = decryptMore();
-        if (nd <= 0) {
+        // we loop for new data
+        int nd = 0;
+        while (nd == 0) {
+            nd = decryptMore();
+        }
+        if (nd < 0) {
             return nd;
         }
 
@@ -297,7 +301,11 @@ public class CryptoInputStream extends InputStream implements
             remaining -= outBuffer.remaining();
             outBuffer.clear();
 
-            nd = decryptMore();
+            // we loop for new data
+            nd = 0;
+            while (nd == 0) {
+                nd = decryptMore();
+            }
             if (nd < 0) {
                 break;
             }
@@ -402,7 +410,12 @@ public class CryptoInputStream extends InputStream implements
         int remaining = outBuffer.remaining();
         if (remaining <= 0) {
             // Decrypt more data
-            int nd = decryptMore();
+            // we loop for new data
+            int nd = 0;
+            while (nd == 0) {
+                nd = decryptMore();
+            }
+
             if (nd < 0) {
                 return -1;
             }
@@ -487,7 +500,9 @@ public class CryptoInputStream extends InputStream implements
      * will be put in the output buffer. If the end of the under stream reached,
      * we will do final of the cipher to finish all the decrypting of data.
      *
-     * @return The number of decrypted data. -1 if end of the decrypted stream.
+     * @return The number of decrypted data.
+     *           return -1 (if end of the decrypted stream)
+     *           return 0 (no data now, but could have more later)
      * @throws IOException if an I/O error occurs.
      */
     protected int decryptMore() throws IOException {
