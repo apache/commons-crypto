@@ -30,3 +30,6 @@ script:
   - mvn verify site
   - jdk_switcher use oraclejdk8
   - mvn verify site
+
+after_success:
+  - mvn clean test jacoco:report coveralls:report
