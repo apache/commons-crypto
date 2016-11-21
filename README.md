@@ -44,7 +44,7 @@ Apache Commons Crypto
 ===================
 
 [![Build Status](https://travis-ci.org/apache/commons-crypto.svg?branch=master)](https://travis-ci.org/apache/commons-crypto)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-crypto/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-crypto)
+[![Coverage Status](https://coveralls.io/repos/github/apache/commons-crypto/badge.svg?branch=master)](https://coveralls.io/github/apache/commons-crypto?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
