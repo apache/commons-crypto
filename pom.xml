@@ -180,6 +180,10 @@ The following provides more details on the included cryptographic software:
       <name>George Kankava </name>
       <email>george.kankava@devfactory.com</email>
     </contributor>
+    <contributor>
+      <name>Tian Jianguo</name>
+      <email>jianguo.tian@intel.com</email>
+    </contributor>
   </contributors>
 
   <properties>
