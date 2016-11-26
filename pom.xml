@@ -26,7 +26,7 @@
   <version>1.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Apache Commons Crypto</name>>
+  <name>Apache Commons Crypto</name>
   <description>
 Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
 Standard New Instructions). It provides Java API for both cipher level and Java stream level.
