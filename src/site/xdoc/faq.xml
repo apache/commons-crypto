@@ -23,11 +23,30 @@ limitations under the License.
 
   <body>
 
+    <h1>Frequently asked questions</h1>
+
     <section name="How to use a custom secret generator?">
       Commons Crypto provides the <code>CryptoRandom</code> interface for defining secret generators.
+      The <code>RandomProvider</code> enum in the <code>CryptoRandomFactory</code> defines some sensible default
+      implementations:
 
-      props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.JAVA.getClassName());
-      CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+      <dl>
+        <dt>OPENSSL</dt><dd>OpenSSL based JNI implementation shipped with Commons Crypto.</dd>
+        <dt>JAVA</dt><dd>The SecureRandom implementation from the JVM.</dd>
+        <dt>OS</dt><dd>The OS random device implementation. May not be available on some operation systems.</dd>
+      </dl>
+
+      When calling <code>CryptoRandomFactory.getCryptoRandom()</code>, Commons Crypto tries to use the OpenSSL
+      CryptoRandom implementation first. If this fails, the Java implementation is used.
+      In order use a different <code>CryptoRandom</code> implementation (e.g. OS), the
+      <code>CryptoRandomFactory.getCryptoRandom(Properties)</code> method can be used, passing in the desired
+      implementation class names:
+
+<source>
+Properties props = new Properties();
+props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OS.getClassName());
+CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+</source>
 
     </section>
   </body>
