@@ -13,15 +13,20 @@
   limitations under the License. See accompanying LICENSE file.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
     <version>40</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-crypto</artifactId>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
+
+  <name>Apache Commons Crypto</name>>
   <description>
 Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
 Standard New Instructions). It provides Java API for both cipher level and Java stream level.
@@ -69,30 +74,34 @@ The following provides more details on the included cryptographic software:
 * Commons Crypto link to and use [OpenSSL](https://www.openssl.org/) ciphers
 
   </description>
-  <version>1.1.0-SNAPSHOT</version>
-  <name>Apache Commons Crypto</name>
+
   <inceptionYear>2016</inceptionYear>
   <url>http://commons.apache.org/proper/commons-crypto/</url>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
   <issueManagement>
     <system>jira</system>
     <url>http://issues.apache.org/jira/browse/CRYPTO</url>
   </issueManagement>
+
   <scm>
-    <connection>
-      scm:git:http://git-wip-us.apache.org/repos/asf/commons-crypto.git
-    </connection>
-    <developerConnection>
-      scm:git:https://git-wip-us.apache.org/repos/asf/commons-crypto.git
-    </developerConnection>
-    <url>
-      https://git-wip-us.apache.org/repos/asf?p=commons-crypto.git
-    </url>
+    <connection>scm:git:http://git-wip-us.apache.org/repos/asf/commons-crypto.git</connection>
+    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/commons-crypto.git</developerConnection>
+    <url>https://git-wip-us.apache.org/repos/asf?p=commons-crypto.git</url>
     <tag>HEAD</tag>
   </scm>
+
   <ciManagement>
     <system>Jenkins</system>
     <url>https://builds.apache.org/search/?q=Commons-CRYPTO</url>
   </ciManagement>
+
   <distributionManagement>
     <site>
       <id>commons.site</id>
@@ -100,6 +109,50 @@ The following provides more details on the included cryptographic software:
       <url>scm:svn:${commons.scmPubUrl}</url>
     </site>
   </distributionManagement>
+
+  <properties>
+    <commons.componentid>crypto</commons.componentid>
+    <commons.release.version>1.0.0</commons.release.version>
+    <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
+    <commons.rc.version>RC1</commons.rc.version>
+    <jna.version>4.2.2</jna.version>
+
+    <!-- properties not related to versioning -->
+    <commons.jira.id>CRYPTO</commons.jira.id>
+    <commons.jira.pid>12320024</commons.jira.pid>
+    <commons.javadoc.java.link>http://download.oracle.com/javase/7/docs/api/</commons.javadoc.java.link>
+    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
+    <commons-build-plugin.version>1.6</commons-build-plugin.version>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+
+    <!--
+        Encoding of Java source files: ensures that the compiler and
+        the javadoc generator use the right encoding. Subprojects may
+        overwrite this, if they are using another encoding.
+    -->
+    <commons.encoding>iso-8859-1</commons.encoding>
+    <!-- used in this pom to provide the Javadoc HTML file encoding -->
+    <commons.docEncoding>${commons.encoding}</commons.docEncoding>
+    <!-- Define source encoding for filtering; used by general plugins -->
+    <project.build.sourceEncoding>${commons.encoding}</project.build.sourceEncoding>
+    <!-- This is used by reporting plugins -->
+    <project.reporting.outputEncoding>${commons.encoding}</project.reporting.outputEncoding>
+
+    <!-- The property "target.name" is used to specify the ant target, The All target will use
+    OsInfo.java to detect the OS info and arch to generate the native binary for detected platform.
+    User is able to specify the platform by maven profiles.-->
+    <target.name>all</target.name>
+    <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+    <junit.version>4.12</junit.version>
+    <commons-logging.version>1.1.3</commons-logging.version>
+    <commons.jacoco.version>0.7.7.201606060606</commons.jacoco.version>
+    <slf4j-api.version>1.7.10</slf4j-api.version>
+
+    <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
+    <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
+  </properties>
+
   <developers>
     <developer>
       <name>Aaron T Myers</name>
@@ -186,49 +239,6 @@ The following provides more details on the included cryptographic software:
     </contributor>
   </contributors>
 
-  <properties>
-    <commons.componentid>crypto</commons.componentid>
-    <commons.release.version>1.0.0</commons.release.version>
-    <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
-    <commons.rc.version>RC1</commons.rc.version>
-    <jna.version>4.2.2</jna.version>
-
-    <!-- properties not related to versioning -->
-    <commons.jira.id>CRYPTO</commons.jira.id>
-    <commons.jira.pid>12320024</commons.jira.pid>
-    <commons.javadoc.java.link>http://download.oracle.com/javase/7/docs/api/</commons.javadoc.java.link>
-    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
-    <commons-build-plugin.version>1.6</commons-build-plugin.version>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
-
-
-    <!--
-        Encoding of Java source files: ensures that the compiler and
-        the javadoc generator use the right encoding. Subprojects may
-        overwrite this, if they are using another encoding.
-    -->
-    <commons.encoding>iso-8859-1</commons.encoding>
-    <!-- used in this pom to provide the Javadoc HTML file encoding -->
-    <commons.docEncoding>${commons.encoding}</commons.docEncoding>
-    <!-- Define source encoding for filtering; used by general plugins -->
-    <project.build.sourceEncoding>${commons.encoding}</project.build.sourceEncoding>
-    <!-- This is used by reporting plugins -->
-    <project.reporting.outputEncoding>${commons.encoding}</project.reporting.outputEncoding>
-
-    <!-- The property "target.name" is used to specify the ant target, The All target will use
-    OsInfo.java to detect the OS info and arch to generate the native binary for detected platform.
-    User is able to specify the platform by maven profiles.-->
-    <target.name>all</target.name>
-    <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
-    <junit.version>4.12</junit.version>
-    <commons-logging.version>1.1.3</commons-logging.version>
-    <commons.jacoco.version>0.7.7.201606060606</commons.jacoco.version>
-    <slf4j-api.version>1.7.10</slf4j-api.version>
-
-    <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
-    <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
-  </properties>
   <profiles>
     <profile>
       <id>win32</id>
@@ -392,12 +402,6 @@ The following provides more details on the included cryptographic software:
     </profile>
 
   </profiles>
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
 
   <build>
     <resources>
