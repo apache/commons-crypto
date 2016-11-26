@@ -145,7 +145,7 @@ public class CryptoRandomFactory {
     }
 
     /**
-     * The default value (OPENSSL,JAVA) used when creating a {@link CryptoCipher}.
+     * The default value (OPENSSL,JAVA) used when creating a {@link org.apache.commons.crypto.cipher.CryptoCipher}.
      */
     private static final String CLASSES_DEFAULT =
         RandomProvider.OPENSSL.getClassName()
