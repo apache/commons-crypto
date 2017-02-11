@@ -99,7 +99,7 @@ public class CipherByteBufferExample {
      */
     private static String asString(ByteBuffer buffer) {
         final ByteBuffer copy = buffer.duplicate();
-        final byte[] bytes = new byte[Math.min(copy.remaining(),50)];
+        final byte[] bytes = new byte[copy.remaining()];
         copy.get(bytes);
         return new String(bytes, StandardCharsets.UTF_8);
     }
