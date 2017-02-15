@@ -39,11 +39,11 @@
 /* A helper macro to 'throw' a java exception. */
 #define THROW(env, exception_name, message) \
   { \
-	jclass ecls = (*env)->FindClass(env, exception_name); \
-	if (ecls) { \
-	  (*env)->ThrowNew(env, ecls, message); \
-	  (*env)->DeleteLocalRef(env, ecls); \
-	} \
+    jclass ecls = (*env)->FindClass(env, exception_name); \
+    if (ecls) { \
+      (*env)->ThrowNew(env, ecls, message); \
+      (*env)->DeleteLocalRef(env, ecls); \
+    } \
   }
 
 /* Helper macro to return if an exception is pending */
@@ -82,14 +82,14 @@
 static __attribute__ ((unused))
 void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
   if (!env || !handle || !symbol) {
-  	THROW(env, "java/lang/InternalError", NULL);
-  	return NULL;
+      THROW(env, "java/lang/InternalError", NULL);
+      return NULL;
   }
   char *error = NULL;
   void *func_ptr = dlsym(handle, symbol);
   if ((error = dlerror()) != NULL) {
-  	THROW(env, "java/lang/UnsatisfiedLinkError", symbol);
-  	return NULL;
+      THROW(env, "java/lang/UnsatisfiedLinkError", symbol);
+      return NULL;
   }
   return func_ptr;
 }
@@ -124,10 +124,10 @@ void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
 #define unlikely(_c) (_c)
 
 /* Disable certain warnings in the native CRC32 code. */
-#pragma warning(disable:4018)		// Signed/unsigned mismatch.
-#pragma warning(disable:4244)		// Possible loss of data in conversion.
-#pragma warning(disable:4267)		// Possible loss of data.
-#pragma warning(disable:4996)		// Use of deprecated function.
+#pragma warning(disable:4018)        // Signed/unsigned mismatch.
+#pragma warning(disable:4244)        // Possible loss of data in conversion.
+#pragma warning(disable:4267)        // Possible loss of data.
+#pragma warning(disable:4996)        // Use of deprecated function.
 
 #include <Windows.h>
 #include <stdio.h>

@@ -135,7 +135,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
 #endif
 #ifdef WINDOWS
     snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    		GetLastError());
+        GetLastError());
 #endif
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
