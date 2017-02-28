@@ -18,6 +18,17 @@
 
 package org.apache.commons.crypto.stream;
 
+import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.stream.output.ChannelOutput;
+import org.apache.commons.crypto.stream.output.Output;
+import org.apache.commons.crypto.stream.output.StreamOutput;
+import org.apache.commons.crypto.utils.Utils;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -27,17 +38,6 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.ShortBufferException;
-import javax.crypto.spec.IvParameterSpec;
-
-import org.apache.commons.crypto.cipher.CryptoCipher;
-import org.apache.commons.crypto.stream.output.ChannelOutput;
-import org.apache.commons.crypto.stream.output.Output;
-import org.apache.commons.crypto.stream.output.StreamOutput;
-import org.apache.commons.crypto.utils.Utils;
 
 /**
  * {@link CryptoOutputStream} encrypts data and writes to the under layer
@@ -78,6 +78,8 @@ public class CryptoOutputStream extends OutputStream implements
      * at outBuffer.limit().
      */
     ByteBuffer outBuffer; // package protected for access by crypto classes; do not expose futher
+
+    boolean blocking;
 
     /**
      * Constructs a {@link CryptoOutputStream}.
@@ -298,30 +300,38 @@ public class CryptoOutputStream extends OutputStream implements
     @Override
     public int write(ByteBuffer src) throws IOException {
         checkStream();
-        final int len = src.remaining();
-        int remaining = len;
+
+        int bytes_written = 0;
+        int remaining = src.remaining();
+
         while (remaining > 0) {
-            final int space = inBuffer.remaining();
-            if (remaining < space) {
+            int position = src.position();
+            int written;
+            final int oldLimit = src.limit();
+            int space = inBuffer.remaining();
+
+            if(remaining < inBuffer.remaining()) {
                 inBuffer.put(src);
-                remaining = 0;
             } else {
-                // to void copy twice, we set the limit to copy directly
-                final int oldLimit = src.limit();
-                final int newLimit = src.position() + space;
+                int newLimit = src.position() + space;
                 src.limit(newLimit);
-
                 inBuffer.put(src);
 
-                // restore the old limit
+                // Restore src state
                 src.limit(oldLimit);
+            }
 
-                remaining -= space;
-                encrypt();
+            written = encrypt_nonblocking();
+            bytes_written += written;
+            remaining -= written;
+            src.position(position+written);
+
+            if (written < space) {
+                break;
             }
         }
 
-        return len;
+        return bytes_written;
     }
 
     /**
@@ -363,6 +373,30 @@ public class CryptoOutputStream extends OutputStream implements
         while (outBuffer.hasRemaining()) {
             output.write(outBuffer);
         }
+    }
+
+    /**
+     * Does the encryption, input is {@link #inBuffer} and output is
+     * {@link #outBuffer}.
+     *
+     * @return number of encrypted bytes output write out, possible zero.
+     * @throws IOException if an I/O error occurs.
+     */
+    protected int encrypt_nonblocking() throws IOException {
+
+        inBuffer.flip();
+        outBuffer.clear();
+
+        try {
+            cipher.update(inBuffer, outBuffer);
+        } catch (ShortBufferException e) {
+            throw new IOException(e);
+        }
+
+        inBuffer.clear();
+        outBuffer.flip();
+
+        return output.write(outBuffer);
     }
 
     /**
