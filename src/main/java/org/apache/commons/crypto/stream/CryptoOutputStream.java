@@ -18,17 +18,6 @@
 
 package org.apache.commons.crypto.stream;
 
-import org.apache.commons.crypto.cipher.CryptoCipher;
-import org.apache.commons.crypto.stream.output.ChannelOutput;
-import org.apache.commons.crypto.stream.output.Output;
-import org.apache.commons.crypto.stream.output.StreamOutput;
-import org.apache.commons.crypto.utils.Utils;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.ShortBufferException;
-import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -38,6 +27,17 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.ShortBufferException;
+import javax.crypto.spec.IvParameterSpec;
+
+import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.stream.output.ChannelOutput;
+import org.apache.commons.crypto.stream.output.Output;
+import org.apache.commons.crypto.stream.output.StreamOutput;
+import org.apache.commons.crypto.utils.Utils;
 
 /**
  * {@link CryptoOutputStream} encrypts data and writes to the under layer
@@ -78,8 +78,6 @@ public class CryptoOutputStream extends OutputStream implements
      * at outBuffer.limit().
      */
     ByteBuffer outBuffer;
-
-    boolean blocking;
 
     /**
      * Constructs a {@link CryptoOutputStream}.
@@ -324,8 +322,9 @@ public class CryptoOutputStream extends OutputStream implements
             written = encrypt_nonblocking();
             bytes_written += written;
             remaining -= written;
-            src.position(position+written);
+            src.position(position + written);
 
+            // Either drained out SRC or output blocking, break and return.
             if (written < space) {
                 break;
             }
@@ -383,7 +382,6 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
     protected int encrypt_nonblocking() throws IOException {
-
         inBuffer.flip();
         outBuffer.clear();
 
