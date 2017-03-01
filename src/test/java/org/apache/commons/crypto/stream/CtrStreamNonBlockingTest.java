@@ -39,17 +39,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NetworkStreamTest extends Thread {
+public class CtrStreamNonBlockingTest extends Thread {
   private final int dataLen = 10000;
   private byte[] data = new byte[dataLen];
-  private ByteBuffer rawData;
-  private ByteBuffer encryptedData;
+  private ByteBuffer originData;
+  private ByteBuffer receivedData;
   private Properties props = new Properties();
   protected byte[] key = new byte[16];
   protected byte[] iv = new byte[16];
   protected static int defaultBufferSize = 8192;
   protected String transformation;
   protected Thread serverThread;
+  protected int port = 9999;
 
   @Before
   public void before() throws IOException {
@@ -58,8 +59,8 @@ public class NetworkStreamTest extends Thread {
     random.nextBytes(key);
     random.nextBytes(iv);
     transformation = "AES/CTR/NoPadding";
-    encryptedData = ByteBuffer.allocate(dataLen);
-    encryptedData.clear();
+    receivedData = ByteBuffer.allocate(dataLen);
+    receivedData.clear();
     startServer();
   }
 
@@ -81,7 +82,7 @@ public class NetworkStreamTest extends Thread {
         try {
           ServerSocketChannel server = ServerSocketChannel.open();
           server.configureBlocking(false);
-          server.socket().bind(new InetSocketAddress("localhost", 9999));
+          server.socket().bind(new InetSocketAddress("localhost", port));
           Selector selector = Selector.open();
 
           int ops = server.validOps();
@@ -108,7 +109,7 @@ public class NetworkStreamTest extends Thread {
                   new IvParameterSpec(iv));
 
                 int read = 0;
-                while ((read = cis.read(encryptedData)) != -1) {
+                while ((read = cis.read(receivedData)) != -1) {
                   total_bytes_read += read;
                 }
                 cis.close();
@@ -128,23 +129,23 @@ public class NetworkStreamTest extends Thread {
   }
 
   /** Test byte buffer write blocking */
-  @Test(timeout = 120000)
+  @Test(timeout = 12000)
   public void testByteBufferWriteBlocking() throws Exception {
     sleep(1000);
     SocketChannel client = SocketChannel.open();
-    client.connect(new InetSocketAddress("localhost", 9999));
+    client.connect(new InetSocketAddress("localhost", port));
     CryptoOutputStream cos = new CryptoOutputStream(client,
       getCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME),
       defaultBufferSize, new SecretKeySpec(key, "AES"),
       new IvParameterSpec(iv));
-    rawData = ByteBuffer.wrap(data);
+    originData = ByteBuffer.wrap(data);
 
-    while (rawData.hasRemaining()) {
-      cos.write(rawData);
+    while (originData.hasRemaining()) {
+      cos.write(originData);
     }
 
     cos.close();
     serverThread.join();
-    Assert.assertArrayEquals("Data not equal", rawData.array(), encryptedData.array());
+    Assert.assertArrayEquals("Data not equal", originData.array(), receivedData.array());
   }
 }
