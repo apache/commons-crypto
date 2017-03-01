@@ -108,7 +108,7 @@ public class NetworkStreamTest extends Thread {
                   new IvParameterSpec(iv));
 
                 int read = 0;
-                while ((read = cis.read(encryptedData)) > 0) {
+                while ((read = cis.read(encryptedData)) != -1) {
                   total_bytes_read += read;
                 }
                 cis.close();
@@ -142,8 +142,9 @@ public class NetworkStreamTest extends Thread {
     while (rawData.hasRemaining()) {
       cos.write(rawData);
     }
-    serverThread.join();
+
     cos.close();
+    serverThread.join();
     Assert.assertArrayEquals("Data not equal", rawData.array(), encryptedData.array());
   }
 }
