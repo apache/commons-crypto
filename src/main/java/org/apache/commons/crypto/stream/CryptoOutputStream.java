@@ -303,13 +303,14 @@ public class CryptoOutputStream extends OutputStream implements
         int remaining = src.remaining();
 
         while (remaining > 0) {
-            int position = src.position();
             int written;
             final int oldLimit = src.limit();
             int space = inBuffer.remaining();
 
-            if(remaining < inBuffer.remaining()) {
+            if(remaining < space) {
                 inBuffer.put(src);
+                bytes_written += remaining;
+                break;
             } else {
                 int newLimit = src.position() + space;
                 src.limit(newLimit);
@@ -318,13 +319,12 @@ public class CryptoOutputStream extends OutputStream implements
                 // Restore src state
                 src.limit(oldLimit);
             }
+            remaining -= space;
 
             written = encrypt_nonblocking();
-            bytes_written += written;
-            remaining -= written;
-            src.position(position + written);
+            bytes_written += space;
 
-            // Either drained out SRC or output blocking, break and return.
+            // Underlying output maybe blocking, break out and return.
             if (written < space) {
                 break;
             }
@@ -382,6 +382,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
     protected int encrypt_nonblocking() throws IOException {
+        int written;
         inBuffer.flip();
         outBuffer.clear();
 
@@ -391,10 +392,16 @@ public class CryptoOutputStream extends OutputStream implements
             throw new IOException(e);
         }
 
-        inBuffer.clear();
         outBuffer.flip();
+        written = output.write(outBuffer);
+        if (outBuffer.hasRemaining()) {
+            inBuffer.position(written);
+            inBuffer.compact();
+        } else {
+            inBuffer.clear();
+        }
 
-        return output.write(outBuffer);
+        return written;
     }
 
     /**
