@@ -304,7 +304,6 @@ public class CryptoOutputStream extends OutputStream implements
 
         while (remaining > 0) {
             int written;
-            final int oldLimit = src.limit();
             int space = inBuffer.remaining();
 
             if(remaining < space) {
@@ -312,11 +311,10 @@ public class CryptoOutputStream extends OutputStream implements
                 bytes_written += remaining;
                 break;
             } else {
+                int oldLimit = src.limit();
                 int newLimit = src.position() + space;
                 src.limit(newLimit);
                 inBuffer.put(src);
-
-                // Restore src state
                 src.limit(oldLimit);
             }
             remaining -= space;
