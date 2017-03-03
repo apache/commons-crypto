@@ -67,6 +67,9 @@ public class CryptoOutputStream extends OutputStream implements
     /** Flag to mark whether the output stream is closed. */
     private boolean closed;
 
+    /** Flag to mark whether output stream is in transfer */
+    private boolean transferInProgress = false;
+
     /**
      * Input data buffer. The data starts at inBuffer.position() and ends at
      * inBuffer.limit().
@@ -233,6 +236,9 @@ public class CryptoOutputStream extends OutputStream implements
                 off += remaining;
                 len -= remaining;
                 encrypt();
+                while (outBuffer.hasRemaining()) {
+                    output.write(outBuffer);
+                }
             }
         }
     }
@@ -248,6 +254,10 @@ public class CryptoOutputStream extends OutputStream implements
     public void flush() throws IOException {
         checkStream();
         encrypt();
+        while (outBuffer.hasRemaining()) {
+            output.write(outBuffer);
+        }
+
         output.flush();
         super.flush();
     }
@@ -299,7 +309,15 @@ public class CryptoOutputStream extends OutputStream implements
     public int write(ByteBuffer src) throws IOException {
         checkStream();
 
-        int bytes_written = 0;
+        if (transferInProgress && outBuffer.hasRemaining()) {
+            output.write(outBuffer);
+            return 0;
+        } else {
+            outBuffer.clear();
+            transferInProgress = false;
+        }
+
+        int bytesWritten = 0;
         int remaining = src.remaining();
 
         while (remaining > 0) {
@@ -308,27 +326,28 @@ public class CryptoOutputStream extends OutputStream implements
 
             if(remaining < space) {
                 inBuffer.put(src);
-                bytes_written += remaining;
+                bytesWritten += remaining;
                 break;
             } else {
-                int oldLimit = src.limit();
-                int newLimit = src.position() + space;
+                final int oldLimit = src.limit();
+                final int newLimit = src.position() + space;
                 src.limit(newLimit);
                 inBuffer.put(src);
                 src.limit(oldLimit);
-            }
-            remaining -= space;
+                remaining -= space;
+                bytesWritten += space;
 
-            written = encrypt_nonblocking();
-            bytes_written += space;
-
-            // Underlying output maybe blocking, break out and return.
-            if (written < space) {
-                break;
+                encrypt();
+                written = output.write(outBuffer);
+                // Underlying output maybe blocking, break out and return.
+                if (written < space) {
+                    transferInProgress = true;
+                    break;
+                }
             }
         }
 
-        return bytes_written;
+        return bytesWritten;
     }
 
     /**
@@ -365,41 +384,6 @@ public class CryptoOutputStream extends OutputStream implements
 
         inBuffer.clear();
         outBuffer.flip();
-
-        // write to output
-        while (outBuffer.hasRemaining()) {
-            output.write(outBuffer);
-        }
-    }
-
-    /**
-     * Does the encryption, input is {@link #inBuffer} and output is
-     * {@link #outBuffer}.
-     *
-     * @return number of encrypted bytes output write out, possible zero.
-     * @throws IOException if an I/O error occurs.
-     */
-    protected int encrypt_nonblocking() throws IOException {
-        int written;
-        inBuffer.flip();
-        outBuffer.clear();
-
-        try {
-            cipher.update(inBuffer, outBuffer);
-        } catch (ShortBufferException e) {
-            throw new IOException(e);
-        }
-
-        outBuffer.flip();
-        written = output.write(outBuffer);
-        if (outBuffer.hasRemaining()) {
-            inBuffer.position(written);
-            inBuffer.compact();
-        } else {
-            inBuffer.clear();
-        }
-
-        return written;
     }
 
     /**
