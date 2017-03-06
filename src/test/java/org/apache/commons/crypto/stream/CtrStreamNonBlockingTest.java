@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,17 +18,10 @@
 package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
 import java.security.SecureRandom;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -45,12 +38,13 @@ public class CtrStreamNonBlockingTest extends Thread {
   private ByteBuffer originData;
   private ByteBuffer receivedData;
   private Properties props = new Properties();
-  protected byte[] key = new byte[16];
-  protected byte[] iv = new byte[16];
-  protected static int defaultBufferSize = 8192;
-  protected String transformation;
-  protected Thread serverThread;
-  protected int port = 9999;
+  private byte[] key = new byte[16];
+  private byte[] iv = new byte[16];
+  private String transformation;
+  private Thread serverThread;
+  private int defaultBufferSize = 8192;
+  private DummyChannel dummyChannel;
+
 
   @Before
   public void before() throws IOException {
@@ -62,13 +56,14 @@ public class CtrStreamNonBlockingTest extends Thread {
     receivedData = ByteBuffer.allocate(dataLen);
     receivedData.clear();
     startServer();
+    dummyChannel = new DummyChannel();
   }
 
   protected CryptoCipher getCipher(String cipherClass) throws IOException {
     try {
       return (CryptoCipher) ReflectionUtils.newInstance(
-        ReflectionUtils.getClassByName(cipherClass), props,
-        transformation);
+              ReflectionUtils.getClassByName(cipherClass), props,
+              transformation);
     } catch (ClassNotFoundException cnfe) {
       throw new IOException("Illegal crypto cipher!");
     }
@@ -80,45 +75,12 @@ public class CtrStreamNonBlockingTest extends Thread {
       @Override
       public void run() {
         try {
-          ServerSocketChannel server = ServerSocketChannel.open();
-          server.configureBlocking(false);
-          server.socket().bind(new InetSocketAddress("localhost", port));
-          Selector selector = Selector.open();
-
-          int ops = server.validOps();
-          server.register(selector,ops, null);
-
-          int total_bytes_read = 0;
-
-          while (total_bytes_read < dataLen) {
-            selector.select();
-            Set<SelectionKey> readyKeys = selector.selectedKeys();
-            Iterator<SelectionKey> keyIterator = readyKeys.iterator();
-
-            while (keyIterator.hasNext()) {
-              SelectionKey skey = keyIterator.next();
-              if (skey.isAcceptable()) {
-                SocketChannel clientSocket = server.accept();
-                clientSocket.configureBlocking(false);
-                clientSocket.register(selector,SelectionKey.OP_READ);
-
-              } else if (skey.isReadable()) {
-                CryptoInputStream cis = new CryptoInputStream((SocketChannel) skey.channel(),
+          CryptoInputStream cis = new CryptoInputStream(dummyChannel,
                   getCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME),
-                  defaultBufferSize, new SecretKeySpec(key, "AES"),
-                  new IvParameterSpec(iv));
+                  defaultBufferSize, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
 
-                int read = 0;
-                while ((read = cis.read(receivedData)) != -1) {
-                  total_bytes_read += read;
-                }
-                cis.close();
-              }
-              keyIterator.remove();
-            }
-          }
-        }
-        catch (Exception e) {
+          while (cis.read(receivedData) != -1);
+        } catch (Exception e) {
           e.printStackTrace();
         }
       }
@@ -129,17 +91,12 @@ public class CtrStreamNonBlockingTest extends Thread {
   }
 
   /** Test byte buffer write blocking */
-  @Test(timeout = 12000)
+  @Test(timeout = 120000)
   public void testByteBufferWriteBlocking() throws Exception {
-    sleep(1000);
-    SocketChannel client = SocketChannel.open();
-    client.connect(new InetSocketAddress("localhost", port));
-    CryptoOutputStream cos = new CryptoOutputStream(client,
-      getCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME),
-      defaultBufferSize, new SecretKeySpec(key, "AES"),
-      new IvParameterSpec(iv));
+    CryptoOutputStream cos = new CryptoOutputStream(dummyChannel,
+            getCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME),
+            defaultBufferSize, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
     originData = ByteBuffer.wrap(data);
-
     while (originData.hasRemaining()) {
       cos.write(originData);
     }
