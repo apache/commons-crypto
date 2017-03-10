@@ -302,9 +302,6 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     protected void encryptFinal() throws IOException {
         // The same as the normal encryption for Counter mode
         encrypt();
-        while (outBuffer.hasRemaining()) {
-            output.write(outBuffer);
-        }
     }
 
     /**

@@ -236,9 +236,6 @@ public class CryptoOutputStream extends OutputStream implements
                 off += remaining;
                 len -= remaining;
                 encrypt();
-                while (outBuffer.hasRemaining()) {
-                    output.write(outBuffer);
-                }
             }
         }
     }
@@ -254,10 +251,6 @@ public class CryptoOutputStream extends OutputStream implements
     public void flush() throws IOException {
         checkStream();
         encrypt();
-        while (outBuffer.hasRemaining()) {
-            output.write(outBuffer);
-        }
-
         output.flush();
         super.flush();
     }
@@ -337,8 +330,9 @@ public class CryptoOutputStream extends OutputStream implements
                 remaining -= space;
                 bytesWritten += space;
 
-                encrypt();
+                encryptNonBlocking();
                 written = output.write(outBuffer);
+
                 // Underlying output maybe blocking, break out and return.
                 if (written < space) {
                     transferInProgress = true;
@@ -372,6 +366,31 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
     protected void encrypt() throws IOException {
+
+        inBuffer.flip();
+        outBuffer.clear();
+
+        try {
+            cipher.update(inBuffer, outBuffer);
+        } catch (ShortBufferException e) {
+            throw new IOException(e);
+        }
+
+        inBuffer.clear();
+        outBuffer.flip();
+
+        while (outBuffer.hasRemaining()) {
+            output.write(outBuffer);
+        }
+    }
+
+    /**
+     * Does the encryption in a non-blocking mode, input is {@link #inBuffer} and output is
+     * {@link #outBuffer}.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    protected void encryptNonBlocking() throws IOException {
 
         inBuffer.flip();
         outBuffer.clear();
