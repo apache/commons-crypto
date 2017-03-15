@@ -45,7 +45,6 @@ public class CtrStreamNonBlockingTest extends Thread {
   private int defaultBufferSize = 8192;
   private DummyChannel dummyChannel;
 
-
   @Before
   public void before() throws IOException {
     Random random = new SecureRandom();
@@ -55,8 +54,8 @@ public class CtrStreamNonBlockingTest extends Thread {
     transformation = "AES/CTR/NoPadding";
     receivedData = ByteBuffer.allocate(dataLen);
     receivedData.clear();
-    startServer();
     dummyChannel = new DummyChannel();
+    startServer();
   }
 
   protected CryptoCipher getCipher(String cipherClass) throws IOException {
