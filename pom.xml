@@ -112,6 +112,7 @@ The following provides more details on the included cryptographic software:
 
   <properties>
     <commons.componentid>crypto</commons.componentid>
+    <commons.module.name>org.apache.commons.crypto</commons.module.name>
     <commons.release.version>1.0.0</commons.release.version>
     <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
     <commons.rc.version>RC1</commons.rc.version>
