@@ -54,6 +54,12 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     public void init(int mode, byte[] key, AlgorithmParameterSpec params)
             throws InvalidAlgorithmParameterException {
 
+        if (aadBuffer == null) {
+            aadBuffer = new ByteArrayOutputStream();
+        } else {
+            aadBuffer.reset();
+        }
+
         this.cipherMode = mode;
         byte[] iv;
         if (params instanceof GCMParameterSpec) {
@@ -253,6 +259,11 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
         }
 
         return totalLen;
+    }
+
+    public void clean() {
+        super.clean();
+        aadBuffer = null;
     }
 
     @Override
