@@ -196,6 +196,62 @@ class JceCipher implements CryptoCipher {
                 outputOffset);
     }
 
+
+    /**
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the cipher when operating in
+     * modes such as AEAD (GCM/CCM).  If this cipher is operating in
+     * either GCM or CCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
+     *
+     * @param aad the buffer containing the Additional Authentication Data
+     *
+     * @throws IllegalArgumentException if the {@code aad}
+     * byte array is null
+     * @throws IllegalStateException if this cipher is in a wrong state
+     * (e.g., has not been initialized), does not accept AAD, or if
+     * operating in either GCM or CCM mode and one of the {@code update}
+     * methods has already been called for the active
+     * encryption/decryption operation
+     * @throws UnsupportedOperationException if JCE's implementation does not
+     * support such operation
+     */
+    @Override
+    public void updateAAD(byte[] aad) {
+        cipher.updateAAD(aad);
+    }
+
+    /**
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the cipher when operating in
+     * modes such as AEAD (GCM/CCM).  If this cipher is operating in
+     * either GCM or CCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
+     *
+     * @param aad the buffer containing the Additional Authentication Data
+     *
+     * @throws IllegalArgumentException if the {@code aad}
+     * byte array is null
+     * @throws IllegalStateException if this cipher is in a wrong state
+     * (e.g., has not been initialized), does not accept AAD, or if
+     * operating in either GCM or CCM mode and one of the {@code update}
+     * methods has already been called for the active
+     * encryption/decryption operation
+     * @throws UnsupportedOperationException if JCE's implementation does not
+     * support such operation
+     */
+    @Override
+    public void updateAAD(ByteBuffer aad) {
+        cipher.updateAAD(aad);
+    }
+
+
     /**
      * Closes Jce cipher.
      */

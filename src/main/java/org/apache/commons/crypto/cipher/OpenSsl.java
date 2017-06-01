@@ -18,7 +18,9 @@
 package org.apache.commons.crypto.cipher;
 
 import java.nio.ByteBuffer;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.StringTokenizer;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -34,13 +36,15 @@ import org.apache.commons.crypto.utils.Utils;
  */
 final class OpenSsl {
 
+    OpenSslFeedbackCipher opensslBlockCipher;
+
     // Mode constant defined by OpenSsl JNI
     public static final int ENCRYPT_MODE = 1;
     public static final int DECRYPT_MODE = 0;
 
     /** Currently only support AES/CTR/NoPadding. */
     private static enum AlgorithmMode {
-        AES_CTR, AES_CBC;
+        AES_CTR, AES_CBC, AES_GCM;
 
         /**
          * Gets the mode.
@@ -82,10 +86,6 @@ final class OpenSsl {
         }
     }
 
-    private long context = 0;
-    private final int algorithm;
-    private final int padding;
-
     private static final Throwable loadingFailureReason;
 
     static {
@@ -122,9 +122,11 @@ final class OpenSsl {
      * @param padding the padding.
      */
     private OpenSsl(long context, int algorithm, int padding) {
-        this.context = context;
-        this.algorithm = algorithm;
-        this.padding = padding;
+        if (algorithm == AlgorithmMode.AES_GCM.ordinal()) {
+            opensslBlockCipher = new OpenSslGaloisCounterMode(context, algorithm, padding);
+        } else {
+            opensslBlockCipher = new OpenSslCommonMode(context, algorithm, padding);
+        }
     }
 
     /**
@@ -210,11 +212,13 @@ final class OpenSsl {
      *
      * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
      * @param key crypto key
-     * @param iv crypto iv
+     * @param params the algorithm parameters
+     * @throws InvalidAlgorithmParameterException if IV length is wrong
      */
-    public void init(int mode, byte[] key, byte[] iv) {
-        context = OpenSslNative
-                .init(context, mode, algorithm, padding, key, iv);
+    public void init(int mode, byte[] key, AlgorithmParameterSpec params)
+            throws InvalidAlgorithmParameterException {
+        checkState();
+        opensslBlockCipher.init(mode, key, params);
     }
 
     /**
@@ -250,12 +254,7 @@ final class OpenSsl {
         checkState();
         Utils.checkArgument(input.isDirect() && output.isDirect(),
                 "Direct buffers are required.");
-        int len = OpenSslNative.update(context, input, input.position(),
-                input.remaining(), output, output.position(),
-                output.remaining());
-        input.position(input.limit());
-        output.position(output.position() + len);
-        return len;
+        return opensslBlockCipher.update(input, output);
     }
 
     /**
@@ -274,8 +273,37 @@ final class OpenSsl {
     public int update(byte[] input, int inputOffset, int inputLen,
             byte[] output, int outputOffset) throws ShortBufferException {
         checkState();
-        return OpenSslNative.updateByteArray(context, input, inputOffset,
-                inputLen, output, outputOffset, output.length - outputOffset);
+        return opensslBlockCipher.update(input, inputOffset, inputLen, output, outputOffset);
+    }
+
+    /**
+     * Encrypts or decrypts data in a single-part operation, or finishes a
+     * multiple-part operation.
+     *
+     * @param input the input byte array
+     * @param inputOffset the offset in input where the input starts
+     * @param inputLen the input length
+     * @param output the byte array for the result
+     * @param outputOffset the offset in output where the result is stored
+     * @return the number of bytes stored in output
+     * @throws ShortBufferException if the given output byte array is too small
+     *         to hold the result
+     * @throws BadPaddingException if this cipher is in decryption mode, and
+     *         (un)padding has been requested, but the decrypted data is not
+     *         bounded by the appropriate padding bytes
+     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
+     *         padding has been requested (only in encryption mode), and the
+     *         total input length of the data processed by this cipher is not a
+     *         multiple of block size; or if this encryption algorithm is unable
+     *         to process the input data provided.
+     */
+    public int doFinal(byte[] input, int inputOffset, int inputLen,
+                       byte[] output, int outputOffset)
+            throws ShortBufferException, IllegalBlockSizeException,
+            BadPaddingException{
+
+        checkState();
+        return opensslBlockCipher.doFinal(input, inputOffset, inputLen, output, outputOffset);
     }
 
     /**
@@ -304,6 +332,7 @@ final class OpenSsl {
      * If any exception is thrown, this cipher object need to be reset before it
      * can be used again.
      *
+     * @param input the input ByteBuffer
      * @param output the output ByteBuffer
      * @return int number of bytes stored in <code>output</code>
      * @throws ShortBufferException if the given output byte array is too small
@@ -317,53 +346,43 @@ final class OpenSsl {
      *         (un)padding has been requested, but the decrypted data is not
      *         bounded by the appropriate padding bytes
      */
-    public int doFinal(ByteBuffer output) throws ShortBufferException,
+    public int doFinal(ByteBuffer input, ByteBuffer output) throws ShortBufferException,
             IllegalBlockSizeException, BadPaddingException {
         checkState();
         Utils.checkArgument(output.isDirect(), "Direct buffer is required.");
-        int len = OpenSslNative.doFinal(context, output, output.position(),
-                output.remaining());
-        output.position(output.position() + len);
-        return len;
+
+        return opensslBlockCipher.doFinal(input, output);
     }
 
+
     /**
-     * Encrypts or decrypts data in a single-part operation, or finishes a
-     * multiple-part operation.
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the cipher when operating in
+     * modes such as AEAD (GCM).  If this cipher is operating in
+     * either GCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
      *
-     * @param output the byte array for the result
-     * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
-     * @throws ShortBufferException if the given output byte array is too small
-     *         to hold the result
-     * @throws BadPaddingException if this cipher is in decryption mode, and
-     *         (un)padding has been requested, but the decrypted data is not
-     *         bounded by the appropriate padding bytes
-     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
-     *         padding has been requested (only in encryption mode), and the
-     *         total input length of the data processed by this cipher is not a
-     *         multiple of block size; or if this encryption algorithm is unable
-     *         to process the input data provided.
+     * @param aad the buffer containing the Additional Authentication Data
+     *
      */
-    public int doFinal(byte[] output, int outputOffset)
-            throws ShortBufferException, IllegalBlockSizeException,
-            BadPaddingException {
-        checkState();
-        return OpenSslNative.doFinalByteArray(context, output, outputOffset,
-                output.length - outputOffset);
+    public void updateAAD(byte[] aad) {
+        this.opensslBlockCipher.updateAAD(aad);
     }
+
 
     /** Forcibly clean the context. */
     public void clean() {
-        if (context != 0) {
-            OpenSslNative.clean(context);
-            context = 0;
+        if (opensslBlockCipher != null) {
+            opensslBlockCipher.clean();
         }
     }
 
     /** Checks whether context is initialized. */
     private void checkState() {
-        Utils.checkState(context != 0);
+        Utils.checkState(opensslBlockCipher != null);
     }
 
     @Override
