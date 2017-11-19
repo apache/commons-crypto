@@ -153,4 +153,56 @@ public interface CryptoCipher extends Closeable {
     int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output,
             int outputOffset) throws ShortBufferException,
             IllegalBlockSizeException, BadPaddingException;
+
+    /**
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the cipher when operating in
+     * modes such as AEAD (GCM).  If this cipher is operating in
+     * GCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
+     *
+     * @param aad the buffer containing the Additional Authentication Data
+     *
+     * @throws IllegalArgumentException if the {@code aad}
+     * byte array is null
+     * @throws IllegalStateException if this cipher is in a wrong state
+     * (e.g., has not been initialized), does not accept AAD, or if
+     * operating in either GCM or CCM mode and one of the {@code update}
+     * methods has already been called for the active
+     * encryption/decryption operation
+     * @throws UnsupportedOperationException if the corresponding method
+     * has not been overridden by an implementation
+     *
+     */
+    void updateAAD(byte[] aad)
+            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException;
+
+    /**
+     * Continues a multi-part update of the Additional Authentication
+     * Data (AAD).
+     * <p>
+     * Calls to this method provide AAD to the cipher when operating in
+     * modes such as AEAD (GCM).  If this cipher is operating in
+     * GCM mode, all AAD must be supplied before beginning
+     * operations on the ciphertext (via the {@code update} and
+     * {@code doFinal} methods).
+     *
+     * @param aad the buffer containing the Additional Authentication Data
+     *
+     * @throws IllegalArgumentException if the {@code aad}
+     * byte array is null
+     * @throws IllegalStateException if this cipher is in a wrong state
+     * (e.g., has not been initialized), does not accept AAD, or if
+     * operating in either GCM or CCM mode and one of the {@code update}
+     * methods has already been called for the active
+     * encryption/decryption operation
+     * @throws UnsupportedOperationException if the corresponding method
+     * has not been overridden by an implementation
+     *
+     */
+    void updateAAD(ByteBuffer aad)
+            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException;
 }

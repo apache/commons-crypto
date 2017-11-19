@@ -35,6 +35,7 @@ static void (*dlsym_EVP_CIPHER_CTX_free)(EVP_CIPHER_CTX *);
 static int (*dlsym_EVP_CIPHER_CTX_cleanup)(EVP_CIPHER_CTX *);
 static void (*dlsym_EVP_CIPHER_CTX_init)(EVP_CIPHER_CTX *);
 static int (*dlsym_EVP_CIPHER_CTX_set_padding)(EVP_CIPHER_CTX *, int);
+static int (*dlsym_EVP_CIPHER_CTX_ctrl)(EVP_CIPHER_CTX *, int, int, void *);
 static int (*dlsym_EVP_CipherInit_ex)(EVP_CIPHER_CTX *, const EVP_CIPHER *,  \
            ENGINE *, const unsigned char *, const unsigned char *, int);
 static int (*dlsym_EVP_CipherUpdate)(EVP_CIPHER_CTX *, unsigned char *,  \
@@ -46,6 +47,9 @@ static EVP_CIPHER * (*dlsym_EVP_aes_128_ctr)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_256_cbc)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_192_cbc)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_128_cbc)(void);
+static EVP_CIPHER * (*dlsym_EVP_aes_256_gcm)(void);
+static EVP_CIPHER * (*dlsym_EVP_aes_192_gcm)(void);
+static EVP_CIPHER * (*dlsym_EVP_aes_128_gcm)(void);
 #endif
 
 #ifdef WINDOWS
@@ -54,6 +58,7 @@ typedef void (__cdecl *__dlsym_EVP_CIPHER_CTX_free)(EVP_CIPHER_CTX *);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_cleanup)(EVP_CIPHER_CTX *);
 typedef void (__cdecl *__dlsym_EVP_CIPHER_CTX_init)(EVP_CIPHER_CTX *);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_set_padding)(EVP_CIPHER_CTX *, int);
+typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_ctrl)(EVP_CIPHER_CTX *, int, int, void *);
 typedef int (__cdecl *__dlsym_EVP_CipherInit_ex)(EVP_CIPHER_CTX *,  \
              const EVP_CIPHER *, ENGINE *, const unsigned char *,  \
              const unsigned char *, int);
@@ -67,11 +72,15 @@ typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_ctr)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_256_cbc)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_192_cbc)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_cbc)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_256_gcm)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_192_gcm)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_gcm)(void);
 static __dlsym_EVP_CIPHER_CTX_new dlsym_EVP_CIPHER_CTX_new;
 static __dlsym_EVP_CIPHER_CTX_free dlsym_EVP_CIPHER_CTX_free;
 static __dlsym_EVP_CIPHER_CTX_cleanup dlsym_EVP_CIPHER_CTX_cleanup;
 static __dlsym_EVP_CIPHER_CTX_init dlsym_EVP_CIPHER_CTX_init;
 static __dlsym_EVP_CIPHER_CTX_set_padding dlsym_EVP_CIPHER_CTX_set_padding;
+static __dlsym_EVP_CIPHER_CTX_ctrl dlsym_EVP_CIPHER_CTX_ctrl;
 static __dlsym_EVP_CipherInit_ex dlsym_EVP_CipherInit_ex;
 static __dlsym_EVP_CipherUpdate dlsym_EVP_CipherUpdate;
 static __dlsym_EVP_CipherFinal_ex dlsym_EVP_CipherFinal_ex;
@@ -81,6 +90,9 @@ static __dlsym_EVP_aes_128_ctr dlsym_EVP_aes_128_ctr;
 static __dlsym_EVP_aes_256_cbc dlsym_EVP_aes_256_cbc;
 static __dlsym_EVP_aes_192_cbc dlsym_EVP_aes_192_cbc;
 static __dlsym_EVP_aes_128_cbc dlsym_EVP_aes_128_cbc;
+static __dlsym_EVP_aes_256_gcm dlsym_EVP_aes_256_gcm;
+static __dlsym_EVP_aes_192_gcm dlsym_EVP_aes_192_gcm;
+static __dlsym_EVP_aes_128_gcm dlsym_EVP_aes_128_gcm;
 #endif
 
 #ifdef UNIX
@@ -98,6 +110,9 @@ static void loadAes(JNIEnv *env, HMODULE openssl)
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_cbc, env, openssl, "EVP_aes_256_cbc");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_192_cbc, env, openssl, "EVP_aes_192_cbc");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_128_cbc, env, openssl, "EVP_aes_128_cbc");
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_gcm, env, openssl, "EVP_aes_256_gcm");
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_192_gcm, env, openssl, "EVP_aes_192_gcm");
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_128_gcm, env, openssl, "EVP_aes_128_gcm");
 #endif
 
 #ifdef WINDOWS
@@ -113,6 +128,12 @@ static void loadAes(JNIEnv *env, HMODULE openssl)
                       env, openssl, "EVP_aes_192_cbc");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_128_cbc, dlsym_EVP_aes_128_cbc,  \
                       env, openssl, "EVP_aes_128_cbc");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_256_gcm, dlsym_EVP_aes_256_gcm,  \
+                      env, openssl, "EVP_aes_256_gcm");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_192_gcm, dlsym_EVP_aes_192_gcm,  \
+                      env, openssl, "EVP_aes_192_gcm");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_128_gcm, dlsym_EVP_aes_128_gcm,  \
+                      env, openssl, "EVP_aes_128_gcm");
 #endif
 }
 
@@ -153,6 +174,8 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
                       "EVP_CIPHER_CTX_init");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_set_padding, env, openssl,  \
                       "EVP_CIPHER_CTX_set_padding");
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_ctrl, env, openssl,  \
+                      "EVP_CIPHER_CTX_ctrl");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CipherInit_ex, env, openssl,  \
                       "EVP_CipherInit_ex");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CipherUpdate, env, openssl,  \
@@ -195,12 +218,13 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
 JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initContext
     (JNIEnv *env, jclass clazz, jint alg, jint padding)
 {
-  if (alg != AES_CTR && alg != AES_CBC) {
+  if (alg != AES_CTR && alg != AES_CBC && alg != AES_GCM) {
     THROW(env, "java/security/NoSuchAlgorithmException", NULL);
     return (jlong)0;
   }
   if (!(alg == AES_CTR && padding == NOPADDING)
-      && !(alg == AES_CBC && (padding == NOPADDING|| padding == PKCS5PADDING))) {
+      && !(alg == AES_CBC && (padding == NOPADDING|| padding == PKCS5PADDING))
+      && !(alg == AES_GCM && padding == NOPADDING)) {
     THROW(env, "javax/crypto/NoSuchPaddingException", NULL);
     return (jlong)0;
   }
@@ -216,6 +240,13 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
         dlsym_EVP_aes_192_cbc == NULL || dlsym_EVP_aes_128_cbc == NULL) {
     THROW(env, "java/security/NoSuchAlgorithmException",  \
         "Doesn't support AES CBC.");
+    return (jlong)0;
+  }
+
+  if (dlsym_EVP_aes_256_gcm == NULL ||
+    dlsym_EVP_aes_192_gcm == NULL || dlsym_EVP_aes_128_gcm == NULL) {
+    THROW(env, "java/security/NoSuchAlgorithmException",  \
+       "Doesn't support AES GCM.");
     return (jlong)0;
   }
 
@@ -249,6 +280,14 @@ static EVP_CIPHER * getEvpCipher(int alg, int keyLen)
     } else if (keyLen == KEY_LENGTH_128) {
       cipher = dlsym_EVP_aes_128_cbc();
     }
+  } else if (alg == AES_GCM) {
+    if (keyLen == KEY_LENGTH_256) {
+      cipher = dlsym_EVP_aes_256_gcm();
+    } else if (keyLen == KEY_LENGTH_192) {
+      cipher = dlsym_EVP_aes_192_gcm();
+    } else if (keyLen == KEY_LENGTH_128) {
+      cipher = dlsym_EVP_aes_128_gcm();
+    }
   }
   return cipher;
 }
@@ -271,7 +310,7 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
     THROW(env, "java/security/InvalidKeyException", str);
     goto cleanup;
   }
-  if (jIvLen != IV_LENGTH) {
+  if ((alg != AES_GCM) && (jIvLen != IV_LENGTH)) {
     THROW(env, "java/security/InvalidAlgorithmParameterException", "Wrong IV length: must be 16 bytes long");
     goto cleanup;
   }
@@ -296,13 +335,26 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
     goto cleanup;
   }
 
-  if (!(alg == AES_CTR || alg == AES_CBC)) {
+  if (!(alg == AES_CTR || alg == AES_CBC || alg == AES_GCM)) {
     THROW(env, "java/security/NoSuchAlgorithmException", "The algorithm is not supported.");
     goto cleanup;
   }
 
+  // initialize cipher & mode
   int rc = dlsym_EVP_CipherInit_ex(context, getEvpCipher(alg, jKeyLen),  \
-      NULL, (unsigned char *)jKey, (unsigned char *)jIv, mode == ENCRYPT_MODE);
+      NULL, NULL, NULL, mode == ENCRYPT_MODE);
+  if (rc == 0) {
+    THROW(env, "java/lang/InternalError", "Error in EVP_CipherInit_ex.");
+    goto cleanup;
+  }
+
+  // Set IV length if default 12 bytes (96 bits) is not appropriate
+  // Note: set IV length after cipher is initialized, before iv is initialized.
+  if (alg == AES_GCM) {
+    rc = dlsym_EVP_CIPHER_CTX_ctrl(context, EVP_CTRL_GCM_SET_IVLEN, jIvLen, NULL);
+  }
+  rc = dlsym_EVP_CipherInit_ex(context, NULL, NULL, \
+         (unsigned char *)jKey, (unsigned char *)jIv, mode == ENCRYPT_MODE);
   if (rc == 0) {
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherInit_ex.");
     goto cleanup;
@@ -394,20 +446,28 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
     jint input_len, jbyteArray output, jint output_offset, jint max_output_len)
 {
   EVP_CIPHER_CTX *context = CONTEXT(ctx);
-  if (!check_update_max_output_len(context, input_len, max_output_len)) {
+
+  // when provide AAD to EVP cipher, output is NULL.
+  if (output != NULL
+        && !check_update_max_output_len(context, input_len, max_output_len)) {
     THROW(env, "javax/crypto/ShortBufferException",  \
         "Output buffer is not sufficient.");
     return 0;
   }
+
   unsigned char *input_bytes = NULL;
   unsigned char *output_bytes = NULL;
   int output_len = 0;
 
   input_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, input, 0);
-  output_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, output, 0);
-  if (input_bytes == NULL || output_bytes == NULL) {
+
+  // output is NULL when updateAAD
+  if (output != NULL) {
+    output_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, output, 0);
+  }
+  if (input_bytes == NULL || (output != NULL && output_bytes == NULL)) {
     THROW(env, "java/lang/InternalError", "Cannot get buffer address.");
-    goto cleanup;
+    return 0;
   }
 
   int rc = dlsym_EVP_CipherUpdate(context, output_bytes + output_offset, &output_len,  \
@@ -428,6 +488,37 @@ cleanup:
 
   return output_len;
 }
+
+JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updateByteArrayByteBuffer
+    (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray input, jint input_offset,
+    jint input_len, jobject output, jint output_offset, jint max_output_len)
+{
+  EVP_CIPHER_CTX *context = CONTEXT(ctx);
+  if (!check_update_max_output_len(context, input_len, max_output_len)) {
+    THROW(env, "javax/crypto/ShortBufferException",  \
+        "Output buffer is not sufficient.");
+    return 0;
+  }
+  unsigned char *input_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, input, 0);
+  unsigned char *output_bytes = (*env)->GetDirectBufferAddress(env, output);
+  if (input_bytes == NULL || output_bytes == NULL) {
+    THROW(env, "java/lang/InternalError", "Cannot get buffer address.");
+    return 0;
+  }
+  input_bytes = input_bytes + input_offset;
+  output_bytes = output_bytes + output_offset;
+
+  int output_len = 0;
+  if (!dlsym_EVP_CipherUpdate(context, output_bytes, &output_len,  \
+      input_bytes, input_len)) {
+    (*env)->ReleaseByteArrayElements(env, input, (jbyte *) input_bytes, 0);
+    dlsym_EVP_CIPHER_CTX_cleanup(context);
+    THROW(env, "java/lang/InternalError", "Error in EVP_CipherUpdate.");
+    return 0;
+  }
+  return output_len;
+}
+
 
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
 static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
@@ -464,8 +555,14 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
 
   int output_len = 0;
   if (!dlsym_EVP_CipherFinal_ex(context, output_bytes, &output_len)) {
+    // validate tag in GCM mode when decrypt
+    if ((context->cipher->flags & EVP_CIPH_MODE) == EVP_CIPH_GCM_MODE
+        && context->encrypt == DECRYPT_MODE) {
+      THROW(env, "javax/crypto/AEADBadTagException", "Tag mismatch!");
+    } else {
+      THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
+    }
     dlsym_EVP_CIPHER_CTX_cleanup(context);
-    THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
     return 0;
   }
   return output_len;
@@ -493,12 +590,63 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
   (*env)->ReleaseByteArrayElements(env, output, (jbyte *) output_bytes, 0);
 
   if (rc == 0) {
-    dlsym_EVP_CIPHER_CTX_cleanup(context);
+    // validate tag in GCM mode when decrypt
+    if ((context->cipher->flags & EVP_CIPH_MODE) == EVP_CIPH_GCM_MODE
+      && context->encrypt == DECRYPT_MODE) {
+    THROW(env, "javax/crypto/AEADBadTagException", "Tag mismatch!");
+    } else {
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
+    }
+    dlsym_EVP_CIPHER_CTX_cleanup(context);
     return 0;
   }
   return output_len;
 }
+
+JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_ctrl
+    (JNIEnv *env, jclass clazz, jlong ctx, jint type, jint arg, jbyteArray data)
+{
+  EVP_CIPHER_CTX *context = CONTEXT(ctx);
+
+  int rc = 0;
+  void *data_ptr = NULL;
+  if (data != NULL) {
+    data_ptr = (void*) (*env)->GetByteArrayElements(env, data, 0);
+    if (data_ptr == NULL) {
+      THROW(env, "java/lang/InternalError", "Cannot get buffer address.");
+      return 0;
+    }
+  }
+
+  // get/set tag for GCM
+  if (type == EVP_CTRL_GCM_GET_TAG || type == EVP_CTRL_GCM_SET_TAG) {
+    if (arg <= 0 || arg > 16) {
+      THROW(env, "javax/crypto/AEADBadTagException", "TAG_LENGTH_INTERNAL_ERROR");
+      goto exit_;
+    }
+    if (data == NULL) {
+      THROW(env, "javax/crypto/AEADBadTagException", "tag is null");
+      goto exit_;
+    }
+
+    unsigned char *tag = (unsigned char*) data_ptr;
+    rc = dlsym_EVP_CIPHER_CTX_ctrl(context, type, arg, tag);
+    if (!rc) {
+      THROW(env, "javax/crypto/AEADBadTagException", "TAG_SET_ERROR or TAG_RETRIEVE_ERROR");
+      goto exit_;
+    }
+  } else {
+    THROW(env, "java.lang.UnsupportedOperationException", "Not implemented yet!");
+    goto exit_;
+  }
+
+exit_:
+  if (data_ptr != NULL) {
+    (*env)->ReleaseByteArrayElements(env, data, (jbyte *) data_ptr, 0);
+  }
+  return rc;
+}
+
 
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_clean
     (JNIEnv *env, jclass clazz, jlong ctx)
