@@ -17,13 +17,16 @@
  */
 package org.apache.commons.crypto.stream;
 
+import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
+import java.security.spec.AlgorithmParameterSpec;
 
 public class CbcNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() throws IOException {
         transformation = "AES/CBC/NoPadding";
+        algorithmParameterSpec = new IvParameterSpec(super.iv);
     }
 
 }

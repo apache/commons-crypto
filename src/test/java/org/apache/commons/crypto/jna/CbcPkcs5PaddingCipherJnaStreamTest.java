@@ -17,13 +17,17 @@
  */
 package org.apache.commons.crypto.jna;
 
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
+import java.security.spec.AlgorithmParameterSpec;
 
 public class CbcPkcs5PaddingCipherJnaStreamTest extends AbstractCipherJnaStreamTest {
 
     @Override
     public void setUp() throws IOException {
         transformation = "AES/CBC/PKCS5Padding";
+        algorithmParameterSpec = new IvParameterSpec(iv);
     }
 
 }

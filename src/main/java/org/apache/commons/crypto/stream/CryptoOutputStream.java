@@ -31,6 +31,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
@@ -177,7 +178,7 @@ public class CryptoOutputStream extends OutputStream implements
         this.key = key;
         this.params = params;
 
-        if (!(params instanceof IvParameterSpec)) {
+        if (!(params instanceof IvParameterSpec) && !(params instanceof GCMParameterSpec)) {
             // other AlgorithmParameterSpec such as GCMParameterSpec is not
             // supported now.
             throw new IOException("Illegal parameters");

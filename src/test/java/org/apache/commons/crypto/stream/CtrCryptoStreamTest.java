@@ -24,11 +24,14 @@ import java.nio.channels.Channels;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 
+import javax.crypto.spec.IvParameterSpec;
+
 public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() throws IOException {
         transformation = "AES/CTR/NoPadding";
+        algorithmParameterSpec = new IvParameterSpec(super.iv);
     }
 
     @Override

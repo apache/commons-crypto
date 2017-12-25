@@ -17,13 +17,16 @@
  */
 package org.apache.commons.crypto.jna;
 
+import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
+import java.security.spec.AlgorithmParameterSpec;
 
 public class CtrNoPaddingCipherJnaStreamTest extends AbstractCipherJnaStreamTest {
 
     @Override
     public void setUp() throws IOException {
         transformation = "AES/CTR/NoPadding";
+        algorithmParameterSpec = new IvParameterSpec(iv);
     }
 
 }
