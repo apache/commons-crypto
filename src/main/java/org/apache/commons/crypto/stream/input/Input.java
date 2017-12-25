@@ -134,4 +134,5 @@ public interface Input {
      * @throws IOException if an I/O error occurs.
      */
     void close() throws IOException;
+
 }

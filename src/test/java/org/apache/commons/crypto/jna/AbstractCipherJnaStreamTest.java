@@ -18,6 +18,8 @@
 package org.apache.commons.crypto.jna;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.spec.AlgorithmParameterSpec;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.stream.AbstractCipherStreamTest;
@@ -30,7 +32,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
     private static final String CIPHER_OPENSSL_JNA = OpenSslJna.getCipherClass().getName();
 
     @Before
-    public void init() {
+    public void init() throws IOException{
         Assume.assumeTrue(OpenSslJna.isEnabled());
     }
 
