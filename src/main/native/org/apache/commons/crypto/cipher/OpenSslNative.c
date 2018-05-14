@@ -32,8 +32,12 @@
 #ifdef UNIX
 static EVP_CIPHER_CTX * (*dlsym_EVP_CIPHER_CTX_new)(void);
 static void (*dlsym_EVP_CIPHER_CTX_free)(EVP_CIPHER_CTX *);
+#if OPENSSL_API_COMPAT < 0x10100000L
 static int (*dlsym_EVP_CIPHER_CTX_cleanup)(EVP_CIPHER_CTX *);
 static void (*dlsym_EVP_CIPHER_CTX_init)(EVP_CIPHER_CTX *);
+#else
+static void (*dlsym_EVP_CIPHER_CTX_reset)(EVP_CIPHER_CTX *);
+#endif
 static int (*dlsym_EVP_CIPHER_CTX_set_padding)(EVP_CIPHER_CTX *, int);
 static int (*dlsym_EVP_CIPHER_CTX_ctrl)(EVP_CIPHER_CTX *, int, int, void *);
 static int (*dlsym_EVP_CipherInit_ex)(EVP_CIPHER_CTX *, const EVP_CIPHER *,  \
@@ -168,10 +172,15 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
                       "EVP_CIPHER_CTX_new");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_free, env, openssl,  \
                       "EVP_CIPHER_CTX_free");
+#if OPENSSL_API_COMPAT < 0x10100000L
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_cleanup, env, openssl,  \
                       "EVP_CIPHER_CTX_cleanup");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_init, env, openssl,  \
                       "EVP_CIPHER_CTX_init");
+#else
+  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_reset, env, openssl,  \
+                      "EVP_CIPHER_CTX_reset");
+#endif
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_set_padding, env, openssl,  \
                       "EVP_CIPHER_CTX_set_padding");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_ctrl, env, openssl,  \
@@ -372,7 +381,11 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
 cleanup:
   if (result == 0 && context != NULL) {
     if (CONTEXT(ctx) != NULL) {
+#if OPENSSL_API_COMPAT < 0x10100000L
       dlsym_EVP_CIPHER_CTX_cleanup(context);
+#else
+      dlsym_EVP_CIPHER_CTX_reset(context);
+#endif
     } else {
       dlsym_EVP_CIPHER_CTX_free(context);
     }
@@ -391,14 +404,25 @@ cleanup:
 static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
     int max_output_len)
 {
-  if (context->flags & EVP_CIPH_NO_PADDING) {
+#if OPENSSL_API_COMPAT < 0x10100000L
+  if (context->flags & EVP_CIPH_NO_PADDING)
+#else
+  if (EVP_CIPHER_CTX_test_flags(context, EVP_CIPH_NO_PADDING)) 
+#endif
+   {
     if (max_output_len >= input_len) {
       return 1;
     }
     return 0;
   } else {
+#if OPENSSL_API_COMPAT < 0x10100000L
     int b = context->cipher->block_size;
-    if (context->encrypt) {
+    if (context->encrypt)
+#else
+    int b = EVP_CIPHER_CTX_block_size(context);
+    if (EVP_CIPHER_CTX_encrypting(context))
+#endif
+     {
       if (max_output_len >= input_len + b - 1) {
         return 1;
       }
@@ -434,7 +458,11 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
   int output_len = 0;
   if (!dlsym_EVP_CipherUpdate(context, output_bytes, &output_len,  \
       input_bytes, input_len)) {
+#if OPENSSL_API_COMPAT < 0x10100000L
     dlsym_EVP_CIPHER_CTX_cleanup(context);
+#else
+    dlsym_EVP_CIPHER_CTX_reset(context);
+#endif
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherUpdate.");
     return 0;
   }
@@ -473,7 +501,11 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
   int rc = dlsym_EVP_CipherUpdate(context, output_bytes + output_offset, &output_len,  \
       input_bytes + input_offset, input_len);
   if (rc == 0) {
+#if OPENSSL_API_COMPAT < 0x10100000L
     dlsym_EVP_CIPHER_CTX_cleanup(context);
+#else
+    dlsym_EVP_CIPHER_CTX_reset(context);
+#endif
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherUpdate.");
     output_len = 0;
   }
@@ -512,7 +544,11 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
   if (!dlsym_EVP_CipherUpdate(context, output_bytes, &output_len,  \
       input_bytes, input_len)) {
     (*env)->ReleaseByteArrayElements(env, input, (jbyte *) input_bytes, 0);
+#if OPENSSL_API_COMPAT < 0x10100000L
     dlsym_EVP_CIPHER_CTX_cleanup(context);
+#else
+    dlsym_EVP_CIPHER_CTX_reset(context);
+#endif
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherUpdate.");
     return 0;
   }
@@ -524,10 +560,19 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
 static int check_doFinal_max_output_len(EVP_CIPHER_CTX *context,
     int max_output_len)
 {
-  if (context->flags & EVP_CIPH_NO_PADDING) {
+#if OPENSSL_API_COMPAT < 0x10100000L
+  if (context->flags & EVP_CIPH_NO_PADDING)
+#else
+  if (EVP_CIPHER_CTX_test_flags(context,EVP_CIPH_NO_PADDING))
+#endif 
+   {
     return 1;
   } else {
+#if OPENSSL_API_COMPAT < 0x10100000L
     int b = context->cipher->block_size;
+#else
+    int b = EVP_CIPHER_CTX_block_size(context);
+#endif
     if (max_output_len >= b) {
       return 1;
     }
@@ -556,13 +601,24 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
   int output_len = 0;
   if (!dlsym_EVP_CipherFinal_ex(context, output_bytes, &output_len)) {
     // validate tag in GCM mode when decrypt
+#if OPENSSL_API_COMPAT < 0x10100000L
     if ((context->cipher->flags & EVP_CIPH_MODE) == EVP_CIPH_GCM_MODE
-        && context->encrypt == DECRYPT_MODE) {
+        && context->encrypt == DECRYPT_MODE)
+#else
+    if (((EVP_CIPHER_flags(EVP_CIPHER_CTX_cipher(context)) & EVP_CIPH_MODE) 
+        == EVP_CIPH_GCM_MODE) && 
+       (EVP_CIPHER_CTX_encrypting(context) ==  DECRYPT_MODE))
+#endif 
+    {
       THROW(env, "javax/crypto/AEADBadTagException", "Tag mismatch!");
     } else {
       THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
     }
+#if OPENSSL_API_COMPAT < 0x10100000L
     dlsym_EVP_CIPHER_CTX_cleanup(context);
+#else
+    dlsym_EVP_CIPHER_CTX_reset(context);
+#endif
     return 0;
   }
   return output_len;
@@ -591,13 +647,23 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
 
   if (rc == 0) {
     // validate tag in GCM mode when decrypt
+#if OPENSSL_API_COMPAT < 0x10100000L
     if ((context->cipher->flags & EVP_CIPH_MODE) == EVP_CIPH_GCM_MODE
-      && context->encrypt == DECRYPT_MODE) {
+      && context->encrypt == DECRYPT_MODE)
+#else
+    if ((EVP_CIPHER_flags(EVP_CIPHER_CTX_cipher(context)) & EVP_CIPH_MODE) == EVP_CIPH_GCM_MODE
+      && EVP_CIPHER_CTX_encrypting(context) == DECRYPT_MODE)
+#endif 
+    {
     THROW(env, "javax/crypto/AEADBadTagException", "Tag mismatch!");
     } else {
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
     }
+#if OPENSSL_API_COMPAT < 0x10100000L
     dlsym_EVP_CIPHER_CTX_cleanup(context);
+#else
+    dlsym_EVP_CIPHER_CTX_reset(context);
+#endif
     return 0;
   }
   return output_len;

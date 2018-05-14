@@ -17,7 +17,6 @@
  */
 
 package org.apache.commons.crypto.jna;
-
 import java.nio.ByteBuffer;
 
 import com.sun.jna.Native;
@@ -36,11 +35,10 @@ class OpenSslNativeJna {
     static final Throwable INIT_ERROR;
 
     static {
-        boolean ok = false;
-        Throwable thrown = null;
-        try {
-            Native.register("crypto");
-            ERR_load_crypto_strings();
+	     boolean ok = false;
+	     Throwable thrown = null;
+	     try {
+		    Native.register("crypto");
             ok = true;
         } catch (Exception e) {
             thrown = e;
@@ -57,7 +55,7 @@ class OpenSslNativeJna {
      * @return OPENSSL_VERSION_NUMBER which is a numeric release version
      * * identifier
      */
-    public static native NativeLong SSLeay();
+    public static native NativeLong OpenSSL_version_num();
 
     /**
      * Retrieves version/build information about OpenSSL library.
@@ -66,13 +64,10 @@ class OpenSslNativeJna {
      * @return A pointer to a constant string describing the version of the
      * OpenSSL library or giving information about the library build.
      */
-    public static native String SSLeay_version(int type);
-
-    /**
+    public static native String OpenSSL_version(int type);
+     /**
      * Registers the error strings for all libcrypto functions.
      */
-    public static native void ERR_load_crypto_strings();
-
     /**
      * @return the earliest error code from the thread's error queue without
      * modifying it.
@@ -102,12 +97,6 @@ class OpenSslNativeJna {
      */
     public static native PointerByReference EVP_CIPHER_CTX_new();
 
-
-    /**
-     * EVP_CIPHER_CTX_init() remains as an alias for EVP_CIPHER_CTX_reset
-     * @param p cipher context
-     */
-    public static native void EVP_CIPHER_CTX_init(PointerByReference p);
 
     /**
      * Enables or disables padding
@@ -194,21 +183,18 @@ class OpenSslNativeJna {
      * * memory associate with it.
      * @param c openssl evp cipher
      */
-    public static native void EVP_CIPHER_CTX_cleanup(PointerByReference c);
-
+    public static native void EVP_CIPHER_CTX_reset(PointerByReference c);
     //Random generator
     /**
      * OpenSSL uses for random number generation
      * @return pointers to the respective methods
      */
     public static native PointerByReference RAND_get_rand_method();
-
     /**
      * OpenSSL uses for random number generation.
      * @return pointers to the respective methods
      */
-    public static native PointerByReference RAND_SSLeay();
-
+    public static native PointerByReference RAND_OpenSSL();
     /**
      * Generates random data
      * @param buf the bytes for generated random.
@@ -233,17 +219,15 @@ class OpenSslNativeJna {
     public static native int ENGINE_free(PointerByReference e);
 
     /**
-     * Cleanups before program exit, it will avoid memory leaks.
-     * @return 0 on success, 1 otherwise.
-     */
-    public static native int ENGINE_cleanup();
-
-    /**
      * Obtains a functional reference from an existing structural reference.
      * @param e engine reference
      * @return zero if the ENGINE was not already operational and couldn't be successfully initialised
      */
     public static native int ENGINE_init(PointerByReference e);
+     /**
+     * Cleanups before program exit, it will avoid memory leaks.
+     * @return 0 on success, 1 otherwise.
+     */
 
     /**
      * Sets the engine as the default for random number generation.
@@ -260,10 +244,6 @@ class OpenSslNativeJna {
      */
     public static native PointerByReference ENGINE_by_id(String id);
 
-    /**
-     * Initializes the engine.
-     */
-    public static native void ENGINE_load_rdrand();
 
     //TODO callback multithreading
     /*public interface Id_function_cb extends Callback {

@@ -300,7 +300,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     @Override
     public void close() {
         if (context != null) {
-            OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
+	     OpenSslNativeJna.EVP_CIPHER_CTX_reset(context);
             // Freeing the context multiple times causes a JVM crash
             // A work-round is to only free it at finalize time
             // TODO is that sufficient?
@@ -317,7 +317,7 @@ class OpenSslJnaCipher implements CryptoCipher {
             String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
             
             if (context != null) {
-                OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
+                OpenSslNativeJna.EVP_CIPHER_CTX_reset(context);
             }
             throw new RuntimeException("return code "+retVal+" from OpenSSL. Err code is "+err+": "+errdesc);
         }
