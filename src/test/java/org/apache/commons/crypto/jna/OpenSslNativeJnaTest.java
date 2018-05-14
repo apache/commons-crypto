@@ -25,7 +25,7 @@ public class OpenSslNativeJnaTest {
     @Test
     public void test() {
         if (OpenSslJna.isEnabled()) {
-            System.out.println("** INFO: JNA is using: " + OpenSslNativeJna.SSLeay_version(0));
+            System.out.println("** INFO: JNA is using: " + OpenSslNativeJna.OpenSSL_version(0));
         } else {
             System.out.println("** WARN: JNA could not be enabled: " + OpenSslJna.initialisationError().getMessage());
         }

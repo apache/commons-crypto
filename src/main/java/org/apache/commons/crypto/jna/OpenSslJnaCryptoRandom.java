@@ -65,7 +65,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
 
         boolean rdrandLoaded = false;
         try {
-            OpenSslNativeJna.ENGINE_load_rdrand();
+	    //OpenSslNativeJna.ENGINE_load_rdrand(); /* Not supported in openssl-1.1.x   */
             rdrandEngine = OpenSslNativeJna.ENGINE_by_id("rdrand");
             int ENGINE_METHOD_RAND = 0x0008;
             if(rdrandEngine != null) {
@@ -101,8 +101,8 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
         synchronized (OpenSslJnaCryptoRandom.class) {
             //this method is synchronized for now
             //to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
-            
-            if(rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
+            if(rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_OpenSSL())) 
+	    {
                 close();
                 throw new RuntimeException("rdrand should be used but default is detected");
             }
@@ -158,8 +158,6 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     @Override
     public void close() {
         closeRdrandEngine();
-        OpenSslNativeJna.ENGINE_cleanup();
-        
         //cleanup locks
         //OpenSslNativeJna.CRYPTO_set_locking_callback(null);
         //LOCK.unlock();
