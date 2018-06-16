@@ -469,7 +469,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      *
      * @param buf The buffer into which bytes are to be transferred.
      * @param offset the start offset in the data.
-     * @param len the the maximum number of decrypted data bytes to read.
+     * @param len the maximum number of decrypted data bytes to read.
      * @throws IOException if an I/O error occurs.
      */
     protected void decrypt(ByteBuffer buf, int offset, int len)
