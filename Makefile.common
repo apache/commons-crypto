@@ -36,7 +36,7 @@ OPENSSL_VERSION_MINOR :=$(shell openssl version |cut -d " " -f2|cut -d "." -f2 )
 ifneq ($(and $(OPENSSL_VERSION_MAJOR),$(OPENSSL_VERSION_MINOR),1),)
 OPENSSL_VERSION :=0x10100000L
 else
-OPENSSL_VERSION :=0x10000000L
+$(error Set OPENSSL VERSION 1.1.0 or above in environment variable)
 endif
 JAVA  := "$(JAVA_HOME)/bin/java"
 JAVAC := "$(JAVA_HOME)/bin/javac"
