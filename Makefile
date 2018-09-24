@@ -35,7 +35,29 @@ endif
 NATIVE_TARGET_DIR:=$(TARGET)/classes/org/apache/commons/crypto/native/$(OS_NAME)/$(OS_ARCH)
 NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
 
-all: $(NATIVE_DLL)
+#all source files having #ifdef flag
+SOURCES_FILES := $(shell find src/main -name '*.xjava' | sort -r)
+TEST_FILES := $(shell find src/test -name '*.xjava')
+#create java file corresponding to .xjava file
+XJAVA_SRC_OBJS  := $(SOURCES_FILES:.xjava=.java)
+XJAVA_TEST_OBJS := $(TEST_FILES:.xjava=.java)
+
+#create new class file for the same
+JAVA_SRC_OBJ :=$(XJAVA_SRC_OBJS:.java=.class)
+JAVA_TEST_OBJ :=$(XJAVA_TEST_OBJS:.java=.class)
+
+%.java:%.xjava
+	@$(CPP) -D$(DEFINES) $< $@
+
+%.class : %.java
+	@$(JAVAC) -d $(TARGET)/classes -classpath $(shell pwd)/target/classes:$(HOME)/.m2/repository/net/java/dev/jna/jna/4.4.0/jna-4.4.0.jar: -sourcepath $(shell pwd)/src/main/java:$(shell pwd)/target/generated-sources/annotations: -s $(shell pwd)/target/generated-sources/annotations -g -nowarn -target 1.7 -source 1.7 -encoding iso-8859-1 $<
+
+.PRECIOUS: %.java
+
+all: remove_javafiles $(JAVA_SRC_OBJ) $(XJAVA_TEST_OBJS) $(NATIVE_DLL)
+remove_javafiles:
+	@rm -f $(XJAVA_SRC_OBJS)
+	@rm -f $(XJAVA_TEST_OBJS)
 
 $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h: $(TARGET)/classes/org/apache/commons/crypto/cipher/OpenSslNative.class
 	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpenSslNative
@@ -48,15 +70,15 @@ $(TARGET)/jni-classes/org/apache/commons/crypto/OpenSslInfoNative.h: $(TARGET)/c
 
 $(COMMONS_CRYPTO_OUT)/OpenSslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpenSslNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -D$(DEFINES) -c $< -o $@
 
 $(COMMONS_CRYPTO_OUT)/OpenSslCryptoRandomNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.h
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -D$(DEFINES) -c $< -o $@
 
 $(COMMONS_CRYPTO_OUT)/OpenSslInfoNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/OpenSslInfoNative.c $(TARGET)/jni-classes/org/apache/commons/crypto/OpenSslInfoNative.h
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -DVERSION='"$(VERSION)"' -DPROJECT_NAME='"$(PROJECT_NAME)"' -I"$(TARGET)/jni-classes/org/apache/commons/crypto" -c $< -o $@
+	$(CC) $(CFLAGS) -D$(DEFINES) -DVERSION='"$(VERSION)"' -DPROJECT_NAME='"$(PROJECT_NAME)"' -I"$(TARGET)/jni-classes/org/apache/commons/crypto" -c $< -o $@
 
 $(COMMONS_CRYPTO_OUT)/$(LIBNAME): $(COMMONS_CRYPTO_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $+ $(LINKFLAGS)

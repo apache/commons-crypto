@@ -30,7 +30,6 @@
 #ifdef WINDOWS
 #include <windows.h>
 #endif
-
 // export the native interfaces
 #ifdef JNIEXPORT
 #undef JNIEXPORT
@@ -39,8 +38,13 @@
 #include "OpenSslInfoNative.h"
 
 #ifdef UNIX
+#ifdef OPENSSL_VERSION_1_0
 static unsigned long (*dlsym_SSLeay) (void);
 static char * (*dlsym_SSLeay_version) (int);
+#else
+static unsigned long (*dlsym_OpenSSL_version_num) (void);
+static char * (*dlsym_OpenSSL_version) (int);
+#endif
 static void *openssl;
 #endif
 
@@ -62,8 +66,13 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
 {
 #ifdef UNIX
   dlerror();  // Clear any existing error
+#ifdef OPENSSL_VERSION_1_0
   LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay, env, openssl, "SSLeay");
   LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay_version, env, openssl, "SSLeay_version");
+#else
+  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
+  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num");
+#endif
 #endif
 
 #ifdef WINDOWS
@@ -105,7 +114,11 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_SSLea
         return NULL;
     }
 
+#ifdef OPENSSL_VERSION_1_0
     jstring answer = (*env)->NewStringUTF(env,dlsym_SSLeay_version(type));
+#else
+    jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
+#endif
     return answer;
 }
 
@@ -115,7 +128,11 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_SSLeay
     if (!load_library(env)) {
         return 0;
     }
+#ifdef OPENSSL_VERSION_1_0
     return dlsym_SSLeay();
+#else
+    return dlsym_OpenSSL_version_num();
+#endif
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_NativeVersion

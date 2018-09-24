@@ -15,13 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.crypto.jna;
+
 import org.junit.Test;
+
 public class OpenSslNativeJnaTest {
+
     @Test
     public void test() {
         if (OpenSslJna.isEnabled()) {
-   System.out.println("** INFO: JNA is using: " + OpenSslNativeJna.OpenSSL_version(0));
+#ifdef OPENSSL_VERSION_1_0
+            System.out.println("** INFO: JNA is using: " + OpenSslNativeJna.SSLeay_version(0));
+#else
+			System.out.println("** INFO: JNA is using: " + OpenSslNativeJna.OpenSSL_version(0));
+#endif
         } else {
             System.out.println("** WARN: JNA could not be enabled: " + OpenSslJna.initialisationError().getMessage());
         }
