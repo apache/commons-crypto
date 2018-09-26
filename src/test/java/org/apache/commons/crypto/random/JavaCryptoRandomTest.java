@@ -20,7 +20,7 @@ package org.apache.commons.crypto.random;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class JavaCryptoRandomTest extends AbstractRandomTest {
 
@@ -31,10 +31,9 @@ public class JavaCryptoRandomTest extends AbstractRandomTest {
                 CryptoRandomFactory.CLASSES_KEY,
                 JavaCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        if (!(random instanceof JavaCryptoRandom)) {
-            fail("The CryptoRandom should be: "
-                    + JavaCryptoRandom.class.getName());
-        }
+        assertTrue(
+                "The CryptoRandom should be: " + JavaCryptoRandom.class.getName(),
+                random instanceof JavaCryptoRandom);
         return random;
     }
 
