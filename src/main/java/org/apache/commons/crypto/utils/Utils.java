@@ -89,7 +89,7 @@ public final class Utils {
 
     /**
      * Gets a properties instance that defaults to the System Properties
-     * plus any other properties found in the file 
+     * plus any other properties found in the file
      * {@link #SYSTEM_PROPERTIES_FILE}
      * @return a Properties instance with defaults
      */
@@ -183,8 +183,20 @@ public final class Utils {
      * @throws IllegalStateException if expression is false.
      */
     public static void checkState(boolean expression) {
+      checkState(expression, null);
+    }
+
+    /**
+     * Ensures the truth of an expression involving the state of the calling
+     * instance, but not involving any parameters to the calling method.
+     *
+     * @param expression a boolean expression.
+     * @param message Error message for the exception when the expression is false.
+     * @throws IllegalStateException if expression is false.
+     */
+    public static void checkState(boolean expression, String message) {
         if (!expression) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(message);
         }
     }
 
