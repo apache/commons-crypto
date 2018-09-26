@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<differences>
+  <difference>
+    <!--
+      Ignore added methods to CryptoCipher interface. All implementations are expected to be within
+      commons-crypto itself.
+    -->
+    <className>org/apache/commons/crypto/cipher/CryptoCipher</className>
+    <differenceType>7012</differenceType>
+    <method>*</method>
+  </difference>
+</differences>

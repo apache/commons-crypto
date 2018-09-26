@@ -29,7 +29,7 @@ script:
   - jdk_switcher use oraclejdk7
   - mvn verify site
   - jdk_switcher use oraclejdk8
-  - mvn verify site
+  - mvn verify clirr:check site
 
 after_success:
   - mvn clean test jacoco:report coveralls:report
