@@ -19,7 +19,7 @@ language: java
 matrix:
   include:
   - name: "Java 7"
-    jdk: oraclejdk7
+    jdk: openjdk7
   - name: "Java 8"
     jdk: oraclejdk8
     before_install:
