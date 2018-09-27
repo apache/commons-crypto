@@ -260,6 +260,12 @@ The following provides more details on the included cryptographic software:
       </properties>
     </profile>
     <profile>
+      <id>mac64</id>
+      <properties>
+        <target.name>mac64</target.name>
+      </properties>
+    </profile>
+    <profile>
       <id>linux32</id>
       <properties>
         <target.name>linux32</target.name>
