@@ -312,13 +312,6 @@ The following provides more details on the included cryptographic software:
             <artifactId>coveralls-maven-plugin</artifactId>
             <version>3.1.0</version>
           </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>clirr-maven-plugin</artifactId>
-            <configuration>
-              <ignoredDifferencesFile>${basedir}/clirr-excludes.xml</ignoredDifferencesFile>
-            </configuration>
-          </plugin>
         </plugins>
       </build>
       <reporting>
