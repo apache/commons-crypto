@@ -26,6 +26,7 @@ matrix:
         - mvn clean test jacoco:report coveralls:report
     - name: "OS X / Java 8"
       os: osx
+      osx_image: xcode9.3
 
 jdk:
   - oraclejdk8
