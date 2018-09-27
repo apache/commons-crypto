@@ -16,8 +16,8 @@
 <differences>
   <difference>
     <!--
-      Ignore added methods to CryptoCipher interface. All implementations are expected to be within
-      commons-crypto itself.
+      Ignore added methods to CryptoCipher interface. clirr does not detect default methods
+      introduced in Java 8.
     -->
     <className>org/apache/commons/crypto/cipher/CryptoCipher</className>
     <differenceType>7012</differenceType>
