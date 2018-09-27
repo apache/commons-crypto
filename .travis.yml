@@ -16,20 +16,20 @@
 #
 language: java
 
-jdk:
-  - oraclejdk7
-  - oraclejdk8
+matrix:
+  include:
+  - name: "Java 7"
+    jdk: oraclejdk7
+  - name: "Java 8"
+    jdk: oraclejdk8
 
 before_install:
   - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d `jdk_switcher home oraclejdk8`/jre/lib/security && rm /tmp/policy.zip"
 
 script:
   - mvn apache-rat:check
-  - mvn clean test package
-  - jdk_switcher use oraclejdk7
-  - mvn verify site
-  - jdk_switcher use oraclejdk8
-  - mvn verify clirr:check site
+  - mvn site
+  - mvn clirr:check
 
 after_success:
   - mvn clean test jacoco:report coveralls:report
