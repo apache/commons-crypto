@@ -25,6 +25,7 @@ import java.util.Properties;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class OsCryptoRandomTest extends AbstractRandomTest {
@@ -38,15 +39,14 @@ public class OsCryptoRandomTest extends AbstractRandomTest {
                 CryptoRandomFactory.CLASSES_KEY,
                 OsCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        if (!(random instanceof OsCryptoRandom)) {
-            fail("The CryptoRandom should be: "
-                    + OsCryptoRandom.class.getName());
-        }
+        assertTrue(
+                "The CryptoRandom should be: " + OsCryptoRandom.class.getName(),
+                random instanceof OsCryptoRandom);
         return random;
     }
 
     @Test
-    public void testInvalidRansom() {
+    public void testInvalidRandom() {
         Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
         // Invalid device

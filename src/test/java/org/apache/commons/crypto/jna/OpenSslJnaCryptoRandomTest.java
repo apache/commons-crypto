@@ -27,7 +27,7 @@ import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.junit.Assume;
 import org.junit.Before;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
 
@@ -43,10 +43,9 @@ public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
                 CryptoRandomFactory.CLASSES_KEY,
                 OpenSslJnaCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        if (!(random instanceof OpenSslJnaCryptoRandom)) {
-            fail("The CryptoRandom should be: "
-                    + OpenSslJnaCryptoRandom.class.getName());
-        }
+        assertTrue(
+                "The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName(),
+                random instanceof OpenSslJnaCryptoRandom);
         return random;
     }
 

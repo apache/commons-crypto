@@ -268,7 +268,7 @@ public class PositionedCryptoInputStreamTest {
         byte[] bytes = new byte[length];
         try {
             in.readFully(position, bytes, 0, length);
-            Assert.fail("Excepted EOFException.");
+            Assert.fail("Expected IOException.");
         } catch (IOException ioe) {
             // excepted exception
         }
