@@ -42,45 +42,16 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         cipherClass = OPENSSL_CIPHER_CLASSNAME;
     }
 
-    @Test(expected = NoSuchAlgorithmException.class, timeout = 120000)
-    public void testInvalidAlgorithm() throws Exception {
-        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-
-        try {
-            OpenSsl.getInstance("AES2/CTR/NoPadding");
-            Assert.fail("Should specify correct algorithm.");
-        } catch (NoSuchAlgorithmException e) {
-            Assert.assertTrue(e.getMessage().contains(
-                    "Doesn't support algorithm: AES2 and mode: CTR"));
-            throw e;
-        }
-    }
-
     @Test(expected = NoSuchPaddingException.class, timeout = 120000)
     public void testInvalidPadding() throws Exception {
         Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-
-        try {
-            OpenSsl.getInstance("AES/CTR/NoPadding2");
-            Assert.fail("Should specify correct padding.");
-        } catch (NoSuchPaddingException e) {
-            Assert.assertTrue(e.getMessage().contains(
-                    "Doesn't support padding: NoPadding2"));
-            throw e;
-        }
+        OpenSsl.getInstance("AES/CTR/NoPadding2");
     }
 
     @Test(expected = NoSuchAlgorithmException.class, timeout = 120000)
     public void testInvalidMode() throws Exception {
         Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-        try {
-            OpenSsl.getInstance("AES/CTR2/NoPadding");
-            Assert.fail("java.security.NoSuchAlgorithmException should be thrown.");
-        } catch (NoSuchAlgorithmException e) {
-            Assert.assertTrue(e.getMessage().contains(
-                    "Doesn't support algorithm: AES and mode: CTR2"));
-            throw e;
-        }
+        OpenSsl.getInstance("AES/CTR2/NoPadding");
     }
 
     @Test(timeout = 120000)
@@ -98,7 +69,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
         try {
             cipher.update(input, output);
-            Assert.fail("Input and output buffer should be direct buffer.");
+            Assert.fail("Should have failed to accept non-direct buffers.");
         } catch (IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().contains(
                     "Direct buffers are required"));
@@ -109,8 +80,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         output = ByteBuffer.allocateDirect(1000);
         try {
             cipher.update(input, output);
-            Assert.fail("Output buffer length should be sufficient "
-                    + "to store output data");
+            Assert.fail("Failed to check for output buffer size.");
         } catch (ShortBufferException e) {
             Assert.assertTrue(e.getMessage().contains(
                     "Output buffer is not sufficient"));
@@ -132,7 +102,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
         try {
             cipher.doFinal(input, output);
-            Assert.fail("Output buffer should be direct buffer.");
+            Assert.fail("Should have failed to accept non-direct buffers.");
         } catch (IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().contains(
                     "Direct buffer is required"));
@@ -148,13 +118,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
         final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
-        try {
-            cipher.init(OpenSsl.ENCRYPT_MODE, invalidKey, new IvParameterSpec(IV));
-            Assert.fail("java.security.InvalidKeyException should be thrown.");
-        } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Invalid AES key length: " + invalidKey.length + " bytes"));
-            throw e;
-        }
+        cipher.init(OpenSsl.ENCRYPT_MODE, invalidKey, new IvParameterSpec(IV));
     }
 
     @Test(expected = InvalidAlgorithmParameterException.class, timeout = 120000)
@@ -166,13 +130,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
         final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
-        try {
-            cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(invalidIV));
-            Assert.fail("java.security.InvalidAlgorithmParameterException should be thrown.");
-        } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Wrong IV length: must be 16 bytes long"));
-            throw e;
-        }
+        cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(invalidIV));
     }
 
 }

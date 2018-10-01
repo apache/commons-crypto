@@ -23,7 +23,7 @@ import java.util.Properties;
 import org.apache.commons.crypto.Crypto;
 import org.junit.Assume;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class OpenSslCryptoRandomTest extends AbstractRandomTest {
 
@@ -35,10 +35,9 @@ public class OpenSslCryptoRandomTest extends AbstractRandomTest {
                 CryptoRandomFactory.CLASSES_KEY,
                 OpenSslCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        if (!(random instanceof OpenSslCryptoRandom)) {
-            fail("The CryptoRandom should be: "
-                    + OpenSslCryptoRandom.class.getName());
-        }
+        assertTrue(
+                "The CryptoRandom should be: " + OpenSslCryptoRandom.class.getName(),
+                random instanceof OpenSslCryptoRandom);
         return random;
     }
 
