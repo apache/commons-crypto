@@ -25,6 +25,7 @@ before_install:
 script:
   - mvn apache-rat:check
   - mvn site
+  - mvn clirr:check
 
 after_success:
   - mvn clean test jacoco:report coveralls:report
