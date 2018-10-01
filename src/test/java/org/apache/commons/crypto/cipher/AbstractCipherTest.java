@@ -20,7 +20,6 @@ package org.apache.commons.crypto.cipher;
 import static org.junit.Assert.assertNotNull;
 
 import java.nio.ByteBuffer;
-import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
@@ -114,7 +113,7 @@ public abstract class AbstractCipherTest {
     }
 
     @Test
-    public void cryptoTest() throws GeneralSecurityException {
+    public void cryptoTest() throws Exception {
         for (String tran : transformations) {
             /** uses the small data set in {@link TestData} */
             cipherTests = TestData.getTestData(tran);
@@ -150,27 +149,17 @@ public abstract class AbstractCipherTest {
 
     private void byteBufferTest(String transformation,
             byte[] key, byte[] iv, ByteBuffer input, ByteBuffer output)
-            throws GeneralSecurityException {
+            throws Exception {
         ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
         ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
-        CryptoCipher enc, dec;
 
-        enc = getCipher(transformation);
-        dec = getCipher(transformation);
+        CryptoCipher enc = getCipher(transformation);
+        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"),
+                new IvParameterSpec(iv));
 
-        try {
-            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"),
-                    new IvParameterSpec(iv));
-        } catch (Exception e) {
-            Assert.fail("AES failed initialisation - " + e.toString());
-        }
-
-        try {
-            dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"),
-                    new IvParameterSpec(iv));
-        } catch (Exception e) {
-            Assert.fail("AES failed initialisation - " + e.toString());
-        }
+        CryptoCipher dec = getCipher(transformation);
+        dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"),
+                new IvParameterSpec(iv));
 
         //
         // encryption pass
@@ -206,7 +195,7 @@ public abstract class AbstractCipherTest {
     /** test byte array whose data is planned in {@link TestData} */
     private void byteArrayTest(String transformation, byte[] key,
             byte[] iv, byte[] input, byte[] output)
-            throws GeneralSecurityException {
+            throws Exception {
         resetCipher(transformation, key, iv);
         int blockSize = enc.getBlockSize();
 
@@ -227,7 +216,7 @@ public abstract class AbstractCipherTest {
 
     /** test byte array whose data is randomly generated */
     private void byteArrayTest(String transformation, byte[] key,
-            byte[] iv) throws GeneralSecurityException {
+            byte[] iv) throws Exception {
         int blockSize = enc.getBlockSize();
 
         // AES_CBC_NOPADDING only accepts data whose size is the multiple of
@@ -283,34 +272,20 @@ public abstract class AbstractCipherTest {
         }
     }
 
-    private void resetCipher(String transformation, byte[] key,
-            byte[] iv) {
+    private void resetCipher(String transformation, byte[] key, byte[] iv) throws Exception {
         enc = getCipher(transformation);
         dec = getCipher(transformation);
 
-        try {
-            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"),
-                    new IvParameterSpec(iv));
-        } catch (Exception e) {
-            Assert.fail("AES failed initialisation - " + e.toString());
-        }
+        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"),
+                new IvParameterSpec(iv));
 
-        try {
-            dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"),
-                    new IvParameterSpec(iv));
-        } catch (Exception e) {
-            Assert.fail("AES failed initialisation - " + e.toString());
-        }
+        dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"),
+                new IvParameterSpec(iv));
     }
 
-    private CryptoCipher getCipher(String transformation) {
-        try {
-            return (CryptoCipher) ReflectionUtils.newInstance(
-                    ReflectionUtils.getClassByName(cipherClass), props,
-                    transformation);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
+    private CryptoCipher getCipher(String transformation) throws Exception {
+        return (CryptoCipher) ReflectionUtils.newInstance(
+                ReflectionUtils.getClassByName(cipherClass), props,
+                transformation);
     }
 }
