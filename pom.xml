@@ -18,7 +18,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>43</version>
+    <version>47</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
@@ -124,8 +124,8 @@ The following provides more details on the included cryptographic software:
     <commons.javadoc.java.link>http://download.oracle.com/javase/7/docs/api/</commons.javadoc.java.link>
     <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
     <commons-build-plugin.version>1.6</commons-build-plugin.version>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
 
     <!--
         Encoding of Java source files: ensures that the compiler and
@@ -260,6 +260,12 @@ The following provides more details on the included cryptographic software:
       </properties>
     </profile>
     <profile>
+      <id>mac64</id>
+      <properties>
+        <target.name>mac64</target.name>
+      </properties>
+    </profile>
+    <profile>
       <id>linux32</id>
       <properties>
         <target.name>linux32</target.name>
@@ -311,6 +317,13 @@ The following provides more details on the included cryptographic software:
             <groupId>org.eluder.coveralls</groupId>
             <artifactId>coveralls-maven-plugin</artifactId>
             <version>3.1.0</version>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>clirr-maven-plugin</artifactId>
+            <configuration>
+              <ignoredDifferencesFile>${basedir}/clirr-excludes.xml</ignoredDifferencesFile>
+            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -634,6 +647,13 @@ The following provides more details on the included cryptographic software:
             <exclude>.idea/**</exclude>
             <exclude>**/build/**</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>javancss-maven-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
         </configuration>
       </plugin>
     </plugins>

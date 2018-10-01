@@ -34,7 +34,7 @@ import javax.crypto.ShortBufferException;
  * Note that implementations must provide a constructor that has 2 parameters:
  * <br>
  * a Properties instance and a String (transformation)
- * 
+ *
  */
 public interface CryptoCipher extends Closeable {
 
@@ -60,7 +60,7 @@ public interface CryptoCipher extends Closeable {
     /**
      * Initializes the cipher with mode, key and iv.
      *
-     * @param mode {@link javax.crypto.Cipher#ENCRYPT_MODE} or 
+     * @param mode {@link javax.crypto.Cipher#ENCRYPT_MODE} or
      *             {@link javax.crypto.Cipher#DECRYPT_MODE}
      * @param key crypto key for the cipher
      * @param params the algorithm parameters
@@ -177,8 +177,10 @@ public interface CryptoCipher extends Closeable {
      * has not been overridden by an implementation
      *
      */
-    void updateAAD(byte[] aad)
-            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException;
+    default void updateAAD(byte[] aad)
+            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
+      throw new UnsupportedOperationException();
+    }
 
     /**
      * Continues a multi-part update of the Additional Authentication
@@ -203,6 +205,8 @@ public interface CryptoCipher extends Closeable {
      * has not been overridden by an implementation
      *
      */
-    void updateAAD(ByteBuffer aad)
-            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException;
+    default void updateAAD(ByteBuffer aad)
+            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
+      throw new UnsupportedOperationException();
+    }
 }
