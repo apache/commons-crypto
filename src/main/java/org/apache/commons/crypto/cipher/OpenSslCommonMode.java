@@ -32,7 +32,7 @@ import java.security.spec.AlgorithmParameterSpec;
  */
 class OpenSslCommonMode extends OpenSslFeedbackCipher {
 
-    public OpenSslCommonMode(long context, int algorithmMode, int padding) {
+    OpenSslCommonMode(long context, int algorithmMode, int padding) {
         super(context, algorithmMode, padding);
     }
 

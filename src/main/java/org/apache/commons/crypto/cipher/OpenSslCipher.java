@@ -28,7 +28,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
-import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.utils.Utils;
 

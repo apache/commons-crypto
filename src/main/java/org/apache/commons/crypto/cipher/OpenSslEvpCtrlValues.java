@@ -46,7 +46,7 @@ enum OpenSslEvpCtrlValues {
         this.value = value;
     }
 
-    public int getValue() {
+    int getValue() {
         return value;
     }
 }
