@@ -95,7 +95,7 @@ public final class Utils {
      */
     public static Properties getDefaultProperties() {
         return new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
-     }
+    }
 
     /**
      * Gets the properties merged with default properties.
@@ -183,7 +183,7 @@ public final class Utils {
      * @throws IllegalStateException if expression is false.
      */
     public static void checkState(boolean expression) {
-      checkState(expression, null);
+        checkState(expression, null);
     }
 
     /**

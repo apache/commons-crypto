@@ -177,7 +177,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     }
 
     private ByteBuffer dummyBuffer() {
-      return ByteBuffer.allocateDirect(8);
+        return ByteBuffer.allocateDirect(8);
     }
 
 }
