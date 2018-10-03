@@ -48,7 +48,13 @@ import org.apache.commons.crypto.utils.Utils;
  * counter = base + pos/(algorithm blocksize); padding = pos%(algorithm
  * blocksize);
  * </p>
+ * <p>
  * The underlying stream offset is maintained as state.
+ * </p>
+ * <p>
+ * This class should only be used with blocking sinks. Using this class to wrap
+ * a non-blocking sink may lead to high CPU usage.
+ * </p>
  */
 public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
