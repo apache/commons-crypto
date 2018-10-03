@@ -43,6 +43,10 @@ import org.apache.commons.crypto.utils.Utils;
  * {@link CryptoOutputStream} encrypts data and writes to the under layer
  * output. It supports any mode of operations such as AES CBC/CTR/GCM mode in
  * concept. It is not thread-safe.
+ * <p>
+ * This class should only be used with blocking sinks. Using this class to wrap
+ * a non-blocking sink may lead to high CPU usage.
+ * </p>
  */
 
 public class CryptoOutputStream extends OutputStream implements
