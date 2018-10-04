@@ -32,8 +32,8 @@ import java.security.spec.AlgorithmParameterSpec;
 abstract class OpenSslFeedbackCipher {
 
     protected long context = 0;
-    protected int algorithmMode;
-    protected int padding;
+    protected final int algorithmMode;
+    protected final int padding;
 
     protected int cipherMode = OpenSsl.DECRYPT_MODE;
 
@@ -68,6 +68,6 @@ abstract class OpenSslFeedbackCipher {
     }
 
     public void checkState() {
-        Utils.checkState(context != 0);
+        Utils.checkState(context != 0, "Cipher context is invalid.");
     }
 }
