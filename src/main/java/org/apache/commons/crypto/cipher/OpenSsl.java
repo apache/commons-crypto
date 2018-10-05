@@ -36,11 +36,11 @@ import org.apache.commons.crypto.utils.Utils;
  */
 final class OpenSsl {
 
-    OpenSslFeedbackCipher opensslBlockCipher;
-
     // Mode constant defined by OpenSsl JNI
     public static final int ENCRYPT_MODE = 1;
     public static final int DECRYPT_MODE = 0;
+
+    private final OpenSslFeedbackCipher opensslBlockCipher;
 
     /** Currently only support AES/CTR/NoPadding. */
     private static enum AlgorithmMode {
@@ -99,7 +99,7 @@ final class OpenSsl {
         } catch (Exception t) {
             loadingFailure = t;
         } catch (UnsatisfiedLinkError t) {
-            loadingFailure = t;            
+            loadingFailure = t;
         } finally {
             loadingFailureReason = loadingFailure;
         }
@@ -217,7 +217,6 @@ final class OpenSsl {
      */
     public void init(int mode, byte[] key, AlgorithmParameterSpec params)
             throws InvalidAlgorithmParameterException {
-        checkState();
         opensslBlockCipher.init(mode, key, params);
     }
 
@@ -251,7 +250,6 @@ final class OpenSsl {
      */
     public int update(ByteBuffer input, ByteBuffer output)
             throws ShortBufferException {
-        checkState();
         Utils.checkArgument(input.isDirect() && output.isDirect(),
                 "Direct buffers are required.");
         return opensslBlockCipher.update(input, output);
@@ -272,7 +270,6 @@ final class OpenSsl {
      */
     public int update(byte[] input, int inputOffset, int inputLen,
             byte[] output, int outputOffset) throws ShortBufferException {
-        checkState();
         return opensslBlockCipher.update(input, inputOffset, inputLen, output, outputOffset);
     }
 
@@ -301,8 +298,6 @@ final class OpenSsl {
                        byte[] output, int outputOffset)
             throws ShortBufferException, IllegalBlockSizeException,
             BadPaddingException{
-
-        checkState();
         return opensslBlockCipher.doFinal(input, inputOffset, inputLen, output, outputOffset);
     }
 
@@ -348,7 +343,6 @@ final class OpenSsl {
      */
     public int doFinal(ByteBuffer input, ByteBuffer output) throws ShortBufferException,
             IllegalBlockSizeException, BadPaddingException {
-        checkState();
         Utils.checkArgument(output.isDirect(), "Direct buffer is required.");
 
         return opensslBlockCipher.doFinal(input, output);
@@ -378,11 +372,6 @@ final class OpenSsl {
         if (opensslBlockCipher != null) {
             opensslBlockCipher.clean();
         }
-    }
-
-    /** Checks whether context is initialized. */
-    private void checkState() {
-        Utils.checkState(opensslBlockCipher != null);
     }
 
     @Override

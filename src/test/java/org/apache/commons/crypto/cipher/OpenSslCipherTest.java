@@ -22,9 +22,11 @@ import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.junit.Assert;
 import org.junit.Assume;
@@ -131,6 +133,51 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
         cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(invalidIV));
+    }
+
+    @Test
+    public void testCipherLifecycle() throws Exception {
+        try (OpenSslCipher cipher = new OpenSslCipher(new Properties(), "AES/CTR/NoPadding")) {
+            try {
+                cipher.update(dummyBuffer(), dummyBuffer());
+                Assert.fail("Should have thrown exception.");
+            } catch (IllegalStateException ise) {
+                // expected;
+            }
+
+            cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"),
+                new IvParameterSpec(IV));
+            cipher.update(dummyBuffer(), dummyBuffer());
+
+            try {
+                cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(new byte[1], "AES"),
+                    new IvParameterSpec(IV));
+                Assert.fail("Should have thrown exception.");
+            } catch (InvalidKeyException ike) {
+                // expected;
+            }
+
+            // Should keep working with previous init parameters.
+            cipher.update(dummyBuffer(), dummyBuffer());
+            cipher.doFinal(dummyBuffer(), dummyBuffer());
+            cipher.close();
+
+            try {
+                cipher.update(dummyBuffer(), dummyBuffer());
+                Assert.fail("Should have thrown exception.");
+            } catch (IllegalStateException ise) {
+                // expected;
+            }
+
+            cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"),
+                new IvParameterSpec(IV));
+            cipher.update(dummyBuffer(), dummyBuffer());
+            cipher.close();
+        }
+    }
+
+    private ByteBuffer dummyBuffer() {
+        return ByteBuffer.allocateDirect(8);
     }
 
 }
