@@ -20,6 +20,7 @@ package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.cipher.OpenSslCipherTest;
 import org.apache.commons.crypto.jna.OpenSslJnaCipher;
+import org.apache.commons.crypto.jna.OpenSslJnaCipher_1_1;
 import org.junit.Assume;
 
 public class OpenSslJnaCipherTest extends OpenSslCipherTest {
@@ -32,7 +33,10 @@ public class OpenSslJnaCipherTest extends OpenSslCipherTest {
                 "AES/CBC/PKCS5Padding",
                 "AES/CTR/NoPadding"
                 };
-        cipherClass = OpenSslJnaCipher.class.getName();
+        if (OpenSslJna.isOpenSSLVersion_1_1()) {
+            cipherClass = OpenSslJnaCipher_1_1.class.getName();
+        } else {
+            cipherClass = OpenSslJnaCipher.class.getName();
+        }    
     }
-
 }

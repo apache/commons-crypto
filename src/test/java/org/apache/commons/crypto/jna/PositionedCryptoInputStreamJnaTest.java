@@ -34,7 +34,10 @@ public class PositionedCryptoInputStreamJnaTest extends PositionedCryptoInputStr
 
     @Test
     public void doTest() throws Exception {
-        testCipher(OpenSslJnaCipher.class.getName());
+        if (OpenSslJna.isOpenSSLVersion_1_1()) {
+            testCipher(OpenSslJnaCipher_1_1.class.getName());
+        } else {
+            testCipher(OpenSslJnaCipher.class.getName());
+        }    
     }
-
 }

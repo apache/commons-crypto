@@ -19,6 +19,9 @@ package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.random.CryptoRandom;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 /**
  * Public class to give access to the package protected class objects
@@ -26,31 +29,62 @@ import org.apache.commons.crypto.random.CryptoRandom;
 public final class OpenSslJna {
 
     /**
+    * @return installed openSSL version is 1.1 or not
+    */ 
+    static boolean isOpenSSLVersion_1_1() {
+        String line = " ";
+        try {
+            Process process = Runtime.getRuntime().exec("openssl version");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            line = reader.readLine();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return line.matches("OpenSSL 1.1(.*)");
+    }
+
+    /**
      * @return The cipher class of JNA implementation
      */
     public static Class<? extends CryptoCipher> getCipherClass() {
-        return OpenSslJnaCipher.class;
+        if (isOpenSSLVersion_1_1()) {
+            return OpenSslJnaCipher_1_1.class;
+        }  else {
+            return OpenSslJnaCipher.class;
+        }
     }
 
     /**
      * @return The random class of JNA implementation
      */
     public static Class<? extends CryptoRandom> getRandomClass() {
-        return OpenSslJnaCryptoRandom.class;
+        if (isOpenSSLVersion_1_1()) {
+            return OpenSslJnaCryptoRandom_1_1.class;
+        } else {
+            return OpenSslJnaCryptoRandom.class;
+        }
     }
 
     /**
      * @return true if JNA native loads successfully
      */
     public static boolean isEnabled() {
-        return OpenSslNativeJna.INIT_OK;
+        if (isOpenSSLVersion_1_1()) {
+            return OpenSslNativeJna_1_1.INIT_OK;
+        } else {
+            return OpenSslNativeJna.INIT_OK;
+        }
     }
 
     /**
      * @return the error of JNA
      */
     public static Throwable initialisationError() {
-        return OpenSslNativeJna.INIT_ERROR;
+        if (isOpenSSLVersion_1_1()) {
+            return OpenSslNativeJna_1_1.INIT_ERROR;
+        } else {
+            return OpenSslNativeJna.INIT_ERROR;
+        }
     }
-
 }

@@ -21,6 +21,7 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.apache.commons.crypto.jna.OpenSslJnaCryptoRandom;
+import org.apache.commons.crypto.jna.OpenSslJnaCryptoRandom_1_1;
 import org.apache.commons.crypto.random.AbstractRandomTest;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
@@ -39,13 +40,18 @@ public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
         Properties props = new Properties();
-        props.setProperty(
-                CryptoRandomFactory.CLASSES_KEY,
-                OpenSslJnaCryptoRandom.class.getName());
+        boolean  Ssl_version_1_1  = OpenSslJna.isOpenSSLVersion_1_1();
+            props.setProperty(
+                    CryptoRandomFactory.CLASSES_KEY,
+                    Ssl_version_1_1 ? OpenSslJnaCryptoRandom_1_1.class.getName(): OpenSslJnaCryptoRandom.class.getName());
         CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        assertTrue(
-                "The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName(),
-                random instanceof OpenSslJnaCryptoRandom);
+        if (Ssl_version_1_1) { 
+            assertTrue("The CryptoRandom should be: " + OpenSslJnaCryptoRandom_1_1.class.getName(),
+                   random instanceof OpenSslJnaCryptoRandom_1_1);
+        } else {
+            assertTrue("The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName(),
+                   random instanceof OpenSslJnaCryptoRandom);
+        }
         return random;
     }
 

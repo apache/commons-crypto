@@ -31,6 +31,15 @@ ifndef JAVA_HOME
 $(error Set JAVA_HOME environment variable)
 endif
 
+#Getting installed version of OpenSSL
+OPENSSL_VERSION_MAJOR :=$(shell openssl version |cut -d " " -f2|cut -d "." -f1 )
+OPENSSL_VERSION_MINOR :=$(shell openssl version |cut -d " " -f2|cut -d "." -f2 )
+ifneq ($(OPENSSL_VERSION_MAJOR),$(OPENSSL_VERSION_MINOR))
+VERSION_OPEN_SSL:=OPENSSL_VERSION_1_0
+else
+VERSION_OPEN_SSL:=OPENSSL_VERSION_1_1
+endif
+
 JAVA  := "$(JAVA_HOME)/bin/java"
 JAVAC := "$(JAVA_HOME)/bin/javac"
 JAVAH := "$(JAVA_HOME)/bin/javah"
