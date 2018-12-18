@@ -41,7 +41,10 @@
 #ifdef UNIX
 static unsigned long (*dlsym_SSLeay) (void);
 static char * (*dlsym_SSLeay_version) (int);
-static void *openssl;
+static unsigned long (*dlsym_OpenSSL_version_num) (void);
+static char * (*dlsym_OpenSSL_version) (int);
+static void *openssl_old, *openssl_new;
+static int openssl_1 = 0, openssl_0 = 0;
 #endif
 
 #ifdef WINDOWS
@@ -62,8 +65,14 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
 {
 #ifdef UNIX
   dlerror();  // Clear any existing error
-  LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay, env, openssl, "SSLeay");
-  LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay_version, env, openssl, "SSLeay_version");
+  if (openssl_0) {
+    LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay, env, openssl_old, "SSLeay");
+    LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay_version, env, openssl_old, "SSLeay_version");
+  }
+  if (openssl_1) {
+	LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay, env, openssl_new, "OpenSSL_version");
+	LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay_version, env, openssl_new, "OpenSSL_version_num");
+  }
 #endif
 
 #ifdef WINDOWS
@@ -75,38 +84,61 @@ static int load_library(JNIEnv *env)
 {
     char msg[100];
 #ifdef UNIX
-  openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
-#endif
-
-#ifdef WINDOWS
-  openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
-#endif
-
-  if (!openssl) {
-#ifdef UNIX
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+    openssl_new = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY_1, RTLD_LAZY | RTLD_GLOBAL);
+  if (!openssl_new) {
+  	snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY_1,  \
         dlerror());
-#endif
-#ifdef WINDOWS
-    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-        GetLastError());
-#endif
+  } else {
+	openssl_1 = 1;
+	get_methods(env, openssl_new);
+  }
+  openssl_old = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  if (!openssl_old) {
+  	snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+        dlerror());
+  } else {
+	openssl_0 = 1;
+	get_methods(env, openssl_old);
+  }
+  if (!openssl_0 && !openssl_1) {
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
   }
-  get_methods(env, openssl);
+#endif
+#ifdef WINDOWS
+  openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
+  if (!openssl) {
+    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+  	  GetLastError());
+    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
+    return 0;
+  } else {
+  	 get_methods(env, openssl);
+  }
+#endif
+
   return 1;
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_SSLeayVersion
     (JNIEnv *env, jclass clazz, jint type)
 {
+	jstring answer = NULL;
     if (!load_library(env)) {
         return NULL;
     }
-
-    jstring answer = (*env)->NewStringUTF(env,dlsym_SSLeay_version(type));
-    return answer;
+#ifdef UNIX
+	if (openssl_0) {
+    	answer = (*env)->NewStringUTF(env,dlsym_SSLeay_version(type));
+	}
+	if (openssl_1) {
+		answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
+	}
+#endif
+#ifdef WINDOWS
+	answer = (*env)->NewStringUTF(env,dlsym_SSLeay_version(type));
+#endif
+	return answer;
 }
 
 JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_SSLeay
@@ -115,7 +147,10 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_SSLeay
     if (!load_library(env)) {
         return 0;
     }
-    return dlsym_SSLeay();
+	if (openssl_1)
+		return dlsym_OpenSSL_version_num();
+	else
+    	return dlsym_SSLeay();
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_NativeVersion

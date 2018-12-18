@@ -55,6 +55,8 @@ static int (*dlsym_ENGINE_free) (ENGINE *);
 static void (*dlsym_ENGINE_cleanup) (void);
 static int (*dlsym_RAND_bytes) (unsigned char *, int);
 static unsigned long (*dlsym_ERR_get_error) (void);
+static int openssl_1 = 0, openssl_0 = 0;
+
 #endif
 
 #ifdef WINDOWS
@@ -96,46 +98,73 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 {
   char msg[1000];
 #ifdef UNIX
-  void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  void* openssl_new = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY_1, RTLD_LAZY | RTLD_GLOBAL);
+  if (!openssl_new) {
+  	snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY_1,  \
+        dlerror());
+  } else {
+	openssl_1 = 1;
+  }
+  void* openssl_old = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  if (!openssl_old) {
+  	snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+        dlerror());
+  } else {
+	openssl_0 = 1;
+  }
+  if (!openssl_0 && !openssl_1) {
+    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
+    return;
+  }
 #endif
 
 #ifdef WINDOWS
   HMODULE openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
-#endif
-
   if (!openssl) {
-#ifdef UNIX
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-        dlerror());
-#endif
-#ifdef WINDOWS
     snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
         GetLastError());
-#endif
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
   }
+#endif
 
 #ifdef UNIX
   dlerror();  // Clear any existing error
-  LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_malloc, env, openssl, "CRYPTO_malloc");
-  LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_free, env, openssl, "CRYPTO_free");
-  LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_num_locks, env, openssl, "CRYPTO_num_locks");
-  LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_locking_callback,  \
-                      env, openssl, "CRYPTO_set_locking_callback");
-  LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_id_callback, env,  \
-                      openssl, "CRYPTO_set_id_callback");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_load_rdrand, env,  \
-                      openssl, "ENGINE_load_rdrand");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_by_id, env, openssl, "ENGINE_by_id");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_init, env, openssl, "ENGINE_init");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_set_default, env,  \
-                      openssl, "ENGINE_set_default");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_finish, env, openssl, "ENGINE_finish");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_free, env, openssl, "ENGINE_free");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_cleanup, env, openssl, "ENGINE_cleanup");
-  LOAD_DYNAMIC_SYMBOL(dlsym_RAND_bytes, env, openssl, "RAND_bytes");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ERR_get_error, env, openssl, "ERR_get_error");
+ if (openssl_1) {
+   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_malloc, env, openssl_new, "CRYPTO_malloc");
+   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_free, env, openssl_new, "CRYPTO_free");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_by_id, env, openssl_new, "ENGINE_by_id");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_init, env, openssl_new, "ENGINE_init");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_set_default, env,  \
+         openssl_new, "ENGINE_set_default");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_finish, env, openssl_new, "ENGINE_finish");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_free, env, openssl_new, "ENGINE_free");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_cleanup, env, openssl_new, "ENGINE_cleanup");
+   LOAD_DYNAMIC_SYMBOL(dlsym_RAND_bytes, env, openssl_new, "RAND_bytes");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ERR_get_error, env, openssl_new, "ERR_get_error");
+ }
+  
+ if (openssl_0) {
+   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_malloc, env, openssl_old, "CRYPTO_malloc");
+   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_free, env, openssl_old, "CRYPTO_free");
+   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_num_locks, env, openssl_old, "CRYPTO_num_locks");
+   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_locking_callback,  \
+                 env, openssl_old, "CRYPTO_set_locking_callback");
+   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_id_callback, env,  \
+                 openssl_old, "CRYPTO_set_id_callback");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_load_rdrand, env,  \
+                 openssl_old, "ENGINE_load_rdrand");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_by_id, env, openssl_old, "ENGINE_by_id");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_init, env, openssl_old, "ENGINE_init");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_set_default, env,  \
+             openssl_old, "ENGINE_set_default");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_finish, env, openssl_old, "ENGINE_finish");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_free, env, openssl_old, "ENGINE_free");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_cleanup, env, openssl_old, "ENGINE_cleanup");
+   LOAD_DYNAMIC_SYMBOL(dlsym_RAND_bytes, env, openssl_old, "RAND_bytes");
+   LOAD_DYNAMIC_SYMBOL(dlsym_ERR_get_error, env, openssl_old, "ERR_get_error");
+ }
+  
 #endif
 
 #ifdef WINDOWS

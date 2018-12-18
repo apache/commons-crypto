@@ -23,7 +23,7 @@
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-crypto</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Apache Commons Crypto</name>
@@ -116,7 +116,7 @@ The following provides more details on the included cryptographic software:
     <commons.release.version>1.0.0</commons.release.version>
     <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
     <commons.rc.version>RC1</commons.rc.version>
-    <jna.version>4.2.2</jna.version>
+    <jna.version>4.4.0</jna.version>
 
     <!-- properties not related to versioning -->
     <commons.jira.id>CRYPTO</commons.jira.id>
@@ -146,8 +146,8 @@ The following provides more details on the included cryptographic software:
     <target.name>all</target.name>
     <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
     <junit.version>4.12</junit.version>
-    <commons-logging.version>1.1.3</commons-logging.version>
-    <commons.jacoco.version>0.7.7.201606060606</commons.jacoco.version>
+    <commons-logging.version>1.2</commons-logging.version>
+    <commons.jacoco.version>0.8.0</commons.jacoco.version>
     <slf4j-api.version>1.7.10</slf4j-api.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
