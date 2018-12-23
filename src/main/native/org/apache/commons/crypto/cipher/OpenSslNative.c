@@ -31,16 +31,16 @@
 #include "OpenSslNative.h"
 
 #ifdef UNIX
-#if OPENSSL_VERSION_NUMBER > VERSION_1_1_0x
-static int (*dlsym_EVP_CIPHER_CTX_reset)(EVP_CIPHER_CTX *);// 1.1.0
-static unsigned long (*dlsym_EVP_CIPHER_flags)(EVP_CIPHER *);// 1.1.0
-static int (*dlsym_EVP_CIPHER_CTX_test_flags)(EVP_CIPHER_CTX *, int);// 1.1.0
-static EVP_CIPHER * (*dlsym_EVP_CIPHER_CTX_cipher)(EVP_CIPHER_CTX *);// 1.1.0
-static int (*dlsym_EVP_CIPHER_block_size)(EVP_CIPHER *);// 1.1.0
-static int (*dlsym_EVP_CIPHER_CTX_encrypting)(EVP_CIPHER_CTX *);// 1.1.0
-static int (*dlsym_EVP_CIPHER_CTX_block_size)(EVP_CIPHER_CTX *);// 1.1.0
-#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_2x
-static void (*dlsym_EVP_CIPHER_CTX_init)(EVP_CIPHER_CTX *);// 1.0.2
+#if OPENSSL_VERSION_NUMBER > VERSION_1_1_x
+static int (*dlsym_EVP_CIPHER_CTX_reset)(EVP_CIPHER_CTX *);
+static unsigned long (*dlsym_EVP_CIPHER_flags)(EVP_CIPHER *);
+static int (*dlsym_EVP_CIPHER_CTX_test_flags)(EVP_CIPHER_CTX *, int);
+static EVP_CIPHER * (*dlsym_EVP_CIPHER_CTX_cipher)(EVP_CIPHER_CTX *);
+static int (*dlsym_EVP_CIPHER_block_size)(EVP_CIPHER *);
+static int (*dlsym_EVP_CIPHER_CTX_encrypting)(EVP_CIPHER_CTX *);
+static int (*dlsym_EVP_CIPHER_CTX_block_size)(EVP_CIPHER_CTX *);
+#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_x
+static void (*dlsym_EVP_CIPHER_CTX_init)(EVP_CIPHER_CTX *);
 #endif
 
 static EVP_CIPHER_CTX * (*dlsym_EVP_CIPHER_CTX_new)(void);
@@ -173,7 +173,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
 
 #ifdef UNIX
   dlerror();  // Clear any existing error
-#if OPENSSL_VERSION_NUMBER > VERSION_1_1_0x
+#if OPENSSL_VERSION_NUMBER > VERSION_1_1_x
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_reset, env, openssl, "EVP_CIPHER_CTX_reset");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_flags, env, openssl, "EVP_CIPHER_flags");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_test_flags, env, openssl, "EVP_CIPHER_CTX_test_flags");
@@ -181,7 +181,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_block_size, env, openssl, "EVP_CIPHER_block_size");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_encrypting, env, openssl, "EVP_CIPHER_CTX_encrypting");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_block_size, env, openssl, "EVP_CIPHER_CTX_block_size");
-#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_2x
+#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_x
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_init, env, openssl, "EVP_CIPHER_CTX_init");
 #endif
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_new, env, openssl, "EVP_CIPHER_CTX_new");
@@ -693,7 +693,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_clean
   free_context_wrapper(wrapper);
 }
 
-#if OPENSSL_VERSION_NUMBER > VERSION_1_1_0x
+#if OPENSSL_VERSION_NUMBER > VERSION_1_1_x
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
 static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
     int max_output_len)
@@ -743,7 +743,7 @@ static int is_bad_tag(EVP_CIPHER_CTX *context){
   }
   return 0;
 }
-#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_2x
+#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_x
 // https://www.openssl.org/docs/crypto/EVP_EncryptInit.html
 static int check_update_max_output_len(EVP_CIPHER_CTX *context, int input_len,
     int max_output_len)

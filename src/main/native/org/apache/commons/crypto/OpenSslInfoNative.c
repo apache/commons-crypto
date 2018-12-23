@@ -93,10 +93,10 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
 {
 #ifdef UNIX
   dlerror();  // Clear any existing error
-#if OPENSSL_VERSION_NUMBER > VERSION_1_1_0x
+#if OPENSSL_VERSION_NUMBER > VERSION_1_1_x
   LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num");
   LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
-#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_2x
+#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_x
   LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version_num, env, openssl, "SSLeay");
   LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
 #endif
