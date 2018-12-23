@@ -317,7 +317,7 @@ class OpenSslJnaCipher implements CryptoCipher {
             String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
             
             if (context != null) {
-                OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
+            	OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             }
             throw new RuntimeException("return code "+retVal+" from OpenSSL. Err code is "+err+": "+errdesc);
         }

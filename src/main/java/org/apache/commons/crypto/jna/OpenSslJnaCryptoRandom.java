@@ -100,14 +100,14 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
         
         synchronized (OpenSslJnaCryptoRandom.class) {
             //this method is synchronized for now
-            //to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
+            //to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done   
             
             if(rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
-                close();
+                    //close();
                 throw new RuntimeException("rdrand should be used but default is detected");
             }
-            
-            ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
+        	
+        	ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
             int retVal = OpenSslNativeJna.RAND_bytes(buf, bytes.length);
             throwOnError(retVal);
             buf.rewind();
@@ -157,12 +157,8 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      */
     @Override
     public void close() {
-        closeRdrandEngine();
-        OpenSslNativeJna.ENGINE_cleanup();
-        
-        //cleanup locks
-        //OpenSslNativeJna.CRYPTO_set_locking_callback(null);
-        //LOCK.unlock();
+        	closeRdrandEngine();
+        	OpenSslNativeJna.ENGINE_cleanup();
     }
 
     /**

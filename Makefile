@@ -18,7 +18,7 @@
 include Makefile.common
 
 COMMONS_CRYPTO_OUT:=$(TARGET)/$(commons-crypto)-$(os_arch)
-COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpenSslCryptoRandomNative.o OpenSslNative.o OpenSslInfoNative.o)
+COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpenSslInfoNative.o OpenSslCryptoRandomNative.o OpenSslNative.o)
 
 # Windows uses different path separators
 ifeq ($(OS_NAME),Windows)

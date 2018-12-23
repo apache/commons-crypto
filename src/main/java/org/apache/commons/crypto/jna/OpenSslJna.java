@@ -53,4 +53,8 @@ public final class OpenSslJna {
         return OpenSslNativeJna.INIT_ERROR;
     }
 
+    public static String OpenSSLVersion(int i) {
+	return OpenSslNativeJna.OpenSSLVersion(i);
+    }
+
 }

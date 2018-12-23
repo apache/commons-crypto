@@ -39,38 +39,24 @@
 #include "OpenSslInfoNative.h"
 
 #ifdef UNIX
-static unsigned long (*dlsym_SSLeay) (void);
-static char * (*dlsym_SSLeay_version) (int);
+static unsigned long (*dlsym_OpenSSL_version_num) (void);
+static char * (*dlsym_OpenSSL_version) (int);
 static void *openssl;
 #endif
 
 #ifdef WINDOWS
-typedef unsigned long (__cdecl *__dlsym_SSLeay) (void);
-static __dlsym_SSLeay dlsym_SSLeay;
-typedef char * (__cdecl *__dlsym_SSLeay_version) (int);
-static __dlsym_SSLeay dlsym_SSLeay;
-static __dlsym_SSLeay_version dlsym_SSLeay_version;
+typedef unsigned long (__cdecl *__dlsym_OpenSSL) (void);
+static __dlsym_OpenSSL dlsym_OpenSSL;
+typedef char * (__cdecl *__dlsym_OpenSSL_version) (int);
+static __dlsym_OpenSSL dlsym_OpenSSL;
+static __dlsym_OpenSSL_version dlsym_OpenSSL_version;
 HMODULE openssl;
 #endif
 
 #ifdef UNIX
-static void get_methods(JNIEnv *env, void *openssl)
-#endif
-#ifdef WINDOWS
-static void get_methods(JNIEnv *env, HMODULE openssl)
-#endif
-{
-#ifdef UNIX
-  dlerror();  // Clear any existing error
-  LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay, env, openssl, "SSLeay");
-  LOAD_DYNAMIC_SYMBOL(dlsym_SSLeay_version, env, openssl, "SSLeay_version");
+static void get_methods(JNIEnv *env, void *openssl);
 #endif
 
-#ifdef WINDOWS
-  LOAD_DYNAMIC_SYMBOL(__dlsym_SSLeay, dlsym_SSLeay, env, openssl, "SSLeay");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_SSLeay_version, dlsym_SSLeay_version, env, openssl, "SSLeay_version");
-#endif
-}
 static int load_library(JNIEnv *env)
 {
     char msg[100];
@@ -98,24 +84,26 @@ static int load_library(JNIEnv *env)
   return 1;
 }
 
-JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_SSLeayVersion
-    (JNIEnv *env, jclass clazz, jint type)
+#ifdef UNIX
+static void get_methods(JNIEnv *env, void *openssl)
+#endif
+#ifdef WINDOWS
+static void get_methods(JNIEnv *env, HMODULE openssl)
+#endif
 {
-    if (!load_library(env)) {
-        return NULL;
-    }
+#ifdef UNIX
+  dlerror();  // Clear any existing error
+#if OPENSSL_VERSION_NUMBER > VERSION_1_1_0x
+  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num");
+  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
+#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_2x
+  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version_num, env, openssl, "SSLeay");
+  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
+#endif
+#endif
 
-    jstring answer = (*env)->NewStringUTF(env,dlsym_SSLeay_version(type));
-    return answer;
-}
-
-JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_SSLeay
-    (JNIEnv *env, jobject object)
-{
-    if (!load_library(env)) {
-        return 0;
-    }
-    return dlsym_SSLeay();
+#ifdef WINDOWS
+#endif
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_NativeVersion
@@ -135,3 +123,25 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_Nativ
 {
     return (*env)->NewStringUTF(env, PROJECT_NAME);
 }
+
+JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenSSL
+  (JNIEnv *env, jclass clazz)
+{
+    if (!load_library(env)) {
+        return 0;
+    }
+    jlong version_num = (jlong)dlsym_OpenSSL_version_num();
+    return version_num;
+}
+
+JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenSSLVersion
+  (JNIEnv *env, jclass clazz, jint type)
+{
+    if (!load_library(env)) {
+        return NULL;
+    }
+    jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
+    return answer;
+}
+
+
