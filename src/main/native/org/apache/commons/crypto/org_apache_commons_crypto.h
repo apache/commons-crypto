@@ -225,8 +225,8 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
 #define NOPADDING 0
 #define PKCS5PADDING 1
 
-#define VERSION_1_0_2x 0x10002000
-#define VERSION_1_1_0x 0x10100000
+#define VERSION_1_0_x 0x10000000
+#define VERSION_1_1_x 0x10100000
 
 #endif
 

@@ -51,7 +51,7 @@ static int (*dlsym_ENGINE_free) (ENGINE *);
 static int (*dlsym_RAND_bytes) (unsigned char *, int);
 static unsigned long (*dlsym_ERR_get_error) (void);
 
-#if OPENSSL_VERSION_NUMBER < VERSION_1_1_0x
+#if OPENSSL_VERSION_NUMBER < VERSION_1_1_x
 static int (*dlsym_CRYPTO_num_locks) (void);
 static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
 static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
@@ -124,7 +124,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
   LOAD_DYNAMIC_SYMBOL(dlsym_RAND_bytes, env, openssl, "RAND_bytes");
   LOAD_DYNAMIC_SYMBOL(dlsym_ERR_get_error, env, openssl, "ERR_get_error");
 
-#if OPENSSL_VERSION_NUMBER < VERSION_1_1_0x
+#if OPENSSL_VERSION_NUMBER < VERSION_1_1_x
   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_num_locks, env, openssl, "CRYPTO_num_locks");
   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_locking_callback, env, openssl, "CRYPTO_set_locking_callback");
   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_id_callback, env, openssl, "CRYPTO_set_id_callback");
@@ -185,7 +185,7 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRa
   return JNI_TRUE;
 }
 
-#if OPENSSL_VERSION_NUMBER > VERSION_1_1_0x
+#if OPENSSL_VERSION_NUMBER > VERSION_1_1_x
 
 /**
  * If using an Intel chipset with RDRAND, the high-performance hardware
@@ -229,7 +229,7 @@ static void openssl_rand_clean(ENGINE *eng, int clean_locks)
     dlsym_ENGINE_free(eng);
   }
 }
-#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_2x
+#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_x
 
 static void pthreads_locking_callback(int mode, int type, char *file, int line);
 static unsigned long pthreads_thread_id(void);
