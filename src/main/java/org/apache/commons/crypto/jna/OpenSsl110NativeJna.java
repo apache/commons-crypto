@@ -222,5 +222,5 @@ public class OpenSsl110NativeJna {
      * @return A pointer to a constant string describing the version of the
      * OpenSSL library or giving information about the library build.
      */
-	public static native String OpenSSL_version(int type);
+     public static native String OpenSSL_version(int type);
 }

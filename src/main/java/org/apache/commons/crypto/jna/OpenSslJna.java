@@ -53,8 +53,14 @@ public final class OpenSslJna {
         return OpenSslNativeJna.INIT_ERROR;
     }
 
-    public static String OpenSSLVersion(int i) {
-	return OpenSslNativeJna.OpenSSLVersion(i);
+    /**
+     * Retrieves version/build information about OpenSSL library.
+     *
+     * @param type type can be OPENSSL_VERSION, OPENSSL_CFLAGS, OPENSSL_BUILT_ON...
+     * @return A pointer to a constant string describing the version of the
+     * OpenSSL library or giving information about the library build.
+     */
+    public static String OpenSSLVersion(int type) {
+         return OpenSslNativeJna.OpenSSLVersion(type);
     }
-
 }

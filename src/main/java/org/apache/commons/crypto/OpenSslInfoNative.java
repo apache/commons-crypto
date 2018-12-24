@@ -25,7 +25,7 @@ package org.apache.commons.crypto;
  * src/main/native/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c
  */
 public class OpenSslInfoNative {
-	
+
     public static final long VERSION_1_0_2X = 0x10002000;
     public static final long VERSION_1_1_0X = 0x10100000;
 
