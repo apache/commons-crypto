@@ -28,28 +28,28 @@ public final class OpenSslJna {
     /**
      * @return The cipher class of JNA implementation
      */
-    public static Class<? extends CryptoCipher> getCipherClass() {
+    static Class<? extends CryptoCipher> getCipherClass() {
         return OpenSslJnaCipher.class;
     }
 
     /**
      * @return The random class of JNA implementation
      */
-    public static Class<? extends CryptoRandom> getRandomClass() {
+    static Class<? extends CryptoRandom> getRandomClass() {
         return OpenSslJnaCryptoRandom.class;
     }
 
     /**
      * @return true if JNA native loads successfully
      */
-    public static boolean isEnabled() {
+    static boolean isEnabled() {
         return OpenSslNativeJna.INIT_OK;
     }
 
     /**
      * @return the error of JNA
      */
-    public static Throwable initialisationError() {
+    static Throwable initialisationError() {
         return OpenSslNativeJna.INIT_ERROR;
     }
 
@@ -60,7 +60,7 @@ public final class OpenSslJna {
      * @return A pointer to a constant string describing the version of the
      * OpenSSL library or giving information about the library build.
      */
-    public static String OpenSSLVersion(int type) {
+    static String OpenSSLVersion(int type) {
          return OpenSslNativeJna.OpenSSLVersion(type);
     }
 }
