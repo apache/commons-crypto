@@ -56,288 +56,232 @@ class OpenSslNativeJna {
         }
 
         if (VERSION == VERSION_1_1_X) {
-            INIT_OK = OpenSsl110NativeJna.INIT_OK;
-        } else if (VERSION == VERSION_1_0_X) {
-            INIT_OK = OpenSsl102NativeJna.INIT_OK;
+            INIT_OK = OpenSsl11XNativeJna.INIT_OK;
         } else {
-            INIT_OK = false;
+            INIT_OK = OpenSsl10XNativeJna.INIT_OK;
         }
 
         if (INIT_OK) {
             INIT_ERROR = null;
         } else if (VERSION == VERSION_1_1_X) {
-            INIT_ERROR = OpenSsl110NativeJna.INIT_ERROR;
-        } else if (VERSION == VERSION_1_0_X) {
-            INIT_ERROR = OpenSsl102NativeJna.INIT_ERROR;
+            INIT_ERROR = OpenSsl11XNativeJna.INIT_ERROR;
         } else {
-            INIT_ERROR = null;
+            INIT_ERROR = OpenSsl10XNativeJna.INIT_ERROR;
         }
     }
 
     public static PointerByReference ENGINE_by_id(String string) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.ENGINE_by_id(string);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.ENGINE_by_id(string);
+            return OpenSsl11XNativeJna.ENGINE_by_id(string);
         } else {
-            return null;
+            return OpenSsl10XNativeJna.ENGINE_by_id(string);
         }
     }
 
     public static void ENGINE_finish(PointerByReference rdrandEngine) {
         if (VERSION == VERSION_1_1_X) {
-            OpenSsl110NativeJna.ENGINE_finish(rdrandEngine);
-        } else if (VERSION == VERSION_1_0_X) {
-            OpenSsl102NativeJna.ENGINE_finish(rdrandEngine);
+            OpenSsl11XNativeJna.ENGINE_finish(rdrandEngine);
         } else {
-            return;
+            OpenSsl10XNativeJna.ENGINE_finish(rdrandEngine);
         }
     }
 
     public static void ENGINE_free(PointerByReference rdrandEngine) {
         if (VERSION == VERSION_1_1_X) {
-            OpenSsl110NativeJna.ENGINE_free(rdrandEngine);
-        } else if (VERSION == VERSION_1_0_X) {
-            OpenSsl102NativeJna.ENGINE_free(rdrandEngine);
+            OpenSsl11XNativeJna.ENGINE_free(rdrandEngine);
         } else {
-            return;
+            OpenSsl10XNativeJna.ENGINE_free(rdrandEngine);
         }
     }
 
     public static int ENGINE_init(PointerByReference rdrandEngine) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.ENGINE_init(rdrandEngine);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.ENGINE_init(rdrandEngine);
+            return OpenSsl11XNativeJna.ENGINE_init(rdrandEngine);
         } else {
-            return 0;
+            return OpenSsl10XNativeJna.ENGINE_init(rdrandEngine);
         }
     }
 
     public static int ENGINE_set_default(PointerByReference rdrandEngine, int eNGINE_METHOD_RAND) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
+            return OpenSsl11XNativeJna.ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
         } else {
-            return 0;
+            return OpenSsl10XNativeJna.ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
         }
     }
 
     public static String ERR_error_string(NativeLong err, Object object) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.ERR_error_string(err, null);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.ERR_error_string(err, null);
+            return OpenSsl11XNativeJna.ERR_error_string(err, null);
         } else {
-            return null;
+            return OpenSsl10XNativeJna.ERR_error_string(err, null);
         }
     }
 
     public static NativeLong ERR_peek_error() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.ERR_peek_error();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.ERR_peek_error();
+            return OpenSsl11XNativeJna.ERR_peek_error();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.ERR_peek_error();
         }
     }
 
     public static PointerByReference EVP_aes_128_cbc() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_aes_128_cbc();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_aes_128_cbc();
+            return OpenSsl11XNativeJna.EVP_aes_128_cbc();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.EVP_aes_128_cbc();
         }
     }
 
     public static PointerByReference EVP_aes_128_ctr() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_aes_128_ctr();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_aes_128_ctr();
+            return OpenSsl11XNativeJna.EVP_aes_128_ctr();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.EVP_aes_128_ctr();
         }
     }
 
     public static PointerByReference EVP_aes_192_cbc() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_aes_192_cbc();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_aes_192_cbc();
+            return OpenSsl11XNativeJna.EVP_aes_192_cbc();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.EVP_aes_192_cbc();
         }
     }
 
     public static PointerByReference EVP_aes_192_ctr() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_aes_192_ctr();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_aes_192_ctr();
+            return OpenSsl11XNativeJna.EVP_aes_192_ctr();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.EVP_aes_192_ctr();
         }
     }
 
     public static PointerByReference EVP_aes_256_cbc() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_aes_256_cbc();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_aes_256_cbc();
+            return OpenSsl11XNativeJna.EVP_aes_256_cbc();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.EVP_aes_256_cbc();
         }
     }
 
     public static PointerByReference EVP_aes_256_ctr() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_aes_256_ctr();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_aes_256_ctr();
+            return OpenSsl11XNativeJna.EVP_aes_256_ctr();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.EVP_aes_256_ctr();
         }
     }
 
     public static void EVP_CIPHER_CTX_free(PointerByReference context) {
         if (VERSION == VERSION_1_1_X) {
-            OpenSsl110NativeJna.EVP_CIPHER_CTX_free(context);
-        } else if (VERSION == VERSION_1_0_X) {
-            OpenSsl102NativeJna.EVP_CIPHER_CTX_free(context);
+            OpenSsl11XNativeJna.EVP_CIPHER_CTX_free(context);
         } else {
-            return;
+            OpenSsl10XNativeJna.EVP_CIPHER_CTX_free(context);
         }
     }
 
     public static PointerByReference EVP_CIPHER_CTX_new() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_CIPHER_CTX_new();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_CIPHER_CTX_new();
+            return OpenSsl11XNativeJna.EVP_CIPHER_CTX_new();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.EVP_CIPHER_CTX_new();
         }
     }
 
     public static void EVP_CIPHER_CTX_set_padding(PointerByReference context, int padding) {
         if (VERSION == VERSION_1_1_X) {
-            OpenSsl110NativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
-        } else if (VERSION == VERSION_1_0_X) {
-            OpenSsl102NativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
+            OpenSsl11XNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
         } else {
-            return;
+            OpenSsl10XNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
         }
     }
 
     public static int EVP_CipherFinal_ex(PointerByReference context, ByteBuffer outBuffer,
             int[] outlen) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
+            return OpenSsl11XNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
         } else {
-            return 0;
+            return OpenSsl10XNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
         }
     }
 
     public static int EVP_CipherInit_ex(PointerByReference context, PointerByReference algo,
             Object object, byte[] encoded, byte[] iv, int cipherMode) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_CipherInit_ex(context, algo, null, encoded, iv,
-                    cipherMode);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_CipherInit_ex(context, algo, null, encoded, iv,
+            return OpenSsl11XNativeJna.EVP_CipherInit_ex(context, algo, null, encoded, iv,
                     cipherMode);
         } else {
-            return 0;
+            return OpenSsl10XNativeJna.EVP_CipherInit_ex(context, algo, null, encoded, iv,
+                    cipherMode);
         }
     }
 
     public static int EVP_CipherUpdate(PointerByReference context, ByteBuffer outBuffer,
             int[] outlen, ByteBuffer inBuffer, int remaining) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
-                    remaining);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
+            return OpenSsl11XNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
                     remaining);
         } else {
-            return 0;
+            return OpenSsl10XNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
+                    remaining);
         }
     }
 
     public static int RAND_bytes(ByteBuffer buf, int length) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.RAND_bytes(buf, length);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.RAND_bytes(buf, length);
+            return OpenSsl11XNativeJna.RAND_bytes(buf, length);
         } else {
-            return 0;
+            return OpenSsl10XNativeJna.RAND_bytes(buf, length);
         }
     }
 
     public static PointerByReference RAND_get_rand_method() {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.RAND_get_rand_method();
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.RAND_get_rand_method();
+            return OpenSsl11XNativeJna.RAND_get_rand_method();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.RAND_get_rand_method();
         }
     }
 
     public static PointerByReference RAND_SSLeay() {
         if (VERSION == VERSION_1_1_X) {
             return null;
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.RAND_SSLeay();
         } else {
-            return null;
+            return OpenSsl10XNativeJna.RAND_SSLeay();
         }
     }
 
     public static String OpenSSLVersion(int i) {
         if (VERSION == VERSION_1_1_X) {
-            return OpenSsl110NativeJna.OpenSSL_version(i);
-        } else if (VERSION == VERSION_1_0_X) {
-            return OpenSsl102NativeJna.SSLeay_version(i);
+            return OpenSsl11XNativeJna.OpenSSL_version(i);
         } else {
-            return null;
+            return OpenSsl10XNativeJna.SSLeay_version(i);
         }
     }
 
     public static void ENGINE_load_rdrand() {
         if (VERSION == VERSION_1_1_X) {
             return;
-        } else if (VERSION == VERSION_1_0_X) {
-            OpenSsl102NativeJna.ENGINE_load_rdrand();
         } else {
-            return;
+            OpenSsl10XNativeJna.ENGINE_load_rdrand();
         }
     }
 
     public static void ENGINE_cleanup() {
         if (VERSION == VERSION_1_1_X) {
             return;
-        } else if (VERSION == VERSION_1_0_X) {
-            OpenSsl102NativeJna.ENGINE_cleanup();
         } else {
-            return;
+            OpenSsl10XNativeJna.ENGINE_cleanup();
         }
     }
 
     public static void EVP_CIPHER_CTX_cleanup(PointerByReference context) {
         if (VERSION == VERSION_1_1_X) {
             return;
-        } else if (VERSION == VERSION_1_0_X) {
-            OpenSsl102NativeJna.EVP_CIPHER_CTX_cleanup(context);
         } else {
-            return;
+            OpenSsl10XNativeJna.EVP_CIPHER_CTX_cleanup(context);
         }
     }
 }

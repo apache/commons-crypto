@@ -24,7 +24,7 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
 
-class OpenSsl102NativeJna {
+class OpenSsl11XNativeJna {
 
     static final boolean INIT_OK;
 
@@ -45,26 +45,6 @@ class OpenSsl102NativeJna {
             INIT_ERROR = thrown;
         }
     }
-
-    /**
-     * @return OPENSSL_VERSION_NUMBER which is a numeric release version identifier
-     */
-    public static native NativeLong SSLeay();
-
-    /**
-     * Retrieves version/build information about OpenSSL library.
-     *
-     * @param type
-     *            type can be SSLEAY_VERSION, SSLEAY_CFLAGS, SSLEAY_BUILT_ON...
-     * @return A pointer to a constant string describing the version of the OpenSSL library or
-     *         giving information about the library build.
-     */
-    public static native String SSLeay_version(int type);
-
-    /**
-     * Registers the error strings for all libcrypto functions.
-     */
-    public static native void ERR_load_crypto_strings();
 
     /**
      * @return the earliest error code from the thread's error queue without modifying it.
@@ -90,14 +70,6 @@ class OpenSsl102NativeJna {
      * @return a pointer to a newly created EVP_CIPHER_CTX for success and NULL for failure.
      */
     public static native PointerByReference EVP_CIPHER_CTX_new();
-
-    /**
-     * EVP_CIPHER_CTX_init() remains as an alias for EVP_CIPHER_CTX_reset
-     * 
-     * @param p
-     *            cipher context
-     */
-    public static native void EVP_CIPHER_CTX_init(PointerByReference p);
 
     /**
      * Enables or disables padding
@@ -208,7 +180,6 @@ class OpenSsl102NativeJna {
      * @param c
      *            openssl evp cipher
      */
-    public static native void EVP_CIPHER_CTX_cleanup(PointerByReference c);
 
     // Random generator
     /**
@@ -217,13 +188,6 @@ class OpenSsl102NativeJna {
      * @return pointers to the respective methods
      */
     public static native PointerByReference RAND_get_rand_method();
-
-    /**
-     * OpenSSL uses for random number generation.
-     * 
-     * @return pointers to the respective methods
-     */
-    public static native PointerByReference RAND_SSLeay();
 
     /**
      * Generates random data
@@ -253,13 +217,6 @@ class OpenSsl102NativeJna {
      * @return 0 on success, 1 otherwise.
      */
     public static native int ENGINE_free(PointerByReference e);
-
-    /**
-     * Cleanups before program exit, it will avoid memory leaks.
-     * 
-     * @return 0 on success, 1 otherwise.
-     */
-    public static native int ENGINE_cleanup();
 
     /**
      * Obtains a functional reference from an existing structural reference.
@@ -292,7 +249,12 @@ class OpenSsl102NativeJna {
     public static native PointerByReference ENGINE_by_id(String id);
 
     /**
-     * Initializes the engine.
+     * Retrieves version/build information about OpenSSL library.
+     *
+     * @param type
+     *            type can be OPENSSL_VERSION, OPENSSL_CFLAGS, OPENSSL_BUILT_ON...
+     * @return A pointer to a constant string describing the version of the OpenSSL library or
+     *         giving information about the library build.
      */
-    public static native void ENGINE_load_rdrand();
+    public static native String OpenSSL_version(int type);
 }
