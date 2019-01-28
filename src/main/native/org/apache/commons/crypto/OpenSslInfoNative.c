@@ -40,7 +40,7 @@
 
 #ifdef UNIX
 static unsigned long (*dlsym_OpenSSL_version_num) (void);
-static char * (*dlsym_OpenSSL_version) (int);
+static const char * (*dlsym_OpenSSL_version) (int);
 static void *openssl;
 #endif
 
@@ -51,10 +51,6 @@ typedef char * (__cdecl *__dlsym_OpenSSL_version) (int);
 static __dlsym_OpenSSL dlsym_OpenSSL;
 static __dlsym_OpenSSL_version dlsym_OpenSSL_version;
 HMODULE openssl;
-#endif
-
-#ifdef UNIX
-static void get_methods(JNIEnv *env, void *openssl);
 #endif
 
 static int load_library(JNIEnv *env)
@@ -80,30 +76,7 @@ static int load_library(JNIEnv *env)
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
   }
-  get_methods(env, openssl);
   return 1;
-}
-
-#ifdef UNIX
-static void get_methods(JNIEnv *env, void *openssl)
-#endif
-#ifdef WINDOWS
-static void get_methods(JNIEnv *env, HMODULE openssl)
-#endif
-{
-#ifdef UNIX
-  dlerror();  // Clear any existing error
-#if OPENSSL_VERSION_NUMBER > VERSION_1_1_x
-  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num");
-  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
-#elif OPENSSL_VERSION_NUMBER > VERSION_1_0_x
-  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version_num, env, openssl, "SSLeay");
-  LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
-#endif
-#endif
-
-#ifdef WINDOWS
-#endif
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_NativeVersion
@@ -130,6 +103,11 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenSSL
     if (!load_library(env)) {
         return 0;
     }
+    if(OPENSSL_VERSION_NUMBER > VERSION_1_1_X){
+    	dlsym_OpenSSL_version_num = do_dlsym(env, openssl, "OpenSSL_version_num");
+    } else {
+    	dlsym_OpenSSL_version_num = do_dlsym(env, openssl, "SSLeay");
+    }
     jlong version_num = (jlong)dlsym_OpenSSL_version_num();
     return version_num;
 }
@@ -139,6 +117,11 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenS
 {
     if (!load_library(env)) {
         return NULL;
+    }
+    if(OPENSSL_VERSION_NUMBER > VERSION_1_1_X){
+    	dlsym_OpenSSL_version = do_dlsym(env, openssl, "OpenSSL_version");
+    } else {
+    	dlsym_OpenSSL_version = do_dlsym(env, openssl, "SSLeay_version");
     }
     jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
     return answer;
