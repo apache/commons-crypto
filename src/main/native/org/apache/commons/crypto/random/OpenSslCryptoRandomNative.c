@@ -50,6 +50,7 @@ static int (*dlsym_ENGINE_finish) (ENGINE *);
 static int (*dlsym_ENGINE_free) (ENGINE *);
 static int (*dlsym_RAND_bytes) (unsigned char *, int);
 static unsigned long (*dlsym_ERR_get_error) (void);
+static void *openssl;
 #endif
 
 #ifdef WINDOWS
@@ -176,9 +177,6 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRa
  */
 static ENGINE * openssl_rand_init(JNIEnv *env)
 {
-//  if (!load_library(env)) {
-//      return 0;
-//  }
   if (OPENSSL_VERSION_NUMBER < VERSION_1_1_X) {
 	static void (*dlsym_ENGINE_load_rdrand) (void);
 	dlsym_ENGINE_load_rdrand = do_dlsym(env, openssl, "dlsym_ENGINE_load_rdrand");
