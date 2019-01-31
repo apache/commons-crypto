@@ -99,6 +99,8 @@ void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
   if ((func_ptr = do_dlsym(env, handle, symbol)) == NULL) { \
     return; \
   }
+
+static void *openssl;
 #endif
 // Unix part end
 
