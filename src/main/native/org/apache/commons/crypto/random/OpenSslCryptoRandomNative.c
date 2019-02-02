@@ -179,13 +179,13 @@ static ENGINE * openssl_rand_init(JNIEnv *env)
 {
   if (OPENSSL_VERSION_NUMBER < VERSION_1_1_X) {
 	static void (*dlsym_ENGINE_load_rdrand) (void);
-	dlsym_ENGINE_load_rdrand = do_dlsym(env, openssl, "dlsym_ENGINE_load_rdrand");
+	dlsym_ENGINE_load_rdrand = do_dlsym(env, openssl, "ENGINE_load_rdrand");
 	static int (*dlsym_CRYPTO_num_locks) (void);
-	dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "dlsym_CRYPTO_num_locks");
+	dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "CRYPTO_num_locks");
 	static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-	dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "dlsym_CRYPTO_set_locking_callback");
+	dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
 	static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
-	dlsym_CRYPTO_set_id_callback = do_dlsym(env, openssl, "dlsym_CRYPTO_set_id_callback");
+	dlsym_CRYPTO_set_id_callback = do_dlsym(env, openssl, "CRYPTO_set_id_callback");
 
 	int i;
 	lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() *  \
@@ -238,11 +238,11 @@ static void openssl_rand_clean(JNIEnv *env, ENGINE *eng, int clean_locks)
 
   if(OPENSSL_VERSION_NUMBER < VERSION_1_1_X) {
 	static void (*dlsym_ENGINE_cleanup) (void);
-	dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "dlsym_ENGINE_cleanup");
+	dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "ENGINE_cleanup");
 	static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-	dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "dlsym_CRYPTO_set_locking_callback");
+	dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
 	static int (*dlsym_CRYPTO_num_locks) (void);
-	dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "dlsym_CRYPTO_num_locks");
+	dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "CRYPTO_num_locks");
 	dlsym_ENGINE_cleanup();
 	if (clean_locks) {
 	  int i;
