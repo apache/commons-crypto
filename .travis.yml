@@ -33,4 +33,4 @@ jdk:
 script:
   - mvn apache-rat:check
   - mvn verify
-  - mvn site
+  - mvn site -X
