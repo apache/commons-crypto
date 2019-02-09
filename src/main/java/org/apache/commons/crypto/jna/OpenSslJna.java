@@ -28,28 +28,28 @@ public final class OpenSslJna {
     /**
      * @return The cipher class of JNA implementation
      */
-    static Class<? extends CryptoCipher> getCipherClass() {
+    public static Class<? extends CryptoCipher> getCipherClass() {
         return OpenSslJnaCipher.class;
     }
 
     /**
      * @return The random class of JNA implementation
      */
-    static Class<? extends CryptoRandom> getRandomClass() {
+    public static Class<? extends CryptoRandom> getRandomClass() {
         return OpenSslJnaCryptoRandom.class;
     }
 
     /**
      * @return true if JNA native loads successfully
      */
-    static boolean isEnabled() {
+    public static boolean isEnabled() {
         return OpenSslNativeJna.INIT_OK;
     }
 
     /**
      * @return the error of JNA
      */
-    static Throwable initialisationError() {
+    public static Throwable initialisationError() {
         return OpenSslNativeJna.INIT_ERROR;
     }
 
