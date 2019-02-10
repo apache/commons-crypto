@@ -86,7 +86,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 {
   char msg[1000];
 #ifdef UNIX
-  void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
 #endif
 
 #ifdef WINDOWS
@@ -144,11 +144,6 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
   openssl_rand_init(env);
 }
 
-static int openssl_rand_bytes(unsigned char *buf, int num)
-{
-  return dlsym_RAND_bytes(buf, num);
-}
-
 JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_nextRandBytes___3B
     (JNIEnv *env, jobject object, jbyteArray bytes)
 {
@@ -172,32 +167,123 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRa
 }
 
 /**
+ * To ensure thread safety for random number generators, we need to call
+ * CRYPTO_set_locking_callback.
+ * http://wiki.openssl.org/index.php/Random_Numbers
+ * Example: crypto/threads/mttest.c
+ */
+
+#ifdef WINDOWS
+static void windows_locking_callback(int mode, int type, char *file, int line);
+static HANDLE *lock_cs;
+
+static void locks_setup(void)
+{
+  int i;
+  lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(HANDLE),  \
+      __FILE__, __LINE__);
+
+  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+    lock_cs[i] = CreateMutex(NULL, FALSE, NULL);
+  }
+  dlsym_CRYPTO_set_locking_callback((void (*)(int, int, char *, int))  \
+      windows_locking_callback);
+  /* id callback defined */
+}
+
+static void locks_cleanup(void)
+{
+  int i;
+  dlsym_CRYPTO_set_locking_callback(NULL);
+
+  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+    CloseHandle(lock_cs[i]);
+  }
+  dlsym_CRYPTO_free(lock_cs);
+}
+
+static void windows_locking_callback(int mode, int type, char *file, int line)
+{
+  UNUSED(file), UNUSED(line);
+
+  if (mode & CRYPTO_LOCK) {
+    WaitForSingleObject(lock_cs[type], INFINITE);
+  } else {
+    ReleaseMutex(lock_cs[type]);
+  }
+}
+#endif /* WINDOWS */
+
+#ifdef UNIX
+static void pthreads_locking_callback(int mode, int type, char *file, int line);
+static unsigned long pthreads_thread_id(void);
+static pthread_mutex_t *lock_cs;
+
+static void locks_setup(JNIEnv *env)
+{
+  int i;
+  static int (*dlsym_CRYPTO_num_locks) (void);
+  dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "CRYPTO_num_locks");
+  lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() *  \
+      sizeof(pthread_mutex_t), __FILE__, __LINE__);
+
+  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+    pthread_mutex_init(&(lock_cs[i]), NULL);
+  }
+
+  static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
+  dlsym_CRYPTO_set_id_callback = do_dlsym(env, openssl, "CRYPTO_set_id_callback");
+  static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
+  dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
+
+  dlsym_CRYPTO_set_id_callback((unsigned long (*)())pthreads_thread_id);
+  dlsym_CRYPTO_set_locking_callback((void (*)())pthreads_locking_callback);
+}
+
+static void locks_cleanup(JNIEnv *env)
+{
+  int i;
+  static int (*dlsym_CRYPTO_num_locks) (void);
+  dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "CRYPTO_num_locks");
+  static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
+  dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
+  dlsym_CRYPTO_set_locking_callback(NULL);
+
+  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+    pthread_mutex_destroy(&(lock_cs[i]));
+  }
+
+  dlsym_CRYPTO_free(lock_cs);
+}
+
+static void pthreads_locking_callback(int mode, int type, char *file, int line)
+{
+  UNUSED(file), UNUSED(line);
+
+  if (mode & CRYPTO_LOCK) {
+    pthread_mutex_lock(&(lock_cs[type]));
+  } else {
+    pthread_mutex_unlock(&(lock_cs[type]));
+  }
+}
+
+static unsigned long pthreads_thread_id(void)
+{
+  return (unsigned long)syscall(SYS_gettid);
+}
+
+#endif /* UNIX */
+
+/**
  * If using an Intel chipset with RDRAND, the high-performance hardware
  * random number generator will be used.
  */
 static ENGINE * openssl_rand_init(JNIEnv *env)
 {
   if (OPENSSL_VERSION_NUMBER < VERSION_1_1_X) {
+    locks_setup(env);
 	static void (*dlsym_ENGINE_load_rdrand) (void);
 	dlsym_ENGINE_load_rdrand = do_dlsym(env, openssl, "ENGINE_load_rdrand");
-	static int (*dlsym_CRYPTO_num_locks) (void);
-	dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "CRYPTO_num_locks");
-	static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-	dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
-	static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
-	dlsym_CRYPTO_set_id_callback = do_dlsym(env, openssl, "CRYPTO_set_id_callback");
-
-	int i;
-	lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() *  \
-	    sizeof(pthread_mutex_t), __FILE__, __LINE__);
-
-	for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-	  pthread_mutex_init(&(lock_cs[i]), NULL);
-	}
-
-	dlsym_CRYPTO_set_id_callback((unsigned long (*)())pthreads_thread_id);
-	dlsym_CRYPTO_set_locking_callback((void (*)())pthreads_locking_callback);
-
 	dlsym_ENGINE_load_rdrand();
   }
 
@@ -239,35 +325,14 @@ static void openssl_rand_clean(JNIEnv *env, ENGINE *eng, int clean_locks)
   if(OPENSSL_VERSION_NUMBER < VERSION_1_1_X) {
 	static void (*dlsym_ENGINE_cleanup) (void);
 	dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "ENGINE_cleanup");
-	static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-	dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
-	static int (*dlsym_CRYPTO_num_locks) (void);
-	dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "CRYPTO_num_locks");
 	dlsym_ENGINE_cleanup();
 	if (clean_locks) {
-	  int i;
-	  dlsym_CRYPTO_set_locking_callback(NULL);
-
-	  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-	    pthread_mutex_destroy(&(lock_cs[i]));
-	  }
-	    dlsym_CRYPTO_free(lock_cs);
-	}
+      locks_cleanup(env);
+    }
   }
 }
 
-static void pthreads_locking_callback(int mode, int type, char *file, int line)
+static int openssl_rand_bytes(unsigned char *buf, int num)
 {
-  UNUSED(file), UNUSED(line);
-
-  if (mode & CRYPTO_LOCK) {
-    pthread_mutex_lock(&(lock_cs[type]));
-  } else {
-    pthread_mutex_unlock(&(lock_cs[type]));
-  }
-}
-
-static unsigned long pthreads_thread_id(void)
-{
-  return (unsigned long)syscall(SYS_gettid);
+  return dlsym_RAND_bytes(buf, num);
 }
