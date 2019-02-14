@@ -17,7 +17,6 @@
  */
 
 #include "org_apache_commons_crypto.h"
-#include "../OpenSslInfoNative.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -208,15 +207,15 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   }
 }
 
-static int check_update_max_output_len(JNIEnv *env, EVP_CIPHER_CTX *context, jlong ctx, int input_len, int max_output_len);
-static int check_doFinal_max_output_len(JNIEnv *env, EVP_CIPHER_CTX *context, int max_output_len);
-static int is_bad_tag(JNIEnv *env, EVP_CIPHER_CTX *context, jlong ctx);
-
 typedef struct EVP_CTX_Wrapper {
   int initialized;
   int encrypt; // ENCRYPT_MODE or DECRYPT_MODE
   EVP_CIPHER_CTX *ctx;
 } EVP_CTX_Wrapper;
+
+static int check_update_max_output_len(EVP_CTX_Wrapper *wrapper, int input_len, int max_output_len);
+static int check_doFinal_max_output_len(JNIEnv *env, EVP_CIPHER_CTX *context, int max_output_len);
+static int is_bad_tag(EVP_CTX_Wrapper *wrapper);
 
 #define CTX_WRAPPER(addr) ((EVP_CTX_Wrapper *)(ptrdiff_t) addr)
 
@@ -444,7 +443,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
     return 0;
   }
 
-  if (!check_update_max_output_len(env, context, ctx, input_len, max_output_len)) {
+  if (!check_update_max_output_len(CTX_WRAPPER(ctx), input_len, max_output_len)) {
     THROW(env, "javax/crypto/ShortBufferException",  \
         "Output buffer is not sufficient.");
     return 0;
@@ -477,7 +476,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
   }
 
   // when provide AAD to EVP cipher, output is NULL.
-  if (output != NULL && !check_update_max_output_len(env, context, ctx, input_len, max_output_len)) {
+  if (output != NULL && !check_update_max_output_len(CTX_WRAPPER(ctx), input_len, max_output_len)) {
     THROW(env, "javax/crypto/ShortBufferException", "Output buffer is not sufficient.");
     return 0;
   }
@@ -524,7 +523,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
     return 0;
   }
 
-  if (!check_update_max_output_len(env, context, ctx, input_len, max_output_len)) {
+  if (!check_update_max_output_len(CTX_WRAPPER(ctx), input_len, max_output_len)) {
     THROW(env, "javax/crypto/ShortBufferException",  \
         "Output buffer is not sufficient.");
     return 0;
@@ -576,7 +575,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
   int output_len = 0;
   if (!dlsym_EVP_CipherFinal_ex(context, output_bytes, &output_len)) {
     // validate tag in GCM mode when decrypt
-    if (is_bad_tag(env, context, ctx)) {
+    if (is_bad_tag(CTX_WRAPPER(ctx))) {
       THROW(env, "javax/crypto/AEADBadTagException", "Tag mismatch!");
     } else {
       THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
@@ -613,7 +612,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
 
   if (rc == 0) {
     // validate tag in GCM mode when decrypt
-    if (is_bad_tag(env, context, ctx)) {
+    if (is_bad_tag(CTX_WRAPPER(ctx))) {
     THROW(env, "javax/crypto/AEADBadTagException", "Tag mismatch!");
     } else {
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherFinal_ex.");
@@ -678,16 +677,15 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_clean
   free_context_wrapper(wrapper);
 }
 
-static int check_update_max_output_len(JNIEnv *env, EVP_CIPHER_CTX *context, jlong ctx, int input_len, int max_output_len)
+static int check_update_max_output_len(EVP_CTX_Wrapper *wrapper, int input_len, int max_output_len)
 {
-  EVP_CTX_Wrapper *wrapper = CTX_WRAPPER(ctx);
-  if (dlsym_EVP_CIPHER_CTX_test_flags(context, EVP_CIPH_NO_PADDING) == EVP_CIPH_NO_PADDING) {
+  if (dlsym_EVP_CIPHER_CTX_test_flags(wrapper->ctx, EVP_CIPH_NO_PADDING) == EVP_CIPH_NO_PADDING) {
 	if (max_output_len >= input_len) {
 	  return 1;
 	}
 	return 0;
   } else {
-	int b = dlsym_EVP_CIPHER_CTX_block_size(context);
+	int b = dlsym_EVP_CIPHER_CTX_block_size(wrapper->ctx);
 	if (wrapper->encrypt) {
 	  if (max_output_len >= input_len + b - 1) {
 	    return 1;
@@ -710,14 +708,13 @@ static int check_doFinal_max_output_len(JNIEnv *env, EVP_CIPHER_CTX *context, in
     if (max_output_len >= b) {
       return 1;
     }
-  return 0;
+    return 0;
   }
 }
 
-static int is_bad_tag(JNIEnv *env, EVP_CIPHER_CTX *context, jlong ctx)
+static int is_bad_tag(EVP_CTX_Wrapper *wrapper)
 {
-  EVP_CTX_Wrapper *wrapper = CTX_WRAPPER(ctx);
-  EVP_CIPHER* ciph = dlsym_EVP_CIPHER_CTX_cipher(context);
+  EVP_CIPHER* ciph = dlsym_EVP_CIPHER_CTX_cipher(wrapper->ctx);
   unsigned long flags = dlsym_EVP_CIPHER_flags(ciph);
   if ((flags & EVP_CIPH_MODE) == EVP_CIPH_GCM_MODE && wrapper->encrypt == DECRYPT_MODE) {
     return 1;

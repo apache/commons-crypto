@@ -50,6 +50,7 @@ static int (*dlsym_ENGINE_finish) (ENGINE *);
 static int (*dlsym_ENGINE_free) (ENGINE *);
 static int (*dlsym_RAND_bytes) (unsigned char *, int);
 static unsigned long (*dlsym_ERR_get_error) (void);
+static unsigned long (*dlsym_OpenSSL_version_num)(void);
 static void *openssl;
 #endif
 
@@ -118,6 +119,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_free, env, openssl, "ENGINE_free");
   LOAD_DYNAMIC_SYMBOL(dlsym_RAND_bytes, env, openssl, "RAND_bytes");
   LOAD_DYNAMIC_SYMBOL(dlsym_ERR_get_error, env, openssl, "ERR_get_error");
+  LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
 #endif
 
 #ifdef WINDOWS
@@ -280,7 +282,7 @@ static unsigned long pthreads_thread_id(void)
  */
 static ENGINE * openssl_rand_init(JNIEnv *env)
 {
-  if (OPENSSL_VERSION_NUMBER < VERSION_1_1_X) {
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
     locks_setup(env);
 	static void (*dlsym_ENGINE_load_rdrand) (void);
 	dlsym_ENGINE_load_rdrand = do_dlsym(env, openssl, "ENGINE_load_rdrand");
@@ -322,7 +324,7 @@ static void openssl_rand_clean(JNIEnv *env, ENGINE *eng, int clean_locks)
 	dlsym_ENGINE_free(eng);
   }
 
-  if(OPENSSL_VERSION_NUMBER < VERSION_1_1_X) {
+  if(dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
 	static void (*dlsym_ENGINE_cleanup) (void);
 	dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "ENGINE_cleanup");
 	dlsym_ENGINE_cleanup();
