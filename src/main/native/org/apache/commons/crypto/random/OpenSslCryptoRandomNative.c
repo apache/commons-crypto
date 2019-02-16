@@ -324,7 +324,7 @@ static void openssl_rand_clean(JNIEnv *env, ENGINE *eng, int clean_locks)
     dlsym_ENGINE_free(eng);
   }
 
-  if(dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
     static void (*dlsym_ENGINE_cleanup) (void);
     if((dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "ENGINE_cleanup")) == NULL) {
 	THROW(env, "java/lang/UnsatisfiedLinkError", "ENGINE_cleanup");
