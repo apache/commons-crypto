@@ -97,12 +97,12 @@ void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
 static __attribute__ ((unused))
 void *do_version_dlsym(JNIEnv *env, void *handle) {
   if (!env || !handle) {
-	  THROW(env, "java/lang/InternalError", NULL);
-	  return NULL;
+    THROW(env, "java/lang/InternalError", NULL);
+      return NULL;
   }
   void *func_ptr = dlsym(handle, "OpenSSL_version_num");
   if (func_ptr == NULL) {
-	  func_ptr = dlsym(handle, "SSLeay");
+    func_ptr = dlsym(handle, "SSLeay");
   }
   return func_ptr;
 }
@@ -115,9 +115,9 @@ void *do_version_dlsym(JNIEnv *env, void *handle) {
 
 /* A macro to dlsym the appropriate OpenSSL version number function. */
 #define LOAD_OPENSSL_VERSION_FUNCTION(func_ptr, env, handle) \
-if ((func_ptr = do_version_dlsym(env, handle)) == NULL) { \
-	THROW(env, "java/lang/Error", NULL); \
-}
+  if ((func_ptr = do_version_dlsym(env, handle)) == NULL) { \
+    THROW(env, "java/lang/Error", NULL); \
+  }
 #endif
 // Unix part end
 

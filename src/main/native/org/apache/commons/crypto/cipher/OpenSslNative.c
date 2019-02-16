@@ -680,22 +680,22 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_clean
 static int check_update_max_output_len(EVP_CTX_Wrapper *wrapper, int input_len, int max_output_len)
 {
   if (dlsym_EVP_CIPHER_CTX_test_flags(wrapper->ctx, EVP_CIPH_NO_PADDING) == EVP_CIPH_NO_PADDING) {
-	if (max_output_len >= input_len) {
-	  return 1;
-	}
-	return 0;
+    if (max_output_len >= input_len) {
+      return 1;
+    }
+    return 0;
   } else {
-	int b = dlsym_EVP_CIPHER_CTX_block_size(wrapper->ctx);
-	if (wrapper->encrypt) {
-	  if (max_output_len >= input_len + b - 1) {
-	    return 1;
-	  }
-	} else {
-	  if (max_output_len >= input_len + b) {
-	    return 1;
-	  }
-	}
-	return 0;
+    int b = dlsym_EVP_CIPHER_CTX_block_size(wrapper->ctx);
+    if (wrapper->encrypt) {
+      if (max_output_len >= input_len + b - 1) {
+        return 1;
+      }
+    } else {
+      if (max_output_len >= input_len + b) {
+        return 1;
+      }
+    }
+    return 0;
   }
 }
 

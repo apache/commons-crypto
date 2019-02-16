@@ -284,51 +284,53 @@ static ENGINE * openssl_rand_init(JNIEnv *env)
 {
   if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
     locks_setup(env);
-	static void (*dlsym_ENGINE_load_rdrand) (void);
-	dlsym_ENGINE_load_rdrand = do_dlsym(env, openssl, "ENGINE_load_rdrand");
-	dlsym_ENGINE_load_rdrand();
+    static void (*dlsym_ENGINE_load_rdrand) (void);
+    dlsym_ENGINE_load_rdrand = do_dlsym(env, openssl, "ENGINE_load_rdrand");
+    dlsym_ENGINE_load_rdrand();
   }
 
   ENGINE *eng = dlsym_ENGINE_by_id("rdrand");
 
-    int ret = -1;
-    do {
-      if (NULL == eng) {
-        break;
-      }
-
-      int rc = dlsym_ENGINE_init(eng);
-      if (0 == rc) {
-        break;
-      }
-
-      rc = dlsym_ENGINE_set_default(eng, ENGINE_METHOD_RAND);
-      if (0 == rc) {
-        break;
-      }
-
-      ret = 0;
-    } while(0);
-
-    if (ret == -1) {
-      openssl_rand_clean(env, eng, 0);
+  int ret = -1;
+  do {
+    if (NULL == eng) {
+      break;
     }
 
-    return eng;
+    int rc = dlsym_ENGINE_init(eng);
+    if (0 == rc) {
+      break;
+    }
+
+    rc = dlsym_ENGINE_set_default(eng, ENGINE_METHOD_RAND);
+    if (0 == rc) {
+      break;
+    }
+
+    ret = 0;
+  } while(0);
+
+  if (ret == -1) {
+    openssl_rand_clean(env, eng, 0);
+  }
+
+  return eng;
 }
 
 static void openssl_rand_clean(JNIEnv *env, ENGINE *eng, int clean_locks)
 {
   if (NULL != eng) {
-	dlsym_ENGINE_finish(eng);
-	dlsym_ENGINE_free(eng);
+    dlsym_ENGINE_finish(eng);
+    dlsym_ENGINE_free(eng);
   }
 
   if(dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-	static void (*dlsym_ENGINE_cleanup) (void);
-	dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "ENGINE_cleanup");
-	dlsym_ENGINE_cleanup();
-	if (clean_locks) {
+    static void (*dlsym_ENGINE_cleanup) (void);
+    if((dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "ENGINE_cleanup")) == NULL) {
+	THROW(env, "java/lang/UnsatisfiedLinkError", "ENGINE_cleanup");
+    }
+    dlsym_ENGINE_cleanup();
+    if (clean_locks) {
       locks_cleanup(env);
     }
   }
