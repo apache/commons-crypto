@@ -132,8 +132,8 @@ public final class Crypto {
             System.out.println("Native code loaded OK " + OpenSslInfoNative.NativeVersion());
             System.out.println("Native Name " + OpenSslInfoNative.NativeName());
             System.out.println("Native Built " + OpenSslInfoNative.NativeTimeStamp());
-            System.out.println("OpenSSL library loaded OK, version: 0x" + Long.toHexString(OpenSslInfoNative.SSLeay()));
-            System.out.println(OpenSslInfoNative.SSLeayVersion(0));
+            System.out.println("OpenSSL library loaded OK, version: 0x" + Long.toHexString(OpenSslInfoNative.OpenSSL()));
+            System.out.println("OpenSSL library info " + OpenSslInfoNative.OpenSSLVersion(0));
             {
                 Properties props = new Properties();
                 props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
@@ -146,9 +146,9 @@ public final class Crypto {
                 CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props);
                 System.out.println("Cipher instance created OK");
             }
-            System.out.println("Additional SSLeay_version(n) details:");
+            System.out.println("Additional OpenSSL_version(n) details:");
             for(int j=1;j<6;j++) {
-                System.out.println(j+": "+ OpenSslInfoNative.SSLeayVersion(j));
+                System.out.println(j+": "+ OpenSslInfoNative.OpenSSLVersion(j));
             }
         } else {
             System.out.println("Native load failed: " + getLoadingError());            

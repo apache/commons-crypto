@@ -94,10 +94,29 @@ void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
   return func_ptr;
 }
 
+static __attribute__ ((unused))
+void *do_version_dlsym(JNIEnv *env, void *handle) {
+  if (!env || !handle) {
+    THROW(env, "java/lang/InternalError", NULL);
+      return NULL;
+  }
+  void *func_ptr = dlsym(handle, "OpenSSL_version_num");
+  if (func_ptr == NULL) {
+    func_ptr = dlsym(handle, "SSLeay");
+  }
+  return func_ptr;
+}
+
 /* A helper macro to dlsym the requisite dynamic symbol and bail-out on error. */
 #define LOAD_DYNAMIC_SYMBOL(func_ptr, env, handle, symbol) \
   if ((func_ptr = do_dlsym(env, handle, symbol)) == NULL) { \
     return; \
+  }
+
+/* A macro to dlsym the appropriate OpenSSL version number function. */
+#define LOAD_OPENSSL_VERSION_FUNCTION(func_ptr, env, handle) \
+  if ((func_ptr = do_version_dlsym(env, handle)) == NULL) { \
+    THROW(env, "java/lang/Error", NULL); \
   }
 #endif
 // Unix part end
@@ -195,6 +214,7 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
 #include <openssl/aes.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
+#include <openssl/opensslv.h>
 
 /**
  * A helper macro to convert the java 'context-handle'
@@ -224,6 +244,8 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
 #define NOPADDING 0
 #define PKCS5PADDING 1
 
+#define VERSION_1_0_X 0x10000000
+#define VERSION_1_1_X 0x10100000
 
 #endif
 

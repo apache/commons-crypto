@@ -106,7 +106,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
                 close();
                 throw new RuntimeException("rdrand should be used but default is detected");
             }
-            
+
             ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
             int retVal = OpenSslNativeJna.RAND_bytes(buf, bytes.length);
             throwOnError(retVal);

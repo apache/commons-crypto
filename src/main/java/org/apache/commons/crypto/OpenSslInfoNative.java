@@ -18,13 +18,16 @@
 package org.apache.commons.crypto;
 
 /**
- * JNI interface of {@see CryptoRandom} implementation for OpenSSL.
+ * JNI interface of {@link CryptoRandom} implementation for OpenSSL.
  * The native method in this class is defined in 
  * OpenSslCryptoRandomNative.h (generated at build time by javah)
  * and implemented in the file
  * src/main/native/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c
  */
 class OpenSslInfoNative {
+
+    public static final long VERSION_1_0_2X = 0x10002000;
+    public static final long VERSION_1_1_0X = 0x10100000;
 
     /**
      * Makes the constructor private.
@@ -46,16 +49,18 @@ class OpenSslInfoNative {
      * @return timestamp of native
      */
     public static native String NativeTimeStamp();
-
+    
+    
     /**
-     * @return the value of SSLEAY_VERSION_NUMBER.
+     * @return the value of OPENSSL_VERSION_NUMBER.
      */
-    public static native long SSLeay();
-
+    public static native long OpenSSL();
+    
     /**
-     * Returns SSLeay_version according the version type.
+     * Returns OpenSSL_version according the version type.
+     * 
      * @param type The version type
      * @return The text variant of the version number and the release date.
      */
-    public static native String SSLeayVersion(int type);
+    public static native String OpenSSLVersion(int type);
 }
