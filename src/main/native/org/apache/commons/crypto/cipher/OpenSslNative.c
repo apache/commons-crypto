@@ -102,6 +102,7 @@ static __dlsym_EVP_aes_128_cbc dlsym_EVP_aes_128_cbc;
 static __dlsym_EVP_aes_256_gcm dlsym_EVP_aes_256_gcm;
 static __dlsym_EVP_aes_192_gcm dlsym_EVP_aes_192_gcm;
 static __dlsym_EVP_aes_128_gcm dlsym_EVP_aes_128_gcm;
+HMODULE openssl;
 #endif
 
 #ifdef UNIX
@@ -155,7 +156,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
 #endif
 
 #ifdef WINDOWS
-  HMODULE openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
+  openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
 #endif
 
   if (!openssl) {

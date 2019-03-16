@@ -75,7 +75,7 @@ static __dlsym_ENGINE_free dlsym_ENGINE_free;
 static __dlsym_RAND_bytes dlsym_RAND_bytes;
 static __dlsym_ERR_get_error dlsym_ERR_get_error;
 static __dlsym_OpenSSL_version_num dlsym_OpenSSL_version_num;
-static void *openssl;
+HMODULE openssl;
 #endif
 
 static ENGINE * openssl_rand_init(JNIEnv *env);
@@ -94,7 +94,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 #endif
 
 #ifdef WINDOWS
-  HMODULE openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
+  openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
 #endif
 
   if (!openssl) {
