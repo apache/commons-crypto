@@ -45,10 +45,9 @@ static void *openssl;
 #endif
 
 #ifdef WINDOWS
-typedef unsigned long (__cdecl *__dlsym_OpenSSL) (void);
-static __dlsym_OpenSSL dlsym_OpenSSL;
+typedef unsigned long (__cdecl *__dlsym_OpenSSL_version_num) (void);
 typedef char * (__cdecl *__dlsym_OpenSSL_version) (int);
-static __dlsym_OpenSSL dlsym_OpenSSL;
+static __dlsym_OpenSSL_version_num dlsym_OpenSSL_version_num;
 static __dlsym_OpenSSL_version dlsym_OpenSSL_version;
 HMODULE openssl;
 #endif
@@ -76,9 +75,7 @@ static int load_library(JNIEnv *env)
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
   }
-#ifdef UNIX
   LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
-#endif
   return 1;
 }
 
@@ -117,9 +114,19 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenS
         return NULL;
     }
     if (dlsym_OpenSSL_version_num() > VERSION_1_1_X) {
-    	dlsym_OpenSSL_version = do_dlsym(env, openssl, "OpenSSL_version");
+#ifdef UNIX
+        dlsym_OpenSSL_version = do_dlsym(env, openssl, "OpenSSL_version");
+#endif
+#ifdef WINDOWS
+        dlsym_OpenSSL_version = (__dlsym_OpenSSL_version) do_dlsym(env, openssl, "OpenSSL_version");
+#endif
     } else {
-    	dlsym_OpenSSL_version = do_dlsym(env, openssl, "SSLeay_version");
+#ifdef UNIX
+        dlsym_OpenSSL_version = do_dlsym(env, openssl, "SSLeay_version");
+#endif
+#ifdef WINDOWS
+        dlsym_OpenSSL_version = (__dlsym_OpenSSL_version) do_dlsym(env, openssl, "SSLeay_version");
+#endif
     }
     jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
     return answer;

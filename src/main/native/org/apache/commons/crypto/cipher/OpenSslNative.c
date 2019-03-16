@@ -61,6 +61,10 @@ typedef void (__cdecl *__dlsym_EVP_CIPHER_CTX_free)(EVP_CIPHER_CTX *);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_reset)(EVP_CIPHER_CTX *);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_set_padding)(EVP_CIPHER_CTX *, int);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_ctrl)(EVP_CIPHER_CTX *, int, int, void *);
+typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_block_size)(EVP_CIPHER_CTX *);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_CIPHER_CTX_cipher)(EVP_CIPHER_CTX *);
+typedef unsigned long (__cdecl *__dlsym_EVP_CIPHER_flags)(const EVP_CIPHER *);
+typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_test_flags)(const EVP_CIPHER_CTX *, int);
 typedef int (__cdecl *__dlsym_EVP_CipherInit_ex)(EVP_CIPHER_CTX *,  \
              const EVP_CIPHER *, ENGINE *, const unsigned char *,  \
              const unsigned char *, int);
@@ -82,6 +86,10 @@ static __dlsym_EVP_CIPHER_CTX_free dlsym_EVP_CIPHER_CTX_free;
 static __dlsym_EVP_CIPHER_CTX_reset dlsym_EVP_CIPHER_CTX_reset;
 static __dlsym_EVP_CIPHER_CTX_set_padding dlsym_EVP_CIPHER_CTX_set_padding;
 static __dlsym_EVP_CIPHER_CTX_ctrl dlsym_EVP_CIPHER_CTX_ctrl;
+static __dlsym_EVP_CIPHER_CTX_block_size dlsym_EVP_CIPHER_CTX_block_size;
+static __dlsym_EVP_CIPHER_CTX_cipher dlsym_EVP_CIPHER_CTX_cipher;
+static __dlsym_EVP_CIPHER_flags dlsym_EVP_CIPHER_flags;
+static __dlsym_EVP_CIPHER_CTX_test_flags dlsym_EVP_CIPHER_CTX_test_flags;
 static __dlsym_EVP_CipherInit_ex dlsym_EVP_CipherInit_ex;
 static __dlsym_EVP_CipherUpdate dlsym_EVP_CipherUpdate;
 static __dlsym_EVP_CipherFinal_ex dlsym_EVP_CipherFinal_ex;
@@ -189,6 +197,18 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_set_padding,  \
                       dlsym_EVP_CIPHER_CTX_set_padding, env,  \
                       openssl, "EVP_CIPHER_CTX_set_padding");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_block_size,  \
+		              dlsym_EVP_CIPHER_CTX_block_size, env,  \
+                      openssl, "EVP_CIPHER_CTX_block_size");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_cipher,  \
+		              dlsym_EVP_CIPHER_CTX_cipher, env,  \
+                      openssl, "EVP_CIPHER_CTX_cipher");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_flags,  \
+		              dlsym_EVP_CIPHER_flags, env,  \
+                      openssl, "EVP_CIPHER_flags");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_test_flags,  \
+                      dlsym_EVP_CIPHER_CTX_test_flags, env,  \
+                      openssl, "EVP_CIPHER_CTX_test_flags");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherInit_ex, dlsym_EVP_CipherInit_ex,  \
                       env, openssl, "EVP_CipherInit_ex");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherUpdate, dlsym_EVP_CipherUpdate,  \
@@ -197,7 +217,13 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
                       env, openssl, "EVP_CipherFinal_ex");
 #endif
 
+#ifdef UNIX
   loadAes(env);
+#endif
+#ifdef WINDOWS
+  loadAes(env, openssl);
+#endif
+
   jthrowable jthr = (*env)->ExceptionOccurred(env);
   if (jthr) {
     (*env)->DeleteLocalRef(env, jthr);

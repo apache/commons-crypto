@@ -64,6 +64,7 @@ typedef int (__cdecl *__dlsym_ENGINE_finish) (ENGINE *);
 typedef int (__cdecl *__dlsym_ENGINE_free) (ENGINE *);
 typedef int (__cdecl *__dlsym_RAND_bytes) (unsigned char *, int);
 typedef unsigned long (__cdecl *__dlsym_ERR_get_error) (void);
+typedef unsigned long (__cdecl *__dlsym_OpenSSL_version_num) (void);
 static __dlsym_CRYPTO_malloc dlsym_CRYPTO_malloc;
 static __dlsym_CRYPTO_free dlsym_CRYPTO_free;
 static __dlsym_ENGINE_by_id dlsym_ENGINE_by_id;
@@ -73,6 +74,8 @@ static __dlsym_ENGINE_finish dlsym_ENGINE_finish;
 static __dlsym_ENGINE_free dlsym_ENGINE_free;
 static __dlsym_RAND_bytes dlsym_RAND_bytes;
 static __dlsym_ERR_get_error dlsym_ERR_get_error;
+static __dlsym_OpenSSL_version_num dlsym_OpenSSL_version_num;
+static void *openssl;
 #endif
 
 static ENGINE * openssl_rand_init(JNIEnv *env);
@@ -141,6 +144,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
                       env, openssl, "RAND_bytes");
   LOAD_DYNAMIC_SYMBOL(__dlsym_ERR_get_error, dlsym_ERR_get_error,  \
                       env, openssl, "ERR_get_error");
+  LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
 #endif
 
   openssl_rand_init(env);
@@ -178,24 +182,32 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRa
 #ifdef WINDOWS
 static void windows_locking_callback(int mode, int type, char *file, int line);
 static HANDLE *lock_cs;
+typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
+static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
+typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)(int, int, char *, int));
+static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
 
-static void locks_setup(void)
+static void locks_setup(JNIEnv *env)
 {
   int i;
+  dlsym_CRYPTO_num_locks = (__dlsym_CRYPTO_num_locks) do_dlsym(env, openssl, "CRYPTO_num_locks");
   lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(HANDLE),  \
       __FILE__, __LINE__);
 
   for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
     lock_cs[i] = CreateMutex(NULL, FALSE, NULL);
   }
+
+  dlsym_CRYPTO_set_locking_callback = (__dlsym_CRYPTO_set_locking_callback) do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
   dlsym_CRYPTO_set_locking_callback((void (*)(int, int, char *, int))  \
       windows_locking_callback);
   /* id callback defined */
 }
 
-static void locks_cleanup(void)
+static void locks_cleanup(JNIEnv *env)
 {
   int i;
+  dlsym_CRYPTO_set_locking_callback = (__dlsym_CRYPTO_set_locking_callback) do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
   dlsym_CRYPTO_set_locking_callback(NULL);
 
   for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
@@ -284,12 +296,20 @@ static ENGINE * openssl_rand_init(JNIEnv *env)
 {
   if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
     locks_setup(env);
+#ifdef UNIX
     static void (*dlsym_ENGINE_load_rdrand) (void);
     dlsym_ENGINE_load_rdrand = do_dlsym(env, openssl, "ENGINE_load_rdrand");
+#endif
+#ifdef WINDOWS
+    typedef void (__cdecl *__dlsym_ENGINE_load_rdrand) (void);
+    static __dlsym_ENGINE_load_rdrand dlsym_ENGINE_load_rdrand;
+    dlsym_ENGINE_load_rdrand = (__dlsym_ENGINE_load_rdrand) do_dlsym(env, openssl, "ENGINE_load_rdrand");
+#endif
     dlsym_ENGINE_load_rdrand();
   }
 
   ENGINE *eng = dlsym_ENGINE_by_id("rdrand");
+
 
   int ret = -1;
   do {
@@ -325,10 +345,19 @@ static void openssl_rand_clean(JNIEnv *env, ENGINE *eng, int clean_locks)
   }
 
   if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+#ifdef UNIX
     static void (*dlsym_ENGINE_cleanup) (void);
-    if((dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "ENGINE_cleanup")) == NULL) {
-	THROW(env, "java/lang/UnsatisfiedLinkError", "ENGINE_cleanup");
-    }
+	if((dlsym_ENGINE_cleanup = do_dlsym(env, openssl, "ENGINE_cleanup")) == NULL) {
+	  THROW(env, "java/lang/UnsatisfiedLinkError", "ENGINE_cleanup");
+	}
+#endif
+#ifdef WINDOWS
+    typedef void (__cdecl *__dlsym_ENGINE_cleanup) (void);
+    static __dlsym_ENGINE_cleanup dlsym_ENGINE_cleanup;
+	if((dlsym_ENGINE_cleanup = (__dlsym_ENGINE_cleanup) do_dlsym(env, openssl, "ENGINE_cleanup")) == NULL) {
+	  THROW(env, "java/lang/UnsatisfiedLinkError", "ENGINE_cleanup");
+	}
+#endif
     dlsym_ENGINE_cleanup();
     if (clean_locks) {
       locks_cleanup(env);
