@@ -80,7 +80,7 @@ static void openssl_rand_clean(JNIEnv *env, ENGINE *eng, int clean_locks);
 static int openssl_rand_bytes(unsigned char *buf, int num);
 static void pthreads_locking_callback(int mode, int type, char *file, int line);
 static unsigned long pthreads_thread_id(void);
-static pthread_mutex_t *lock_cs;
+//static pthread_mutex_t *lock_cs;
 
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_initSR
     (JNIEnv *env, jclass clazz)

@@ -134,7 +134,7 @@ void *do_version_dlsym(JNIEnv *env, void *handle) {
 
 /* Microsoft C Compiler does not support the C99 inline keyword */
 #ifndef __cplusplus
-#define inline __inline;
+//#define inline __inline;
 #endif // _cplusplus
 
 /* Optimization macros supported by GCC but for which there is no
