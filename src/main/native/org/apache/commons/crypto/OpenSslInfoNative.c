@@ -76,6 +76,7 @@ static int load_library(JNIEnv *env)
     return 0;
   }
   LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
+
   return 1;
 }
 

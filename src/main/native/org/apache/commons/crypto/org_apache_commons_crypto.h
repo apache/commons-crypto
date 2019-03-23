@@ -188,7 +188,7 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
   return func_ptr;
 }
 
-static FARPROC WINAPI do_version_dlsym(JNIEnv *env, void *handle) {
+static FARPROC WINAPI do_version_dlsym(JNIEnv *env, HMODULE handle) {
   FARPROC func_ptr = NULL;
   if (!env || !handle) {
     THROW(env, "java/lang/InternalError", NULL);
