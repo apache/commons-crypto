@@ -20,6 +20,7 @@ matrix:
   include:
     - name: "Linux / Java 8"
       os: linux
+      dist: bionic
       after_success:
         - mvn clean test jacoco:report coveralls:report
     - name: "OS X / Java 8"
