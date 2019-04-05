@@ -58,7 +58,6 @@ static EVP_CIPHER * (*dlsym_EVP_aes_128_gcm)(void);
 #ifdef WINDOWS
 typedef EVP_CIPHER_CTX * (__cdecl *__dlsym_EVP_CIPHER_CTX_new)(void);
 typedef void (__cdecl *__dlsym_EVP_CIPHER_CTX_free)(EVP_CIPHER_CTX *);
-typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_reset)(EVP_CIPHER_CTX *);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_set_padding)(EVP_CIPHER_CTX *, int);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_ctrl)(EVP_CIPHER_CTX *, int, int, void *);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_block_size)(EVP_CIPHER_CTX *);
@@ -83,7 +82,6 @@ typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_192_gcm)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_gcm)(void);
 static __dlsym_EVP_CIPHER_CTX_new dlsym_EVP_CIPHER_CTX_new;
 static __dlsym_EVP_CIPHER_CTX_free dlsym_EVP_CIPHER_CTX_free;
-static __dlsym_EVP_CIPHER_CTX_reset dlsym_EVP_CIPHER_CTX_reset;
 static __dlsym_EVP_CIPHER_CTX_set_padding dlsym_EVP_CIPHER_CTX_set_padding;
 static __dlsym_EVP_CIPHER_CTX_ctrl dlsym_EVP_CIPHER_CTX_ctrl;
 static __dlsym_EVP_CIPHER_CTX_block_size dlsym_EVP_CIPHER_CTX_block_size;
@@ -192,27 +190,18 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
                       env, openssl, "EVP_CIPHER_CTX_new");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_free, dlsym_EVP_CIPHER_CTX_free,  \
                       env, openssl, "EVP_CIPHER_CTX_free");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_reset,  \
-                      dlsym_EVP_CIPHER_CTX_reset, env,
-                      openssl, "EVP_CIPHER_CTX_reset");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_set_padding,  \
-                      dlsym_EVP_CIPHER_CTX_set_padding, env,  \
-                      openssl, "EVP_CIPHER_CTX_set_padding");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_ctrl,  \
-                      dlsym_EVP_CIPHER_CTX_ctrl, env,  \
-                      openssl, "EVP_CIPHER_CTX_ctrl");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_block_size,  \
-		              dlsym_EVP_CIPHER_CTX_block_size, env,  \
-                      openssl, "EVP_CIPHER_CTX_block_size");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_cipher,  \
-		              dlsym_EVP_CIPHER_CTX_cipher, env,  \
-                      openssl, "EVP_CIPHER_CTX_cipher");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_flags,  \
-		              dlsym_EVP_CIPHER_flags, env,  \
-                      openssl, "EVP_CIPHER_flags");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_test_flags,  \
-                      dlsym_EVP_CIPHER_CTX_test_flags, env,  \
-                      openssl, "EVP_CIPHER_CTX_test_flags");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_set_padding, dlsym_EVP_CIPHER_CTX_set_padding,  \
+                      env, openssl, "EVP_CIPHER_CTX_set_padding");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_ctrl, dlsym_EVP_CIPHER_CTX_ctrl,  \
+		              env, openssl, "EVP_CIPHER_CTX_ctrl");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_block_size, dlsym_EVP_CIPHER_CTX_block_size,  \
+		              env, openssl, "EVP_CIPHER_CTX_block_size");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_cipher, dlsym_EVP_CIPHER_CTX_cipher,  \
+		              env, openssl, "EVP_CIPHER_CTX_cipher");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_flags, dlsym_EVP_CIPHER_flags,  \
+		              env, openssl, "EVP_CIPHER_flags");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_test_flags, dlsym_EVP_CIPHER_CTX_test_flags,  \
+		              env, openssl, "EVP_CIPHER_CTX_test_flags");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherInit_ex, dlsym_EVP_CipherInit_ex,  \
                       env, openssl, "EVP_CipherInit_ex");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherUpdate, dlsym_EVP_CipherUpdate,  \
