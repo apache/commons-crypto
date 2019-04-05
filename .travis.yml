@@ -20,15 +20,34 @@ matrix:
   include:
     - name: "Linux / Java 8"
       os: linux
+      jdk:
+        - oraclejdk8
       before_install:
         - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d `jdk_switcher home oraclejdk8`/jre/lib/security && rm /tmp/policy.zip"
       after_success:
         - mvn clean test jacoco:report coveralls:report
-
-jdk:
-  - oraclejdk8
+    - name: "OS X / Java 8"
+      os: osx
+      jdk:
+        - oraclejdk8
+      before_install:
+        - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d /Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/security && rm /tmp/policy.zip"
+        - brew list
+        - openssl version -a
+      after_success:
+        - mvn clean test jacoco:report coveralls:report
+      osx_image: xcode9.3
+    - name: "Windows / Java 8"
+      os: windows
+      language: shell
+      before_install: 
+        - set -e
+        - choco install jdk8 -params 'installdir=c:\\Java\\jdk' -y
+        - refreshenv
+        - java -version
 
 script:
   - mvn apache-rat:check
   - mvn verify
   - mvn site
+  - mvn clirr:check
