@@ -198,6 +198,9 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_set_padding,  \
                       dlsym_EVP_CIPHER_CTX_set_padding, env,  \
                       openssl, "EVP_CIPHER_CTX_set_padding");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_ctrl,  \
+                      dlsym_EVP_CIPHER_CTX_ctrl, env,  \
+                      openssl, "EVP_CIPHER_CTX_ctrl");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_block_size,  \
 		              dlsym_EVP_CIPHER_CTX_block_size, env,  \
                       openssl, "EVP_CIPHER_CTX_block_size");
