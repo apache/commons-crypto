@@ -37,14 +37,6 @@ matrix:
       after_success:
         - mvn clean test jacoco:report coveralls:report
       osx_image: xcode9.3
-    - name: "Windows / Java 8"
-      os: windows
-      language: shell
-      before_install: 
-        - set -e
-        - choco install jdk8 -params 'installdir=c:\\Java\\jdk' -y
-        - refreshenv
-        - java -version
 
 script:
   - mvn apache-rat:check
