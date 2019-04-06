@@ -52,7 +52,6 @@ static EVP_CIPHER * (*dlsym_EVP_aes_128_cbc)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_256_gcm)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_192_gcm)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_128_gcm)(void);
-//static void *openssl;
 #endif
 
 #ifdef WINDOWS
@@ -100,7 +99,6 @@ static __dlsym_EVP_aes_128_cbc dlsym_EVP_aes_128_cbc;
 static __dlsym_EVP_aes_256_gcm dlsym_EVP_aes_256_gcm;
 static __dlsym_EVP_aes_192_gcm dlsym_EVP_aes_192_gcm;
 static __dlsym_EVP_aes_128_gcm dlsym_EVP_aes_128_gcm;
-//HMODULE openssl;
 #endif
 
 #ifdef UNIX

@@ -174,71 +174,6 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRa
  * http://wiki.openssl.org/index.php/Random_Numbers
  * Example: crypto/threads/mttest.c
  */
-
-#ifdef WINDOWS
-static void windows_locking_callback(int mode, int type, char *file, int line);
-static HANDLE *lock_cs;
-
-static void windows_locking_callback(int mode, int type, char *file, int line)
-{
-  UNUSED(file), UNUSED(line);
-
-  if (mode & CRYPTO_LOCK) {
-    WaitForSingleObject(lock_cs[type], INFINITE);
-  } else {
-    ReleaseMutex(lock_cs[type]);
-  }
-}
-
-static void locks_setup(JNIEnv *env)
-{
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
-    typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
-    static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
-    static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
-    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_num_locks, dlsym_CRYPTO_num_locks,  \
-	                    env, openssl, "CRYPTO_num_locks");
-    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_set_locking_callback, dlsym_CRYPTO_set_locking_callback, \
-  		              env, openssl, "CRYPTO_set_locking_callback");
-
-    int i;
-    lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(HANDLE),  \
-      __FILE__, __LINE__);
-
-
-      for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-        lock_cs[i] = CreateMutex(NULL, FALSE, NULL);
-    }
-
-    dlsym_CRYPTO_set_locking_callback((void (*)(int, int, char *, int))  \
-      windows_locking_callback);
-  /* id callback defined */
-  }
-}
-
-static void locks_cleanup(JNIEnv *env)
-{
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
-    typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
-    static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
-    static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
-    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_num_locks, dlsym_CRYPTO_num_locks,  \
-		                env, openssl, "CRYPTO_num_locks");
-    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_set_locking_callback, dlsym_CRYPTO_set_locking_callback, \
-	  		            env, openssl, "CRYPTO_set_locking_callback");
-    int i;
-    dlsym_CRYPTO_set_locking_callback(NULL);
-
-    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-      CloseHandle(lock_cs[i]);
-    }
-    dlsym_CRYPTO_free(lock_cs);
-  }
-}
-#endif /* WINDOWS */
-
 #ifdef UNIX
 static void pthreads_locking_callback(int mode, int type, char *file, int line);
 static unsigned long pthreads_thread_id(void);
@@ -302,6 +237,65 @@ static void locks_cleanup(JNIEnv *env)
   }
 }
 #endif /* UNIX */
+
+#ifdef WINDOWS
+static void windows_locking_callback(int mode, int type, char *file, int line);
+static HANDLE *lock_cs;
+
+static void windows_locking_callback(int mode, int type, char *file, int line)
+{
+  UNUSED(file), UNUSED(line);
+
+  if (mode & CRYPTO_LOCK) {
+    WaitForSingleObject(lock_cs[type], INFINITE);
+  } else {
+    ReleaseMutex(lock_cs[type]);
+  }
+}
+
+static void locks_setup(JNIEnv *env)
+{
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+    typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
+    typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
+    static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
+    static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
+    dlsym_CRYPTO_num_locks = (__dlsym_CRYPTO_num_locks) do_dlsym(env, openssl, "CRYPTO_num_locks");
+    dlsym_CRYPTO_set_locking_callback = (__dlsym_CRYPTO_set_locking_callback) do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
+
+    int i;
+    lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(HANDLE),  \
+      __FILE__, __LINE__);
+
+
+    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+        lock_cs[i] = CreateMutex(NULL, FALSE, NULL);
+    }
+    dlsym_CRYPTO_set_locking_callback((void (*)(int, int, char *, int))  \
+      windows_locking_callback);
+  /* id callback defined */
+  }
+}
+
+static void locks_cleanup(JNIEnv *env)
+{
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+    typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
+    typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
+    static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
+    static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
+    dlsym_CRYPTO_num_locks = (__dlsym_CRYPTO_num_locks) do_dlsym(env, openssl, "CRYPTO_num_locks");
+    dlsym_CRYPTO_set_locking_callback = (__dlsym_CRYPTO_set_locking_callback) do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
+    int i;
+    dlsym_CRYPTO_set_locking_callback(NULL);
+
+    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+      CloseHandle(lock_cs[i]);
+    }
+    dlsym_CRYPTO_free(lock_cs);
+  }
+}
+#endif /* WINDOWS */
 
 /**
  * If using an Intel chipset with RDRAND, the high-performance hardware
