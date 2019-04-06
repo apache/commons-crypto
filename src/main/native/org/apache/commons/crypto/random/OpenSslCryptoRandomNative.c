@@ -81,9 +81,6 @@ HMODULE openssl;
 static ENGINE * openssl_rand_init(JNIEnv *env);
 static void openssl_rand_clean(JNIEnv *env, ENGINE *eng, int clean_locks);
 static int openssl_rand_bytes(unsigned char *buf, int num);
-static void pthreads_locking_callback(int mode, int type, char *file, int line);
-static unsigned long pthreads_thread_id(void);
-//static pthread_mutex_t *lock_cs;
 
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_initSR
     (JNIEnv *env, jclass clazz)
@@ -116,8 +113,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_free, env, openssl, "CRYPTO_free");
   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_by_id, env, openssl, "ENGINE_by_id");
   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_init, env, openssl, "ENGINE_init");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_set_default, env,  \
-                      openssl, "ENGINE_set_default");
+  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_set_default, env, openssl, "ENGINE_set_default");
   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_finish, env, openssl, "ENGINE_finish");
   LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_free, env, openssl, "ENGINE_free");
   LOAD_DYNAMIC_SYMBOL(dlsym_RAND_bytes, env, openssl, "RAND_bytes");
@@ -182,39 +178,6 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRa
 #ifdef WINDOWS
 static void windows_locking_callback(int mode, int type, char *file, int line);
 static HANDLE *lock_cs;
-typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
-static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
-typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)(int, int, char *, int));
-static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
-
-static void locks_setup(JNIEnv *env)
-{
-  int i;
-  dlsym_CRYPTO_num_locks = (__dlsym_CRYPTO_num_locks) do_dlsym(env, openssl, "CRYPTO_num_locks");
-  lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(HANDLE),  \
-      __FILE__, __LINE__);
-
-  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-    lock_cs[i] = CreateMutex(NULL, FALSE, NULL);
-  }
-
-  dlsym_CRYPTO_set_locking_callback = (__dlsym_CRYPTO_set_locking_callback) do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
-  dlsym_CRYPTO_set_locking_callback((void (*)(int, int, char *, int))  \
-      windows_locking_callback);
-  /* id callback defined */
-}
-
-static void locks_cleanup(JNIEnv *env)
-{
-  int i;
-  dlsym_CRYPTO_set_locking_callback = (__dlsym_CRYPTO_set_locking_callback) do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
-  dlsym_CRYPTO_set_locking_callback(NULL);
-
-  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-    CloseHandle(lock_cs[i]);
-  }
-  dlsym_CRYPTO_free(lock_cs);
-}
 
 static void windows_locking_callback(int mode, int type, char *file, int line)
 {
@@ -226,49 +189,60 @@ static void windows_locking_callback(int mode, int type, char *file, int line)
     ReleaseMutex(lock_cs[type]);
   }
 }
+
+static void locks_setup(JNIEnv *env)
+{
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+    typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
+    typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
+    static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
+    static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
+    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_num_locks, dlsym_CRYPTO_num_locks,  \
+	                    env, openssl, "CRYPTO_num_locks");
+    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_set_locking_callback, dlsym_CRYPTO_set_locking_callback, \
+  		              env, openssl, "CRYPTO_set_locking_callback");
+
+    int i;
+    lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(HANDLE),  \
+      __FILE__, __LINE__);
+
+
+      for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+        lock_cs[i] = CreateMutex(NULL, FALSE, NULL);
+    }
+
+    dlsym_CRYPTO_set_locking_callback((void (*)(int, int, char *, int))  \
+      windows_locking_callback);
+  /* id callback defined */
+  }
+}
+
+static void locks_cleanup(JNIEnv *env)
+{
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+    typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
+    typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
+    static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
+    static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
+    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_num_locks, dlsym_CRYPTO_num_locks,  \
+		                env, openssl, "CRYPTO_num_locks");
+    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_set_locking_callback, dlsym_CRYPTO_set_locking_callback, \
+	  		            env, openssl, "CRYPTO_set_locking_callback");
+    int i;
+    dlsym_CRYPTO_set_locking_callback(NULL);
+
+    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+      CloseHandle(lock_cs[i]);
+    }
+    dlsym_CRYPTO_free(lock_cs);
+  }
+}
 #endif /* WINDOWS */
 
 #ifdef UNIX
 static void pthreads_locking_callback(int mode, int type, char *file, int line);
 static unsigned long pthreads_thread_id(void);
 static pthread_mutex_t *lock_cs;
-
-static void locks_setup(JNIEnv *env)
-{
-  int i;
-  static int (*dlsym_CRYPTO_num_locks) (void);
-  dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "CRYPTO_num_locks");
-  lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() *  \
-      sizeof(pthread_mutex_t), __FILE__, __LINE__);
-
-  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-    pthread_mutex_init(&(lock_cs[i]), NULL);
-  }
-
-  static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
-  dlsym_CRYPTO_set_id_callback = do_dlsym(env, openssl, "CRYPTO_set_id_callback");
-  static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-  dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
-
-  dlsym_CRYPTO_set_id_callback((unsigned long (*)())pthreads_thread_id);
-  dlsym_CRYPTO_set_locking_callback((void (*)())pthreads_locking_callback);
-}
-
-static void locks_cleanup(JNIEnv *env)
-{
-  int i;
-  static int (*dlsym_CRYPTO_num_locks) (void);
-  dlsym_CRYPTO_num_locks = do_dlsym(env, openssl, "CRYPTO_num_locks");
-  static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-  dlsym_CRYPTO_set_locking_callback = do_dlsym(env, openssl, "CRYPTO_set_locking_callback");
-  dlsym_CRYPTO_set_locking_callback(NULL);
-
-  for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-    pthread_mutex_destroy(&(lock_cs[i]));
-  }
-
-  dlsym_CRYPTO_free(lock_cs);
-}
 
 static void pthreads_locking_callback(int mode, int type, char *file, int line)
 {
@@ -286,6 +260,47 @@ static unsigned long pthreads_thread_id(void)
   return (unsigned long)syscall(SYS_gettid);
 }
 
+static void locks_setup(JNIEnv *env)
+{
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+    static int (*dlsym_CRYPTO_num_locks) (void);
+    static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
+    static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
+    LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_num_locks, env, openssl, "CRYPTO_num_locks");
+    LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_id_callback, env, openssl, "CRYPTO_set_id_callback");
+    LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_locking_callback, env, openssl, "CRYPTO_set_locking_callback");
+
+    int i;
+    lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() *  \
+      sizeof(pthread_mutex_t), __FILE__, __LINE__);
+
+    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+      pthread_mutex_init(&(lock_cs[i]), NULL);
+    }
+
+    dlsym_CRYPTO_set_id_callback((unsigned long (*)())pthreads_thread_id);
+    dlsym_CRYPTO_set_locking_callback((void (*)())pthreads_locking_callback);
+  }
+}
+
+static void locks_cleanup(JNIEnv *env)
+{
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+    static int (*dlsym_CRYPTO_num_locks) (void);
+    static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
+    LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_num_locks, env, openssl, "CRYPTO_num_locks");
+    LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_locking_callback, env, openssl, "CRYPTO_set_locking_callback");
+
+    int i;
+    dlsym_CRYPTO_set_locking_callback(NULL);
+
+    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
+      pthread_mutex_destroy(&(lock_cs[i]));
+    }
+
+    dlsym_CRYPTO_free(lock_cs);
+  }
+}
 #endif /* UNIX */
 
 /**
