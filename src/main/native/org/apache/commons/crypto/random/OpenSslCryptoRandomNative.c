@@ -51,10 +51,14 @@ static int (*dlsym_ENGINE_free) (ENGINE *);
 static int (*dlsym_RAND_bytes) (unsigned char *, int);
 static unsigned long (*dlsym_ERR_get_error) (void);
 static unsigned long (*dlsym_OpenSSL_version_num)(void);
+static int (*dlsym_CRYPTO_num_locks) (void);
+static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
+static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
+static void (*dlsym_ENGINE_load_rdrand) (void);
+static void (*dlsym_ENGINE_cleanup) (void);
 static void pthreads_locking_callback(int mode, int type, char *file, int line);
 static unsigned long pthreads_thread_id(void);
 static pthread_mutex_t *lock_cs;
-static void *openssl;
 #endif
 
 #ifdef WINDOWS
@@ -88,7 +92,6 @@ static __dlsym_ENGINE_load_rdrand dlsym_ENGINE_load_rdrand;
 static __dlsym_ENGINE_cleanup dlsym_ENGINE_cleanup;
 static void windows_locking_callback(int mode, int type, char *file, int line);
 static HANDLE *lock_cs;
-HMODULE openssl;
 #endif
 
 static ENGINE * openssl_rand_init();
@@ -99,11 +102,11 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 {
   char msg[1000];
 #ifdef UNIX
-  openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
 #endif
 
 #ifdef WINDOWS
-  openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
+  HMODULE openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
 #endif
 
   if (!openssl) {
@@ -130,11 +133,6 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
   LOAD_DYNAMIC_SYMBOL(dlsym_ERR_get_error, env, openssl, "ERR_get_error");
   LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
   if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    static int (*dlsym_CRYPTO_num_locks) (void);
-    static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
-    static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-    static void (*dlsym_ENGINE_load_rdrand) (void);
-    static void (*dlsym_ENGINE_cleanup) (void);
     LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_num_locks, env, openssl, "CRYPTO_num_locks");
     LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_id_callback, env, openssl, "CRYPTO_set_id_callback");
     LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_locking_callback, env, openssl, "CRYPTO_set_locking_callback");
@@ -214,8 +212,7 @@ static void locks_setup(void)
 {
   if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
     int i;
-    lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() *  \
-      sizeof(pthread_mutex_t), __FILE__, __LINE__);
+    lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(pthread_mutex_t), __FILE__, __LINE__);
 
     for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
       pthread_mutex_init(&(lock_cs[i]), NULL);
