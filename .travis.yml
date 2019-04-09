@@ -20,8 +20,6 @@ matrix:
   include:
     - name: "Linux / Java 8"
       os: linux
-      jdk:
-        - oraclejdk8
       before_install:
         - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d `jdk_switcher home oraclejdk8`/jre/lib/security && rm /tmp/policy.zip"
         - openssl version -a
@@ -29,14 +27,15 @@ matrix:
         - mvn clean test jacoco:report coveralls:report
     - name: "OS X / Java 8"
       os: osx
-      jdk:
-        - oraclejdk8
+      osx_image: xcode9.3
       before_install:
         - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d /Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/security && rm /tmp/policy.zip"
         - openssl version -a
       after_success:
         - mvn clean test jacoco:report coveralls:report
-      osx_image: xcode9.3
+      
+jdk:
+  - oraclejdk8
 
 script:
   - mvn apache-rat:check
