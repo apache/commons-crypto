@@ -94,7 +94,7 @@ static void windows_locking_callback(int mode, int type, char *file, int line);
 static HANDLE *lock_cs;
 #endif
 
-static ENGINE * openssl_rand_init();
+static ENGINE * openssl_rand_init(void);
 static void openssl_rand_clean(ENGINE *eng, int clean_locks);
 static int openssl_rand_bytes(unsigned char *buf, int num);
 
@@ -160,7 +160,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
   }
 #endif
 
-  openssl_rand_init(env);
+  openssl_rand_init();
 }
 
 JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_nextRandBytes___3B
@@ -284,7 +284,7 @@ static void windows_locking_callback(int mode, int type, char *file, int line)
  * If using an Intel chipset with RDRAND, the high-performance hardware
  * random number generator will be used.
  */
-static ENGINE * openssl_rand_init()
+static ENGINE * openssl_rand_init(void)
 {
   if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
     locks_setup();
@@ -292,7 +292,6 @@ static ENGINE * openssl_rand_init()
   }
 
   ENGINE *eng = dlsym_ENGINE_by_id("rdrand");
-
 
   int ret = -1;
   do {
@@ -325,12 +324,12 @@ static void openssl_rand_clean(ENGINE *eng, int clean_locks)
   if (NULL != eng) {
     dlsym_ENGINE_finish(eng);
     dlsym_ENGINE_free(eng);
-  }
 
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    dlsym_ENGINE_cleanup();
-    if (clean_locks) {
-      locks_cleanup();
+    if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
+      dlsym_ENGINE_cleanup();
+      if (clean_locks) {
+        locks_cleanup();
+      }
     }
   }
 }

@@ -66,7 +66,7 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
   }
 #endif
 #ifdef WINDOWS
-  LOAD_OPENSSL_VERSION_FUNCTION(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl);
+  LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
   if (dlsym_OpenSSL_version_num() > VERSION_1_1_X) {
       LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
   } else {
