@@ -195,7 +195,6 @@ public class GcmCipherTest {
     }
 
     @Test(expected = AEADBadTagException.class)
-    @Ignore
     public void testGcmTamperedData() throws Exception {
 
         Random r = new Random();
