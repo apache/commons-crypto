@@ -26,7 +26,6 @@ import java.util.Random;
 import org.apache.commons.crypto.utils.Utils;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.crypto.AEADBadTagException;
