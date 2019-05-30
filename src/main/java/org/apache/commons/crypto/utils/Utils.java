@@ -39,7 +39,7 @@ public final class Utils {
      }
 
     /**
-     * The filename of configuration file.
+     * The file name of configuration file.
      * TODO is there any need for it to have the CONF_PREFIX?
      */
     private static final String SYSTEM_PROPERTIES_FILE = Crypto.CONF_PREFIX
