@@ -89,9 +89,9 @@ o CRYPTO-7:    Rename source code in Chimera to Apache name space . Thanks to fe
 o CRYPTO-62:   Add multithreaded related tests Thanks to Hendrik Saly.
 
 
-Historical list of changes: http://commons.apache.org/proper/commons-crypto/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-crypto/changes-report.html
 
 For complete information on Apache Commons Crypto, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons Crypto website:
 
-http://commons.apache.org/proper/commons-crypto/
+https://commons.apache.org/proper/commons-crypto/
