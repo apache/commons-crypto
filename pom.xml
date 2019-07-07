@@ -86,7 +86,7 @@ The following provides more details on the included cryptographic software:
 
   <issueManagement>
     <system>jira</system>
-    <url>http://issues.apache.org/jira/browse/CRYPTO</url>
+    <url>https://issues.apache.org/jira/browse/CRYPTO</url>
   </issueManagement>
 
   <scm>
