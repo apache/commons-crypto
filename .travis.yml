@@ -26,13 +26,6 @@ matrix:
         - openssl version -a
       after_success:
         - mvn clean test jacoco:report coveralls:report
-    - name: "Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
-      os: linux
-      dist: bionic
-      services: 
-        - openjdk8
-      after_success:
-        - mvn clean test jacoco:report coveralls:report    
     - name: "OS X / Java 8"
       os: osx
       osx_image: xcode9.3
