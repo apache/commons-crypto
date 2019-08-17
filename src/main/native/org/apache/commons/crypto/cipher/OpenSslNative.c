@@ -158,11 +158,11 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   if (!openssl) {
 #ifdef UNIX
     snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-        dlerror());
+    dlerror());
 #endif
 #ifdef WINDOWS
     snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-        GetLastError());
+    GetLastError());
 #endif
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
@@ -191,15 +191,15 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_set_padding, dlsym_EVP_CIPHER_CTX_set_padding,  \
                       env, openssl, "EVP_CIPHER_CTX_set_padding");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_ctrl, dlsym_EVP_CIPHER_CTX_ctrl,  \
-		              env, openssl, "EVP_CIPHER_CTX_ctrl");
+                      env, openssl, "EVP_CIPHER_CTX_ctrl");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_block_size, dlsym_EVP_CIPHER_CTX_block_size,  \
-		              env, openssl, "EVP_CIPHER_CTX_block_size");
+                      env, openssl, "EVP_CIPHER_CTX_block_size");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_cipher, dlsym_EVP_CIPHER_CTX_cipher,  \
-		              env, openssl, "EVP_CIPHER_CTX_cipher");
+                      env, openssl, "EVP_CIPHER_CTX_cipher");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_flags, dlsym_EVP_CIPHER_flags,  \
-		              env, openssl, "EVP_CIPHER_flags");
+                      env, openssl, "EVP_CIPHER_flags");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_test_flags, dlsym_EVP_CIPHER_CTX_test_flags,  \
-		              env, openssl, "EVP_CIPHER_CTX_test_flags");
+                      env, openssl, "EVP_CIPHER_CTX_test_flags");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherInit_ex, dlsym_EVP_CipherInit_ex,  \
                       env, openssl, "EVP_CipherInit_ex");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherUpdate, dlsym_EVP_CipherUpdate,  \
@@ -213,7 +213,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   if (jthr) {
     (*env)->DeleteLocalRef(env, jthr);
     THROW(env, "java/lang/UnsatisfiedLinkError",  \
-        "Cannot find AES-CTR support, is your version of Openssl new enough?");
+    "Cannot find AES-CTR support, is your version of Openssl new enough?");
     return;
   }
 }
@@ -288,23 +288,23 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
   }
 
   if (dlsym_EVP_aes_256_ctr == NULL ||
-        dlsym_EVP_aes_192_ctr == NULL || dlsym_EVP_aes_128_ctr == NULL) {
+      dlsym_EVP_aes_192_ctr == NULL || dlsym_EVP_aes_128_ctr == NULL) {
     THROW(env, "java/security/NoSuchAlgorithmException",  \
-        "Doesn't support AES CTR.");
+    "Doesn't support AES CTR.");
     return (jlong)0;
   }
 
   if (dlsym_EVP_aes_256_cbc == NULL ||
-        dlsym_EVP_aes_192_cbc == NULL || dlsym_EVP_aes_128_cbc == NULL) {
+      dlsym_EVP_aes_192_cbc == NULL || dlsym_EVP_aes_128_cbc == NULL) {
     THROW(env, "java/security/NoSuchAlgorithmException",  \
-        "Doesn't support AES CBC.");
+    "Doesn't support AES CBC.");
     return (jlong)0;
   }
 
   if (dlsym_EVP_aes_256_gcm == NULL ||
-    dlsym_EVP_aes_192_gcm == NULL || dlsym_EVP_aes_128_gcm == NULL) {
+      dlsym_EVP_aes_192_gcm == NULL || dlsym_EVP_aes_128_gcm == NULL) {
     THROW(env, "java/security/NoSuchAlgorithmException",  \
-       "Doesn't support AES GCM.");
+    "Doesn't support AES GCM.");
     return (jlong)0;
   }
 
@@ -345,8 +345,8 @@ static EVP_CIPHER * getEvpCipher(int alg, int keyLen)
 }
 
 JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
-    (JNIEnv *env, jclass clazz, jlong ctx, jint mode, jint alg, jint padding,
-    jbyteArray key, jbyteArray iv)
+  (JNIEnv *env, jclass clazz, jlong ctx, jint mode, jint alg, jint padding,
+   jbyteArray key, jbyteArray iv)
 {
   EVP_CTX_Wrapper *wrapper = CTX_WRAPPER(ctx);
   int is_new_context = 0;
@@ -364,7 +364,7 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
   int jKeyLen = (*env)->GetArrayLength(env, key);
   int jIvLen = (*env)->GetArrayLength(env, iv);
   if (jKeyLen != KEY_LENGTH_128 && jKeyLen != KEY_LENGTH_192
-        && jKeyLen != KEY_LENGTH_256) {
+      && jKeyLen != KEY_LENGTH_256) {
     char str[64] = {0};
     snprintf(str, sizeof(str), "Invalid AES key length: %d bytes", jKeyLen);
     THROW(env, "java/security/InvalidKeyException", str);
@@ -415,7 +415,7 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
   }
 
   rc = dlsym_EVP_CipherInit_ex(context, NULL, NULL, \
-         (unsigned char *)jKey, (unsigned char *)jIv, mode == ENCRYPT_MODE);
+       (unsigned char *)jKey, (unsigned char *)jIv, mode == ENCRYPT_MODE);
   if (rc == 0) {
     THROW(env, "java/lang/InternalError", "Error in EVP_CipherInit_ex.");
     goto cleanup;
@@ -446,8 +446,8 @@ cleanup:
 }
 
 JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_update
-    (JNIEnv *env, jclass clazz, jlong ctx, jobject input, jint input_offset,
-    jint input_len, jobject output, jint output_offset, jint max_output_len)
+  (JNIEnv *env, jclass clazz, jlong ctx, jobject input, jint input_offset,
+   jint input_len, jobject output, jint output_offset, jint max_output_len)
 {
   EVP_CIPHER_CTX *context = get_context(env, ctx);
   if (context == NULL) {
@@ -456,7 +456,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
 
   if (!check_update_max_output_len(CTX_WRAPPER(ctx), input_len, max_output_len)) {
     THROW(env, "javax/crypto/ShortBufferException",  \
-        "Output buffer is not sufficient.");
+    "Output buffer is not sufficient.");
     return 0;
   }
   unsigned char *input_bytes = (*env)->GetDirectBufferAddress(env, input);
@@ -478,8 +478,8 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
 }
 
 JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updateByteArray
-    (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray input, jint input_offset,
-    jint input_len, jbyteArray output, jint output_offset, jint max_output_len)
+  (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray input, jint input_offset,
+   jint input_len, jbyteArray output, jint output_offset, jint max_output_len)
 {
   EVP_CIPHER_CTX *context = get_context(env, ctx);
   if (context == NULL) {
@@ -526,8 +526,8 @@ cleanup:
 }
 
 JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updateByteArrayByteBuffer
-    (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray input, jint input_offset,
-    jint input_len, jobject output, jint output_offset, jint max_output_len)
+  (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray input, jint input_offset,
+   jint input_len, jobject output, jint output_offset, jint max_output_len)
 {
   EVP_CIPHER_CTX *context = get_context(env, ctx);
   if (context == NULL) {
@@ -536,7 +536,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_updat
 
   if (!check_update_max_output_len(CTX_WRAPPER(ctx), input_len, max_output_len)) {
     THROW(env, "javax/crypto/ShortBufferException",  \
-        "Output buffer is not sufficient.");
+    "Output buffer is not sufficient.");
     return 0;
   }
 
@@ -563,8 +563,8 @@ cleanup:
 }
 
 JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFinal
-    (JNIEnv *env, jclass clazz, jlong ctx, jobject output, jint offset,
-    jint max_output_len)
+  (JNIEnv *env, jclass clazz, jlong ctx, jobject output, jint offset,
+   jint max_output_len)
 {
   EVP_CIPHER_CTX *context = get_context(env, ctx);
   if (context == NULL) {
@@ -573,7 +573,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
 
   if (!check_doFinal_max_output_len(env, context, max_output_len)) {
     THROW(env, "javax/crypto/ShortBufferException",  \
-        "Output buffer is not sufficient.");
+    "Output buffer is not sufficient.");
     return 0;
   }
   unsigned char *output_bytes = (*env)->GetDirectBufferAddress(env, output);
@@ -597,8 +597,8 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
 }
 
 JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFinalByteArray
-    (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray output, jint offset,
-     jint max_output_len)
+  (JNIEnv *env, jclass clazz, jlong ctx, jbyteArray output, jint offset,
+   jint max_output_len)
 {
   EVP_CIPHER_CTX *context = get_context(env, ctx);
   if (context == NULL) {
@@ -607,7 +607,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
 
   if (!check_doFinal_max_output_len(env, context, max_output_len)) {
     THROW(env, "javax/crypto/ShortBufferException",  \
-        "Output buffer is not sufficient.");
+    "Output buffer is not sufficient.");
     return 0;
   }
   unsigned char *output_bytes = (unsigned char *) (*env)->GetByteArrayElements(env, output, 0);
@@ -634,7 +634,7 @@ JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_doFin
 }
 
 JNIEXPORT jint JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_ctrl
-    (JNIEnv *env, jclass clazz, jlong ctx, jint type, jint arg, jbyteArray data)
+  (JNIEnv *env, jclass clazz, jlong ctx, jint type, jint arg, jbyteArray data)
 {
   EVP_CIPHER_CTX *context = get_context(env, ctx);
   if (context == NULL) {
@@ -682,7 +682,7 @@ exit_:
 
 
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_clean
-    (JNIEnv *env, jclass clazz, jlong ctx)
+  (JNIEnv *env, jclass clazz, jlong ctx)
 {
   EVP_CTX_Wrapper *wrapper = CTX_WRAPPER(ctx);
   free_context_wrapper(wrapper);
@@ -732,5 +732,3 @@ static int is_bad_tag(EVP_CTX_Wrapper *wrapper)
   }
   return 0;
 }
-
-

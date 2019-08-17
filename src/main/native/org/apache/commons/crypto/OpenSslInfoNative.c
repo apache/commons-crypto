@@ -60,23 +60,23 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
   LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
 #ifdef UNIX
   if (dlsym_OpenSSL_version_num() > VERSION_1_1_X) {
-      LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
+    LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
   } else {
-      LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
+    LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
   }
 #endif
 #ifdef WINDOWS
   if (dlsym_OpenSSL_version_num() > VERSION_1_1_X) {
-      LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
+    LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
   } else {
-      LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
+    LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
   }
 #endif
 }
 
 static int load_library(JNIEnv *env)
 {
-    char msg[100];
+  char msg[100];
 #ifdef UNIX
   void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
 #endif
@@ -88,11 +88,11 @@ static int load_library(JNIEnv *env)
   if (!openssl) {
 #ifdef UNIX
     snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-        dlerror());
+    dlerror());
 #endif
 #ifdef WINDOWS
     snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-        GetLastError());
+    GetLastError());
 #endif
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
@@ -102,41 +102,41 @@ static int load_library(JNIEnv *env)
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_NativeVersion
-    (JNIEnv *env, jobject object)
+  (JNIEnv *env, jobject object)
 {
-    return (*env)->NewStringUTF(env, VERSION);
+  return (*env)->NewStringUTF(env, VERSION);
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_NativeTimeStamp
-    (JNIEnv *env, jobject object)
+  (JNIEnv *env, jobject object)
 {
-    return (*env)->NewStringUTF(env, __DATE__);
+  return (*env)->NewStringUTF(env, __DATE__);
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_NativeName
-    (JNIEnv *env, jobject object)
+  (JNIEnv *env, jobject object)
 {
-    return (*env)->NewStringUTF(env, PROJECT_NAME);
+  return (*env)->NewStringUTF(env, PROJECT_NAME);
 }
 
 JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenSSL
   (JNIEnv *env, jclass clazz)
 {
-    if (!load_library(env)) {
-        return 0;
-    }
-    jlong version_num = (jlong)dlsym_OpenSSL_version_num();
-    return version_num;
+  if (!load_library(env)) {
+    return 0;
+  }
+  jlong version_num = (jlong)dlsym_OpenSSL_version_num();
+  return version_num;
 }
 
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenSSLVersion
   (JNIEnv *env, jclass clazz, jint type)
 {
-    if (!load_library(env)) {
-        return NULL;
-    }
-    jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
-    return answer;
+  if (!load_library(env)) {
+    return NULL;
+  }
+  jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
+  return answer;
 }
 
 
