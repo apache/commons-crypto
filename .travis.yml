@@ -29,7 +29,8 @@ matrix:
     - name: "Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
       os: linux
       dist: bionic
-	  services: openjdk8
+	  services: 
+	    - openjdk8
       after_success:
         - mvn clean test jacoco:report coveralls:report    
     - name: "OS X / Java 8"
