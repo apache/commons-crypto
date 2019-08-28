@@ -134,7 +134,7 @@ void *do_version_dlsym(JNIEnv *env, void *handle) {
 
 /* Microsoft C Compiler does not support the C99 inline keyword */
 #ifndef __cplusplus
-#define inline __inline;
+//#define inline __inline;
 #endif // _cplusplus
 
 /* Optimization macros supported by GCC but for which there is no
@@ -187,6 +187,25 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
   }
   return func_ptr;
 }
+
+static FARPROC WINAPI do_version_dlsym(JNIEnv *env, HMODULE handle) {
+  FARPROC func_ptr = NULL;
+  if (!env || !handle) {
+    THROW(env, "java/lang/InternalError", NULL);
+    return NULL;
+  }
+  func_ptr = GetProcAddress(handle, "OpenSSL_version_num");
+  if (func_ptr == NULL) {
+    func_ptr = GetProcAddress(handle, "SSLeay");
+  }
+  return func_ptr;
+}
+
+/* A macro to dlsym the appropriate OpenSSL version number function. */
+#define LOAD_OPENSSL_VERSION_FUNCTION(func_ptr, env, handle) \
+  if ((func_ptr = (__dlsym_OpenSSL_version_num) do_version_dlsym(env, handle)) == NULL) { \
+    THROW(env, "java/lang/Error", NULL); \
+  }
 #endif
 // Windows part end
 
