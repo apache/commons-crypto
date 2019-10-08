@@ -51,13 +51,10 @@ public abstract class AbstractRandomTest {
             final List<Thread> threads = new ArrayList<>(threadCount);
 
             for (int i = 0; i < threadCount; i++) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkRandomBytes(random, 10);
-                        checkRandomBytes(random, 1000);
-                        checkRandomBytes(random, 100000);
-                    }
+                Thread t = new Thread(() -> {
+                    checkRandomBytes(random, 10);
+                    checkRandomBytes(random, 1000);
+                    checkRandomBytes(random, 100000);
                 });
                 t.start();
                 threads.add(t);
