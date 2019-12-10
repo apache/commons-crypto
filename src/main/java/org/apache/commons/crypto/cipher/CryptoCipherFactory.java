@@ -195,7 +195,7 @@ public class CryptoCipherFactory {
     /**
      * Gets the cipher class.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @return the cipher class based on the props.
      */

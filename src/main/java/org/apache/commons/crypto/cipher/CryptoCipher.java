@@ -70,7 +70,7 @@ public interface CryptoCipher extends Closeable {
      *         policy files).
      * @throws InvalidAlgorithmParameterException if the given algorithm
      *         parameters are inappropriate for this cipher, or this cipher
-     *         requires algorithm parameters and <code>params</code> is null, or
+     *         requires algorithm parameters and {@code params} is null, or
      *         the given algorithm parameters imply a cryptographic strength
      *         that would exceed the legal limits (as determined from the
      *         configured jurisdiction policy files).
@@ -84,7 +84,7 @@ public interface CryptoCipher extends Closeable {
      *
      * @param inBuffer the input ByteBuffer
      * @param outBuffer the output ByteBuffer
-     * @return int number of bytes stored in <code>output</code>
+     * @return int number of bytes stored in {@code output}
      * @throws ShortBufferException if there is insufficient space in the output
      *         buffer
      */
@@ -113,7 +113,7 @@ public interface CryptoCipher extends Closeable {
      *
      * @param inBuffer the input ByteBuffer
      * @param outBuffer the output ByteBuffer
-     * @return int number of bytes stored in <code>output</code>
+     * @return int number of bytes stored in {@code output}
      * @throws BadPaddingException if this cipher is in decryption mode, and
      *         (un)padding has been requested, but the decrypted data is not
      *         bounded by the appropriate padding bytes

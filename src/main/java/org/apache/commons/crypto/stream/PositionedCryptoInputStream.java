@@ -62,7 +62,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * Constructs a {@link PositionedCryptoInputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param in the input data.
      * @param key crypto key for the cipher.

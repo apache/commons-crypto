@@ -107,7 +107,7 @@ public class CryptoInputStream extends InputStream implements
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param in the input stream.
      * @param key crypto key for the cipher.
@@ -128,7 +128,7 @@ public class CryptoInputStream extends InputStream implements
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param in the ReadableByteChannel object.
      * @param key crypto key for the cipher.
@@ -210,7 +210,7 @@ public class CryptoInputStream extends InputStream implements
      * Overrides the {@link java.io.InputStream#read()}. Reads the next byte of
      * data from the input stream.
      *
-     * @return the next byte of data, or <code>-1</code> if the end of the
+     * @return the next byte of data, or {@code -1} if the end of the
      *         stream is reached.
      * @throws IOException if an I/O error occurs.
      */
@@ -271,7 +271,7 @@ public class CryptoInputStream extends InputStream implements
 
     /**
      * Overrides the {@link java.io.InputStream#skip(long)}. Skips over and
-     * discards <code>n</code> bytes of data from this input stream.
+     * discards {@code n} bytes of data from this input stream.
      *
      * @param n the number of bytes to be skipped.
      * @return the actual number of bytes skipped.
@@ -630,7 +630,7 @@ public class CryptoInputStream extends InputStream implements
     /**
      * Reads crypto buffer size.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @return the buffer size.
      * */

@@ -130,16 +130,16 @@ final class OpenSsl {
     }
 
     /**
-     * Return an <code>OpenSslCipher</code> object that implements the specified
+     * Return an {@code OpenSslCipher} object that implements the specified
      * transformation.
      *
      * @param transformation the name of the transformation, e.g.,
      *        AES/CTR/NoPadding.
-     * @return OpenSslCipher an <code>OpenSslCipher</code> object
-     * @throws NoSuchAlgorithmException if <code>transformation</code> is null,
+     * @return OpenSslCipher an {@code OpenSslCipher} object
+     * @throws NoSuchAlgorithmException if {@code transformation} is null,
      *         empty, in an invalid format, or if OpenSsl doesn't implement the
      *         specified algorithm.
-     * @throws NoSuchPaddingException if <code>transformation</code> contains a
+     * @throws NoSuchPaddingException if {@code transformation} contains a
      *         padding scheme that is not available.
      * @throws IllegalStateException if native code cannot be initialised
      */
@@ -227,8 +227,8 @@ final class OpenSsl {
      * </p>
      *
      * <p>
-     * All <code>input.remaining()</code> bytes starting at
-     * <code>input.position()</code> are processed. The result is stored in the
+     * All {@code input.remaining()} bytes starting at
+     * {@code input.position()} are processed. The result is stored in the
      * output buffer.
      * </p>
      *
@@ -239,12 +239,12 @@ final class OpenSsl {
      * buffer's limit will not have changed.
      * </p>
      *
-     * If <code>output.remaining()</code> bytes are insufficient to hold the
-     * result, a <code>ShortBufferException</code> is thrown.
+     * If {@code output.remaining()} bytes are insufficient to hold the
+     * result, a {@code ShortBufferException} is thrown.
      *
      * @param input the input ByteBuffer
      * @param output the output ByteBuffer
-     * @return int number of bytes stored in <code>output</code>
+     * @return int number of bytes stored in {@code output}
      * @throws ShortBufferException if there is insufficient space in the output
      *         buffer
      */
@@ -314,8 +314,8 @@ final class OpenSsl {
      * </p>
      *
      * <p>
-     * If <code>output.remaining()</code> bytes are insufficient to hold the
-     * result, a <code>ShortBufferException</code> is thrown.
+     * If {@code output.remaining()} bytes are insufficient to hold the
+     * result, a {@code ShortBufferException} is thrown.
      * </p>
      *
      * <p>
@@ -329,7 +329,7 @@ final class OpenSsl {
      *
      * @param input the input ByteBuffer
      * @param output the output ByteBuffer
-     * @return int number of bytes stored in <code>output</code>
+     * @return int number of bytes stored in {@code output}
      * @throws ShortBufferException if the given output byte array is too small
      *         to hold the result.
      * @throws IllegalBlockSizeException if this cipher is a block cipher, no

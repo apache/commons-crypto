@@ -22,10 +22,10 @@ import java.nio.ByteBuffer;
 
 /**
  * The Input interface abstract the input source of
- * <code>CryptoInputStream</code> so that different implementation of input can
+ * {@code CryptoInputStream} so that different implementation of input can
  * be used. The implementation Input interface will usually wraps an input
- * mechanism such as <code>InputStream</code> or
- * <code>ReadableByteChannel</code>.
+ * mechanism such as {@code InputStream} or
+ * {@code ReadableByteChannel}.
  */
 public interface Input {
     /**
@@ -48,24 +48,24 @@ public interface Input {
      *
      * @param dst The buffer into which bytes are to be transferred.
      * @return the total number of bytes read into the buffer, or
-     *         <code>-1</code> if there is no more data because the end of the
+     *         {@code -1} if there is no more data because the end of the
      *         stream has been reached.
      * @throws IOException If some other I/O error occurs.
      */
     int read(ByteBuffer dst) throws IOException;
 
     /**
-     * Skips over and discards <code>n</code> bytes of data from this input The
-     * <code>skip</code> method may, for a variety of reasons, end up skipping
-     * over some smaller number of bytes, possibly <code>0</code>. This may
+     * Skips over and discards {@code n} bytes of data from this input The
+     * {@code skip} method may, for a variety of reasons, end up skipping
+     * over some smaller number of bytes, possibly {@code 0}. This may
      * result from any of a number of conditions; reaching end of file before
-     * <code>n</code> bytes have been skipped is only one possibility. The
-     * actual number of bytes skipped is returned. If <code>n</code> is
+     * {@code n} bytes have been skipped is only one possibility. The
+     * actual number of bytes skipped is returned. If {@code n} is
      * negative, no bytes are skipped.
      *
      * <p>
-     * The <code>skip</code> method of this class creates a byte array and then
-     * repeatedly reads into it until <code>n</code> bytes have been read or the
+     * The {@code skip} method of this class creates a byte array and then
+     * repeatedly reads into it until {@code n} bytes have been read or the
      * end of the stream has been reached. Subclasses are encouraged to provide
      * a more efficient implementation of this method. For instance, the
      * implementation may depend on the ability to seek.
@@ -108,7 +108,7 @@ public interface Input {
      * @param offset the start offset in array buffer.
      * @param length the maximum number of bytes to read.
      * @return the total number of bytes read into the buffer, or
-     *         <code>-1</code> if there is no more data because the end of the
+     *         {@code -1} if there is no more data because the end of the
      *         stream has been reached.
      * @throws IOException if an I/O error occurs.
      */

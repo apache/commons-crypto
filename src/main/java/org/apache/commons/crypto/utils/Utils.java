@@ -112,7 +112,7 @@ public final class Utils {
      * Helper method to create a CryptoCipher instance and throws only
      * IOException.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param transformation the name of the transformation, e.g.,
      * <i>AES/CBC/PKCS5Padding</i>.

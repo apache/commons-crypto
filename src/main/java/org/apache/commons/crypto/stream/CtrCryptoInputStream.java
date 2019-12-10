@@ -83,7 +83,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param in the input stream.
      * @param key crypto key for the cipher.
@@ -98,7 +98,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param in the ReadableByteChannel instance.
      * @param key crypto key for the cipher.
@@ -158,7 +158,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param in the InputStream instance.
      * @param key crypto key for the cipher.
@@ -176,7 +176,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param in the ReadableByteChannel instance.
      * @param key crypto key for the cipher.
@@ -253,7 +253,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
 
     /**
      * Overrides the {@link CryptoInputStream#skip(long)}. Skips over and
-     * discards <code>n</code> bytes of data from this input stream.
+     * discards {@code n} bytes of data from this input stream.
      *
      * @param n the number of bytes to be skipped.
      * @return the actual number of bytes skipped.

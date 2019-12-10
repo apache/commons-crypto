@@ -126,8 +126,8 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      * zeros).
      *
      * @param numBits number of random bits to be generated, where 0
-     *        {@literal <=} <code>numBits</code> {@literal <=} 32.
-     * @return int an <code>int</code> containing the user-specified number of
+     *        {@literal <=} {@code numBits} {@literal <=} 32.
+     * @return int an {@code int} containing the user-specified number of
      *         random bits (right justified, with leading zeros).
      */
     @Override

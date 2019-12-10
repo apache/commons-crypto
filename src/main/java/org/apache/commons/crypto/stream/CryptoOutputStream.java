@@ -90,7 +90,7 @@ public class CryptoOutputStream extends OutputStream implements
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param out the output stream.
      * @param key crypto key for the cipher.
@@ -113,7 +113,7 @@ public class CryptoOutputStream extends OutputStream implements
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param out the WritableByteChannel instance.
      * @param key crypto key for the cipher.

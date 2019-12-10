@@ -87,7 +87,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param out the output stream.
      * @param key crypto key for the cipher.
@@ -102,7 +102,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param out the WritableByteChannel instance.
      * @param key crypto key for the cipher.
@@ -163,7 +163,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param out the output stream.
      * @param key crypto key for the cipher.
@@ -181,7 +181,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param out the WritableByteChannel instance.
      * @param key crypto key for the cipher.

@@ -22,10 +22,10 @@ import java.nio.ByteBuffer;
 
 /**
  * The Output interface abstract the output target of
- * <code>CryptoOutputStream</code> so that different implementation of output
+ * {@code CryptoOutputStream} so that different implementation of output
  * can be used. The implementation Output interface will usually wraps an output
- * mechanism such as <code>OutputStream</code> or
- * <code>WritableByteChannel</code>.
+ * mechanism such as {@code OutputStream} or
+ * {@code WritableByteChannel}.
  */
 public interface Output {
 
@@ -58,7 +58,7 @@ public interface Output {
     /**
      * Flushes this output and forces any buffered output bytes to be written
      * out if the under layer output method support. The general contract of
-     * <code>flush</code> is that calling it is an indication that, if any bytes
+     * {@code flush} is that calling it is an indication that, if any bytes
      * previously written have been buffered by the implementation of the output
      * stream, such bytes should immediately be written to their intended
      * destination.

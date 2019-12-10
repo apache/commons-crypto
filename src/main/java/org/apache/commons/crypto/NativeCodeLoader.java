@@ -255,7 +255,7 @@ final class NativeCodeLoader {
     /**
      * Checks whether native code is loaded for this platform.
      *
-     * @return <code>true</code> if native is loaded, else <code>false</code>.
+     * @return {@code true} if native is loaded, else {@code false}.
      */
     static boolean isNativeCodeLoaded() {
         return nativeCodeLoaded;

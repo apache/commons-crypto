@@ -22,9 +22,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 
 /**
- * The ChannelOutput class takes a <code>WritableByteChannel</code> object and
- * wraps it as <code>Output</code> object acceptable by
- * <code>CryptoOutputStream</code> as the output target.
+ * The ChannelOutput class takes a {@code WritableByteChannel} object and
+ * wraps it as {@code Output} object acceptable by
+ * {@code CryptoOutputStream} as the output target.
  */
 public class ChannelOutput implements Output {
 

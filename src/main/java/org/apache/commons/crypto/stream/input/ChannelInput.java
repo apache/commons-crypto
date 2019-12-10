@@ -22,9 +22,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
 /**
- * The ChannelInput class takes a <code>ReadableByteChannel</code> object and
- * wraps it as <code>Input</code> object acceptable by
- * <code>CryptoInputStream</code>.
+ * The ChannelInput class takes a {@code ReadableByteChannel} object and
+ * wraps it as {@code Input} object acceptable by
+ * {@code CryptoInputStream}.
  */
 public class ChannelInput implements Input {
     private static final int SKIP_BUFFER_SIZE = 2048;
@@ -49,7 +49,7 @@ public class ChannelInput implements Input {
      *
      * @param dst The buffer into which bytes are to be transferred.
      * @return the total number of bytes read into the buffer, or
-     *         <code>-1</code> if there is no more data because the end of the
+     *         {@code -1} if there is no more data because the end of the
      *         stream has been reached.
      * @throws IOException if an I/O error occurs.
      */
@@ -61,7 +61,7 @@ public class ChannelInput implements Input {
     /**
      * Overrides the
      * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
-     * over and discards <code>n</code> bytes of data from this input stream.
+     * over and discards {@code n} bytes of data from this input stream.
      *
      * @param n the number of bytes to be skipped.
      * @return the actual number of bytes skipped.
@@ -112,8 +112,8 @@ public class ChannelInput implements Input {
     /**
      * Overrides the
      * {@link org.apache.commons.crypto.stream.input.Input#read(long, byte[], int, int)}
-     * . Reads up to <code>len</code> bytes of data from the input stream into
-     * an array of bytes. An attempt is made to read as many as <code>len</code>
+     * . Reads up to {@code len} bytes of data from the input stream into
+     * an array of bytes. An attempt is made to read as many as {@code len}
      * bytes, but a smaller number may be read. The number of bytes actually
      * read is returned as an integer.
      *
@@ -122,7 +122,7 @@ public class ChannelInput implements Input {
      * @param offset the start offset in array buffer.
      * @param length the maximum number of bytes to read.
      * @return the total number of bytes read into the buffer, or
-     *         <code>-1</code> if there is no more data because the end of the
+     *         {@code -1} if there is no more data because the end of the
      *         stream has been reached.
      * @throws IOException if an I/O error occurs.
      */

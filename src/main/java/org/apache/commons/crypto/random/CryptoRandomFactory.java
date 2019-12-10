@@ -220,7 +220,7 @@ public class CryptoRandomFactory {
     /**
      * Gets the CryptoRandom class.
      *
-     * @param props The <code>Properties</code> class represents a set of
+     * @param props The {@code Properties} class represents a set of
      *        properties.
      * @return the CryptoRandom class based on the props.
      */
