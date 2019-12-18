@@ -648,7 +648,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     static void calculateIV(byte[] initIV, long counter, byte[] IV) {
         Utils.checkArgument(initIV.length == CryptoCipherFactory.AES_BLOCK_SIZE);
         Utils.checkArgument(IV.length == CryptoCipherFactory.AES_BLOCK_SIZE);
-    
+
         int i = IV.length; // IV length
         int j = 0; // counter bytes index
         int sum = 0;

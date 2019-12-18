@@ -43,5 +43,5 @@ public class EnumTest {
     }
 
     // TODO check if any implementations of CryptoRandom or CryptoCipher are missing from the values
-    
+
 }

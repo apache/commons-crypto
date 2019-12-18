@@ -13,7 +13,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  */
 package org.apache.commons.crypto.random;
 
@@ -26,6 +26,6 @@ abstract class AbstractRandom implements CryptoRandom {
 
     // Should fail to instantiate, as it is an abstract class
     AbstractRandom(Properties props) {
-        
+
     }
 }

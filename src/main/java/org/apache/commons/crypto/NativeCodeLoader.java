@@ -54,7 +54,7 @@ final class NativeCodeLoader {
 
     /**
      * Loads the library if possible.
-     * 
+     *
      * @return null if successful, otherwise the Throwable that was caught
      */
     static Throwable loadLibrary() {
@@ -263,7 +263,7 @@ final class NativeCodeLoader {
 
     /**
      * Gets the error cause if loading failed.
-     * 
+     *
      * @return null, unless loading failed
      */
     static Throwable getLoadingError() {

@@ -609,7 +609,7 @@ public class CryptoInputStream extends InputStream implements
             .clean(); */
             final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
             Class<?>[] interfaces = buffer.getClass().getInterfaces();
-    
+
             for (Class<?> clazz : interfaces) {
                 if (clazz.getName().equals(SUN_CLASS)) {
                     final Object[] NO_PARAM = new Object[0];

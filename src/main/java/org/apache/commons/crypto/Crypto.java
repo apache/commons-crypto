@@ -77,7 +77,7 @@ public final class Crypto {
 
     /**
      * Checks whether the native code has been successfully loaded for the platform.
-     * 
+     *
      * @return true if the native code has been loaded successfully.
      */
     public static boolean isNativeCodeLoaded() {
@@ -86,7 +86,7 @@ public final class Crypto {
 
     /**
      * The loading error throwable, if loading failed.
-     * 
+     *
      * @return null, unless loading failed.
      */
     public static Throwable getLoadingError() {
@@ -151,7 +151,7 @@ public final class Crypto {
                 System.out.println(j+": "+ OpenSslInfoNative.OpenSSLVersion(j));
             }
         } else {
-            System.out.println("Native load failed: " + getLoadingError());            
+            System.out.println("Native load failed: " + getLoadingError());
         }
     }
 }

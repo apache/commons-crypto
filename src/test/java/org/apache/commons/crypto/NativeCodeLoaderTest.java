@@ -36,7 +36,7 @@ public class NativeCodeLoaderTest {
             // TODO display versions once available
             System.out.println("** INFO: Native (JNI) code loaded successfully");
         } else {
-            System.out.println("** WARN: Native (JNI) code was not loaded: " 
+            System.out.println("** WARN: Native (JNI) code was not loaded: "
                 + NativeCodeLoader.getLoadingError());
         }
     }

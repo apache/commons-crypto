@@ -53,7 +53,7 @@ class OpenSsl11XNativeJna {
 
     /**
      * Generates a human-readable string representing the error code e.
-     * 
+     *
      * @see <a>https://www.openssl.org/docs/manmaster/crypto/ERR_error_string.html</a>
      *
      * @param err
@@ -73,7 +73,7 @@ class OpenSsl11XNativeJna {
 
     /**
      * Enables or disables padding
-     * 
+     *
      * @param c
      *            cipher context
      * @param pad
@@ -114,7 +114,7 @@ class OpenSsl11XNativeJna {
 
     /**
      * Init a cipher.
-     * 
+     *
      * @param ctx
      *            cipher context
      * @param cipher
@@ -167,7 +167,7 @@ class OpenSsl11XNativeJna {
     /**
      * Clears all information from a cipher context and free up any allocated memory associate with
      * it, including ctx itself.
-     * 
+     *
      * @param c
      *            openssl evp cipher
      */
@@ -176,7 +176,7 @@ class OpenSsl11XNativeJna {
     /**
      * Clears all information from a cipher context and free up any allocated * memory associate
      * with it.
-     * 
+     *
      * @param c
      *            openssl evp cipher
      */
@@ -184,14 +184,14 @@ class OpenSsl11XNativeJna {
     // Random generator
     /**
      * OpenSSL uses for random number generation
-     * 
+     *
      * @return pointers to the respective methods
      */
     public static native PointerByReference RAND_get_rand_method();
 
     /**
      * Generates random data
-     * 
+     *
      * @param buf
      *            the bytes for generated random.
      * @param num
@@ -211,7 +211,7 @@ class OpenSsl11XNativeJna {
 
     /**
      * Frees the structural reference
-     * 
+     *
      * @param e
      *            engine reference.
      * @return 0 on success, 1 otherwise.
@@ -220,7 +220,7 @@ class OpenSsl11XNativeJna {
 
     /**
      * Obtains a functional reference from an existing structural reference.
-     * 
+     *
      * @param e
      *            engine reference
      * @return zero if the ENGINE was not already operational and couldn't be successfully
@@ -230,7 +230,7 @@ class OpenSsl11XNativeJna {
 
     /**
      * Sets the engine as the default for random number generation.
-     * 
+     *
      * @param e
      *            engine reference
      * @param flags
@@ -241,7 +241,7 @@ class OpenSsl11XNativeJna {
 
     /**
      * Gets engine by id
-     * 
+     *
      * @param id
      *            engine id
      * @return engine instance

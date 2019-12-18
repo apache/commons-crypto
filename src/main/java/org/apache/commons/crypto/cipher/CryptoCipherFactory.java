@@ -148,7 +148,7 @@ public class CryptoCipherFactory {
 
         final List<String> names = Utils.splitClassNames(getCipherClassString(props), ",");
         if (names.size() == 0) {
-            throw new IllegalArgumentException("No classname(s) provided");            
+            throw new IllegalArgumentException("No classname(s) provided");
         }
         CryptoCipher cipher = null;
         Exception lastException = null;

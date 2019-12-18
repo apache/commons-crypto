@@ -67,7 +67,7 @@ class OpenSslJnaCipher implements CryptoCipher {
         this.transformation = transformation;
         Transform transform = tokenizeTransformation(transformation);
         algMode = AlgorithmMode.get(transform.algorithm, transform.mode);
-        
+
         if(algMode != AlgorithmMode.AES_CBC && algMode != AlgorithmMode.AES_CTR) {
             throw new GeneralSecurityException("unknown algorithm "+transform.algorithm + "_" + transform.mode);
         }
@@ -103,7 +103,7 @@ class OpenSslJnaCipher implements CryptoCipher {
             // supported now.
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
-        
+
        if(algMode == AlgorithmMode.AES_CBC) {
             switch (key.getEncoded().length) {
                 case 16: algo = OpenSslNativeJna.EVP_aes_128_cbc(); break;
@@ -122,7 +122,7 @@ class OpenSslJnaCipher implements CryptoCipher {
                 throw new InvalidKeyException("keysize unsupported (" + key.getEncoded().length + ")");
             }
         }
-        
+
         int retVal = OpenSslNativeJna.EVP_CipherInit_ex(context, algo, null, key.getEncoded(), iv, cipherMode);
         throwOnError(retVal);
         OpenSslNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
@@ -315,7 +315,7 @@ class OpenSslJnaCipher implements CryptoCipher {
         if (retVal != 1) {
             NativeLong err = OpenSslNativeJna.ERR_peek_error();
             String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
-            
+
             if (context != null) {
                 OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             }
@@ -372,7 +372,7 @@ class OpenSslJnaCipher implements CryptoCipher {
         }
         return new Transform(parts[0], parts[1], parts[2]);
     }
-    
+
     /**
      * AlgorithmMode of JNA.  Currently only support AES/CTR/NoPadding.
      */

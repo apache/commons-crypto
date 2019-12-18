@@ -347,8 +347,8 @@ public abstract class AbstractCipherStreamTest {
     private void doReadWriteTestForInputStream(int count,
             String encCipherClass, String decCipherClass, byte[] iv)
             throws IOException {
-        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(encCipherClass) 
-                || 
+        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(encCipherClass)
+                ||
             AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(decCipherClass)) {
             if (!Crypto.isNativeCodeLoaded()) {
                 return; // Skip this test if no JNI
@@ -415,8 +415,8 @@ public abstract class AbstractCipherStreamTest {
     private void doReadWriteTestForReadableByteChannel(int count,
             String encCipherClass, String decCipherClass, byte[] iv)
             throws IOException {
-        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(encCipherClass) 
-                || 
+        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(encCipherClass)
+                ||
             AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(decCipherClass)) {
             if (!Crypto.isNativeCodeLoaded()) {
                 return; // Skip this test if no JNI
