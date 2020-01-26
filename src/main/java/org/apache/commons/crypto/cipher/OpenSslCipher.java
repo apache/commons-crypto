@@ -23,13 +23,13 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Objects;
 import java.util.Properties;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
-
-import org.apache.commons.crypto.utils.Utils;
 
 /**
  * Implements the CryptoCipher using JNI into OpenSSL.
@@ -99,8 +99,8 @@ class OpenSslCipher implements CryptoCipher {
     @Override
     public void init(int mode, Key key, AlgorithmParameterSpec params)
             throws InvalidKeyException, InvalidAlgorithmParameterException {
-        Utils.checkNotNull(key);
-        Utils.checkNotNull(params);
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(params, "params");
 
         int cipherMode = OpenSsl.DECRYPT_MODE;
         if (mode == Cipher.ENCRYPT_MODE) {

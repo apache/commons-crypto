@@ -24,6 +24,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -36,7 +37,6 @@ import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
-import org.apache.commons.crypto.utils.Utils;
 
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
@@ -89,8 +89,8 @@ class OpenSslJnaCipher implements CryptoCipher {
     @Override
     public void init(int mode, Key key, AlgorithmParameterSpec params)
             throws InvalidKeyException, InvalidAlgorithmParameterException {
-        Utils.checkNotNull(key);
-        Utils.checkNotNull(params);
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(params, "params");
         int cipherMode = OpenSslNativeJna.OOSL_JNA_DECRYPT_MODE;
         if (mode == Cipher.ENCRYPT_MODE) {
             cipherMode = OpenSslNativeJna.OOSL_JNA_ENCRYPT_MODE;

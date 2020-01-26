@@ -168,7 +168,9 @@ public final class Utils {
      * @param reference an object reference.
      * @return the non-null reference that was validated.
      * @throws NullPointerException if reference is null.
+     * @deprecated Use {@link Objects#requireNonNull(Object)}.
      */
+    @Deprecated
     public static <T> T checkNotNull(T reference) {
         return Objects.requireNonNull(reference, "reference");
     }
