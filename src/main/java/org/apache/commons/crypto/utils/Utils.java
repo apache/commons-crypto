@@ -23,6 +23,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.commons.crypto.Crypto;
@@ -169,10 +170,7 @@ public final class Utils {
      * @throws NullPointerException if reference is null.
      */
     public static <T> T checkNotNull(T reference) {
-        if (reference == null) {
-            throw new NullPointerException();
-        }
-        return reference;
+        return Objects.requireNonNull(reference, "reference");
     }
 
     /**

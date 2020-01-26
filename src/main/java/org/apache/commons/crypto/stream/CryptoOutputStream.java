@@ -26,6 +26,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Objects;
 import java.util.Properties;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -213,27 +214,26 @@ public class CryptoOutputStream extends OutputStream implements
      * then write to this buffer. If {@link #inBuffer} is full, then do
      * encryption and write data to the underlying stream.
      *
-     * @param b the data.
+     * @param array the data.
      * @param off the start offset in the data.
      * @param len the number of bytes to write.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
+    public void write(byte[] array, int off, int len) throws IOException {
         checkStream();
-        if (b == null) {
-            throw new NullPointerException();
-        } else if (off < 0 || len < 0 || off > b.length || len > b.length - off) {
+        Objects.requireNonNull(array, "array");
+        if (off < 0 || len < 0 || off > array.length || len > array.length - off) {
             throw new IndexOutOfBoundsException();
         }
 
         while (len > 0) {
             final int remaining = inBuffer.remaining();
             if (len < remaining) {
-                inBuffer.put(b, off, len);
+                inBuffer.put(array, off, len);
                 len = 0;
             } else {
-                inBuffer.put(b, off, remaining);
+                inBuffer.put(array, off, remaining);
                 off += remaining;
                 len -= remaining;
                 encrypt();

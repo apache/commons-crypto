@@ -26,6 +26,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Objects;
 import java.util.Properties;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -229,7 +230,7 @@ public class CryptoInputStream extends InputStream implements
      * read it out of this buffer. If there is no data in {@link #outBuffer},
      * then read more from the underlying stream and do the decryption.
      *
-     * @param b the buffer into which the decrypted data is read.
+     * @param array the buffer into which the decrypted data is read.
      * @param off the buffer offset.
      * @param len the maximum number of decrypted data bytes to read.
      * @return int the total number of decrypted data bytes read into the
@@ -237,11 +238,10 @@ public class CryptoInputStream extends InputStream implements
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(byte[] b, int off, int len) throws IOException {
+    public int read(byte[] array, int off, int len) throws IOException {
         checkStream();
-        if (b == null) {
-            throw new NullPointerException();
-        } else if (off < 0 || len < 0 || len > b.length - off) {
+        Objects.requireNonNull(array, "array");
+        if (off < 0 || len < 0 || len > array.length - off) {
             throw new IndexOutOfBoundsException();
         } else if (len == 0) {
             return 0;
@@ -251,7 +251,7 @@ public class CryptoInputStream extends InputStream implements
         if (remaining > 0) {
             // Satisfy the read with the existing data
             int n = Math.min(len, remaining);
-            outBuffer.get(b, off, n);
+            outBuffer.get(array, off, n);
             return n;
         }
         // No data in the out buffer, try read new data and decrypt it
@@ -265,7 +265,7 @@ public class CryptoInputStream extends InputStream implements
         }
 
         int n = Math.min(len, outBuffer.remaining());
-        outBuffer.get(b, off, n);
+        outBuffer.get(array, off, n);
         return n;
     }
 

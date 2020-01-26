@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Random;
 
@@ -340,9 +341,8 @@ public class PositionedCryptoInputStreamTest {
         @Override
         public int read(long position, byte[] buffer, int offset, int length)
                 throws IOException {
-            if (buffer == null) {
-                throw new NullPointerException();
-            } else if (offset < 0 || length < 0
+            Objects.requireNonNull(buffer, "buffer");
+            if (offset < 0 || length < 0
                     || length > buffer.length - offset) {
                 throw new IndexOutOfBoundsException();
             }
