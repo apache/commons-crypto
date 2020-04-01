@@ -53,7 +53,7 @@ endif
 
 # os=Default is meant to be generic unix/linux
 
-known_os_archs := Linux-x86 Linux-x86_64 Linux-arm Linux-armhf Linux-ppc Linux-ppc64 Mac-x86 Mac-x86_64 FreeBSD-x86_64 Windows-x86 Windows-x86_64 SunOS-x86 SunOS-sparc SunOS-x86_64 AIX-ppc64
+known_os_archs := Linux-x86 Linux-x86_64 Linux-aarch64 Linux-arm Linux-armhf Linux-ppc Linux-ppc64 Mac-x86 Mac-x86_64 FreeBSD-x86_64 Windows-x86 Windows-x86_64 SunOS-x86 SunOS-sparc SunOS-x86_64 AIX-ppc64
 os_arch := $(OS_NAME)-$(OS_ARCH)
 
 ifeq (,$(findstring $(strip $(os_arch)),$(known_os_archs)))
@@ -168,6 +168,15 @@ Linux-armhf_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I$(JAVA_HOME)/include 
 Linux-armhf_LINKFLAGS := -shared -static-libgcc
 Linux-armhf_LIBNAME   := libcommons-crypto.so
 Linux-armhf_COMMONS_CRYPTO_FLAGS:=
+
+Linux-aarch64_CC        := $(CROSS_PREFIX)gcc
+Linux-aarch64_CXX       := $(CROSS_PREFIX)g++
+Linux-aarch64_STRIP     := $(CROSS_PREFIX)strip
+Linux-aarch64_CXXFLAGS  := -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -Wall -Werror
+Linux-aarch64_CFLAGS    := -Ilib/inc_linux -I$(JAVA_HOME)/include -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -Wall -Werror
+Linux-aarch64_LINKFLAGS := -shared -static-libgcc
+Linux-aarch64_LIBNAME   := libcommons-crypto.so
+Linux-aarch64_COMMONS_CRYPTO_FLAGS  :=
 
 Mac-x86_CC        := gcc -arch i386
 Mac-x86_CXX       := g++ -arch i386
