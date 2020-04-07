@@ -28,6 +28,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.Random;
 import javax.crypto.spec.IvParameterSpec;
@@ -52,6 +54,7 @@ public abstract class AbstractCipherStreamTest {
     protected int count = 10000;
     protected static int defaultBufferSize = 8192;
     protected static int smallBufferSize = 1024;
+    protected AlgorithmParameterSpec algorithmParameterSpec;
 
     protected String transformation;
 
@@ -72,7 +75,6 @@ public abstract class AbstractCipherStreamTest {
     public void testSkip() throws Exception {
         doSkipTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, false);
         doSkipTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, false);
-
         doSkipTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, true);
         doSkipTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, true);
     }
@@ -82,7 +84,6 @@ public abstract class AbstractCipherStreamTest {
     public void testByteBufferRead() throws Exception {
         doByteBufferRead(AbstractCipherTest.JCE_CIPHER_CLASSNAME, false);
         doByteBufferRead(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, false);
-
         doByteBufferRead(AbstractCipherTest.JCE_CIPHER_CLASSNAME, true);
         doByteBufferRead(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, true);
     }
@@ -263,7 +264,7 @@ public abstract class AbstractCipherStreamTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (OutputStream out = new CryptoOutputStream(baos, cipher,
                 defaultBufferSize, new SecretKeySpec(key, "AES"),
-                new IvParameterSpec(iv))) {
+                algorithmParameterSpec)) {
             out.write(data);
             out.flush();
         }
@@ -276,10 +277,10 @@ public abstract class AbstractCipherStreamTest {
         if (withChannel) {
             return new CryptoInputStream(Channels.newChannel(bais), cipher,
                     bufferSize, new SecretKeySpec(key, "AES"),
-                    new IvParameterSpec(iv));
+                    algorithmParameterSpec);
         }
         return new CryptoInputStream(bais, cipher, bufferSize,
-                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+                new SecretKeySpec(key, "AES"), algorithmParameterSpec);
     }
 
     protected CryptoOutputStream getCryptoOutputStream(
@@ -288,10 +289,10 @@ public abstract class AbstractCipherStreamTest {
         if (withChannel) {
             return new CryptoOutputStream(Channels.newChannel(baos), cipher,
                     bufferSize, new SecretKeySpec(key, "AES"),
-                    new IvParameterSpec(iv));
+                    algorithmParameterSpec);
         }
         return new CryptoOutputStream(baos, cipher, bufferSize,
-                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+                new SecretKeySpec(key, "AES"), algorithmParameterSpec);
     }
 
     private int readAll(InputStream in, byte[] b, int offset, int len)

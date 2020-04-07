@@ -32,6 +32,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.Crypto;
@@ -178,6 +179,22 @@ public class CryptoInputStream extends InputStream implements
     /**
      * Constructs a {@link CryptoInputStream}.
      *
+     * @param in the ReadableByteChannel instance.
+     * @param cipher the cipher instance.
+     * @param bufferSize the bufferSize.
+     * @param key crypto key for the cipher.
+     * @param params the algorithm parameters.
+     * @throws IOException if an I/O error occurs.
+     */
+    protected CryptoInputStream(ReadableByteChannel in, CryptoCipher cipher,
+                                int bufferSize, Key key, AlgorithmParameterSpec params,int dateSize)
+            throws IOException {
+        this(new ChannelInput(in,dateSize), cipher, bufferSize, key, params);
+    }
+
+    /**
+     * Constructs a {@link CryptoInputStream}.
+     *
      * @param input the input data.
      * @param cipher the cipher instance.
      * @param bufferSize the bufferSize.
@@ -193,15 +210,16 @@ public class CryptoInputStream extends InputStream implements
 
         this.key = key;
         this.params = params;
-        if (!(params instanceof IvParameterSpec)) {
-            // other AlgorithmParameterSpec such as GCMParameterSpec is not
-            // supported now.
+        if (params instanceof IvParameterSpec){
+            outBuffer = ByteBuffer.allocateDirect(this.bufferSize
+                    + cipher.getBlockSize());
+        }else if (params instanceof GCMParameterSpec){
+            outBuffer = ByteBuffer.allocateDirect(input.available());
+        }else {
             throw new IOException("Illegal parameters");
         }
 
         inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-        outBuffer = ByteBuffer.allocateDirect(this.bufferSize
-                + cipher.getBlockSize());
         outBuffer.limit(0);
 
         initCipher();
@@ -412,7 +430,7 @@ public class CryptoInputStream extends InputStream implements
             // Decrypt more data
             // we loop for new data
             int nd = 0;
-            while (nd == 0) {
+            while (nd == 0 && !finalDone) {
                 nd = decryptMore();
             }
 
@@ -511,6 +529,8 @@ public class CryptoInputStream extends InputStream implements
         }
 
         int n = input.read(inBuffer);
+
+        //if it is used of gmac ,it must dofinal though decryptFinal
         if (n < 0) {
             // The stream is end, finalize the cipher stream
             decryptFinal();
@@ -523,10 +543,20 @@ public class CryptoInputStream extends InputStream implements
 
             // End of the stream
             return -1;
-        } else if (n == 0) {
+        } else if (n == 0 && !(params instanceof GCMParameterSpec)) {
             // No data is read, but the stream is not end yet
             return 0;
-        } else {
+        } else if (n < bufferSize && (params instanceof GCMParameterSpec)){
+            decryptFinal();
+            // Satisfy the read with the remaining
+            int remaining = outBuffer.remaining();
+            if (remaining > 0) {
+                return remaining;
+            }
+
+            // End of the stream
+            return -1;
+        }else {
             decrypt();
             return outBuffer.remaining();
         }

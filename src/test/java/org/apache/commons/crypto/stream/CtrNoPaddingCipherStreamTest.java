@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.stream;
 
+import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 
 public class CtrNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
@@ -24,6 +25,7 @@ public class CtrNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
     @Override
     public void setUp() throws IOException {
         transformation = "AES/CTR/NoPadding";
+        algorithmParameterSpec = new IvParameterSpec(super.iv);
     }
 
 }

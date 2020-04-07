@@ -17,6 +17,8 @@
  */
 package org.apache.commons.crypto.stream;
 
+import javax.crypto.spec.IvParameterSpec;
+import javax.swing.plaf.SeparatorUI;
 import java.io.IOException;
 
 public class CbcPkcs5PaddingCipherStreamTest extends AbstractCipherStreamTest {
@@ -24,5 +26,6 @@ public class CbcPkcs5PaddingCipherStreamTest extends AbstractCipherStreamTest {
     @Override
     public void setUp() throws IOException {
         transformation = "AES/CBC/PKCS5Padding";
+        algorithmParameterSpec = new IvParameterSpec(super.iv);
     }
 }

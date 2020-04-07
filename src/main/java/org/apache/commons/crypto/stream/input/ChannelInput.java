@@ -31,6 +31,7 @@ public class ChannelInput implements Input {
 
     private ByteBuffer buf;
     private final ReadableByteChannel channel;
+    private int channelSize = 0;
 
     /**
      * Constructs the
@@ -40,6 +41,18 @@ public class ChannelInput implements Input {
      */
     public ChannelInput(ReadableByteChannel channel) {
         this.channel = channel;
+    }
+
+    /**
+     * Constructs the
+     * {@link org.apache.commons.crypto.stream.input.ChannelInput}.
+     *
+     * @param channel the ReadableByteChannel object.
+     * @param channelSize using it to adjust gcm
+     */
+    public ChannelInput(ReadableByteChannel channel,int channelSize) {
+        this.channel = channel;
+        this.channelSize = channelSize;
     }
 
     /**
@@ -99,6 +112,7 @@ public class ChannelInput implements Input {
      * single read or skip of this many bytes will not block, but may read or
      * skip fewer bytes.
      *
+     * @author Li,Gongyi
      * @return an estimate of the number of bytes that can be read (or skipped
      *         over) from this input stream without blocking or {@code 0} when
      *         it reaches the end of the input stream.
@@ -106,6 +120,9 @@ public class ChannelInput implements Input {
      */
     @Override
     public int available() throws IOException {
+        if (channelSize != 0){
+            return channelSize;
+        }
         return 0;
     }
 

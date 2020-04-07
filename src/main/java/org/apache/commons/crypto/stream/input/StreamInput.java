@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.stream.input;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -157,4 +158,5 @@ public class StreamInput implements Input {
     public void close() throws IOException {
         in.close();
     }
+
 }
