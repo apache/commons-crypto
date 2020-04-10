@@ -376,7 +376,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     /**
      * AlgorithmMode of JNA.  Currently only support AES/CTR/NoPadding.
      */
-    private static enum AlgorithmMode {
+    private enum AlgorithmMode {
         AES_CTR, AES_CBC;
 
         /**
@@ -398,7 +398,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     /**
      * Padding of JNA.
      */
-    private static enum Padding {
+    private enum Padding {
         NoPadding, PKCS5Padding;
 
         /**

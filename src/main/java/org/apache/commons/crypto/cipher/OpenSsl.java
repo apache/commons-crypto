@@ -44,7 +44,7 @@ final class OpenSsl {
     private final OpenSslFeedbackCipher opensslBlockCipher;
 
     /** Currently only support AES/CTR/NoPadding. */
-    private static enum AlgorithmMode {
+    private enum AlgorithmMode {
         AES_CTR, AES_CBC, AES_GCM;
 
         /**
@@ -67,7 +67,7 @@ final class OpenSsl {
         }
     }
 
-    private static enum Padding {
+    private enum Padding {
         NoPadding, PKCS5Padding;
 
         /**
