@@ -20,7 +20,6 @@ package org.apache.commons.crypto.jna;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.apache.commons.crypto.jna.OpenSslJnaCryptoRandom;
 import org.apache.commons.crypto.random.AbstractRandomTest;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
