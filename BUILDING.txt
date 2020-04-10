@@ -10,6 +10,7 @@ Requirements:
 * Maven 3.0 or above
 * Make
 * OpenSSL devel 1.0.1c or above (Openssl library header files are required)
+* GCC
 
 ----------------------------------------------------------------------------------
 Install JCE Unlimited Strength Jurisdiction Policy Files:

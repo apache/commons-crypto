@@ -498,8 +498,8 @@ The following provides more details on the included cryptographic software:
               <target name="make">
                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                 <exec executable="make" failonerror="true" dir="${project.basedir}">
-                  <env key="VERSION" value="${project.version}" />
-                  <env key="PROJECT_NAME" value="${project.name}" />
+                  <env key="VERSION" value="&quot;${project.version}&quot;" />
+                  <env key="PROJECT_NAME" value="&quot;${project.name}&quot;" />
                   <!-- For debugging: -->
                   <!-- <arg value="-d" /> -->
                   <arg value="${target.name}" />
