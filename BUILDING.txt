@@ -7,6 +7,7 @@ Requirements:
 * JDK 1.7 or above (environment variable JAVA_HOME must be set)
 * Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy
   Files (if running unit tests)
+* export JAVA_HOME
 * Maven 3.0 or above
 * Make
 * OpenSSL devel 1.0.1c or above (Openssl library header files are required)
@@ -41,6 +42,8 @@ Upgrade OpenSSL in Mac:
 
   $ brew install homebrew/versions/openssl101
   $ brew link openssl --force
+
+Get OpenSSL headers: sudo apt -y install libssl-dev
 
 ----------------------------------------------------------------------------------
 Maven build goals:
