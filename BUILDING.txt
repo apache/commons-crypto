@@ -12,6 +12,7 @@ Requirements:
 * Make
 * OpenSSL devel 1.0.1c or above (Openssl library header files are required)
 * GCC
+* G++
 
 ----------------------------------------------------------------------------------
 Install JCE Unlimited Strength Jurisdiction Policy Files:
