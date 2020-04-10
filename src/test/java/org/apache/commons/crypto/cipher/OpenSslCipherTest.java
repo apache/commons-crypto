@@ -59,7 +59,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Test(timeout = 120000)
     public void testUpdateArguments() throws Exception {
         Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-        OpenSsl cipher = OpenSsl
+        final OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
@@ -72,7 +72,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         try {
             cipher.update(input, output);
             Assert.fail("Should have failed to accept non-direct buffers.");
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().contains(
                     "Direct buffers are required"));
         }
@@ -83,7 +83,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         try {
             cipher.update(input, output);
             Assert.fail("Failed to check for output buffer size.");
-        } catch (ShortBufferException e) {
+        } catch (final ShortBufferException e) {
             Assert.assertTrue(e.getMessage().contains(
                     "Output buffer is not sufficient"));
         }
@@ -92,20 +92,20 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Test(timeout = 120000)
     public void testDoFinalArguments() throws Exception {
         Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-        OpenSsl cipher = OpenSsl
+        final OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
         cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(IV));
 
         // Require direct buffer
-        ByteBuffer input = ByteBuffer.allocate(1024);
-        ByteBuffer output = ByteBuffer.allocate(1024);
+        final ByteBuffer input = ByteBuffer.allocate(1024);
+        final ByteBuffer output = ByteBuffer.allocate(1024);
 
         try {
             cipher.doFinal(input, output);
             Assert.fail("Should have failed to accept non-direct buffers.");
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().contains(
                     "Direct buffer is required"));
         }
@@ -114,7 +114,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Test(expected = InvalidKeyException.class, timeout = 120000)
     public void testInvalidKey() throws Exception {
         Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-        OpenSsl cipher = OpenSsl
+        final OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
@@ -126,7 +126,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Test(expected = InvalidAlgorithmParameterException.class, timeout = 120000)
     public void testInvalidIV() throws Exception {
         Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-        OpenSsl cipher = OpenSsl
+        final OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
         Assert.assertNotNull(cipher);
 
@@ -141,7 +141,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
             try {
                 cipher.update(dummyBuffer(), dummyBuffer());
                 Assert.fail("Should have thrown exception.");
-            } catch (IllegalStateException ise) {
+            } catch (final IllegalStateException ise) {
                 // expected;
             }
 
@@ -153,7 +153,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
                 cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(new byte[1], "AES"),
                     new IvParameterSpec(IV));
                 Assert.fail("Should have thrown exception.");
-            } catch (InvalidKeyException ike) {
+            } catch (final InvalidKeyException ike) {
                 // expected;
             }
 
@@ -165,7 +165,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
             try {
                 cipher.update(dummyBuffer(), dummyBuffer());
                 Assert.fail("Should have thrown exception.");
-            } catch (IllegalStateException ise) {
+            } catch (final IllegalStateException ise) {
                 // expected;
             }
 

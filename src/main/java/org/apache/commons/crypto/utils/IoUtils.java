@@ -42,11 +42,11 @@ public final class IoUtils {
      * @param len the maximum number of bytes to read.
      * @throws IOException if an I/O error occurs.
      */
-    public static void readFully(InputStream in, byte buf[], int off, int len)
+    public static void readFully(final InputStream in, final byte buf[], int off, final int len)
             throws IOException {
         int toRead = len;
         while (toRead > 0) {
-            int ret = in.read(buf, off, toRead);
+            final int ret = in.read(buf, off, toRead);
             if (ret < 0) {
                 throw new IOException("Premature EOF from inputStream");
             }
@@ -66,11 +66,11 @@ public final class IoUtils {
      * @param offset the start offset in array buffer.
      * @throws IOException if an I/O error occurs.
      */
-    public static void readFully(Input in, long position, byte[] buffer,
-            int offset, int length) throws IOException {
+    public static void readFully(final Input in, final long position, final byte[] buffer,
+            final int offset, final int length) throws IOException {
         int nread = 0;
         while (nread < length) {
-            int nbytes = in.read(position + nread, buffer, offset + nread,
+            final int nbytes = in.read(position + nread, buffer, offset + nread,
                     length - nread);
             if (nbytes < 0) {
                 throw new IOException(
@@ -86,12 +86,12 @@ public final class IoUtils {
      *
      * @param closeables the objects to close.
      */
-    public static void cleanup(java.io.Closeable... closeables) {
-        for (java.io.Closeable c : closeables) {
+    public static void cleanup(final java.io.Closeable... closeables) {
+        for (final java.io.Closeable c : closeables) {
             if (c != null) {
                 try {
                     c.close();
-                } catch (IOException e) { // NOPMD
+                } catch (final IOException e) { // NOPMD
                 }
             }
         }

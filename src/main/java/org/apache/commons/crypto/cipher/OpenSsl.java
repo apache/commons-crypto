@@ -54,11 +54,11 @@ final class OpenSsl {
          * @return the Algorithm mode.
          * @throws NoSuchAlgorithmException if the algorithm is not available.
          */
-        static int get(String algorithm, String mode)
+        static int get(final String algorithm, final String mode)
                 throws NoSuchAlgorithmException {
             try {
                 return AlgorithmMode.valueOf(algorithm + "_" + mode).ordinal();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new NoSuchAlgorithmException(
                         "Doesn't support algorithm: " + algorithm
                                 + " and mode: " + mode);
@@ -76,10 +76,10 @@ final class OpenSsl {
          * @return the value of Padding.
          * @throws NoSuchPaddingException if the padding is not available.
          */
-        static int get(String padding) throws NoSuchPaddingException {
+        static int get(final String padding) throws NoSuchPaddingException {
             try {
                 return Padding.valueOf(padding).ordinal();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new NoSuchPaddingException("Doesn't support padding: "
                         + padding);
             }
@@ -96,9 +96,9 @@ final class OpenSsl {
             } else {
                 loadingFailure = Crypto.getLoadingError();
             }
-        } catch (Exception t) {
+        } catch (final Exception t) {
             loadingFailure = t;
-        } catch (UnsatisfiedLinkError t) {
+        } catch (final UnsatisfiedLinkError t) {
             loadingFailure = t;
         } finally {
             loadingFailureReason = loadingFailure;
@@ -121,7 +121,7 @@ final class OpenSsl {
      * @param algorithm the algorithm.
      * @param padding the padding.
      */
-    private OpenSsl(long context, int algorithm, int padding) {
+    private OpenSsl(final long context, final int algorithm, final int padding) {
         if (algorithm == AlgorithmMode.AES_GCM.ordinal()) {
             opensslBlockCipher = new OpenSslGaloisCounterMode(context, algorithm, padding);
         } else {
@@ -143,16 +143,16 @@ final class OpenSsl {
      *         padding scheme that is not available.
      * @throws IllegalStateException if native code cannot be initialised
      */
-    public static OpenSsl getInstance(String transformation)
+    public static OpenSsl getInstance(final String transformation)
             throws NoSuchAlgorithmException, NoSuchPaddingException {
         if (loadingFailureReason != null) {
             throw new IllegalStateException(loadingFailureReason);
         }
-        Transform transform = tokenizeTransformation(transformation);
-        int algorithmMode = AlgorithmMode.get(transform.algorithm,
+        final Transform transform = tokenizeTransformation(transformation);
+        final int algorithmMode = AlgorithmMode.get(transform.algorithm,
                 transform.mode);
-        int padding = Padding.get(transform.padding);
-        long context = OpenSslNative.initContext(algorithmMode, padding);
+        final int padding = Padding.get(transform.padding);
+        final long context = OpenSslNative.initContext(algorithmMode, padding);
         return new OpenSsl(context, algorithmMode, padding);
     }
 
@@ -169,7 +169,7 @@ final class OpenSsl {
          * @param mode the mode.
          * @param padding the padding.
          */
-        public Transform(String algorithm, String mode, String padding) {
+        public Transform(final String algorithm, final String mode, final String padding) {
             this.algorithm = algorithm;
             this.mode = mode;
             this.padding = padding;
@@ -183,7 +183,7 @@ final class OpenSsl {
      * @return the {@link Transform} instance.
      * @throws NoSuchAlgorithmException if the transformation is null.
      */
-    private static Transform tokenizeTransformation(String transformation)
+    private static Transform tokenizeTransformation(final String transformation)
             throws NoSuchAlgorithmException {
         if (transformation == null) {
             throw new NoSuchAlgorithmException("No transformation given.");
@@ -194,9 +194,9 @@ final class OpenSsl {
          * algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding
          * (e.g., NoPadding)
          */
-        String[] parts = new String[3];
+        final String[] parts = new String[3];
         int count = 0;
-        StringTokenizer parser = new StringTokenizer(transformation, "/");
+        final StringTokenizer parser = new StringTokenizer(transformation, "/");
         while (parser.hasMoreTokens() && count < 3) {
             parts[count++] = parser.nextToken().trim();
         }
@@ -215,7 +215,7 @@ final class OpenSsl {
      * @param params the algorithm parameters
      * @throws InvalidAlgorithmParameterException if IV length is wrong
      */
-    public void init(int mode, byte[] key, AlgorithmParameterSpec params)
+    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params)
             throws InvalidAlgorithmParameterException {
         opensslBlockCipher.init(mode, key, params);
     }
@@ -248,7 +248,7 @@ final class OpenSsl {
      * @throws ShortBufferException if there is insufficient space in the output
      *         buffer
      */
-    public int update(ByteBuffer input, ByteBuffer output)
+    public int update(final ByteBuffer input, final ByteBuffer output)
             throws ShortBufferException {
         Utils.checkArgument(input.isDirect() && output.isDirect(),
                 "Direct buffers are required.");
@@ -268,8 +268,8 @@ final class OpenSsl {
      * @throws ShortBufferException if there is insufficient space in the output
      *         byte array
      */
-    public int update(byte[] input, int inputOffset, int inputLen,
-            byte[] output, int outputOffset) throws ShortBufferException {
+    public int update(final byte[] input, final int inputOffset, final int inputLen,
+            final byte[] output, final int outputOffset) throws ShortBufferException {
         return opensslBlockCipher.update(input, inputOffset, inputLen, output, outputOffset);
     }
 
@@ -294,8 +294,8 @@ final class OpenSsl {
      *         multiple of block size; or if this encryption algorithm is unable
      *         to process the input data provided.
      */
-    public int doFinal(byte[] input, int inputOffset, int inputLen,
-                       byte[] output, int outputOffset)
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen,
+                       final byte[] output, final int outputOffset)
             throws ShortBufferException, IllegalBlockSizeException,
             BadPaddingException{
         return opensslBlockCipher.doFinal(input, inputOffset, inputLen, output, outputOffset);
@@ -341,7 +341,7 @@ final class OpenSsl {
      *         (un)padding has been requested, but the decrypted data is not
      *         bounded by the appropriate padding bytes
      */
-    public int doFinal(ByteBuffer input, ByteBuffer output) throws ShortBufferException,
+    public int doFinal(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException,
             IllegalBlockSizeException, BadPaddingException {
         Utils.checkArgument(output.isDirect(), "Direct buffer is required.");
 
@@ -362,7 +362,7 @@ final class OpenSsl {
      * @param aad the buffer containing the Additional Authentication Data
      *
      */
-    public void updateAAD(byte[] aad) {
+    public void updateAAD(final byte[] aad) {
         this.opensslBlockCipher.updateAAD(aad);
     }
 

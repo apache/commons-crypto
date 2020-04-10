@@ -35,7 +35,7 @@ public final class ReflectionUtils {
     private static final ClassLoader CLASSLOADER;
 
     static {
-        ClassLoader threadClassLoader = Thread.currentThread()
+        final ClassLoader threadClassLoader = Thread.currentThread()
                 .getContextClassLoader();
         CLASSLOADER = (threadClassLoader != null) ? threadClassLoader
                 : CryptoCipher.class.getClassLoader();
@@ -71,14 +71,14 @@ public final class ReflectionUtils {
      * @return a new object created by calling the constructor this object
      *         represents.
      */
-    public static <T> T newInstance(Class<T> klass, Object... args) {
+    public static <T> T newInstance(final Class<T> klass, final Object... args) {
         try {
             Constructor<T> ctor;
 
             if (args.length == 0) {
                 ctor = klass.getDeclaredConstructor();
             } else {
-                Class<?>[] argClses = new Class[args.length];
+                final Class<?>[] argClses = new Class[args.length];
                 for (int i = 0; i < args.length; i++) {
                     argClses[i] = args[i].getClass();
                 }
@@ -86,7 +86,7 @@ public final class ReflectionUtils {
             }
             ctor.setAccessible(true);
             return ctor.newInstance(args);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -98,9 +98,9 @@ public final class ReflectionUtils {
      * @return the class object.
      * @throws ClassNotFoundException if the class is not found.
      */
-    public static Class<?> getClassByName(String name)
+    public static Class<?> getClassByName(final String name)
             throws ClassNotFoundException {
-        Class<?> ret = getClassByNameOrNull(name);
+        final Class<?> ret = getClassByNameOrNull(name);
         if (ret == null) {
             throw new ClassNotFoundException("Class " + name + " not found");
         }
@@ -115,7 +115,7 @@ public final class ReflectionUtils {
      * @param name the class name.
      * @return the class object, or null if it could not be found.
      */
-    private static Class<?> getClassByNameOrNull(String name) {
+    private static Class<?> getClassByNameOrNull(final String name) {
         Map<String, WeakReference<Class<?>>> map;
 
         synchronized (CACHE_CLASSES) {
@@ -128,7 +128,7 @@ public final class ReflectionUtils {
         }
 
         Class<?> clazz = null;
-        WeakReference<Class<?>> ref = map.get(name);
+        final WeakReference<Class<?>> ref = map.get(name);
         if (ref != null) {
             clazz = ref.get();
         }
@@ -136,7 +136,7 @@ public final class ReflectionUtils {
         if (clazz == null) {
             try {
                 clazz = Class.forName(name, true, CLASSLOADER);
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 // Leave a marker that the class isn't found
                 map.put(name, new WeakReference<Class<?>>(
                         NEGATIVE_CACHE_SENTINEL));

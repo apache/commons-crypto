@@ -56,7 +56,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
     @Override
     @Test(timeout = 120000)
     public void testByteBufferWrite() throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         doByteBufferWrite(CIPHER_OPENSSL_JNA, baos, false);
 
         doByteBufferWrite(CIPHER_OPENSSL_JNA, baos, true);

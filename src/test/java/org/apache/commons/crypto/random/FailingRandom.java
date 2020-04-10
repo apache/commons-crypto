@@ -23,7 +23,7 @@ import java.util.Properties;
 class FailingRandom implements CryptoRandom {
 
     // Should fail with NoSuchMethodException
-    FailingRandom(Properties props) {
+    FailingRandom(final Properties props) {
         NoSuchMethod();
     }
 
@@ -32,7 +32,7 @@ class FailingRandom implements CryptoRandom {
     }
 
     @Override
-    public void nextBytes(byte[] bytes) {
+    public void nextBytes(final byte[] bytes) {
     }
 
     public static native void NoSuchMethod();

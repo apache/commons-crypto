@@ -30,14 +30,14 @@ public class EnumTest {
 
     @Test
     public void testRandom() throws Exception {
-        for(RandomProvider value : CryptoRandomFactory.RandomProvider.values()) {
+        for(final RandomProvider value : CryptoRandomFactory.RandomProvider.values()) {
             ReflectionUtils.getClassByName(value.getClassName());
         }
     }
 
     @Test
     public void testCipher() throws Exception {
-        for(CipherProvider value : CryptoCipherFactory.CipherProvider.values()) {
+        for(final CipherProvider value : CryptoCipherFactory.CipherProvider.values()) {
             ReflectionUtils.getClassByName(value.getClassName());
         }
     }

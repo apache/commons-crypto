@@ -59,7 +59,7 @@ final class NativeCodeLoader {
      */
     static Throwable loadLibrary() {
         try {
-            File nativeLibFile = findNativeLibrary();
+            final File nativeLibFile = findNativeLibrary();
             if (nativeLibFile != null) {
                 // Load extracted or specified native library.
                 System.load(nativeLibFile.getAbsolutePath());
@@ -68,9 +68,9 @@ final class NativeCodeLoader {
                 System.loadLibrary("commons-crypto");
             }
             return null; // OK
-        } catch (Exception t) {
+        } catch (final Exception t) {
             return t;
-        } catch (UnsatisfiedLinkError t) {
+        } catch (final UnsatisfiedLinkError t) {
             return t;
         }
     }
@@ -93,7 +93,7 @@ final class NativeCodeLoader {
             nativeLibraryName = System.mapLibraryName("commons-crypto");
         }
         if (nativeLibraryPath != null) {
-            File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
+            final File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
             if (nativeLib.exists()) {
                 return nativeLib;
             }
@@ -105,7 +105,7 @@ final class NativeCodeLoader {
         boolean hasNativeLib = hasResource(nativeLibraryPath + "/"
                 + nativeLibraryName);
         if (!hasNativeLib) {
-            String altName = "libcommons-crypto.jnilib";
+            final String altName = "libcommons-crypto.jnilib";
             if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + "/" + altName)) {
                 // Fix for openjdk7 for Mac
                 nativeLibraryName = altName;
@@ -114,7 +114,7 @@ final class NativeCodeLoader {
         }
 
         if (!hasNativeLib) {
-            String errorMessage = String.format(
+            final String errorMessage = String.format(
                     "no native library is found for os.name=%s and os.arch=%s",
                     OsInfo.getOSName(), OsInfo.getArchName());
             throw new RuntimeException(errorMessage);
@@ -122,7 +122,7 @@ final class NativeCodeLoader {
 
         // Temporary folder for the native lib. Use the value of
         // commons-crypto.tempdir or java.io.tmpdir
-        String tempFolder = new File(props.getProperty(Crypto.LIB_TEMPDIR_KEY,
+        final String tempFolder = new File(props.getProperty(Crypto.LIB_TEMPDIR_KEY,
         System.getProperty("java.io.tmpdir"))).getAbsolutePath();
 
         // Extract and load a native library inside the jar file
@@ -139,27 +139,27 @@ final class NativeCodeLoader {
      *        commons-crypto.tempdir or java.io.tmpdir.
      * @return the library file.
      */
-    private static File extractLibraryFile(String libFolderForCurrentOS,
-            String libraryFileName, String targetFolder) {
-        String nativeLibraryFilePath = libFolderForCurrentOS + "/"
+    private static File extractLibraryFile(final String libFolderForCurrentOS,
+            final String libraryFileName, final String targetFolder) {
+        final String nativeLibraryFilePath = libFolderForCurrentOS + "/"
                 + libraryFileName;
 
         // Attach UUID to the native library file to ensure multiple class
         // loaders
         // can read the libcommons-crypto multiple times.
-        String uuid = UUID.randomUUID().toString();
-        String extractedLibFileName = String.format("commons-crypto-%s-%s",
+        final String uuid = UUID.randomUUID().toString();
+        final String extractedLibFileName = String.format("commons-crypto-%s-%s",
                 uuid, libraryFileName);
-        File extractedLibFile = new File(targetFolder, extractedLibFileName);
+        final File extractedLibFile = new File(targetFolder, extractedLibFileName);
 
         InputStream reader = null;
         try {
             // Extract a native library file into the target directory
             reader = NativeCodeLoader.class
                     .getResourceAsStream(nativeLibraryFilePath);
-            FileOutputStream writer = new FileOutputStream(extractedLibFile);
+            final FileOutputStream writer = new FileOutputStream(extractedLibFile);
             try {
-                byte[] buffer = new byte[8192];
+                final byte[] buffer = new byte[8192];
                 int bytesRead;
                 while ((bytesRead = reader.read(buffer)) != -1) {
                     writer.write(buffer, 0, bytesRead);
@@ -206,7 +206,7 @@ final class NativeCodeLoader {
             }
 
             return extractedLibFile;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             return null;
         } finally {
             IoUtils.cleanup(reader);
@@ -232,13 +232,13 @@ final class NativeCodeLoader {
 
         int ch = in1.read();
         while (ch != -1) {
-            int ch2 = in2.read();
+            final int ch2 = in2.read();
             if (ch != ch2) {
                 return false;
             }
             ch = in1.read();
         }
-        int ch2 = in2.read();
+        final int ch2 = in2.read();
         return ch2 == -1;
     }
 
@@ -248,7 +248,7 @@ final class NativeCodeLoader {
      * @param path the path.
      * @return the boolean.
      */
-    private static boolean hasResource(String path) {
+    private static boolean hasResource(final String path) {
         return NativeCodeLoader.class.getResource(path) != null;
     }
 

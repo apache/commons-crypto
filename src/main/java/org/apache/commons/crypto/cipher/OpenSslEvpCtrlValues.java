@@ -42,7 +42,7 @@ enum OpenSslEvpCtrlValues {
 
     private final int value;
 
-    OpenSslEvpCtrlValues(int value) {
+    OpenSslEvpCtrlValues(final int value) {
         this.value = value;
     }
 

@@ -120,7 +120,7 @@ public class CryptoRandomFactory {
          * The private constructor.
          * @param klass the Class of CryptoRandom
          */
-        private RandomProvider(Class<? extends CryptoRandom> klass) {
+        private RandomProvider(final Class<? extends CryptoRandom> klass) {
             this.klass = klass;
             this.className = klass.getName();
         }
@@ -166,7 +166,7 @@ public class CryptoRandomFactory {
      * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
      */
     public static CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         return getCryptoRandom(properties);
     }
 
@@ -183,29 +183,29 @@ public class CryptoRandomFactory {
      * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
      * @throws IllegalArgumentException if no classname(s) are provided
      */
-    public static CryptoRandom getCryptoRandom(Properties props)
+    public static CryptoRandom getCryptoRandom(final Properties props)
             throws GeneralSecurityException {
         final List<String> names = Utils.splitClassNames(getRandomClassString(props), ",");
         if (names.size() == 0) {
             throw new IllegalArgumentException("No classname(s) provided");
         }
-        StringBuilder errorMessage = new StringBuilder();
+        final StringBuilder errorMessage = new StringBuilder();
         CryptoRandom random = null;
         Exception lastException = null;
-        for (String klassName : names) {
+        for (final String klassName : names) {
             try {
                 final Class<?> klass = ReflectionUtils.getClassByName(klassName);
                 random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
                 if (random != null) {
                     break;
                 }
-            } catch (ClassCastException e) {
+            } catch (final ClassCastException e) {
                 lastException = e;
                 errorMessage.append("Class: [" + klassName + "] is not a CryptoRandom.");
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 lastException = e;
                 errorMessage.append("CryptoRandom: [" + klassName + "] not found.");
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 lastException = e;
                 errorMessage.append("CryptoRandom: [" + klassName + "] failed with " + e.getMessage());
             }
@@ -224,7 +224,7 @@ public class CryptoRandomFactory {
      *        properties.
      * @return the CryptoRandom class based on the props.
      */
-    private static String getRandomClassString(Properties props) {
+    private static String getRandomClassString(final Properties props) {
         String randomClassString = props.getProperty(CryptoRandomFactory.CLASSES_KEY, CLASSES_DEFAULT);
         if (randomClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
             randomClassString = CLASSES_DEFAULT;

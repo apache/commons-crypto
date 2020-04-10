@@ -66,7 +66,7 @@ public class NativeCodeLoaderTest {
         final String nameKey = System.getProperty(Crypto.LIB_NAME_KEY);
         final String pathKey = System.getProperty(Crypto.LIB_PATH_KEY);
         // An empty file should cause UnsatisfiedLinkError
-        File empty = File.createTempFile("NativeCodeLoaderTest", "tmp");
+        final File empty = File.createTempFile("NativeCodeLoaderTest", "tmp");
         try {
             System.setProperty(Crypto.LIB_PATH_KEY, empty.getParent());
             System.setProperty(Crypto.LIB_NAME_KEY, empty.getName());

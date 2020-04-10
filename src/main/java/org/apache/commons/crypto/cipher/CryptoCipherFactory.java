@@ -89,7 +89,7 @@ public class CryptoCipherFactory {
          * The private constructor.
          * @param klass the Class of CryptoCipher
          */
-        private CipherProvider(Class<? extends CryptoCipher> klass) {
+        private CipherProvider(final Class<? extends CryptoCipher> klass) {
             this.klass = klass;
             this.className = klass.getName();
         }
@@ -143,8 +143,8 @@ public class CryptoCipherFactory {
      * @throws GeneralSecurityException if cipher initialize failed
      * @throws IllegalArgumentException if no classname(s) were provided
      */
-    public static CryptoCipher getCryptoCipher(String transformation,
-                                           Properties props) throws GeneralSecurityException {
+    public static CryptoCipher getCryptoCipher(final String transformation,
+                                           final Properties props) throws GeneralSecurityException {
 
         final List<String> names = Utils.splitClassNames(getCipherClassString(props), ",");
         if (names.size() == 0) {
@@ -153,16 +153,16 @@ public class CryptoCipherFactory {
         CryptoCipher cipher = null;
         Exception lastException = null;
 
-        StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
-        for (String klass : names) {
+        final StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
+        for (final String klass : names) {
             try {
-                Class<?> cls = ReflectionUtils.getClassByName(klass);
+                final Class<?> cls = ReflectionUtils.getClassByName(klass);
                 cipher = ReflectionUtils.newInstance(cls.asSubclass
                         (CryptoCipher.class), props, transformation);
                 if (cipher != null) {
                     break;
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 lastException = e;
                 errorMessage.append("{" + klass + "}");
             }
@@ -187,7 +187,7 @@ public class CryptoCipherFactory {
      * @return CryptoCipher the cipher object (defaults to OpenSslCipher if available, else JceCipher)
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
-    public static CryptoCipher getCryptoCipher(String transformation)
+    public static CryptoCipher getCryptoCipher(final String transformation)
             throws GeneralSecurityException {
         return getCryptoCipher(transformation, new Properties());
     }
@@ -199,7 +199,7 @@ public class CryptoCipherFactory {
      *        properties.
      * @return the cipher class based on the props.
      */
-    private static String getCipherClassString(Properties props) {
+    private static String getCipherClassString(final Properties props) {
         String cipherClassString = props.getProperty(CryptoCipherFactory.CLASSES_KEY, CLASSES_DEFAULT);
         if (cipherClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
             cipherClassString = CLASSES_DEFAULT;

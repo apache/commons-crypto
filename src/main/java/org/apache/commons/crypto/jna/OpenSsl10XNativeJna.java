@@ -36,9 +36,9 @@ class OpenSsl10XNativeJna {
         try {
             Native.register("crypto");
             ok = true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             thrown = e;
-        } catch (UnsatisfiedLinkError e) {
+        } catch (final UnsatisfiedLinkError e) {
             thrown = e;
         } finally {
             INIT_OK = ok;

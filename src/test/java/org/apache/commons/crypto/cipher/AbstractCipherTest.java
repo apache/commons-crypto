@@ -71,14 +71,14 @@ public abstract class AbstractCipherTest {
     @Test
     public void closeTestNoInit() throws Exception {
         // This test deliberately does not use try with resources in order to control the sequence of operations exactly
-        CryptoCipher enc = getCipher(transformations[0]);
+        final CryptoCipher enc = getCipher(transformations[0]);
         enc.close();
     }
 
     @Test
     public void closeTestAfterInit() throws Exception {
         // This test deliberately does not use try with resources in order to control the sequence of operations exactly
-        CryptoCipher enc = getCipher(transformations[0]);
+        final CryptoCipher enc = getCipher(transformations[0]);
         enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
         enc.close();
     }
@@ -86,7 +86,7 @@ public abstract class AbstractCipherTest {
     @Test
     public void reInitTest() throws Exception {
         // This test deliberately does not use try with resources in order to control the sequence of operations exactly
-        CryptoCipher enc = getCipher(transformations[0]);
+        final CryptoCipher enc = getCipher(transformations[0]);
         enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
         enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
         enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
@@ -96,7 +96,7 @@ public abstract class AbstractCipherTest {
     @Test
     public void reInitAfterClose() throws Exception {
         // This test deliberately does not use try with resources in order to control the sequence of operations exactly
-        CryptoCipher enc = getCipher(transformations[0]);
+        final CryptoCipher enc = getCipher(transformations[0]);
         enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
         enc.close();
         enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
@@ -106,7 +106,7 @@ public abstract class AbstractCipherTest {
     @Test
     public void closeTestRepeat() throws Exception {
         // This test deliberately does not use try with resources in order to control the sequence of operations exactly
-        CryptoCipher enc = getCipher(transformations[0]);
+        final CryptoCipher enc = getCipher(transformations[0]);
         enc.close();
         enc.close(); // repeat the close
         enc.close();
@@ -114,24 +114,24 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void cryptoTest() throws Exception {
-        for (String tran : transformations) {
+        for (final String tran : transformations) {
             /** uses the small data set in {@link TestData} */
             cipherTests = TestData.getTestData(tran);
             assertNotNull(tran, cipherTests);
             for (int i = 0; i != cipherTests.length; i += 5) {
-                byte[] key = DatatypeConverter
+                final byte[] key = DatatypeConverter
                         .parseHexBinary(cipherTests[i + 1]);
-                byte[] iv = DatatypeConverter
+                final byte[] iv = DatatypeConverter
                         .parseHexBinary(cipherTests[i + 2]);
 
-                byte[] inputBytes = DatatypeConverter
+                final byte[] inputBytes = DatatypeConverter
                         .parseHexBinary(cipherTests[i + 3]);
-                byte[] outputBytes = DatatypeConverter
+                final byte[] outputBytes = DatatypeConverter
                         .parseHexBinary(cipherTests[i + 4]);
 
-                ByteBuffer inputBuffer = ByteBuffer
+                final ByteBuffer inputBuffer = ByteBuffer
                         .allocateDirect(inputBytes.length);
-                ByteBuffer outputBuffer = ByteBuffer
+                final ByteBuffer outputBuffer = ByteBuffer
                         .allocateDirect(outputBytes.length);
                 inputBuffer.put(inputBytes);
                 inputBuffer.flip();
@@ -147,17 +147,17 @@ public abstract class AbstractCipherTest {
         }
     }
 
-    private void byteBufferTest(String transformation,
-            byte[] key, byte[] iv, ByteBuffer input, ByteBuffer output)
+    private void byteBufferTest(final String transformation,
+            final byte[] key, final byte[] iv, final ByteBuffer input, final ByteBuffer output)
             throws Exception {
-        ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
-        ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
+        final ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
+        final ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
 
-        CryptoCipher enc = getCipher(transformation);
+        final CryptoCipher enc = getCipher(transformation);
         enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"),
                 new IvParameterSpec(iv));
 
-        CryptoCipher dec = getCipher(transformation);
+        final CryptoCipher dec = getCipher(transformation);
         dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"),
                 new IvParameterSpec(iv));
 
@@ -168,9 +168,9 @@ public abstract class AbstractCipherTest {
         input.flip();
         encResult.flip();
         if (!output.equals(encResult)) {
-            byte[] b = new byte[output.remaining()];
+            final byte[] b = new byte[output.remaining()];
             output.get(b);
-            byte[] c = new byte[encResult.remaining()];
+            final byte[] c = new byte[encResult.remaining()];
             encResult.get(c);
             Assert.fail("AES failed encryption - expected "
                     + new String(DatatypeConverter.printHexBinary(b)) + " got "
@@ -184,8 +184,8 @@ public abstract class AbstractCipherTest {
         decResult.flip();
 
         if (!input.equals(decResult)) {
-            byte[] inArray = new byte[input.remaining()];
-            byte[] decResultArray = new byte[decResult.remaining()];
+            final byte[] inArray = new byte[input.remaining()];
+            final byte[] decResultArray = new byte[decResult.remaining()];
             input.get(inArray);
             decResult.get(decResultArray);
             Assert.fail();
@@ -193,46 +193,46 @@ public abstract class AbstractCipherTest {
     }
 
     /** test byte array whose data is planned in {@link TestData} */
-    private void byteArrayTest(String transformation, byte[] key,
-            byte[] iv, byte[] input, byte[] output)
+    private void byteArrayTest(final String transformation, final byte[] key,
+            final byte[] iv, final byte[] input, final byte[] output)
             throws Exception {
         resetCipher(transformation, key, iv);
-        int blockSize = enc.getBlockSize();
+        final int blockSize = enc.getBlockSize();
 
         byte[] temp = new byte[input.length + blockSize];
-        int n = enc.doFinal(input, 0, input.length, temp, 0);
-        byte[] cipherText = new byte[n];
+        final int n = enc.doFinal(input, 0, input.length, temp, 0);
+        final byte[] cipherText = new byte[n];
         System.arraycopy(temp, 0, cipherText, 0, n);
         Assert.assertArrayEquals("byte array encryption error.", output,
                 cipherText);
 
         temp = new byte[cipherText.length + blockSize];
-        int m = dec.doFinal(cipherText, 0, cipherText.length, temp, 0);
-        byte[] plainText = new byte[m];
+        final int m = dec.doFinal(cipherText, 0, cipherText.length, temp, 0);
+        final byte[] plainText = new byte[m];
         System.arraycopy(temp, 0, plainText, 0, m);
         Assert.assertArrayEquals("byte array decryption error.", input,
                 plainText);
     }
 
     /** test byte array whose data is randomly generated */
-    private void byteArrayTest(String transformation, byte[] key,
-            byte[] iv) throws Exception {
-        int blockSize = enc.getBlockSize();
+    private void byteArrayTest(final String transformation, final byte[] key,
+            final byte[] iv) throws Exception {
+        final int blockSize = enc.getBlockSize();
 
         // AES_CBC_NOPADDING only accepts data whose size is the multiple of
         // block size
-        int[] dataLenList = transformation.equals("AES/CBC/NoPadding") ? new int[] { 10 * 1024 }
+        final int[] dataLenList = transformation.equals("AES/CBC/NoPadding") ? new int[] { 10 * 1024 }
                 : new int[] { 10 * 1024, 10 * 1024 - 3 };
-        for (int dataLen : dataLenList) {
-            byte[] plainText = new byte[dataLen];
-            Random random = new SecureRandom();
+        for (final int dataLen : dataLenList) {
+            final byte[] plainText = new byte[dataLen];
+            final Random random = new SecureRandom();
             random.nextBytes(plainText);
-            byte[] cipherText = new byte[dataLen + blockSize];
+            final byte[] cipherText = new byte[dataLen + blockSize];
 
             // check update method with inputs whose sizes are the multiple of
             // block size or not
-            int[] bufferLenList = new int[] { 2 * 1024 - 128, 2 * 1024 - 125 };
-            for (int bufferLen : bufferLenList) {
+            final int[] bufferLenList = new int[] { 2 * 1024 - 128, 2 * 1024 - 125 };
+            for (final int bufferLen : bufferLenList) {
                 resetCipher(transformation, key, iv);
 
                 int offset = 0;
@@ -248,7 +248,7 @@ public abstract class AbstractCipherTest {
 
                 offset = 0;
                 // decrypt (update + doFinal) the data
-                byte[] realPlainText = new byte[cipherPos + blockSize];
+                final byte[] realPlainText = new byte[cipherPos + blockSize];
                 int plainPos = 0;
                 for (int i = 0; i < cipherPos / bufferLen; i++) {
                     plainPos += dec.update(cipherText, offset, bufferLen,
@@ -263,7 +263,7 @@ public abstract class AbstractCipherTest {
                         "random byte array length changes after transformation",
                         dataLen, plainPos);
 
-                byte[] shrinkPlainText = new byte[plainPos];
+                final byte[] shrinkPlainText = new byte[plainPos];
                 System.arraycopy(realPlainText, 0, shrinkPlainText, 0, plainPos);
                 Assert.assertArrayEquals(
                         "random byte array contents changes after transformation",
@@ -272,7 +272,7 @@ public abstract class AbstractCipherTest {
         }
     }
 
-    private void resetCipher(String transformation, byte[] key, byte[] iv) throws Exception {
+    private void resetCipher(final String transformation, final byte[] key, final byte[] iv) throws Exception {
         enc = getCipher(transformation);
         dec = getCipher(transformation);
 
@@ -283,7 +283,7 @@ public abstract class AbstractCipherTest {
                 new IvParameterSpec(iv));
     }
 
-    private CryptoCipher getCipher(String transformation) throws Exception {
+    private CryptoCipher getCipher(final String transformation) throws Exception {
         return (CryptoCipher) ReflectionUtils.newInstance(
                 ReflectionUtils.getClassByName(cipherClass), props,
                 transformation);

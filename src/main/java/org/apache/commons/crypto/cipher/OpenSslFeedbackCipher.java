@@ -37,7 +37,7 @@ abstract class OpenSslFeedbackCipher {
 
     protected int cipherMode = OpenSsl.DECRYPT_MODE;
 
-    OpenSslFeedbackCipher(long context, int algorithmMode, int padding) {
+    OpenSslFeedbackCipher(final long context, final int algorithmMode, final int padding) {
         this.context = context;
         this.algorithmMode = algorithmMode;
         this.padding = padding;

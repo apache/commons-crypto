@@ -26,7 +26,7 @@ public class CryptoTest {
     // This test may fail unless the code was built by Maven, as
     // it relies on the VERSION file being set up correctly
     public void testGetComponentVersion() {
-        String version = Crypto.getComponentVersion();
+        final String version = Crypto.getComponentVersion();
         Assert.assertNotNull("Should not be null",version);
         Assert.assertTrue(version,version.matches("^\\d+\\.\\d+.*"));
     }
@@ -35,7 +35,7 @@ public class CryptoTest {
     // This test may fail unless the code was built by Maven, as
     // it relies on the VERSION file being set up correctly
     public void testGetComponentName() {
-        String version = Crypto.getComponentName();
+        final String version = Crypto.getComponentName();
         Assert.assertNotNull("Should not be null",version);
         Assert.assertTrue(version,version.matches("^Apache Commons Crypto.*"));
     }

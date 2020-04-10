@@ -26,11 +26,11 @@ public class JavaCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.setProperty(
                 CryptoRandomFactory.CLASSES_KEY,
                 JavaCryptoRandom.class.getName());
-        CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+        final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         assertTrue(
                 "The CryptoRandom should be: " + JavaCryptoRandom.class.getName(),
                 random instanceof JavaCryptoRandom);

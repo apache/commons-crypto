@@ -51,7 +51,7 @@ public abstract class AbstractRandomTest {
             final List<Thread> threads = new ArrayList<>(threadCount);
 
             for (int i = 0; i < threadCount; i++) {
-                Thread t = new Thread(() -> {
+                final Thread t = new Thread(() -> {
                     checkRandomBytes(random, 10);
                     checkRandomBytes(random, 1000);
                     checkRandomBytes(random, 100000);
@@ -60,7 +60,7 @@ public abstract class AbstractRandomTest {
                 threads.add(t);
             }
 
-            for (Thread t : threads) {
+            for (final Thread t : threads) {
                 if (!t.getState().equals(State.NEW)) {
                     t.join();
                 }
@@ -73,9 +73,9 @@ public abstract class AbstractRandomTest {
      * Test will timeout if secure random implementation always returns a
      * constant value.
      */
-    private void checkRandomBytes(CryptoRandom random, int len) {
-        byte[] bytes = new byte[len];
-        byte[] bytes1 = new byte[len];
+    private void checkRandomBytes(final CryptoRandom random, final int len) {
+        final byte[] bytes = new byte[len];
+        final byte[] bytes1 = new byte[len];
         random.nextBytes(bytes);
         random.nextBytes(bytes1);
 

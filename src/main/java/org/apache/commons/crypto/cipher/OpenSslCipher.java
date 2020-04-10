@@ -50,11 +50,11 @@ class OpenSslCipher implements CryptoCipher {
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OpenSslCipher(Properties props, String transformation) // NOPMD
+    public OpenSslCipher(final Properties props, final String transformation) // NOPMD
             throws GeneralSecurityException {
         this.transformation = transformation;
 
-        Throwable loadingFailureReason = OpenSsl.getLoadingFailureReason();
+        final Throwable loadingFailureReason = OpenSsl.getLoadingFailureReason();
         if (loadingFailureReason != null) {
             throw new RuntimeException(loadingFailureReason);
         }
@@ -97,7 +97,7 @@ class OpenSslCipher implements CryptoCipher {
      * @throws InvalidAlgorithmParameterException if IV length is wrong
      */
     @Override
-    public void init(int mode, Key key, AlgorithmParameterSpec params)
+    public void init(final int mode, final Key key, final AlgorithmParameterSpec params)
             throws InvalidKeyException, InvalidAlgorithmParameterException {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(params, "params");
@@ -121,7 +121,7 @@ class OpenSslCipher implements CryptoCipher {
      *         buffer
      */
     @Override
-    public int update(ByteBuffer inBuffer, ByteBuffer outBuffer)
+    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
             throws ShortBufferException {
         return openSslEngine.update(inBuffer, outBuffer);
     }
@@ -140,8 +140,8 @@ class OpenSslCipher implements CryptoCipher {
      *         byte array
      */
     @Override
-    public int update(byte[] input, int inputOffset, int inputLen,
-            byte[] output, int outputOffset) throws ShortBufferException {
+    public int update(final byte[] input, final int inputOffset, final int inputLen,
+            final byte[] output, final int outputOffset) throws ShortBufferException {
         return openSslEngine
                 .update(input, inputOffset, inputLen, output, outputOffset);
     }
@@ -166,7 +166,7 @@ class OpenSslCipher implements CryptoCipher {
      *         hold the result
      */
     @Override
-    public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer)
+    public int doFinal(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
             throws ShortBufferException, IllegalBlockSizeException,
             BadPaddingException {
         return openSslEngine.doFinal(inBuffer, outBuffer);
@@ -194,8 +194,8 @@ class OpenSslCipher implements CryptoCipher {
      *         to process the input data provided.
      */
     @Override
-    public int doFinal(byte[] input, int inputOffset, int inputLen,
-            byte[] output, int outputOffset) throws ShortBufferException,
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen,
+            final byte[] output, final int outputOffset) throws ShortBufferException,
             IllegalBlockSizeException, BadPaddingException {
         return openSslEngine.doFinal(input, inputOffset, inputLen, output,outputOffset);
     }
@@ -224,7 +224,7 @@ class OpenSslCipher implements CryptoCipher {
      * doesn't support this operation.
      */
     @Override
-    public void updateAAD(byte[] aad) throws IllegalArgumentException,
+    public void updateAAD(final byte[] aad) throws IllegalArgumentException,
             IllegalStateException, UnsupportedOperationException {
         if (aad == null) {
             throw new IllegalArgumentException("aad buffer is null");
@@ -262,7 +262,7 @@ class OpenSslCipher implements CryptoCipher {
      * doesn't support this operation.
      */
     @Override
-    public void updateAAD(ByteBuffer aad) throws IllegalArgumentException,
+    public void updateAAD(final ByteBuffer aad) throws IllegalArgumentException,
             IllegalStateException, UnsupportedOperationException {
         if (aad == null) {
             throw new IllegalArgumentException("aad buffer is null");
@@ -271,11 +271,11 @@ class OpenSslCipher implements CryptoCipher {
             throw new IllegalStateException("Cipher not initialized");
         }
 
-        int aadLen = aad.limit() - aad.position();
+        final int aadLen = aad.limit() - aad.position();
         if (aadLen == 0) {
             return;
         }
-        byte[] aadBytes = new byte[aadLen];
+        final byte[] aadBytes = new byte[aadLen];
         aad.get(aadBytes);
         openSslEngine.updateAAD(aadBytes);
     }

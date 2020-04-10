@@ -46,12 +46,12 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     // buffer for storing input in decryption, not used for encryption
     private ByteArrayOutputStream inBuffer = null;
 
-    public OpenSslGaloisCounterMode(long context, int algorithmMode, int padding) {
+    public OpenSslGaloisCounterMode(final long context, final int algorithmMode, final int padding) {
         super(context, algorithmMode, padding);
     }
 
     @Override
-    public void init(int mode, byte[] key, AlgorithmParameterSpec params)
+    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params)
             throws InvalidAlgorithmParameterException {
 
         if (aadBuffer == null) {
@@ -63,7 +63,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
         this.cipherMode = mode;
         byte[] iv;
         if (params instanceof GCMParameterSpec) {
-            GCMParameterSpec gcmParam = (GCMParameterSpec) params;
+            final GCMParameterSpec gcmParam = (GCMParameterSpec) params;
             iv = gcmParam.getIV();
             this.tagBitLen = gcmParam.getTLen();
         } else {
@@ -79,7 +79,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     }
 
     @Override
-    public int update(ByteBuffer input, ByteBuffer output) throws ShortBufferException {
+    public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
         checkState();
 
         processAAD();
@@ -89,8 +89,8 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             // store internally until doFinal(decrypt) is called because
             // spec mentioned that only return recovered data after tag
             // is successfully verified
-            int inputLen = input.remaining();
-            byte[] inputBuf = new byte[inputLen];
+            final int inputLen = input.remaining();
+            final byte[] inputBuf = new byte[inputLen];
             input.get(inputBuf, 0, inputLen);
             inBuffer.write(inputBuf, 0, inputLen);
             return 0;
@@ -106,7 +106,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     }
 
     @Override
-    public int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
             throws ShortBufferException {
         checkState();
 
@@ -125,7 +125,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     }
 
     @Override
-    public int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
             throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         checkState();
 
@@ -152,12 +152,12 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
                 throw new AEADBadTagException("Input too short - need tag");
             }
 
-            int inputDataLen = inputLenFinal - getTagLen();
+            final int inputDataLen = inputLenFinal - getTagLen();
             len = OpenSslNative.updateByteArray(context, inputFinal, inputOffsetFinal,
                     inputDataLen, output, outputOffset, output.length - outputOffset);
 
             // set tag to EVP_Cipher for integrity verification in doFinal
-            ByteBuffer tag = ByteBuffer.allocate(getTagLen());
+            final ByteBuffer tag = ByteBuffer.allocate(getTagLen());
             tag.put(input, input.length - getTagLen(), getTagLen());
             tag.flip();
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_SET_TAG.getValue(), getTagLen(), tag);
@@ -182,7 +182,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     }
 
     @Override
-    public int doFinal(ByteBuffer input, ByteBuffer output)
+    public int doFinal(final ByteBuffer input, final ByteBuffer output)
             throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         checkState();
 
@@ -191,15 +191,15 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
         int totalLen = 0;
         int len;
         if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
-            ByteBuffer tag = ByteBuffer.allocate(getTagLen());
+            final ByteBuffer tag = ByteBuffer.allocate(getTagLen());
 
             // if GCM-DECRYPT, we have to handle the buffered input
             // and the retrieve the trailing tag from input
             if (inBuffer != null && inBuffer.size() > 0) {
-                byte[] inputBytes = new byte[input.remaining()];
+                final byte[] inputBytes = new byte[input.remaining()];
                 input.get(inputBytes, 0, inputBytes.length);
                 inBuffer.write(inputBytes, 0, inputBytes.length);
-                byte[] inputFinal = inBuffer.toByteArray();
+                final byte[] inputFinal = inBuffer.toByteArray();
                 inBuffer.reset();
 
                 if (inputFinal.length < getTagLen()) {
@@ -267,7 +267,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     }
 
     @Override
-    public void updateAAD(byte[] aad) {
+    public void updateAAD(final byte[] aad) {
         // must be called after initialized.
         if (aadBuffer != null) {
             aadBuffer.write(aad, 0, aad.length);
@@ -296,7 +296,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
      * it may set/get any native char or long type to the data buffer(ptr).
      * Here we use ByteBuffer and set nativeOrder to handle the endianness.
      */
-    private void evpCipherCtxCtrl(long context, int type, int arg, ByteBuffer bb) {
+    private void evpCipherCtxCtrl(final long context, final int type, final int arg, final ByteBuffer bb) {
         checkState();
 
         try {
@@ -306,7 +306,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             } else {
                 OpenSslNative.ctrl(context, type, arg, null);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.out.println(e.getMessage());
         }
     }

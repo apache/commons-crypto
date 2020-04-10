@@ -26,7 +26,7 @@ import org.junit.Test;
 public class CryptoCipherFactoryTest {
     @Test
     public void testDefaultCipher() throws GeneralSecurityException {
-        CryptoCipher defaultCipher = CryptoCipherFactory
+        final CryptoCipher defaultCipher = CryptoCipherFactory
                 .getCryptoCipher("AES/CBC/NoPadding");
         final String name = defaultCipher.getClass().getName();
         if (OpenSsl.getLoadingFailureReason() == null) {
@@ -38,9 +38,9 @@ public class CryptoCipherFactoryTest {
 
     @Test
     public void testEmptyCipher() throws GeneralSecurityException {
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ""); // TODO should this really mean use the default?
-        CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
+        final CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
                 "AES/CBC/NoPadding", properties);
         final String name = defaultCipher.getClass().getName();
         if (OpenSsl.getLoadingFailureReason() == null) {
@@ -52,7 +52,7 @@ public class CryptoCipherFactoryTest {
 
     @Test(expected = GeneralSecurityException.class)
     public void testInvalidCipher() throws GeneralSecurityException {
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY,
                 "InvalidCipherName");
         CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties);
@@ -60,13 +60,13 @@ public class CryptoCipherFactoryTest {
 
     @Test(expected = GeneralSecurityException.class)
     public void testInvalidTransformation() throws GeneralSecurityException {
-      Properties properties = new Properties();
+      final Properties properties = new Properties();
       CryptoCipherFactory.getCryptoCipher("AES/Invalid/NoPadding", properties);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNoCipher() throws Exception {
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         // An empty string currently means use the default
         // However the splitter drops empty fields
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ",");

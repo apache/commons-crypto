@@ -70,7 +70,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Initialization vector for the cipher.
      */
-    private byte[] iv;
+    private final byte[] iv;
 
     /**
      * Padding = pos%(algorithm blocksize); Padding is put into
@@ -94,8 +94,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    public CtrCryptoOutputStream(Properties props, OutputStream out,
-            byte[] key, byte[] iv) throws IOException {
+    public CtrCryptoOutputStream(final Properties props, final OutputStream out,
+            final byte[] key, final byte[] iv) throws IOException {
         this(props, out, key, iv, 0);
     }
 
@@ -109,8 +109,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    public CtrCryptoOutputStream(Properties props, WritableByteChannel out,
-            byte[] key, byte[] iv) throws IOException {
+    public CtrCryptoOutputStream(final Properties props, final WritableByteChannel out,
+            final byte[] key, final byte[] iv) throws IOException {
         this(props, out, key, iv, 0);
     }
 
@@ -124,8 +124,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(OutputStream out, CryptoCipher cipher,
-            int bufferSize, byte[] key, byte[] iv) throws IOException {
+    protected CtrCryptoOutputStream(final OutputStream out, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv) throws IOException {
         this(out, cipher, bufferSize, key, iv, 0);
     }
 
@@ -139,8 +139,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(WritableByteChannel channel,
-            CryptoCipher cipher, int bufferSize, byte[] key, byte[] iv)
+    protected CtrCryptoOutputStream(final WritableByteChannel channel,
+            final CryptoCipher cipher, final int bufferSize, final byte[] key, final byte[] iv)
             throws IOException {
         this(channel, cipher, bufferSize, key, iv, 0);
     }
@@ -155,8 +155,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(Output output, CryptoCipher cipher,
-            int bufferSize, byte[] key, byte[] iv) throws IOException {
+    protected CtrCryptoOutputStream(final Output output, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv) throws IOException {
         this(output, cipher, bufferSize, key, iv, 0);
     }
 
@@ -171,8 +171,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    public CtrCryptoOutputStream(Properties props, OutputStream out,
-            byte[] key, byte[] iv, long streamOffset) throws IOException {
+    public CtrCryptoOutputStream(final Properties props, final OutputStream out,
+            final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
         this(out, Utils.getCipherInstance(
                 "AES/CTR/NoPadding", props),
                 CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
@@ -189,8 +189,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    public CtrCryptoOutputStream(Properties props, WritableByteChannel out,
-            byte[] key, byte[] iv, long streamOffset) throws IOException {
+    public CtrCryptoOutputStream(final Properties props, final WritableByteChannel out,
+            final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
         this(out, Utils.getCipherInstance(
                 "AES/CTR/NoPadding", props),
                 CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
@@ -207,8 +207,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(OutputStream out, CryptoCipher cipher,
-            int bufferSize, byte[] key, byte[] iv, long streamOffset)
+    protected CtrCryptoOutputStream(final OutputStream out, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
         this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, iv,
                 streamOffset);
@@ -225,9 +225,9 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(WritableByteChannel channel,
-            CryptoCipher cipher, int bufferSize, byte[] key, byte[] iv,
-            long streamOffset) throws IOException {
+    protected CtrCryptoOutputStream(final WritableByteChannel channel,
+            final CryptoCipher cipher, final int bufferSize, final byte[] key, final byte[] iv,
+            final long streamOffset) throws IOException {
         this(new ChannelOutput(channel), cipher, bufferSize, key, iv,
                 streamOffset);
     }
@@ -243,8 +243,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(Output output, CryptoCipher cipher,
-            int bufferSize, byte[] key, byte[] iv, long streamOffset)
+    protected CtrCryptoOutputStream(final Output output, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
         super(output, cipher, bufferSize, new SecretKeySpec(key, "AES"),
                 new IvParameterSpec(iv));
@@ -334,9 +334,9 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
         CtrCryptoInputStream.calculateIV(initIV, counter, iv);
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
-        } catch (InvalidKeyException e) {
+        } catch (final InvalidKeyException e) {
             throw new IOException(e);
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (final InvalidAlgorithmParameterException e) {
             throw new IOException(e);
         }
         cipherReset = false;
@@ -348,10 +348,10 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param out the output ByteBuffer.
      * @throws IOException if an I/O error occurs.
      */
-    private void encryptBuffer(ByteBuffer out) throws IOException {
-        int inputSize = inBuffer.remaining();
+    private void encryptBuffer(final ByteBuffer out) throws IOException {
+        final int inputSize = inBuffer.remaining();
         try {
-            int n = cipher.update(inBuffer, out);
+            final int n = cipher.update(inBuffer, out);
             if (n < inputSize) {
                 /**
                  * Typically code will not get here. CryptoCipher#update will
@@ -361,11 +361,11 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
                 cipher.doFinal(inBuffer, out);
                 cipherReset = true;
             }
-        } catch (ShortBufferException e) {
+        } catch (final ShortBufferException e) {
             throw new IOException(e);
-        } catch (BadPaddingException e) {
+        } catch (final BadPaddingException e) {
             throw new IOException(e);
-        } catch (IllegalBlockSizeException e) {
+        } catch (final IllegalBlockSizeException e) {
             throw new IOException(e);
         }
     }
@@ -384,7 +384,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param streamOffset the underlying stream offset
      */
-    protected void setStreamOffset(long streamOffset) {
+    protected void setStreamOffset(final long streamOffset) {
         this.streamOffset = streamOffset;
     }
 }

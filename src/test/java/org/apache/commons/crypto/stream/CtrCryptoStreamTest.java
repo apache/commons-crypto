@@ -33,8 +33,8 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     @Override
     protected CtrCryptoInputStream getCryptoInputStream(
-            ByteArrayInputStream bais, CryptoCipher cipher, int bufferSize,
-            byte[] iv, boolean withChannel) throws IOException {
+            final ByteArrayInputStream bais, final CryptoCipher cipher, final int bufferSize,
+            final byte[] iv, final boolean withChannel) throws IOException {
         if (withChannel) {
             return new CtrCryptoInputStream(Channels.newChannel(bais), cipher,
                     bufferSize, key, iv);
@@ -44,8 +44,8 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     @Override
     protected CtrCryptoOutputStream getCryptoOutputStream(
-            ByteArrayOutputStream baos, CryptoCipher cipher, int bufferSize,
-            byte[] iv, boolean withChannel) throws IOException {
+            final ByteArrayOutputStream baos, final CryptoCipher cipher, final int bufferSize,
+            final byte[] iv, final boolean withChannel) throws IOException {
         if (withChannel) {
             return new CtrCryptoOutputStream(Channels.newChannel(baos), cipher,
                     bufferSize, key, iv);

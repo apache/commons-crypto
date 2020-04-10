@@ -57,7 +57,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      * @param props the configuration properties (not used)
      * @throws GeneralSecurityException  if could not enable JNA access
      */
-    public OpenSslJnaCryptoRandom(Properties props) //NOPMD
+    public OpenSslJnaCryptoRandom(final Properties props) //NOPMD
             throws GeneralSecurityException {
         if (!OpenSslJna.isEnabled()) {
             throw new GeneralSecurityException("Could not enable JNA access", OpenSslJna.initialisationError());
@@ -67,19 +67,19 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
         try {
             OpenSslNativeJna.ENGINE_load_rdrand();
             rdrandEngine = OpenSslNativeJna.ENGINE_by_id("rdrand");
-            int ENGINE_METHOD_RAND = 0x0008;
+            final int ENGINE_METHOD_RAND = 0x0008;
             if(rdrandEngine != null) {
-                int rc = OpenSslNativeJna.ENGINE_init(rdrandEngine);
+                final int rc = OpenSslNativeJna.ENGINE_init(rdrandEngine);
 
                 if(rc != 0) {
-                    int rc2 = OpenSslNativeJna.ENGINE_set_default(rdrandEngine, ENGINE_METHOD_RAND);
+                    final int rc2 = OpenSslNativeJna.ENGINE_set_default(rdrandEngine, ENGINE_METHOD_RAND);
                     if(rc2 != 0) {
                         rdrandLoaded = true;
                     }
                 }
             }
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new NoSuchAlgorithmException();
         }
 
@@ -96,7 +96,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      * @param bytes the array to be filled in with random bytes.
      */
     @Override
-    public void nextBytes(byte[] bytes) {
+    public void nextBytes(final byte[] bytes) {
 
         synchronized (OpenSslJnaCryptoRandom.class) {
             //this method is synchronized for now
@@ -107,8 +107,8 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
                 throw new RuntimeException("rdrand should be used but default is detected");
             }
 
-            ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
-            int retVal = OpenSslNativeJna.RAND_bytes(buf, bytes.length);
+            final ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
+            final int retVal = OpenSslNativeJna.RAND_bytes(buf, bytes.length);
             throwOnError(retVal);
             buf.rewind();
             buf.get(bytes,0, bytes.length);
@@ -122,7 +122,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      * @param seed the initial seed.
      */
     @Override
-    public void setSeed(long seed) {
+    public void setSeed(final long seed) {
         // Self-seeding.
     }
 
@@ -137,10 +137,10 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      *         random bits (right justified, with leading zeros).
      */
     @Override
-    final protected int next(int numBits) {
+    final protected int next(final int numBits) {
         Utils.checkArgument(numBits >= 0 && numBits <= 32);
-        int numBytes = (numBits + 7) / 8;
-        byte b[] = new byte[numBytes];
+        final int numBytes = (numBits + 7) / 8;
+        final byte b[] = new byte[numBytes];
         int next = 0;
 
         nextBytes(b);
@@ -188,10 +188,10 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     /**
      * @param retVal the result value of error.
      */
-    private void throwOnError(int retVal) {
+    private void throwOnError(final int retVal) {
         if (retVal != 1) {
-            NativeLong err = OpenSslNativeJna.ERR_peek_error();
-            String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
+            final NativeLong err = OpenSslNativeJna.ERR_peek_error();
+            final String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
             close();
             throw new RuntimeException("return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
         }

@@ -99,9 +99,9 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
 
-    public CryptoOutputStream(String transformation,
-            Properties props, OutputStream out, Key key,
-            AlgorithmParameterSpec params) throws IOException {
+    public CryptoOutputStream(final String transformation,
+            final Properties props, final OutputStream out, final Key key,
+            final AlgorithmParameterSpec params) throws IOException {
         this(out, Utils.getCipherInstance(transformation, props),
                 CryptoInputStream.getBufferSize(props), key, params);
 
@@ -121,9 +121,9 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoOutputStream(String transformation,
-            Properties props, WritableByteChannel out, Key key,
-            AlgorithmParameterSpec params) throws IOException {
+    public CryptoOutputStream(final String transformation,
+            final Properties props, final WritableByteChannel out, final Key key,
+            final AlgorithmParameterSpec params) throws IOException {
         this(out, Utils.getCipherInstance(transformation, props), CryptoInputStream
                 .getBufferSize(props), key, params);
 
@@ -139,8 +139,8 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoOutputStream(OutputStream out, CryptoCipher cipher,
-            int bufferSize, Key key, AlgorithmParameterSpec params)
+    protected CryptoOutputStream(final OutputStream out, final CryptoCipher cipher,
+            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
         this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, params);
     }
@@ -155,8 +155,8 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoOutputStream(WritableByteChannel channel, CryptoCipher cipher,
-            int bufferSize, Key key, AlgorithmParameterSpec params)
+    protected CryptoOutputStream(final WritableByteChannel channel, final CryptoCipher cipher,
+            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
         this(new ChannelOutput(channel), cipher, bufferSize, key, params);
     }
@@ -171,8 +171,8 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoOutputStream(Output output, CryptoCipher cipher,
-            int bufferSize, Key key, AlgorithmParameterSpec params)
+    protected CryptoOutputStream(final Output output, final CryptoCipher cipher,
+            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
 
         this.output = output;
@@ -203,7 +203,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void write(int b) throws IOException {
+    public void write(final int b) throws IOException {
         oneByteBuf[0] = (byte) (b & 0xff);
         write(oneByteBuf, 0, oneByteBuf.length);
     }
@@ -220,7 +220,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void write(byte[] array, int off, int len) throws IOException {
+    public void write(final byte[] array, int off, int len) throws IOException {
         checkStream();
         Objects.requireNonNull(array, "array");
         if (off < 0 || len < 0 || off > array.length || len > array.length - off) {
@@ -300,7 +300,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int write(ByteBuffer src) throws IOException {
+    public int write(final ByteBuffer src) throws IOException {
         checkStream();
         final int len = src.remaining();
         int remaining = len;
@@ -336,9 +336,9 @@ public class CryptoOutputStream extends OutputStream implements
     protected void initCipher() throws IOException {
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key, params);
-        } catch (InvalidKeyException e) {
+        } catch (final InvalidKeyException e) {
             throw new IOException(e);
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (final InvalidAlgorithmParameterException e) {
             throw new IOException(e);
         }
     }
@@ -356,7 +356,7 @@ public class CryptoOutputStream extends OutputStream implements
 
         try {
             cipher.update(inBuffer, outBuffer);
-        } catch (ShortBufferException e) {
+        } catch (final ShortBufferException e) {
             throw new IOException(e);
         }
 
@@ -380,11 +380,11 @@ public class CryptoOutputStream extends OutputStream implements
 
         try {
             cipher.doFinal(inBuffer, outBuffer);
-        } catch (ShortBufferException e) {
+        } catch (final ShortBufferException e) {
             throw new IOException(e);
-        } catch (IllegalBlockSizeException e) {
+        } catch (final IllegalBlockSizeException e) {
             throw new IOException(e);
-        } catch (BadPaddingException e) {
+        } catch (final BadPaddingException e) {
             throw new IOException(e);
         }
 

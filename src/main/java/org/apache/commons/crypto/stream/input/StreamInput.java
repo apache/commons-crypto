@@ -36,7 +36,7 @@ public class StreamInput implements Input {
      * @param inputStream the inputstream object.
      * @param bufferSize the buffersize.
      */
-    public StreamInput(InputStream inputStream, int bufferSize) {
+    public StreamInput(final InputStream inputStream, final int bufferSize) {
         this.in = inputStream;
         this.bufferSize = bufferSize;
         buf = new byte[bufferSize];
@@ -55,7 +55,7 @@ public class StreamInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(ByteBuffer dst) throws IOException {
+    public int read(final ByteBuffer dst) throws IOException {
         int remaining = dst.remaining();
         int read = 0;
         while (remaining > 0) {
@@ -84,7 +84,7 @@ public class StreamInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public long skip(long n) throws IOException {
+    public long skip(final long n) throws IOException {
         return in.skip(n);
     }
 
@@ -124,7 +124,7 @@ public class StreamInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(long position, byte[] buffer, int offset, int length)
+    public int read(final long position, final byte[] buffer, final int offset, final int length)
             throws IOException {
         throw new UnsupportedOperationException(
                 "Positioned read is not supported by this implementation");
@@ -140,7 +140,7 @@ public class StreamInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void seek(long position) throws IOException {
+    public void seek(final long position) throws IOException {
         throw new UnsupportedOperationException(
                 "Seek is not supported by this implementation");
     }

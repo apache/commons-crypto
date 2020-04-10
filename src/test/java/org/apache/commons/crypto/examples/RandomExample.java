@@ -30,12 +30,12 @@ import org.apache.commons.crypto.random.CryptoRandomFactory;
  */
 public class RandomExample {
 
-    public static void main(String []args) throws GeneralSecurityException, IOException {
+    public static void main(final String []args) throws GeneralSecurityException, IOException {
         // Constructs a byte array to store random data.
-        byte[] key = new byte[16];
-        byte[] iv = new byte[32];
+        final byte[] key = new byte[16];
+        final byte[] iv = new byte[32];
 
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.put(CryptoRandomFactory.CLASSES_KEY,
             CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
 

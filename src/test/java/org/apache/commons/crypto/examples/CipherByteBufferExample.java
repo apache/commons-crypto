@@ -34,10 +34,10 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class CipherByteBufferExample {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"), "AES");
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         //Creates a CryptoCipher instance with the transformation and properties.
         final String transform = "AES/CBC/PKCS5Padding";
         final ByteBuffer outBuffer;
@@ -46,7 +46,7 @@ public class CipherByteBufferExample {
         final int finalBytes;
         try (CryptoCipher encipher = Utils.getCipherInstance(transform, properties)) {
 
-            ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);
+            final ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);
             outBuffer = ByteBuffer.allocateDirect(bufferSize);
             inBuffer.put(getUTF8Bytes("hello world!"));
 
@@ -66,14 +66,14 @@ public class CipherByteBufferExample {
         }
 
         outBuffer.flip(); // ready for use as decrypt
-        byte [] encoded = new byte[updateBytes + finalBytes];
+        final byte [] encoded = new byte[updateBytes + finalBytes];
         outBuffer.duplicate().get(encoded);
         System.out.println(Arrays.toString(encoded));
 
         // Now reverse the process
         try (CryptoCipher decipher = Utils.getCipherInstance(transform, properties)) {
             decipher.init(Cipher.DECRYPT_MODE, key, iv);
-            ByteBuffer decoded = ByteBuffer.allocateDirect(bufferSize);
+            final ByteBuffer decoded = ByteBuffer.allocateDirect(bufferSize);
             decipher.update(outBuffer, decoded);
             decipher.doFinal(outBuffer, decoded);
             decoded.flip(); // ready for use
@@ -87,7 +87,7 @@ public class CipherByteBufferExample {
      * @param input the input string
      * @return UTF8 bytes
      */
-    private static byte[] getUTF8Bytes(String input) {
+    private static byte[] getUTF8Bytes(final String input) {
         return input.getBytes(StandardCharsets.UTF_8);
     }
 
@@ -97,7 +97,7 @@ public class CipherByteBufferExample {
      * @param buffer input byte buffer
      * @return the converted string
      */
-    private static String asString(ByteBuffer buffer) {
+    private static String asString(final ByteBuffer buffer) {
         final ByteBuffer copy = buffer.duplicate();
         final byte[] bytes = new byte[copy.remaining()];
         copy.get(bytes);

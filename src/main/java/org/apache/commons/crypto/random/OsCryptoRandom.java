@@ -46,11 +46,11 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      *
      * @param min the length.
      */
-    private void fillReservoir(int min) {
+    private void fillReservoir(final int min) {
         if (pos >= reservoir.length - min) {
             try {
                 IoUtils.readFully(stream, reservoir, 0, reservoir.length);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new RuntimeException("failed to fill reservoir", e);
             }
             pos = 0;
@@ -67,21 +67,21 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OsCryptoRandom(Properties props) {
-        File randomDevFile = new File(
+    public OsCryptoRandom(final Properties props) {
+        final File randomDevFile = new File(
                 props.getProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY,
                                   CryptoRandomFactory.DEVICE_FILE_PATH_DEFAULT));
 
         try {
             close();
             this.stream = new FileInputStream(randomDevFile);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
 
         try {
             fillReservoir(0);
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             close();
             throw e;
         }
@@ -95,7 +95,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      * @param bytes the array to be filled in with random bytes.
      */
     @Override
-    synchronized public void nextBytes(byte[] bytes) {
+    synchronized public void nextBytes(final byte[] bytes) {
         int off = 0;
         int n = 0;
         while (off < bytes.length) {
@@ -116,7 +116,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      *         sequence.
      */
     @Override
-    synchronized protected int next(int nbits) {
+    synchronized protected int next(final int nbits) {
         fillReservoir(4);
         int n = 0;
         for (int i = 0; i < 4; i++) {

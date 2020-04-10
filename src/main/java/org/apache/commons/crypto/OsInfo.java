@@ -114,7 +114,7 @@ final class OsInfo {
      *
      * @param args the argv.
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         if (args.length >= 1) {
             if ("--os".equals(args[0])) {
                 System.out.print(getOSName());
@@ -153,30 +153,30 @@ final class OsInfo {
      */
     static String getArchName() {
         // if running Linux on ARM, need to determine ABI of JVM
-        String osArch = System.getProperty("os.arch");
+        final String osArch = System.getProperty("os.arch");
         if (osArch.startsWith("arm")
                 && System.getProperty("os.name").contains("Linux")) {
-            String javaHome = System.getProperty("java.home");
+            final String javaHome = System.getProperty("java.home");
             try {
                 // determine if first JVM found uses ARM hard-float ABI
-                String[] cmdarray = {
+                final String[] cmdarray = {
                         "/bin/sh",
                         "-c",
                         "find '"
                                 + javaHome
                                 + "' -name 'libjvm.so' | head -1 | xargs readelf -A | "
                                 + "grep 'Tag_ABI_VFP_args: VFP registers'" };
-                int exitCode = Runtime.getRuntime().exec(cmdarray).waitFor();
+                final int exitCode = Runtime.getRuntime().exec(cmdarray).waitFor();
                 if (exitCode == 0) {
                     return "armhf";
                 }
-            } catch (IOException e) { //NOPMD
+            } catch (final IOException e) { //NOPMD
                 // ignored: fall back to "arm" arch (soft-float ABI)
-            } catch (InterruptedException e) { //NOPMD
+            } catch (final InterruptedException e) { //NOPMD
                 // ignored: fall back to "arm" arch (soft-float ABI)
             }
         } else {
-            String lc = osArch.toLowerCase(Locale.US);
+            final String lc = osArch.toLowerCase(Locale.US);
             if (archMapping.containsKey(lc)) {
                 return archMapping.get(lc);
             }
@@ -190,7 +190,7 @@ final class OsInfo {
      * @param osName the OS name.
      * @return the folder name.
      */
-    private static String translateOSNameToFolderName(String osName) {
+    private static String translateOSNameToFolderName(final String osName) {
         if (osName.contains("Windows")) {
             return "Windows";
         } else if (osName.contains("Mac")) {
@@ -212,7 +212,7 @@ final class OsInfo {
      * @param archName the architecture name.
      * @return the folder name.
      */
-    private static String translateArchNameToFolderName(String archName) {
+    private static String translateArchNameToFolderName(final String archName) {
         return archName.replaceAll("\\W", "");
     }
 }

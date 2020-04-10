@@ -62,13 +62,13 @@ public final class Crypto {
          * @return Properties contains project version.
          */
         private static Properties getComponentProperties() {
-            URL url = Crypto.class.getResource("/org/apache/commons/crypto/component.properties");
+            final URL url = Crypto.class.getResource("/org/apache/commons/crypto/component.properties");
             if (url != null) {
-                Properties versionData = new Properties();
+                final Properties versionData = new Properties();
                 try (InputStream openStream = url.openStream()) {
                     versionData.load(openStream);
                     return versionData;
-                } catch (IOException e) {  // NOPMD
+                } catch (final IOException e) {  // NOPMD
                 }
             }
             return new Properties(); // make sure field is not null
@@ -126,7 +126,7 @@ public final class Crypto {
      * @param args don't use the args
      * @throws Exception if getCryptoRandom or getCryptoCipher get error.
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) throws Exception {
         System.out.println(getComponentName() + " " + getComponentVersion());
         if (isNativeCodeLoaded()) {
             System.out.println("Native code loaded OK " + OpenSslInfoNative.NativeVersion());
@@ -135,13 +135,13 @@ public final class Crypto {
             System.out.println("OpenSSL library loaded OK, version: 0x" + Long.toHexString(OpenSslInfoNative.OpenSSL()));
             System.out.println("OpenSSL library info " + OpenSslInfoNative.OpenSSLVersion(0));
             {
-                Properties props = new Properties();
+                final Properties props = new Properties();
                 props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
                 CryptoRandomFactory.getCryptoRandom(props);
                 System.out.println("Random instance created OK");
             }
             {
-                Properties props = new Properties();
+                final Properties props = new Properties();
                 props.setProperty(CryptoCipherFactory.CLASSES_KEY, CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
                 CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props);
                 System.out.println("Cipher instance created OK");

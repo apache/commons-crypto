@@ -41,14 +41,14 @@ class JavaCryptoRandom extends Random implements CryptoRandom {
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public JavaCryptoRandom(Properties properties) {
+    public JavaCryptoRandom(final Properties properties) {
       try {
         instance = SecureRandom
                 .getInstance(properties
                         .getProperty(
                                 CryptoRandomFactory.JAVA_ALGORITHM_KEY,
                                 CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT));
-      } catch (NoSuchAlgorithmException e) {
+      } catch (final NoSuchAlgorithmException e) {
         instance = new SecureRandom();
       }
     }
@@ -70,7 +70,7 @@ class JavaCryptoRandom extends Random implements CryptoRandom {
      * @param bytes the array to be filled in with random bytes.
      */
     @Override
-    public void nextBytes(byte[] bytes) {
+    public void nextBytes(final byte[] bytes) {
         instance.nextBytes(bytes);
     }
 }

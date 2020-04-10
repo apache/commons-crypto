@@ -60,27 +60,27 @@ public final class Utils {
      */
     private static Properties createDefaultProperties() {
         // default to system
-        Properties defaultedProps = new Properties(System.getProperties());
+        final Properties defaultedProps = new Properties(System.getProperties());
         try {
-            InputStream is = Thread.currentThread().getContextClassLoader()
+            final InputStream is = Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream(SYSTEM_PROPERTIES_FILE);
 
             if (is == null) {
                 return defaultedProps; // no configuration file is found
             }
             // Load property file
-            Properties fileProps = new Properties();
+            final Properties fileProps = new Properties();
             fileProps.load(is);
             is.close();
-            Enumeration<?> names = fileProps.propertyNames();
+            final Enumeration<?> names = fileProps.propertyNames();
             while (names.hasMoreElements()) {
-                String name = (String) names.nextElement();
+                final String name = (String) names.nextElement();
                 // ensure System properties override ones in the file so one can override the file on the command line
                 if (System.getProperty(name) == null) {
                     defaultedProps.setProperty(name, fileProps.getProperty(name));
                 }
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             System.err.println("Could not load '"
                     + SYSTEM_PROPERTIES_FILE
                     + "' from classpath: " + ex.toString());
@@ -103,8 +103,8 @@ public final class Utils {
      * @param newProp  User-defined properties
      * @return User-defined properties with the default properties
      */
-    public static Properties getProperties(Properties newProp) {
-        Properties properties = new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
+    public static Properties getProperties(final Properties newProp) {
+        final Properties properties = new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
         properties.putAll(newProp);
         return properties;
      }
@@ -123,11 +123,11 @@ public final class Utils {
      * @throws IOException if an I/O error occurs.
      */
     public static CryptoCipher getCipherInstance(
-            String transformation, Properties props)
+            final String transformation, final Properties props)
             throws IOException {
         try {
             return CryptoCipherFactory.getCryptoCipher(transformation, props);
-        } catch (GeneralSecurityException e) {
+        } catch (final GeneralSecurityException e) {
             throw new IOException(e);
         }
     }
@@ -139,7 +139,7 @@ public final class Utils {
      * @param expression a boolean expression.
      * @throws IllegalArgumentException if expression is false.
      */
-    public static void checkArgument(boolean expression) {
+    public static void checkArgument(final boolean expression) {
         if (!expression) {
             throw new IllegalArgumentException();
         }
@@ -154,7 +154,7 @@ public final class Utils {
      *                     .valueOf(Object)</code>.
      * @throws IllegalArgumentException if expression is false.
      */
-    public static void checkArgument(boolean expression, Object errorMessage) {
+    public static void checkArgument(final boolean expression, final Object errorMessage) {
         if (!expression) {
             throw new IllegalArgumentException(String.valueOf(errorMessage));
         }
@@ -171,7 +171,7 @@ public final class Utils {
      * @deprecated Use {@link Objects#requireNonNull(Object)}.
      */
     @Deprecated
-    public static <T> T checkNotNull(T reference) {
+    public static <T> T checkNotNull(final T reference) {
         return Objects.requireNonNull(reference, "reference");
     }
 
@@ -182,7 +182,7 @@ public final class Utils {
      * @param expression a boolean expression.
      * @throws IllegalStateException if expression is false.
      */
-    public static void checkState(boolean expression) {
+    public static void checkState(final boolean expression) {
         checkState(expression, null);
     }
 
@@ -194,7 +194,7 @@ public final class Utils {
      * @param message Error message for the exception when the expression is false.
      * @throws IllegalStateException if expression is false.
      */
-    public static void checkState(boolean expression, String message) {
+    public static void checkState(final boolean expression, final String message) {
         if (!expression) {
             throw new IllegalStateException(message);
         }
@@ -209,8 +209,8 @@ public final class Utils {
      * @param separator a delimiter for the input string.
      * @return a list of class entries.
      */
-    public static List<String> splitClassNames(String clazzNames, String separator) {
-        List<String> res = new ArrayList<>();
+    public static List<String> splitClassNames(final String clazzNames, final String separator) {
+        final List<String> res = new ArrayList<>();
         if (clazzNames == null || clazzNames.isEmpty()) {
             return res;
         }

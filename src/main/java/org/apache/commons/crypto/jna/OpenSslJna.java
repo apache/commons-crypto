@@ -60,7 +60,7 @@ public final class OpenSslJna {
      * @return A pointer to a constant string describing the version of the
      * OpenSSL library or giving information about the library build.
      */
-    static String OpenSSLVersion(int type) {
+    static String OpenSSLVersion(final int type) {
          return OpenSslNativeJna.OpenSSLVersion(type);
     }
 }

@@ -38,7 +38,7 @@ public class StreamOutput implements Output {
      * @param out the OutputStream object.
      * @param bufferSize the buffersize.
      */
-    public StreamOutput(OutputStream out, int bufferSize) {
+    public StreamOutput(final OutputStream out, final int bufferSize) {
         this.out = out;
         this.bufferSize = bufferSize;
         buf = new byte[bufferSize];
@@ -55,7 +55,7 @@ public class StreamOutput implements Output {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int write(ByteBuffer src) throws IOException {
+    public int write(final ByteBuffer src) throws IOException {
         final int len = src.remaining();
 
         int remaining = len;

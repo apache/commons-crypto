@@ -144,7 +144,7 @@ public class TestData {
         testData.put("AES/CTR/NoPadding", cipherCTRTests);
     }
 
-    public static String[] getTestData(String transformation) {
+    public static String[] getTestData(final String transformation) {
         return testData.get(transformation);
     }
 }

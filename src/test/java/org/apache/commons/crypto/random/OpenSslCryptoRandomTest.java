@@ -30,11 +30,11 @@ public class OpenSslCryptoRandomTest extends AbstractRandomTest {
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
         Assume.assumeTrue(Crypto.isNativeCodeLoaded());
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.setProperty(
                 CryptoRandomFactory.CLASSES_KEY,
                 OpenSslCryptoRandom.class.getName());
-        CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+        final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         assertTrue(
                 "The CryptoRandom should be: " + OpenSslCryptoRandom.class.getName(),
                 random instanceof OpenSslCryptoRandom);

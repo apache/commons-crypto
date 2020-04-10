@@ -36,7 +36,7 @@ public class ChannelOutput implements Output {
      *
      * @param channel the WritableByteChannel object.
      */
-    public ChannelOutput(WritableByteChannel channel) {
+    public ChannelOutput(final WritableByteChannel channel) {
         this.channel = channel;
     }
 
@@ -51,7 +51,7 @@ public class ChannelOutput implements Output {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int write(ByteBuffer src) throws IOException {
+    public int write(final ByteBuffer src) throws IOException {
         return channel.write(src);
     }
 

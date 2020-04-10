@@ -55,9 +55,9 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
             try {
                 OpenSslCryptoRandomNative.initSR();
                 opensslLoaded = true;
-            } catch (Exception t) {
+            } catch (final Exception t) {
                 except = t;
-            } catch (UnsatisfiedLinkError t) {
+            } catch (final UnsatisfiedLinkError t) {
                 except = t;
             }
         }
@@ -82,7 +82,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OpenSslCryptoRandom(Properties props) throws GeneralSecurityException { // NOPMD
+    public OpenSslCryptoRandom(final Properties props) throws GeneralSecurityException { // NOPMD
         if (!nativeEnabled) {
             if (initException != null) {
                 throw new GeneralSecurityException("Native library could not be initialised", initException);
@@ -101,7 +101,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      * @param bytes the array to be filled in with random bytes.
      */
     @Override
-    public void nextBytes(byte[] bytes) {
+    public void nextBytes(final byte[] bytes) {
         // Constructor ensures that native is enabled here
         if (!OpenSslCryptoRandomNative.nextRandBytes(bytes)) {
             // Assume it's a problem with the argument, rather than an internal issue
@@ -116,7 +116,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      * @param seed the initial seed.
      */
     @Override
-    public void setSeed(long seed) {
+    public void setSeed(final long seed) {
         // Self-seeding.
     }
 
@@ -131,10 +131,10 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      *         random bits (right justified, with leading zeros).
      */
     @Override
-    final protected int next(int numBits) {
+    final protected int next(final int numBits) {
         Utils.checkArgument(numBits >= 0 && numBits <= 32);
-        int numBytes = (numBits + 7) / 8;
-        byte b[] = new byte[numBytes];
+        final int numBytes = (numBits + 7) / 8;
+        final byte b[] = new byte[numBytes];
         int next = 0;
 
         nextBytes(b);

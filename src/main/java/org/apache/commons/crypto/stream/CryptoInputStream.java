@@ -115,9 +115,9 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoInputStream(String transformation,
-            Properties props, InputStream in, Key key,
-            AlgorithmParameterSpec params) throws IOException {
+    public CryptoInputStream(final String transformation,
+            final Properties props, final InputStream in, final Key key,
+            final AlgorithmParameterSpec params) throws IOException {
         this(in, Utils.getCipherInstance(transformation, props),
                 CryptoInputStream.getBufferSize(props), key, params);
     }
@@ -136,9 +136,9 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    public CryptoInputStream(String transformation,
-            Properties props, ReadableByteChannel in, Key key,
-            AlgorithmParameterSpec params) throws IOException {
+    public CryptoInputStream(final String transformation,
+            final Properties props, final ReadableByteChannel in, final Key key,
+            final AlgorithmParameterSpec params) throws IOException {
         this(in, Utils.getCipherInstance(transformation, props), CryptoInputStream
                 .getBufferSize(props), key, params);
     }
@@ -153,8 +153,8 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoInputStream(InputStream in, CryptoCipher cipher,
-            int bufferSize, Key key, AlgorithmParameterSpec params)
+    protected CryptoInputStream(final InputStream in, final CryptoCipher cipher,
+            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
         this(new StreamInput(in, bufferSize), cipher, bufferSize, key, params);
     }
@@ -169,8 +169,8 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoInputStream(ReadableByteChannel in, CryptoCipher cipher,
-            int bufferSize, Key key, AlgorithmParameterSpec params)
+    protected CryptoInputStream(final ReadableByteChannel in, final CryptoCipher cipher,
+            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
         this(new ChannelInput(in), cipher, bufferSize, key, params);
     }
@@ -185,8 +185,8 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoInputStream(Input input, CryptoCipher cipher, int bufferSize,
-            Key key, AlgorithmParameterSpec params) throws IOException {
+    protected CryptoInputStream(final Input input, final CryptoCipher cipher, final int bufferSize,
+            final Key key, final AlgorithmParameterSpec params) throws IOException {
         this.input = input;
         this.cipher = cipher;
         this.bufferSize = CryptoInputStream.checkBufferSize(cipher, bufferSize);
@@ -238,7 +238,7 @@ public class CryptoInputStream extends InputStream implements
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(byte[] array, int off, int len) throws IOException {
+    public int read(final byte[] array, final int off, final int len) throws IOException {
         checkStream();
         Objects.requireNonNull(array, "array");
         if (off < 0 || len < 0 || len > array.length - off) {
@@ -247,10 +247,10 @@ public class CryptoInputStream extends InputStream implements
             return 0;
         }
 
-        int remaining = outBuffer.remaining();
+        final int remaining = outBuffer.remaining();
         if (remaining > 0) {
             // Satisfy the read with the existing data
-            int n = Math.min(len, remaining);
+            final int n = Math.min(len, remaining);
             outBuffer.get(array, off, n);
             return n;
         }
@@ -264,7 +264,7 @@ public class CryptoInputStream extends InputStream implements
             return nd;
         }
 
-        int n = Math.min(len, outBuffer.remaining());
+        final int n = Math.min(len, outBuffer.remaining());
         outBuffer.get(array, off, n);
         return n;
     }
@@ -278,7 +278,7 @@ public class CryptoInputStream extends InputStream implements
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public long skip(long n) throws IOException {
+    public long skip(final long n) throws IOException {
         Utils.checkArgument(n >= 0, "Negative skip length.");
         checkStream();
 
@@ -292,7 +292,7 @@ public class CryptoInputStream extends InputStream implements
         while (remaining > 0) {
             if (remaining <= outBuffer.remaining()) {
                 // Skip in the remaining buffer
-                int pos = outBuffer.position() + (int) remaining;
+                final int pos = outBuffer.position() + (int) remaining;
                 outBuffer.position(pos);
 
                 remaining = 0;
@@ -359,7 +359,7 @@ public class CryptoInputStream extends InputStream implements
      *        mark position becomes invalid.
      */
     @Override
-    public void mark(int readlimit) {
+    public void mark(final int readlimit) {
     }
 
     /**
@@ -405,7 +405,7 @@ public class CryptoInputStream extends InputStream implements
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(ByteBuffer dst) throws IOException {
+    public int read(final ByteBuffer dst) throws IOException {
         checkStream();
         int remaining = outBuffer.remaining();
         if (remaining <= 0) {
@@ -488,9 +488,9 @@ public class CryptoInputStream extends InputStream implements
     protected void initCipher() throws IOException {
         try {
             cipher.init(Cipher.DECRYPT_MODE, key, params);
-        } catch (InvalidKeyException e) {
+        } catch (final InvalidKeyException e) {
             throw new IOException(e);
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (final InvalidAlgorithmParameterException e) {
             throw new IOException(e);
         }
     }
@@ -510,13 +510,13 @@ public class CryptoInputStream extends InputStream implements
             return -1;
         }
 
-        int n = input.read(inBuffer);
+        final int n = input.read(inBuffer);
         if (n < 0) {
             // The stream is end, finalize the cipher stream
             decryptFinal();
 
             // Satisfy the read with the remaining
-            int remaining = outBuffer.remaining();
+            final int remaining = outBuffer.remaining();
             if (remaining > 0) {
                 return remaining;
             }
@@ -546,7 +546,7 @@ public class CryptoInputStream extends InputStream implements
 
         try {
             cipher.update(inBuffer, outBuffer);
-        } catch (ShortBufferException e) {
+        } catch (final ShortBufferException e) {
             throw new IOException(e);
         }
 
@@ -568,11 +568,11 @@ public class CryptoInputStream extends InputStream implements
         try {
             cipher.doFinal(inBuffer, outBuffer);
             finalDone = true;
-        } catch (ShortBufferException e) {
+        } catch (final ShortBufferException e) {
             throw new IOException(e);
-        } catch (IllegalBlockSizeException e) {
+        } catch (final IllegalBlockSizeException e) {
             throw new IOException(e);
-        } catch (BadPaddingException e) {
+        } catch (final BadPaddingException e) {
             throw new IOException(e);
         }
 
@@ -603,26 +603,26 @@ public class CryptoInputStream extends InputStream implements
      *
      * @param buffer the bytebuffer to be freed.
      */
-    static void freeDirectBuffer(ByteBuffer buffer) {
+    static void freeDirectBuffer(final ByteBuffer buffer) {
         try {
             /* Using reflection to implement sun.nio.ch.DirectBuffer.cleaner()
             .clean(); */
             final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
-            Class<?>[] interfaces = buffer.getClass().getInterfaces();
+            final Class<?>[] interfaces = buffer.getClass().getInterfaces();
 
-            for (Class<?> clazz : interfaces) {
+            for (final Class<?> clazz : interfaces) {
                 if (clazz.getName().equals(SUN_CLASS)) {
                     final Object[] NO_PARAM = new Object[0];
                     /* DirectBuffer#cleaner() */
-                    Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
-                    Object cleaner = getCleaner.invoke(buffer, NO_PARAM);
+                    final Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
+                    final Object cleaner = getCleaner.invoke(buffer, NO_PARAM);
                     /* Cleaner#clean() */
-                    Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
+                    final Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
                     cleanMethod.invoke(cleaner, NO_PARAM);
                     return;
                 }
             }
-        } catch (ReflectiveOperationException e) { // NOPMD
+        } catch (final ReflectiveOperationException e) { // NOPMD
             // Ignore the Reflection exception.
         }
     }
@@ -634,8 +634,8 @@ public class CryptoInputStream extends InputStream implements
      *        properties.
      * @return the buffer size.
      * */
-    static int getBufferSize(Properties props) {
-        String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY);
+    static int getBufferSize(final Properties props) {
+        final String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY);
         if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
             return CryptoInputStream.STREAM_BUFFER_SIZE_DEFAULT;
         }
@@ -648,7 +648,7 @@ public class CryptoInputStream extends InputStream implements
      * @param cipher the {@link CryptoCipher} instance.
      * @throws IOException if an I/O error occurs.
      */
-    static void checkStreamCipher(CryptoCipher cipher)
+    static void checkStreamCipher(final CryptoCipher cipher)
             throws IOException {
         if (!cipher.getAlgorithm().equals("AES/CTR/NoPadding")) {
             throw new IOException("AES/CTR/NoPadding is required");
@@ -662,7 +662,7 @@ public class CryptoInputStream extends InputStream implements
      * @param bufferSize the buffer size.
      * @return the remaining buffer size.
      */
-    static int checkBufferSize(CryptoCipher cipher, int bufferSize) {
+    static int checkBufferSize(final CryptoCipher cipher, final int bufferSize) {
         Utils.checkArgument(bufferSize >= CryptoInputStream.MIN_BUFFER_SIZE,
                 "Minimum value of buffer size is " + CryptoInputStream.MIN_BUFFER_SIZE + ".");
         return bufferSize - bufferSize

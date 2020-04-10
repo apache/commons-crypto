@@ -25,7 +25,7 @@ import java.util.Properties;
 abstract class AbstractRandom implements CryptoRandom {
 
     // Should fail to instantiate, as it is an abstract class
-    AbstractRandom(Properties props) {
+    AbstractRandom(final Properties props) {
 
     }
 }

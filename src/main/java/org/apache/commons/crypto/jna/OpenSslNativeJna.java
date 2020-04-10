@@ -41,11 +41,11 @@ class OpenSslNativeJna {
     public static final long VERSION_1_1_X = 0x10100000;
 
     static {
-        NativeLibrary crypto = NativeLibrary.getInstance("crypto");
+        final NativeLibrary crypto = NativeLibrary.getInstance("crypto");
         Function version = null;
         try {
             version = crypto.getFunction("SSLeay");
-        } catch (UnsatisfiedLinkError e) {
+        } catch (final UnsatisfiedLinkError e) {
             // Swallow the Error.
         }
 
@@ -70,7 +70,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static PointerByReference ENGINE_by_id(String string) {
+    public static PointerByReference ENGINE_by_id(final String string) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.ENGINE_by_id(string);
         } else {
@@ -78,7 +78,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static void ENGINE_finish(PointerByReference rdrandEngine) {
+    public static void ENGINE_finish(final PointerByReference rdrandEngine) {
         if (VERSION == VERSION_1_1_X) {
             OpenSsl11XNativeJna.ENGINE_finish(rdrandEngine);
         } else {
@@ -86,7 +86,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static void ENGINE_free(PointerByReference rdrandEngine) {
+    public static void ENGINE_free(final PointerByReference rdrandEngine) {
         if (VERSION == VERSION_1_1_X) {
             OpenSsl11XNativeJna.ENGINE_free(rdrandEngine);
         } else {
@@ -94,7 +94,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static int ENGINE_init(PointerByReference rdrandEngine) {
+    public static int ENGINE_init(final PointerByReference rdrandEngine) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.ENGINE_init(rdrandEngine);
         } else {
@@ -102,7 +102,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static int ENGINE_set_default(PointerByReference rdrandEngine, int eNGINE_METHOD_RAND) {
+    public static int ENGINE_set_default(final PointerByReference rdrandEngine, final int eNGINE_METHOD_RAND) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
         } else {
@@ -110,7 +110,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static String ERR_error_string(NativeLong err, Object object) {
+    public static String ERR_error_string(final NativeLong err, final Object object) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.ERR_error_string(err, null);
         } else {
@@ -174,7 +174,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static void EVP_CIPHER_CTX_free(PointerByReference context) {
+    public static void EVP_CIPHER_CTX_free(final PointerByReference context) {
         if (VERSION == VERSION_1_1_X) {
             OpenSsl11XNativeJna.EVP_CIPHER_CTX_free(context);
         } else {
@@ -190,7 +190,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static void EVP_CIPHER_CTX_set_padding(PointerByReference context, int padding) {
+    public static void EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding) {
         if (VERSION == VERSION_1_1_X) {
             OpenSsl11XNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
         } else {
@@ -198,8 +198,8 @@ class OpenSslNativeJna {
         }
     }
 
-    public static int EVP_CipherFinal_ex(PointerByReference context, ByteBuffer outBuffer,
-            int[] outlen) {
+    public static int EVP_CipherFinal_ex(final PointerByReference context, final ByteBuffer outBuffer,
+            final int[] outlen) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
         } else {
@@ -207,8 +207,8 @@ class OpenSslNativeJna {
         }
     }
 
-    public static int EVP_CipherInit_ex(PointerByReference context, PointerByReference algo,
-            Object object, byte[] encoded, byte[] iv, int cipherMode) {
+    public static int EVP_CipherInit_ex(final PointerByReference context, final PointerByReference algo,
+            final Object object, final byte[] encoded, final byte[] iv, final int cipherMode) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.EVP_CipherInit_ex(context, algo, null, encoded, iv,
                     cipherMode);
@@ -218,8 +218,8 @@ class OpenSslNativeJna {
         }
     }
 
-    public static int EVP_CipherUpdate(PointerByReference context, ByteBuffer outBuffer,
-            int[] outlen, ByteBuffer inBuffer, int remaining) {
+    public static int EVP_CipherUpdate(final PointerByReference context, final ByteBuffer outBuffer,
+            final int[] outlen, final ByteBuffer inBuffer, final int remaining) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
                     remaining);
@@ -229,7 +229,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static int RAND_bytes(ByteBuffer buf, int length) {
+    public static int RAND_bytes(final ByteBuffer buf, final int length) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.RAND_bytes(buf, length);
         } else {
@@ -253,7 +253,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static String OpenSSLVersion(int i) {
+    public static String OpenSSLVersion(final int i) {
         if (VERSION == VERSION_1_1_X) {
             return OpenSsl11XNativeJna.OpenSSL_version(i);
         } else {
@@ -277,7 +277,7 @@ class OpenSslNativeJna {
         }
     }
 
-    public static void EVP_CIPHER_CTX_cleanup(PointerByReference context) {
+    public static void EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
         if (VERSION == VERSION_1_1_X) {
             return;
         } else {

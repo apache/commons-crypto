@@ -34,11 +34,11 @@ public class OsCryptoRandomTest extends AbstractRandomTest {
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
         // Windows does not have a /dev/random device
         Assume.assumeTrue(!System.getProperty("os.name").contains("Windows"));
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.setProperty(
                 CryptoRandomFactory.CLASSES_KEY,
                 OsCryptoRandom.class.getName());
-        CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+        final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         assertTrue(
                 "The CryptoRandom should be: " + OsCryptoRandom.class.getName(),
                 random instanceof OsCryptoRandom);
@@ -47,14 +47,14 @@ public class OsCryptoRandomTest extends AbstractRandomTest {
 
     @Test
     public void testInvalidRandom() {
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
         // Invalid device
         props.setProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, "");
         try {
             CryptoRandomFactory.getCryptoRandom(props);
             fail("Expected GeneralSecurityException");
-        } catch (GeneralSecurityException e) {
+        } catch (final GeneralSecurityException e) {
             Throwable cause;
             cause = e.getCause();
             Assert.assertEquals(RuntimeException.class, cause.getClass());

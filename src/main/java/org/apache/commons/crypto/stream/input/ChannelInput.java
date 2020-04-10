@@ -38,7 +38,7 @@ public class ChannelInput implements Input {
      *
      * @param channel the ReadableByteChannel object.
      */
-    public ChannelInput(ReadableByteChannel channel) {
+    public ChannelInput(final ReadableByteChannel channel) {
         this.channel = channel;
     }
 
@@ -54,7 +54,7 @@ public class ChannelInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(ByteBuffer dst) throws IOException {
+    public int read(final ByteBuffer dst) throws IOException {
         return channel.read(dst);
     }
 
@@ -68,7 +68,7 @@ public class ChannelInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public long skip(long n) throws IOException {
+    public long skip(final long n) throws IOException {
         long remaining = n;
         int nr;
 
@@ -76,8 +76,8 @@ public class ChannelInput implements Input {
             return 0;
         }
 
-        int size = (int) Math.min(SKIP_BUFFER_SIZE, remaining);
-        ByteBuffer skipBuffer = getSkipBuf();
+        final int size = (int) Math.min(SKIP_BUFFER_SIZE, remaining);
+        final ByteBuffer skipBuffer = getSkipBuf();
         while (remaining > 0) {
             skipBuffer.clear();
             skipBuffer.limit((int) Math.min(size, remaining));
@@ -127,7 +127,7 @@ public class ChannelInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(long position, byte[] buffer, int offset, int length)
+    public int read(final long position, final byte[] buffer, final int offset, final int length)
             throws IOException {
         throw new UnsupportedOperationException(
                 "Positioned read is not supported by this implementation");
@@ -143,7 +143,7 @@ public class ChannelInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void seek(long position) throws IOException {
+    public void seek(final long position) throws IOException {
         throw new UnsupportedOperationException(
                 "Seek is not supported by this implementation");
     }

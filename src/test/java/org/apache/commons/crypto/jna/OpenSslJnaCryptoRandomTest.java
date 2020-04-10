@@ -38,11 +38,11 @@ public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.setProperty(
                 CryptoRandomFactory.CLASSES_KEY,
                 OpenSslJnaCryptoRandom.class.getName());
-        CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+        final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         assertTrue(
                 "The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName(),
                 random instanceof OpenSslJnaCryptoRandom);

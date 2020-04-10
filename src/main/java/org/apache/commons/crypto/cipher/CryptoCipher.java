@@ -177,7 +177,7 @@ public interface CryptoCipher extends Closeable {
      * has not been overridden by an implementation
      *
      */
-    default void updateAAD(byte[] aad)
+    default void updateAAD(final byte[] aad)
             throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
       throw new UnsupportedOperationException();
     }
@@ -205,7 +205,7 @@ public interface CryptoCipher extends Closeable {
      * has not been overridden by an implementation
      *
      */
-    default void updateAAD(ByteBuffer aad)
+    default void updateAAD(final ByteBuffer aad)
             throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
       throw new UnsupportedOperationException();
     }

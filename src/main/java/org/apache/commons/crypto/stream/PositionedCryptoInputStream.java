@@ -70,8 +70,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    public PositionedCryptoInputStream(Properties props, Input in, byte[] key,
-            byte[] iv, long streamOffset) throws IOException {
+    public PositionedCryptoInputStream(final Properties props, final Input in, final byte[] key,
+            final byte[] iv, final long streamOffset) throws IOException {
         this(props, in, Utils.getCipherInstance("AES/CTR/NoPadding", props),
                 CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
     }
@@ -88,8 +88,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected PositionedCryptoInputStream(Properties props, Input input, CryptoCipher cipher,
-            int bufferSize, byte[] key, byte[] iv, long streamOffset)
+    protected PositionedCryptoInputStream(final Properties props, final Input input, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
         super(input, cipher, bufferSize, key, iv, streamOffset);
         this.props = props;
@@ -108,7 +108,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @return int the total number of decrypted data bytes read into the
      *         buffer.
      */
-    public int read(long position, byte[] buffer, int offset, int length)
+    public int read(final long position, final byte[] buffer, final int offset, final int length)
             throws IOException {
         checkStream();
         final int n = input.read(position, buffer, offset, length);
@@ -130,7 +130,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param position the offset from the start of the stream.
      * @throws IOException if an I/O error occurs.
      */
-    public void readFully(long position, byte[] buffer, int offset, int length)
+    public void readFully(final long position, final byte[] buffer, final int offset, final int length)
             throws IOException {
         checkStream();
         IoUtils.readFully(input, position, buffer, offset, length);
@@ -149,7 +149,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param buffer the buffer into which the data is read.
      * @throws IOException if an I/O error occurs.
      */
-    public void readFully(long position, byte[] buffer) throws IOException {
+    public void readFully(final long position, final byte[] buffer) throws IOException {
         readFully(position, buffer, 0, buffer.length);
     }
 
@@ -163,21 +163,21 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param length the maximum number of bytes to read.
      * @throws IOException if an I/O error occurs.
      */
-    protected void decrypt(long position, byte[] buffer, int offset, int length)
+    protected void decrypt(final long position, final byte[] buffer, final int offset, final int length)
             throws IOException {
-        ByteBuffer inByteBuffer = getBuffer();
-        ByteBuffer outByteBuffer = getBuffer();
+        final ByteBuffer inByteBuffer = getBuffer();
+        final ByteBuffer outByteBuffer = getBuffer();
         CipherState state = null;
         try {
             state = getCipherState();
-            byte[] iv = getInitIV().clone();
+            final byte[] iv = getInitIV().clone();
             resetCipher(state, position, iv);
             byte padding = getPadding(position);
             inByteBuffer.position(padding); // Set proper position for input data.
 
             int n = 0;
             while (n < length) {
-                int toDecrypt = Math.min(length - n, inByteBuffer.remaining());
+                final int toDecrypt = Math.min(length - n, inByteBuffer.remaining());
                 inByteBuffer.put(buffer, offset + n, toDecrypt);
 
                 // Do decryption
@@ -205,8 +205,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param padding the padding.
      * @throws IOException if an I/O error occurs.
      */
-    private void decrypt(CipherState state, ByteBuffer inByteBuffer,
-            ByteBuffer outByteBuffer, byte padding) throws IOException {
+    private void decrypt(final CipherState state, final ByteBuffer inByteBuffer,
+            final ByteBuffer outByteBuffer, final byte padding) throws IOException {
         Utils.checkState(inByteBuffer.position() >= padding);
         if (inByteBuffer.position() == padding) {
             // There is no real data in inBuffer.
@@ -234,11 +234,11 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param outByteBuffer the output buffer.
      * @throws IOException if an I/O error occurs.
      */
-    private void decryptBuffer(CipherState state, ByteBuffer inByteBuffer,
-            ByteBuffer outByteBuffer) throws IOException {
-        int inputSize = inByteBuffer.remaining();
+    private void decryptBuffer(final CipherState state, final ByteBuffer inByteBuffer,
+            final ByteBuffer outByteBuffer) throws IOException {
+        final int inputSize = inByteBuffer.remaining();
         try {
-            int n = state.getCryptoCipher().update(inByteBuffer, outByteBuffer);
+            final int n = state.getCryptoCipher().update(inByteBuffer, outByteBuffer);
             if (n < inputSize) {
                 /**
                  * Typically code will not get here. CryptoCipher#update will
@@ -248,11 +248,11 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
                 state.getCryptoCipher().doFinal(inByteBuffer, outByteBuffer);
                 state.reset(true);
             }
-        } catch (ShortBufferException e) {
+        } catch (final ShortBufferException e) {
             throw new IOException(e);
-        } catch (IllegalBlockSizeException e) {
+        } catch (final IllegalBlockSizeException e) {
             throw new IOException(e);
-        } catch (BadPaddingException e) {
+        } catch (final BadPaddingException e) {
             throw new IOException(e);
         }
     }
@@ -268,8 +268,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @return the padding.
      * @throws IOException if an I/O error occurs.
      */
-    private byte postDecryption(CipherState state, ByteBuffer inByteBuffer,
-            long position, byte[] iv) throws IOException {
+    private byte postDecryption(final CipherState state, final ByteBuffer inByteBuffer,
+            final long position, final byte[] iv) throws IOException {
         byte padding = 0;
         if (state.isReset()) {
             /*
@@ -293,16 +293,16 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param iv the iv.
      * @throws IOException if an I/O error occurs.
      */
-    private void resetCipher(CipherState state, long position, byte[] iv)
+    private void resetCipher(final CipherState state, final long position, final byte[] iv)
             throws IOException {
         final long counter = getCounter(position);
         CtrCryptoInputStream.calculateIV(getInitIV(), counter, iv);
         try {
             state.getCryptoCipher().init(Cipher.DECRYPT_MODE, key,
                     new IvParameterSpec(iv));
-        } catch (InvalidKeyException e) {
+        } catch (final InvalidKeyException e) {
             throw new IOException(e);
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (final InvalidAlgorithmParameterException e) {
             throw new IOException(e);
         }
         state.reset(false);
@@ -320,7 +320,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
             CryptoCipher cryptoCipher;
             try {
                 cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props);
-            } catch (GeneralSecurityException e) {
+            } catch (final GeneralSecurityException e) {
                 throw new IOException(e);
             }
             state = new CipherState(cryptoCipher);
@@ -334,7 +334,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      *
      * @param state the CipherState instance.
      */
-    private void returnCipherState(CipherState state) {
+    private void returnCipherState(final CipherState state) {
         if (state != null) {
             cipherPool.add(state);
         }
@@ -359,7 +359,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      *
      * @param buf the buffer.
      */
-    private void returnBuffer(ByteBuffer buf) {
+    private void returnBuffer(final ByteBuffer buf) {
         if (buf != null) {
             buf.clear();
             bufferPool.add(buf);
@@ -391,7 +391,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     }
 
     private class CipherState {
-        private CryptoCipher cryptoCipher;
+        private final CryptoCipher cryptoCipher;
         private boolean reset;
 
         /**
@@ -399,7 +399,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
          *
          * @param cipher the CryptoCipher instance.
          */
-        public CipherState(CryptoCipher cipher) {
+        public CipherState(final CryptoCipher cipher) {
             this.cryptoCipher = cipher;
             this.reset = false;
         }
@@ -427,7 +427,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
          *
          * @param reset the reset.
          */
-        public void reset(boolean reset) {
+        public void reset(final boolean reset) {
             this.reset = reset;
         }
     }
