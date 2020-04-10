@@ -23,16 +23,16 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.commons.crypto.utils.Utils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import javax.crypto.AEADBadTagException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+
+import org.apache.commons.crypto.utils.Utils;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class GcmCipherTest {
 

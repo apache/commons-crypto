@@ -17,10 +17,10 @@
  */
 package org.apache.commons.crypto.random;
 
+import static org.junit.Assert.assertTrue;
+
 import java.security.GeneralSecurityException;
 import java.util.Properties;
-
-import static org.junit.Assert.assertTrue;
 
 public class JavaCryptoRandomTest extends AbstractRandomTest {
 

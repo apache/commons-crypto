@@ -18,18 +18,6 @@
 
 package org.apache.commons.crypto.stream;
 
-import org.apache.commons.crypto.Crypto;
-import org.apache.commons.crypto.cipher.AbstractCipherTest;
-import org.apache.commons.crypto.cipher.CryptoCipher;
-import org.apache.commons.crypto.stream.input.Input;
-import org.apache.commons.crypto.utils.ReflectionUtils;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -39,6 +27,19 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Random;
+
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.crypto.Crypto;
+import org.apache.commons.crypto.cipher.AbstractCipherTest;
+import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.stream.input.Input;
+import org.apache.commons.crypto.utils.ReflectionUtils;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PositionedCryptoInputStreamTest {
 

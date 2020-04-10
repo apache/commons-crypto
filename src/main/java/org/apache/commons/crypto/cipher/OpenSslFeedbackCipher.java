@@ -17,14 +17,15 @@
  */
 package org.apache.commons.crypto.cipher;
 
-import org.apache.commons.crypto.utils.Utils;
+import java.nio.ByteBuffer;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
-import java.nio.ByteBuffer;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.spec.AlgorithmParameterSpec;
+
+import org.apache.commons.crypto.utils.Utils;
 
 /**
  * This class represents a block cipher in one of its modes.

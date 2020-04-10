@@ -17,6 +17,8 @@
  */
 package org.apache.commons.crypto.jna;
 
+import static org.junit.Assert.assertTrue;
+
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
@@ -25,8 +27,6 @@ import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.junit.Assume;
 import org.junit.Before;
-
-import static org.junit.Assert.assertTrue;
 
 public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
 
