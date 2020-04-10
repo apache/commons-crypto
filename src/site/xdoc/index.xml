@@ -76,6 +76,10 @@ limitations under the License.
 <section name="Releases">
 <ul>
     <li>
+        <a href="https://commons.apache.org/proper/commons-crypto/download_crypto.cgi">Crypto 1.1.0 (mirrors)</a>
+        requires Java 1.8
+    </li>
+    <li>
         <a href="https://commons.apache.org/proper/commons-crypto/download_crypto.cgi">Crypto 1.0.0 (mirrors)</a>
         requires Java 1.7
     </li>

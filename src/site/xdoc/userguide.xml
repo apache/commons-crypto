@@ -72,7 +72,7 @@
 &lt;dependency&gt;<br/>
     &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;<br/>
     &lt;artifactId&gt;commons-crypto&lt;/artifactId&gt;<br/>
-    &lt;version&gt;1.0.0&lt;/version&gt;<br/>
+    &lt;version&gt;1.1.0&lt;/version&gt;<br/>
 &lt;/dependency&gt;<br/>
 </pre>
         <h4>Usage of Random API</h4>
