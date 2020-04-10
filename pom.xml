@@ -18,7 +18,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>43</version>
+    <version>50</version>
   </parent>
 
   <artifactId>commons-crypto</artifactId>
@@ -110,22 +110,22 @@ The following provides more details on the included cryptographic software:
   </distributionManagement>
 
   <properties>
+    <commons.release.version>1.1.0</commons.release.version>
+    <commons.release.desc>(Java 8)</commons.release.desc>
+    <!-- The RC version used in the staging repository URL. -->
+    <commons.rc.version>RC1</commons.rc.version>
+    <commons.bc.version>1.0.0</commons.bc.version>
     <commons.componentid>crypto</commons.componentid>
     <commons.module.name>org.apache.commons.crypto</commons.module.name>
-    <commons.release.version>1.0.0</commons.release.version>
-    <commons.release.desc>(Requires Java ${maven.compiler.target} or later)</commons.release.desc>
-    <commons.rc.version>RC1</commons.rc.version>
-    <jna.version>4.4.0</jna.version>
-
-    <!-- properties not related to versioning -->
     <commons.jira.id>CRYPTO</commons.jira.id>
     <commons.jira.pid>12320024</commons.jira.pid>
-    <commons.javadoc.java.link>http://download.oracle.com/javase/7/docs/api/</commons.javadoc.java.link>
-    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
-    <commons-build-plugin.version>1.6</commons-build-plugin.version>
+    <project.inceptionYear>2016</project.inceptionYear>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-
+    <commons.javadoc.java.link>http://docs.oracle.com/javase/8/docs/api/</commons.javadoc.java.link>
+    <!-- Ensure copies work OK (can be removed later when this is in parent POM) -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!--
         Encoding of Java source files: ensures that the compiler and
         the javadoc generator use the right encoding. Subprojects may
@@ -139,14 +139,28 @@ The following provides more details on the included cryptographic software:
     <!-- This is used by reporting plugins -->
     <project.reporting.outputEncoding>${commons.encoding}</project.reporting.outputEncoding>
 
+    <checkstyle.version>3.0.0</checkstyle.version>
+    <checkstyle.header.file>${basedir}/LICENSE-header.txt</checkstyle.header.file>
+    <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
+
+    <commons.pmd.version>3.13.0</commons.pmd.version>
+    <japicmp.skip>false</japicmp.skip>
+    
+    <commons.release.isDistModule>true</commons.release.isDistModule>
+    <commons.releaseManagerName>Gary Gregory</commons.releaseManagerName>    
+    <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
+  
+    <jna.version>5.5.0</jna.version>
+    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
+    <commons-logging.version>1.1.3</commons-logging.version>
+    <commons.jacoco.version>0.8.5</commons.jacoco.version>
+
     <!-- The property "target.name" is used to specify the ant target, The All target will use
     OsInfo.java to detect the OS info and arch to generate the native binary for detected platform.
     User is able to specify the platform by maven profiles.-->
     <target.name>all</target.name>
     <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
-    <junit.version>4.12</junit.version>
-    <commons-logging.version>1.1.3</commons-logging.version>
-    <commons.jacoco.version>0.7.7.201606060606</commons.jacoco.version>
+    <junit.version>4.13</junit.version>
     <slf4j-api.version>1.7.10</slf4j-api.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
@@ -378,7 +392,7 @@ The following provides more details on the included cryptographic software:
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>1.4.0</version>
+            <version>1.6.0</version>
             <executions>
               <execution>
                 <id>benchmark</id>
@@ -454,7 +468,7 @@ The following provides more details on the included cryptographic software:
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.1.0</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -473,7 +487,6 @@ The following provides more details on the included cryptographic software:
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.7</version>
         <executions>
           <execution>
             <id>create-version-file</id>
@@ -512,7 +525,6 @@ The following provides more details on the included cryptographic software:
       <plugin>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-build-plugin</artifactId>
-        <version>${commons-build-plugin.version}</version>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -535,7 +547,6 @@ The following provides more details on the included cryptographic software:
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
-        <version>1.1</version>
         <configuration>
           <ignorePathsToDelete>
             <ignorePathToDelete>javadocs**</ignorePathToDelete>
@@ -589,7 +600,7 @@ The following provides more details on the included cryptographic software:
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.6</version>
+        <version>${commons.pmd.version}</version>
         <configuration>
           <targetJdk>${maven.compiler.target}</targetJdk>
         </configuration>
