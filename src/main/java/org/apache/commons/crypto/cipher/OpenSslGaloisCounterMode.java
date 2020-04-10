@@ -261,6 +261,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
         return totalLen;
     }
 
+    @Override
     public void clean() {
         super.clean();
         aadBuffer = null;
