@@ -61,14 +61,18 @@
    -->
 
   <body>
-    <release version="1.1.0" date="tba" description="tba">
-      <action issue="CRYPTO-131" type="add" dev="britter" >Provide FAQ page.</action>
-      <action issue="CRYPTO-134" type="fix" dev="sebb" >CipherByteBufferExample should not truncate the string</action>
+    <release version="1.1.0" date="tba" description="Minor release (Java 8)">
+      <action issue="CRYPTO-125" type="fix">CryptoOutputStream does not call write in a loop when underlying channel works in non-block mode.</action>
+      <action issue="CRYPTO-131" type="add" dev="britter">Provide FAQ page.</action>
+      <action issue="CRYPTO-134" type="fix" dev="sebb">CipherByteBufferExample should not truncate the string</action>
+      <action issue="CRYPTO-137" type="fix">Error compiling on Win64 with Mingw.</action>
+      <action issue="CRYPTO-138" type="fix">CipherByteArrayExample fails on openssl 1.1.0g with java.lang.UnsatisfiedLinkError: EVP_CIPHER_CTX_cleanup.</action>
+      <action issue="CRYPTO-139" type="add">Add support for AARCH64.</action>
+      <action issue="CRYPTO-141" type="fix">Errors in native code can leave Java wrappers in bad state.</action>
     </release>
 
     <release version="1.0.0" date="2016-07-22" description="
-Initial release
- ===============
+Initial release (Java 7).
 
 The initial release is known to build on Linux, MacOS/X and Windows (using MinGW).
 
@@ -76,7 +80,7 @@ It may build on other systems.
 
 Please note that the JNA interface to OpenSSL is a preliminary release.
  It is relatively slow, but may be of use on systems which aren't yet supported by the JNI code.">
-      <action issue="CRYPTO-68" type="add" dev="britter" >Enable common code quality reports.</action>
+      <action issue="CRYPTO-68" type="add" dev="britter">Enable common code quality reports.</action>
       <action issue="CRYPTO-65" type="fix" dev="britter" due-to="sebb">Warnings compiling on MacOSX - JNIEXPORT redefined.</action>
       <action issue="CRYPTO-11" type="add" dev="Ke Jia" due-to="Ke Jia, Jerry Chen">User guide documentation .</action>
       <action issue="CRYPTO-12" type="add" dev="Xianda Ke" due-to="Xianda Ke">Rename CryptoInputStream to CipherInputStream and CryptoOutputStream to CipherOutputStream .</action>
