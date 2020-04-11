@@ -62,8 +62,8 @@
 
   <body>
     <release version="1.1.0" date="tba" description="tba">
-      <action issue="CRYPTO-134" type="fix" dev="sebb" >CipherByteBufferExample should not truncate the string</action>
       <action issue="CRYPTO-131" type="add" dev="britter" >Provide FAQ page.</action>
+      <action issue="CRYPTO-134" type="fix" dev="sebb" >CipherByteBufferExample should not truncate the string</action>
     </release>
 
     <release version="1.0.0" date="2016-07-22" description="

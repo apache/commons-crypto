@@ -228,6 +228,11 @@ The following provides more details on the included cryptographic software:
       <email>yliu@apache.org</email>
       <id>yliu</id>
     </developer>
+    <developer>
+      <name>Gary Gregory</name>
+      <email>ggregory@apache.org</email>
+      <id>ggregory</id>
+    </developer>
   </developers>
 
   <contributors>
