@@ -24,11 +24,10 @@ limitations under the License.
 <!-- ================================================== -->
 <section name="Apache Commons Crypto">
     <p>Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
-        Standard New Instructions). It provides Java API for both cipher level and Java stream
-        level. Developers can use it to implement high performance AES encryption/decryption with
-        the minimum code and effort. Please note that Apache Commons Crypto doesn't implement the
-        cryptographic algorithm such as AES directly. It wraps to Openssl or JCE which implement the
-        algorithms.
+        Standard New Instructions). Commons Crypto provides Java APIs at the cipher level and Java stream
+        level. Developers can implement high performance AES encryption/decryption with
+        minimum coding and effort. Please note that Commons Crypto doesn't implement the
+        cryptographic algorithm such as AES directly, it wraps OpenSSL and JCE.
     </p>
 </section>
 <!-- ================================================== -->
@@ -43,7 +42,7 @@ limitations under the License.
       <li>High performance AES encryption/decryption optimized with Intel AES-NI.
       </li>
       <li>Portable across various operating systems (currently only Linux/Mac OS/Windows); Apache
-          Commons Crypto loads the library according to your machine environment (It looks system
+          Commons Crypto loads the library according to your machine environment (using system
           properties, os.name and os.arch).
       </li>
       <li>Simple usage. Add the commons-crypto-(version).jar file to your classpath.</li>
@@ -80,8 +79,8 @@ limitations under the License.
         requires Java 1.8, built and tested with OpenSSL 1.1.1 (11 Sep 2018).
     </li>
     <li>
-        <a href="https://commons.apache.org/proper/commons-crypto/download_crypto.cgi">Crypto 1.0.0 (mirrors)</a>
-        requires Java 1.7
+        <a href="https://archive.apache.org/dist/commons/crypto/">Crypto 1.0.0 (archives)</a>
+        requires Java 1.7.
     </li>
 </ul>
 <p>
