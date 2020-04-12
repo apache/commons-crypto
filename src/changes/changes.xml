@@ -61,7 +61,8 @@
    -->
 
   <body>
-    <release version="1.1.0" date="tba" description="Minor release (Java 8)">
+    <release version="1.1.0" date="2020-MM-DD" description="Minor release (Java 8 and OpenSSL 1.1.1)">
+      <action issue="CRYPTO-59" type="add">Support Galois/Counter Mode (GCM).</action>
       <action issue="CRYPTO-125" type="fix">CryptoOutputStream does not call write in a loop when underlying channel works in non-block mode.</action>
       <action issue="CRYPTO-131" type="add" dev="britter">Provide FAQ page.</action>
       <action issue="CRYPTO-134" type="fix" dev="sebb">CipherByteBufferExample should not truncate the string</action>
