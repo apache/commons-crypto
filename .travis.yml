@@ -18,11 +18,13 @@ language: java
 
 matrix:
   include:
+
     - name: "x64 / Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
       arch: amd64
       os: linux
       dist: trusty
       jdk: openjdk8
+
     - name: "aarch64 / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
       arch: arm64
       os: linux
@@ -34,6 +36,7 @@ matrix:
         apt:
           packages:
             - maven
+
     - name: "ppc64le / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
       arch: ppc64le
       os: linux
@@ -45,6 +48,7 @@ matrix:
         apt:
           packages:
             - maven
+
     - name: "OS X / Java 8 / LibreSSL"
       os: osx
       osx_image: xcode9.3
