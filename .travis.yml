@@ -23,9 +23,6 @@ matrix:
       os: linux
       dist: trusty
       jdk: openjdk8
-      before_install:
-        - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security && rm /tmp/policy.zip"
-        - openssl version -a
     - name: "aarch64 / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
       arch: arm64
       os: linux
@@ -37,19 +34,19 @@ matrix:
         apt:
           packages:
             - maven
-      before_install:
-        - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security && rm /tmp/policy.zip"
-        - openssl version -a
     - name: "OS X / Java 8 / LibreSSL"
       os: osx
       osx_image: xcode9.3
       jdk: oraclejdk8
       env:
         - JAVA_HOME=$(/usr/libexec/java_home)
-      before_install:
-        - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security && rm /tmp/policy.zip"
-        - openssl version -a
 
+before_install:
+  - |
+    curl -L --cookie 'oraclelicense=accept-securebackup-cookie;' http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip
+    sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security
+    rm /tmp/policy.zip
+  - openssl version -a
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test jacoco:report coveralls:report -B -V
 after_success: mvn site -B -V
