@@ -34,6 +34,17 @@ matrix:
         apt:
           packages:
             - maven
+    - name: "ppc64le / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
+      arch: ppc64le
+      os: linux
+      dist: xenial
+      jdk: openjdk8
+      env:
+        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+      addons:
+        apt:
+          packages:
+            - maven
     - name: "OS X / Java 8 / LibreSSL"
       os: osx
       osx_image: xcode9.3
