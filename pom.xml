@@ -256,6 +256,10 @@ The following provides more details on the included cryptographic software:
       <name>Tian Jianguo</name>
       <email>jianguo.tian@intel.com</email>
     </contributor>
+    <contributor>
+      <name>Adam Retter</name>
+      <organization>Evolved Binary</organization>
+    </contributor>
   </contributors>
 
   <profiles>
