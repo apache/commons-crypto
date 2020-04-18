@@ -18,11 +18,23 @@ language: java
 
 matrix:
   include:
-    - name: "Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
+    - name: "x64 / Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
+      arch: amd64
       os: linux
       dist: trusty
       before_install:
         - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d `jdk_switcher home oraclejdk8`/jre/lib/security && rm /tmp/policy.zip"
+        - openssl version -a
+    - name: "aarch64 / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
+      arch: arm64
+      os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+            - maven
+      before_install:
+        - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d /usr/lib/jvm/adoptopenjdk-8-hotspot-arm64/jre/lib/security && rm /tmp/policy.zip"
         - openssl version -a
     - name: "OS X / Java 8 / LibreSSL"
       os: osx
