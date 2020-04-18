@@ -48,5 +48,6 @@ jdk:
 
 install: mvn apache-rat:check install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test jacoco:report coveralls:report -B -V
-after_script: mvn clirr:check -B -V
 after_success: mvn site -B -V
+
+
