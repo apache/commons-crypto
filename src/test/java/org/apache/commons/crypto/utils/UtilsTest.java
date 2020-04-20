@@ -20,6 +20,7 @@ package org.apache.commons.crypto.utils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,8 +38,19 @@ public class UtilsTest {
         clazzNames = Utils.splitClassNames("a, b,", ",");
         Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
     }
+
     @Test
     public void testSplitNull() {
         Assert.assertEquals(Collections.<String> emptyList(), Utils.splitClassNames(null, ","));
+    }
+
+    @Test
+    public void testGetProperties() {
+        final Properties props = new Properties();
+        props.setProperty(
+            "garbage.in",
+            "out");
+        final Properties allprops = Utils.getProperties(props);
+        Assert.assertEquals(allprops.getProperty("garbage.in"), "out");
     }
 }
