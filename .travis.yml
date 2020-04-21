@@ -18,28 +18,84 @@ language: java
 
 matrix:
   include:
-    - name: "Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
+
+    - name: "x64 / Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
+      arch: amd64
       os: linux
       dist: trusty
-      before_install:
-        - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d `jdk_switcher home oraclejdk8`/jre/lib/security && rm /tmp/policy.zip"
-        - openssl version -a
-      after_success:
-        - mvn clean test jacoco:report coveralls:report
-    - name: "OS X / Java 8 / LibreSSL"
+      jdk: openjdk8
+
+    - name: "x64 / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
+      arch: amd64
+      os: linux
+      dist: bionic
+      jdk: openjdk8
+
+    - name: "aarch64 / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
+      arch: arm64
+      os: linux
+      dist: xenial
+      jdk: openjdk8
+      env:
+        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-arm64
+      addons:
+        apt:
+          packages:
+            - maven
+
+    - name: "aarch64 / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
+      arch: arm64
+      os: linux
+      dist: bionic
+      jdk: openjdk8
+      env:
+        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-arm64
+      addons:
+        apt:
+          packages:
+            - maven
+
+    - name: "ppc64le / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
+      arch: ppc64le
+      os: linux
+      dist: xenial
+      jdk: openjdk8
+      env:
+        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+      addons:
+        apt:
+          packages:
+            - maven
+
+    - name: "ppc64le / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
+      arch: ppc64le
+      os: linux
+      dist: bionic
+      jdk: openjdk8
+      env:
+        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+      addons:
+        apt:
+          packages:
+            - maven
+
+    - name: "OS X / Java 8 / LibreSSL 2.2.x"
       os: osx
       osx_image: xcode9.3
-      before_install:
-        - "curl -L --cookie 'oraclelicense=accept-securebackup-cookie;'  http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip && sudo unzip -j -o /tmp/policy.zip *.jar -d /Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/security && rm /tmp/policy.zip"
-        - openssl version -a
-      after_success:
-        - mvn clean test jacoco:report coveralls:report
-      
-jdk:
-  - oraclejdk8
+      jdk: oraclejdk8
+      env:
+        - JAVA_HOME=$(/usr/libexec/java_home)
 
-script:
-  - mvn apache-rat:check
-  - mvn verify
-  - mvn site
-  - mvn clirr:check
+before_install:
+  - |
+    curl -L --cookie 'oraclelicense=accept-securebackup-cookie;' http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip
+    sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security
+    rm /tmp/policy.zip
+  - openssl version -a
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script: mvn test jacoco:report coveralls:report -B -V
+after_success: mvn site -B -V
+
+cache:
+  directories:
+    - $HOME/.m2
