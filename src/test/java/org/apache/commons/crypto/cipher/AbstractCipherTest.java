@@ -160,7 +160,7 @@ public abstract class AbstractCipherTest {
 
     @Test(expected = RuntimeException.class)
     public void testInvalidTransform() throws Exception {
-        final CryptoCipher cipher = getCipher("AES/CBR/NoPadding/garbage/garbage");
+        getCipher("AES/CBR/NoPadding/garbage/garbage");
     }
 
     @Test
