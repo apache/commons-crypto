@@ -155,7 +155,7 @@ public abstract class AbstractCipherTest {
 
     @Test(expected = RuntimeException.class)
     public void testNullTransform() throws Exception {
-        final CryptoCipher cipher = getCipher(null);
+        getCipher(null);
     }
 
     @Test(expected = RuntimeException.class)
