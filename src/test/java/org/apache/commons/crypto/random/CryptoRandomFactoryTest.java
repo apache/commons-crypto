@@ -88,6 +88,22 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
+    public void testInvalidRandomClass() throws GeneralSecurityException {
+        final Properties properties = new Properties();
+        properties.setProperty(
+            "org.apache.commons.crypto.cipher",
+            "OpenSsl");
+        final CryptoRandom rand = CryptoRandomFactory.getCryptoRandom(properties);
+        Assert.assertEquals(OpenSslCryptoRandom.class.getName(), rand.getClass().getName());
+    }
+
+    @Test
+    public void testDefaultRandomClass() throws GeneralSecurityException {
+        final CryptoRandom rand = CryptoRandomFactory.getCryptoRandom();
+        Assert.assertEquals(OpenSslCryptoRandom.class.getName(), rand.getClass().getName());
+    }
+
+    @Test
     public void testAbstractRandom() {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());

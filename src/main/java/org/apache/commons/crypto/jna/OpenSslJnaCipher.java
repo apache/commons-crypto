@@ -51,6 +51,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     private final AlgorithmMode algMode;
     private final int padding;
     private final String transformation;
+    private final int IV_LENGTH = 16;
 
     /**
      * Constructs a {@link CryptoCipher} using JNA into OpenSSL
@@ -104,7 +105,13 @@ class OpenSslJnaCipher implements CryptoCipher {
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
 
-       if(algMode == AlgorithmMode.AES_CBC) {
+        if ((algMode == AlgorithmMode.AES_CBC || 
+             algMode == AlgorithmMode.AES_CTR) 
+            && iv.length != IV_LENGTH) {
+            throw new InvalidAlgorithmParameterException("Wrong IV length: must be 16 bytes long");
+        }
+
+        if(algMode == AlgorithmMode.AES_CBC) {
             switch (key.getEncoded().length) {
                 case 16: algo = OpenSslNativeJna.EVP_aes_128_cbc(); break;
                 case 24: algo = OpenSslNativeJna.EVP_aes_192_cbc(); break;

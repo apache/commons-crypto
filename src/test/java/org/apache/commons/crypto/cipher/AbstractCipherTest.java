@@ -19,7 +19,11 @@ package org.apache.commons.crypto.cipher;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
@@ -27,6 +31,7 @@ import java.util.Random;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.utils.ReflectionUtils;
@@ -51,7 +56,8 @@ public abstract class AbstractCipherTest {
 
     // cipher
     static final byte[] KEY = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-            0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16 };
+            0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16,
+            0x17, 0x18, 0x19, 0x20, 0x21, 0x22, 0x23, 0x24};
     static final byte[] IV = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
             0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
     private CryptoCipher enc, dec;
@@ -144,6 +150,62 @@ public abstract class AbstractCipherTest {
 
             /** uses randomly generated big data set */
             byteArrayTest(tran, KEY, IV);
+        }
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testNullTransform() throws Exception {
+        getCipher(null);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testInvalidTransform() throws Exception {
+        getCipher("AES/CBR/NoPadding/garbage/garbage");
+    }
+
+    @Test
+    public void testInvalidKey() throws Exception {
+        for (String transform : transformations) {
+            try {
+                final CryptoCipher cipher = getCipher(transform);
+                Assert.assertNotNull(cipher);
+
+                final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+                    0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
+                cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(invalidKey, "AES"), new IvParameterSpec(IV));
+                Assert.fail("Expected InvalidKeyException");
+            } catch (final InvalidKeyException ike) {
+            }
+        }
+    }
+
+    @Test
+    public void testInvalidIV() throws Exception {
+        for (String transform : transformations) {
+            try {
+                final CryptoCipher cipher = getCipher(transform);
+                Assert.assertNotNull(cipher);
+
+                final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+                        0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
+                cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(invalidIV));
+                Assert.fail("Expected InvalidAlgorithmParameterException");
+            } catch (final InvalidAlgorithmParameterException iape) {
+            }
+        }
+    }
+
+    @Test
+    public void testInvalidIVClass() throws Exception {
+        for (String transform : transformations) {
+            try {
+                final CryptoCipher cipher = getCipher(transform);
+                Assert.assertNotNull(cipher);
+
+                cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new GCMParameterSpec(IV.length, IV));
+                Assert.fail("Should have caught an InvalidAlgorithmParameterException");
+            } catch (final InvalidAlgorithmParameterException iape) {
+            }
         }
     }
 
