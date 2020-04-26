@@ -1,0 +1,95 @@
+Build instructions for Apache Commons Crypto
+
+----------------------------------------------------------------------------------
+Requirements:
+
+* Unix System (Linux or Mac), or Windows with MinGW
+* JDK 1.7 or above (environment variable JAVA_HOME must be set)
+* Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy
+  Files (if running unit tests)
+* export JAVA_HOME
+* Maven 3.0 or above
+* Make
+* OpenSSL devel 1.0.1c or above (Openssl library header files are required)
+* GCC
+* G++
+
+----------------------------------------------------------------------------------
+Install JCE Unlimited Strength Jurisdiction Policy Files:
+
+Download the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files from Oracle:
+
+For JDK 1.7: http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html
+For JDK 1.8: http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
+
+Install JCE Unlimited Strength Jurisdiction Policy Files to JDK:
+
+Copy downloaded local_policy.jar and US_export_policy.jar to <java-home>/jre/lib/security/
+
+----------------------------------------------------------------------------------
+Verify OpenSSL version:
+
+Check OpenSSL version:
+
+  $ openssl version
+
+If it is not 1.0.1c or above, upgrade OpenSSL version to 1.0.1c or above:
+
+Upgrade OpenSSL in Linux:
+
+You can follow your OS distribution instructions to upgrade OpenSSL to a proper version.
+
+Upgrade OpenSSL in Mac:
+
+  $ brew install homebrew/versions/openssl101
+  $ brew link openssl --force
+
+Get OpenSSL headers: sudo apt -y install libssl-dev
+
+----------------------------------------------------------------------------------
+Maven build goals:
+
+* Clean                     : mvn clean
+* Compile                   : mvn compile
+* Run tests                 : mvn test
+* Run benchmarks            : mvn clean test -Pbenchmark
+* Run test; no JNI build    : mvn clean test -Dmaven.antrun.skip
+* Create JAR                : mvn package
+* Run findbugs              : mvn compile -Pfindbugs
+* Run checkstyle            : mvn compile checkstyle:checkstyle
+* Install JAR in M2 cache   : mvn install
+* Deploy JAR to Maven repo  : mvn deploy
+* Run RAT                   : mvn apache-rat:check
+* Run Clirr                 : mvn clirr:check
+* Build javadocs            : mvn javadoc:javadoc
+* Change version            : mvn versions:set -DnewVersion=NEWVERSION
+
+----------------------------------------------------------------------------------
+Importing projects to eclipse
+
+Generate eclipse project files.
+
+  $ mvn eclipse:eclipse -DskipTests
+
+At last, import to eclipse by specifying the root directory of the project via
+[File] > [Import] > [Existing Projects into Workspace].
+
+----------------------------------------------------------------------------------
+Building distributions:
+
+To perform the license release audit, a.k.a. "RAT check", run:
+
+   mvn apache-rat:check
+
+[Once 1.0.0 is out] To perform a Clirr check, run:
+
+   mvn clirr:check
+
+Create binary distribution:
+
+  $ mvn package -DskipTests
+
+Create a local staging version of the website (in /tmp/crypto-site):
+
+  $ mvn clean site; mvn site:stage -DstagingDirectory=/tmp/crypto-site
+

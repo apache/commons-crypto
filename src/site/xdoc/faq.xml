@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<document>
+  <properties>
+    <title>Apache Commons Crypto: FAQ</title>
+  </properties>
+
+  <body>
+
+    <h1>Frequently asked questions</h1>
+
+    <section name="How to use a custom secret generator?">
+      Commons Crypto provides the <code>CryptoRandom</code> interface for defining secret generators.
+      The <code>RandomProvider</code> enum in the <code>CryptoRandomFactory</code> defines some sensible default
+      implementations:
+
+      <dl>
+        <dt>OPENSSL</dt><dd>OpenSSL based JNI implementation shipped with Commons Crypto.</dd>
+        <dt>JAVA</dt><dd>The SecureRandom implementation from the JVM.</dd>
+        <dt>OS</dt><dd>The OS random device implementation. May not be available on some operation systems.</dd>
+      </dl>
+
+      When calling <code>CryptoRandomFactory.getCryptoRandom()</code>, Commons Crypto tries to use the OpenSSL
+      CryptoRandom implementation first. If this fails, the Java implementation is used.
+      In order use a different <code>CryptoRandom</code> implementation (e.g. OS), the
+      <code>CryptoRandomFactory.getCryptoRandom(Properties)</code> method can be used, passing in the desired
+      implementation class names:
+
+<source>
+Properties props = new Properties();
+props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OS.getClassName());
+CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+</source>
+
+    </section>
+  </body>
+</document>
