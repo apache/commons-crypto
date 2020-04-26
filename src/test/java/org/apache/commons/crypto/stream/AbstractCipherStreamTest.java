@@ -106,22 +106,22 @@ public abstract class AbstractCipherStreamTest {
     
     @Test(timeout = 120000)
     public void testExceptions() throws Exception {
-    	final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    	doExceptionTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, false);
-    	doExceptionTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, false);
-    	
-    	doExceptionTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, true);
-    	doExceptionTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, true);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        doExceptionTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, false);
+        doExceptionTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, false);
+
+        doExceptionTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, true);
+        doExceptionTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, true);
     }
     
     @Test(timeout = 120000)
     public void testFieldGetters() throws Exception {
-    	final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    	doFieldGetterTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, false);
-    	doFieldGetterTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, false);
-    	
-    	doFieldGetterTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, true);
-    	doFieldGetterTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, true);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        doFieldGetterTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, false);
+        doFieldGetterTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, false);
+
+        doFieldGetterTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, baos, true);
+        doFieldGetterTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, baos, true);
     }
 
     protected void doSkipTest(final String cipherClass, final boolean withChannel)
@@ -242,70 +242,70 @@ public abstract class AbstractCipherStreamTest {
         
         // Default buffer size, initial buffer position is 0
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf = ByteBuffer.allocate(dataLen + 100);
         byteBufferReadCheck(in, buf, 0);
         in.close();
         
         // Default buffer size, initial buffer position is not 0
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf.clear();
         byteBufferReadCheck(in, buf, 11);
         in.close();
 
         // Small buffer size, initial buffer position is 0
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf.clear();
         byteBufferReadCheck(in, buf, 0);
         in.close();
 
         // Small buffer size, initial buffer position is not 0
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf.clear();
         byteBufferReadCheck(in, buf, 11);
         in.close();
 
         // Direct buffer, default buffer size, initial buffer position is 0
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf = ByteBuffer.allocateDirect(dataLen + 100);
         byteBufferReadCheck(in, buf, 0);
         in.close();
 
         // Direct buffer, default buffer size, initial buffer position is not 0
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf.clear();
         byteBufferReadCheck(in, buf, 11);
         in.close();
 
         // Direct buffer, small buffer size, initial buffer position is 0
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf.clear();
         byteBufferReadCheck(in, buf, 0);
         in.close();
 
         // Direct buffer, small buffer size, initial buffer position is not 0
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf.clear();
         byteBufferReadCheck(in, buf, 11);
         in.close();
         
         // Direct buffer, default buffer size, initial buffer position is 0, final read
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf.clear();
         byteBufferFinalReadCheck(in, buf, 0);
         in.close();
         
         // Default buffer size, initial buffer position is 0, insufficient dest buffer length
         in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         buf = ByteBuffer.allocate(100);
         byteBufferReadCheck(in, buf, 0);
         in.close();
@@ -313,7 +313,7 @@ public abstract class AbstractCipherStreamTest {
 
     protected void doByteBufferWrite(final String cipherClass,
             final ByteArrayOutputStream baos, final boolean withChannel) 
-            		throws Exception {
+                throws Exception {
         if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(cipherClass)) {
             if (!Crypto.isNativeCodeLoaded()) {
                 return; // Skip this test if no JNI
@@ -328,19 +328,19 @@ public abstract class AbstractCipherStreamTest {
         CryptoCipher cipher = getCipher(cipherClass);
         String transformation = cipher.getAlgorithm();
         out = getCryptoOutputStream(transformation, props, baos, key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         doByteBufferWrite(out, withChannel);
         out.write(1);
         Assert.assertTrue(out.isOpen()); 
         
         out = getCryptoOutputStream(transformation, props, baos, key, 
-        		new IvParameterSpec(iv), withChannel);
+                new IvParameterSpec(iv), withChannel);
         out.close();
         Assert.assertTrue(!out.isOpen());
     }
 
     protected void doExceptionTest(final String cipherClass, ByteArrayOutputStream baos,
-    		final boolean withChannel) throws IOException {
+            final boolean withChannel) throws IOException {
         if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(cipherClass)) {
             if (!Crypto.isNativeCodeLoaded()) {
                 return; // Skip this test if no JNI
@@ -351,80 +351,80 @@ public abstract class AbstractCipherStreamTest {
         OutputStream out = null;
         try { // Test InvalidAlgorithmParameters
         	in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), 
-        			new SecretKeySpec(key, "AES"), new GCMParameterSpec(0, new byte[0]), 
-        			withChannel);
-        	Assert.fail("Expected IOException.");
+                    new SecretKeySpec(key, "AES"), new GCMParameterSpec(0, new byte[0]), 
+                    withChannel);
+            Assert.fail("Expected IOException.");
         } catch (IOException ex) {
-        	Assert.assertEquals(ex.getMessage(),"Illegal parameters");
+            Assert.assertEquals(ex.getMessage(),"Illegal parameters");
         } 
         
         try { // Test InvalidAlgorithmParameters
-        	out = getCryptoOutputStream(transformation, props, baos, 
-        			new SecretKeySpec(key, "AES"), new GCMParameterSpec(0, 
-        			new byte[0]), withChannel);
-        	Assert.fail("Expected IOException.");
+            out = getCryptoOutputStream(transformation, props, baos, 
+                    new SecretKeySpec(key, "AES"), new GCMParameterSpec(0, 
+                    new byte[0]), withChannel);
+            Assert.fail("Expected IOException.");
         } catch (IOException ex) {
         	Assert.assertEquals(ex.getMessage(),"Illegal parameters");
         } 
         
         try { // Test Invalid Key
             in = getCryptoInputStream(transformation,props, new ByteArrayInputStream(encData), 
-            		new SecretKeySpec(new byte[10], "AES"), new IvParameterSpec(iv), withChannel);
+                    new SecretKeySpec(new byte[10], "AES"), new IvParameterSpec(iv), withChannel);
             Assert.fail("Expected IOException for Invalid Key");
         } catch (IOException ex) {
-        	Assert.assertNotNull(ex);
+            Assert.assertNotNull(ex);
         }
         
         try { // Test Invalid Key
-        	out = getCryptoOutputStream(transformation, props, baos, new byte[10], 
-        			new IvParameterSpec(iv), withChannel);
+            out = getCryptoOutputStream(transformation, props, baos, new byte[10], 
+                    new IvParameterSpec(iv), withChannel);
             Assert.fail("Expected IOException for Invalid Key");
         } catch (IOException ex) {
-        	Assert.assertNotNull(ex);
+            Assert.assertNotNull(ex);
         }
         
         try { // Test closed stream.
-        	in = getCryptoInputStream(new ByteArrayInputStream(encData), 
-        			getCipher(cipherClass), defaultBufferSize, iv, withChannel);
-        	in.close();
-        	in.close(); // Don't throw exception.
-        	in.read(); // Throw exception.
+            in = getCryptoInputStream(new ByteArrayInputStream(encData), 
+                    getCipher(cipherClass), defaultBufferSize, iv, withChannel);
+            in.close();
+            in.close(); // Don't throw exception.
+            in.read(); // Throw exception.
         } catch (IOException ex) {
-        	Assert.assertTrue(ex.getMessage().equals("Stream closed"));
+            Assert.assertTrue(ex.getMessage().equals("Stream closed"));
         } 
-        
+
         try { // Test closed stream.
-        	out = getCryptoOutputStream(transformation, props, baos, key, new IvParameterSpec(iv), 
-        			withChannel);
-        	out.close();
-        	out.close(); // Don't throw exception.
-        	((CryptoOutputStream)out).checkStream(); // Throw exception.
+            out = getCryptoOutputStream(transformation, props, baos, key, new IvParameterSpec(iv), 
+                    withChannel);
+            out.close();
+            out.close(); // Don't throw exception.
+            ((CryptoOutputStream)out).checkStream(); // Throw exception.
         } catch (IOException ex) {
-        	Assert.assertTrue(ex.getMessage().equals("Stream closed"));
+            Assert.assertTrue(ex.getMessage().equals("Stream closed"));
         } 
-        
+
         try { // Test checkStreamCipher
             CryptoInputStream.checkStreamCipher(getCipher(cipherClass));
         } catch (IOException ex) {
-        	Assert.assertTrue(ex.getMessage().equals("AES/CTR/NoPadding is required"));
+            Assert.assertTrue(ex.getMessage().equals("AES/CTR/NoPadding is required"));
         } finally {
-        	in.close();
+            in.close();
         }
-        
+
         try { // Test unsupported operation handling.
             in = getCryptoInputStream(new ByteArrayInputStream(encData), 
-            		getCipher(cipherClass), defaultBufferSize, iv, false);
+                    getCipher(cipherClass), defaultBufferSize, iv, false);
             in.mark(0); // Should not throw an exception.
             assertEquals(false, in.markSupported());
-        	in.reset();
-        	Assert.fail("Expected IOException.");
+            in.reset();
+            Assert.fail("Expected IOException.");
         } catch (IOException ex) {
-        	Assert.assertTrue(ex.getMessage().equals("Mark/reset not supported"));
+            Assert.assertTrue(ex.getMessage().equals("Mark/reset not supported"));
         }  
     }
-    
+
     protected void doFieldGetterTest(final String cipherClass, ByteArrayOutputStream baos,
-    		final boolean withChannel) throws Exception {
+            final boolean withChannel) throws Exception {
         if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(cipherClass)) {
             if (!Crypto.isNativeCodeLoaded()) {
                 return; // Skip this test if no JNI
@@ -432,26 +432,26 @@ public abstract class AbstractCipherStreamTest {
         }
         
         CryptoInputStream in = getCryptoInputStream(
-                new ByteArrayInputStream(encData), getCipher(cipherClass),
-                defaultBufferSize, iv, withChannel); 
-        
+                new ByteArrayInputStream(encData), getCipher(cipherClass), defaultBufferSize, 
+                iv, withChannel); 
+
         Properties props = new Properties();
         String bufferSize = Integer.toString(defaultBufferSize / 2);
         props.put(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, bufferSize);
 
         Assert.assertEquals(CryptoInputStream.getBufferSize(props), Integer.parseInt(bufferSize));
         Assert.assertEquals(in.getBufferSize(), defaultBufferSize);
-    	Assert.assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
-    	Assert.assertEquals(in.getKey().getAlgorithm(), "AES");
-    	Assert.assertEquals(in.getParams().getClass(), IvParameterSpec.class);
-    	Assert.assertNotNull(in.getInput());
-    	
-    	CryptoOutputStream out = getCryptoOutputStream(baos,
-                getCipher(cipherClass), defaultBufferSize, iv, withChannel);
-    	
-    	Assert.assertEquals(out.getOutBuffer().capacity(), defaultBufferSize + 16);
-    	Assert.assertEquals(out.getInBuffer().capacity(), defaultBufferSize);
-    	Assert.assertEquals(out.getBufferSize(), defaultBufferSize);
+        Assert.assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
+        Assert.assertEquals(in.getKey().getAlgorithm(), "AES");
+        Assert.assertEquals(in.getParams().getClass(), IvParameterSpec.class);
+        Assert.assertNotNull(in.getInput());
+
+        CryptoOutputStream out = getCryptoOutputStream(baos, getCipher(cipherClass), 
+                defaultBufferSize, iv, withChannel);
+
+        Assert.assertEquals(out.getOutBuffer().capacity(), defaultBufferSize + 16);
+        Assert.assertEquals(out.getInBuffer().capacity(), defaultBufferSize);
+        Assert.assertEquals(out.getBufferSize(), defaultBufferSize);
     }
     
     private void byteBufferReadCheck(final InputStream in, final ByteBuffer buf, final int bufPos)
@@ -466,23 +466,23 @@ public abstract class AbstractCipherStreamTest {
         final byte[] expectedData = new byte[n];
         System.arraycopy(data, 0, expectedData, 0, n);
         Assert.assertArrayEquals(readData, expectedData);
-        
+
         try {
-        	in.read(readData, -1, 0);
-        	Assert.fail("Expected IndexOutOfBoundsException.");
+            in.read(readData, -1, 0);
+            Assert.fail("Expected IndexOutOfBoundsException.");
         } catch (IndexOutOfBoundsException ex) {
-        	Assert.assertNotNull(ex);
+            Assert.assertNotNull(ex);
         }
     }
-    
+
     private void byteBufferFinalReadCheck(final InputStream in, final ByteBuffer buf, final int bufPos)
             throws Exception {
         buf.position(bufPos);
         int len = 0;
         int n = 0;
         do {
-        	n = ((ReadableByteChannel) in).read(buf);
-        	len += n;
+            n = ((ReadableByteChannel) in).read(buf);
+            len += n;
         } while (n > 0);
         buf.rewind();
         byte[] readData = new byte[len + 1];
@@ -512,8 +512,7 @@ public abstract class AbstractCipherStreamTest {
         encData = baos.toByteArray();
     }
     
-    private void doByteBufferWrite(CryptoOutputStream out, boolean withChannel) 
-    		throws Exception {
+    private void doByteBufferWrite(CryptoOutputStream out, boolean withChannel) throws Exception {
         ByteBuffer buf = ByteBuffer.allocateDirect(dataLen / 2);
         buf.put(data, 0, dataLen / 2);
         buf.flip();
@@ -534,10 +533,10 @@ public abstract class AbstractCipherStreamTest {
         Assert.assertEquals(dataLen, n1 + n2 + n3 + 1);
         
         try {
-        	out.write(data, 0, data.length + 1);
-        	Assert.fail("Expected IndexOutOfBoundsException.");
+            out.write(data, 0, data.length + 1);
+            Assert.fail("Expected IndexOutOfBoundsException.");
         } catch (IndexOutOfBoundsException ex) {
-        	Assert.assertNotNull(ex);
+            Assert.assertNotNull(ex);
         }
         
         out.flush();
@@ -563,21 +562,21 @@ public abstract class AbstractCipherStreamTest {
     }
     
     protected CryptoInputStream getCryptoInputStream(final String transformation, final Properties props, 
-    		final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
-    		boolean withChannel) throws IOException {
-    	if(withChannel) {
-    		return new CryptoInputStream(transformation, props, Channels.newChannel(bais), new SecretKeySpec(key, "AES"), params);
+    	    final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
+    	    boolean withChannel) throws IOException {
+        if(withChannel) {
+    	    return new CryptoInputStream(transformation, props, Channels.newChannel(bais), new SecretKeySpec(key, "AES"), params);
     	}
-    	return new CryptoInputStream(transformation, props, bais, new SecretKeySpec(key, "AES"), params);
+        return new CryptoInputStream(transformation, props, bais, new SecretKeySpec(key, "AES"), params);
     }
     
     protected CryptoInputStream getCryptoInputStream(final String transformation,
             final Properties props, final ByteArrayInputStream bais, final Key key,
             final AlgorithmParameterSpec params, boolean withChannel) throws IOException {
-    	if(withChannel) {
-        	return new CryptoInputStream(transformation, props, Channels.newChannel(bais), key, params);
-    	}
-    	return new CryptoInputStream(transformation, props, bais, key, params);
+        if(withChannel) {
+            return new CryptoInputStream(transformation, props, Channels.newChannel(bais), key, params);
+        }
+        return new CryptoInputStream(transformation, props, bais, key, params);
     }
 
     protected CryptoOutputStream getCryptoOutputStream(
@@ -597,20 +596,19 @@ public abstract class AbstractCipherStreamTest {
             final AlgorithmParameterSpec param, final boolean withChannel) throws IOException {
         if (withChannel) {
             return new CryptoOutputStream(transformation, props, Channels.newChannel(baos), 
-            		new SecretKeySpec(key, "AES"), param);
+                    new SecretKeySpec(key, "AES"), param);
         }
         return new CryptoOutputStream(transformation, props, baos, new SecretKeySpec(key, "AES"), 
-        		param);
+                param);
     }
     
-    // TODO: Look to override in subclass
     protected CryptoOutputStream getCryptoOutputStream(final String transformation,
             final Properties props, final ByteArrayOutputStream baos, final Key key,
             final AlgorithmParameterSpec params, boolean withChannel) throws IOException {
-    	if(withChannel) {
-        	return new CryptoOutputStream(transformation, props, Channels.newChannel(baos), key, params);
-    	}
-    	return new CryptoOutputStream(transformation, props, baos, key, params);
+        if(withChannel) {
+            return new CryptoOutputStream(transformation, props, Channels.newChannel(baos), key, params);
+        }
+        return new CryptoOutputStream(transformation, props, baos, key, params);
     }
 
     private int readAll(final InputStream in, final byte[] b, final int offset, final int len)

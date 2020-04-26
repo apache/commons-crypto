@@ -95,7 +95,7 @@ public class PositionedCryptoInputStreamTest {
     }
     
     private PositionedCryptoInputStream getCryptoInputStream(final int streamOffset) 
-    		throws IOException {
+            throws IOException {
         return new PositionedCryptoInputStream(props, new PositionedInputForTest(
                 Arrays.copyOf(encData, encData.length)), key, iv, streamOffset);
     }
@@ -156,9 +156,9 @@ public class PositionedCryptoInputStreamTest {
     }
     
     private void doMultipleReadTest() throws Exception{
-    	PositionedCryptoInputStream in = getCryptoInputStream(0);
-    	final String cipherClass = in.getCipher().getClass().getName();
-    	doMultipleReadTest(cipherClass);
+        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final String cipherClass = in.getCipher().getClass().getName();
+        doMultipleReadTest(cipherClass);
     }
 
     private void doPositionedReadTests(final String cipherClass) throws Exception {
@@ -201,9 +201,9 @@ public class PositionedCryptoInputStreamTest {
     }
     
     private void doReadFullyTests() throws Exception {
-    	PositionedCryptoInputStream in = getCryptoInputStream(0);
-    	final String cipherClass = in.getCipher().getClass().getName();
-    	doReadFullyTests(cipherClass);
+        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final String cipherClass = in.getCipher().getClass().getName();
+        doReadFullyTests(cipherClass);
     }
 
     private void doSeekTests(final String cipherClass) throws Exception {
@@ -218,9 +218,9 @@ public class PositionedCryptoInputStreamTest {
     }
     
     private void doSeekTests() throws Exception{
-    	PositionedCryptoInputStream in = getCryptoInputStream(0);
-    	final String cipherClass = in.getCipher().getClass().getName();
-    	doSeekTests(cipherClass);
+        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final String cipherClass = in.getCipher().getClass().getName();
+        doSeekTests(cipherClass);
     }
 
     private void testSeekLoop(final String cipherClass, int position, final int length,
@@ -289,7 +289,6 @@ public class PositionedCryptoInputStreamTest {
             while (position + length <= total) {
                 final byte[] bytes = new byte[length];
                 in.readFully(position, bytes);
-                //in.readFully(position, bytes, 0, length);
                 compareByteArray(testData, position, bytes, length);
                 position += length;
             }
