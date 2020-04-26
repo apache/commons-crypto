@@ -58,7 +58,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     protected CtrCryptoInputStream getCryptoInputStream(final String transformation, final Properties props, 
             final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
             boolean withChannel) throws IOException {
-        if(withChannel) {
+        if (withChannel) {
             return new CtrCryptoInputStream(props, Channels.newChannel(bais), key, 
                     ((IvParameterSpec)params).getIV());
         }
