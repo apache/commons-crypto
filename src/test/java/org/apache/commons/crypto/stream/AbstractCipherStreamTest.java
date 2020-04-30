@@ -383,26 +383,36 @@ public abstract class AbstractCipherStreamTest {
             Assert.assertNotNull(ex);
         }
         
-        try { // Test closed stream.
+        try { // Test reading a closed stream.
             in = getCryptoInputStream(new ByteArrayInputStream(encData), 
                     getCipher(cipherClass), defaultBufferSize, iv, withChannel);
             in.close();
-            in.close(); // Don't throw exception.
             in.read(); // Throw exception.
         } catch (IOException ex) {
             Assert.assertTrue(ex.getMessage().equals("Stream closed"));
         } 
+        
+        try { // Test closing a closed stream.
+            in.close(); // Don't throw exception on double-close.
+        } catch (IOException ex) {
+            Assert.fail("Should not throw exception closing a closed stream.");
+        } 
 
-        try { // Test closed stream.
+        try { // Test checking a closed stream.
             out = getCryptoOutputStream(transformation, props, baos, key, new IvParameterSpec(iv), 
                     withChannel);
             out.close();
-            out.close(); // Don't throw exception.
             ((CryptoOutputStream)out).checkStream(); // Throw exception.
         } catch (IOException ex) {
             Assert.assertTrue(ex.getMessage().equals("Stream closed"));
         } 
 
+        try { // Test closing a closed stream.
+            out.close(); // Don't throw exception.
+        } catch (IOException ex) {
+            Assert.fail("Should not throw exception closing a closed stream.");
+        } 
+        
         try { // Test checkStreamCipher
             CryptoInputStream.checkStreamCipher(getCipher(cipherClass));
         } catch (IOException ex) {
