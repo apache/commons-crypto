@@ -84,7 +84,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
             return new CtrCryptoOutputStream(props, Channels.newChannel(baos), key, 
                     ((IvParameterSpec)params).getIV());
         }
-        return new CtrCryptoOutputStream(props, baos, key,((IvParameterSpec)params).getIV());
+        return new CtrCryptoOutputStream(props, baos, key, ((IvParameterSpec)params).getIV());
     }
     
     @Override
