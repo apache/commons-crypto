@@ -349,7 +349,8 @@ public abstract class AbstractCipherStreamTest {
         
         InputStream in = null;
         OutputStream out = null;
-        try { // Test InvalidAlgorithmParameters
+        // Test InvalidAlgorithmParameters
+        try {
         	in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), 
                     new SecretKeySpec(key, "AES"), new GCMParameterSpec(0, new byte[0]), 
                     withChannel);
