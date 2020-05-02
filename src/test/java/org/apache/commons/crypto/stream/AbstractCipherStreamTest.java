@@ -226,7 +226,7 @@ public abstract class AbstractCipherStreamTest {
         byteBufferReadCheck(in, buf, 11);
         in.close();      
         
-        // Direct buffer, default buffer size, initial buffer position is 0, final read
+        // Direct buffer, small buffer size, initial buffer position is 0, final read
         in = getCryptoInputStream(new ByteArrayInputStream(encData),
                 getCipher(cipherClass), smallBufferSize, iv, withChannel);
         buf.clear();
@@ -349,6 +349,7 @@ public abstract class AbstractCipherStreamTest {
         
         InputStream in = null;
         OutputStream out = null;
+        
         // Test InvalidAlgorithmParameters
         try {
         	in = getCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), 
@@ -387,7 +388,8 @@ public abstract class AbstractCipherStreamTest {
             Assert.assertNotNull(ex);
         }
         
-        try { // Test reading a closed stream.
+        // Test reading a closed stream.
+        try { 
             in = getCryptoInputStream(new ByteArrayInputStream(encData), 
                     getCipher(cipherClass), defaultBufferSize, iv, withChannel);
             in.close();
@@ -396,13 +398,15 @@ public abstract class AbstractCipherStreamTest {
             Assert.assertTrue(ex.getMessage().equals("Stream closed"));
         } 
         
-        try { // Test closing a closed stream.
+        // Test closing a closed stream.
+        try { 
             in.close(); // Don't throw exception on double-close.
         } catch (IOException ex) {
             Assert.fail("Should not throw exception closing a closed stream.");
         } 
 
-        try { // Test checking a closed stream.
+        // Test checking a closed stream.
+        try { 
             out = getCryptoOutputStream(transformation, props, baos, key, new IvParameterSpec(iv), 
                     withChannel);
             out.close();
@@ -411,13 +415,15 @@ public abstract class AbstractCipherStreamTest {
             Assert.assertTrue(ex.getMessage().equals("Stream closed"));
         } 
 
-        try { // Test closing a closed stream.
+        // Test closing a closed stream.
+        try { 
             out.close(); // Don't throw exception.
         } catch (IOException ex) {
             Assert.fail("Should not throw exception closing a closed stream.");
         } 
         
-        try { // Test checkStreamCipher
+        // Test checkStreamCipher
+        try { 
             CryptoInputStream.checkStreamCipher(getCipher(cipherClass));
         } catch (IOException ex) {
             Assert.assertTrue(ex.getMessage().equals("AES/CTR/NoPadding is required"));
@@ -425,7 +431,8 @@ public abstract class AbstractCipherStreamTest {
             in.close();
         }
 
-        try { // Test unsupported operation handling.
+        // Test unsupported operation handling.
+        try { 
             in = getCryptoInputStream(new ByteArrayInputStream(encData), 
                     getCipher(cipherClass), defaultBufferSize, iv, false);
             in.mark(0); // Should not throw an exception.
@@ -434,7 +441,9 @@ public abstract class AbstractCipherStreamTest {
             Assert.fail("Expected IOException.");
         } catch (IOException ex) {
             Assert.assertTrue(ex.getMessage().equals("Mark/reset not supported"));
-        }  
+        } finally {
+            in.close();
+        }
     }
 
     protected void doFieldGetterTest(final String cipherClass, ByteArrayOutputStream baos,
@@ -445,8 +454,10 @@ public abstract class AbstractCipherStreamTest {
             }
         }
         
+        CryptoCipher cipher = getCipher(cipherClass);
+        
         CryptoInputStream in = getCryptoInputStream(
-                new ByteArrayInputStream(encData), getCipher(cipherClass), defaultBufferSize, 
+                new ByteArrayInputStream(encData), cipher, defaultBufferSize, 
                 iv, withChannel); 
 
         Properties props = new Properties();
@@ -463,7 +474,7 @@ public abstract class AbstractCipherStreamTest {
         CryptoOutputStream out = getCryptoOutputStream(baos, getCipher(cipherClass), 
                 defaultBufferSize, iv, withChannel);
 
-        Assert.assertEquals(out.getOutBuffer().capacity(), defaultBufferSize + 16);
+        Assert.assertEquals(out.getOutBuffer().capacity(), defaultBufferSize + cipher.getBlockSize());
         Assert.assertEquals(out.getInBuffer().capacity(), defaultBufferSize);
         Assert.assertEquals(out.getBufferSize(), defaultBufferSize);
     }
