@@ -359,7 +359,8 @@ public abstract class AbstractCipherStreamTest {
             Assert.assertEquals(ex.getMessage(),"Illegal parameters");
         } 
         
-        try { // Test InvalidAlgorithmParameters
+        // Test InvalidAlgorithmParameters
+        try {
             out = getCryptoOutputStream(transformation, props, baos, 
                     new SecretKeySpec(key, "AES"), new GCMParameterSpec(0, 
                     new byte[0]), withChannel);
