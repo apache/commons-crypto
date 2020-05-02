@@ -375,7 +375,8 @@ public abstract class AbstractCipherStreamTest {
             Assert.assertNotNull(ex);
         }
         
-        try { // Test Invalid Key
+        // Test Invalid Key
+        try {
             out = getCryptoOutputStream(transformation, props, baos, new byte[10], 
                     new IvParameterSpec(iv), withChannel);
             Assert.fail("Expected IOException for Invalid Key");
