@@ -574,7 +574,7 @@ public abstract class AbstractCipherStreamTest {
     protected CryptoInputStream getCryptoInputStream(final String transformation, final Properties props, 
     	    final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
     	    boolean withChannel) throws IOException {
-        if(withChannel) {
+        if (withChannel) {
     	    return new CryptoInputStream(transformation, props, Channels.newChannel(bais), new SecretKeySpec(key, "AES"), params);
     	}
         return new CryptoInputStream(transformation, props, bais, new SecretKeySpec(key, "AES"), params);
