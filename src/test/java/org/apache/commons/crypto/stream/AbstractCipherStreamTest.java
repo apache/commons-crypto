@@ -435,7 +435,7 @@ public abstract class AbstractCipherStreamTest {
         try { 
             in = getCryptoInputStream(new ByteArrayInputStream(encData), 
                     getCipher(cipherClass), defaultBufferSize, iv, false);
-            in.mark(0); // Should not throw an exception.
+            in.mark(0);
             assertEquals(false, in.markSupported());
             in.reset();
             Assert.fail("Expected IOException.");
