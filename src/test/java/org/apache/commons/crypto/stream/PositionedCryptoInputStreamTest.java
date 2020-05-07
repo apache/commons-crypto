@@ -93,6 +93,12 @@ public class PositionedCryptoInputStreamTest {
                 Arrays.copyOf(encData, encData.length)), cipher, bufferSize,
                 key, iv, 0);
     }
+    
+    private PositionedCryptoInputStream getCryptoInputStream(final int streamOffset) 
+            throws IOException {
+        return new PositionedCryptoInputStream(props, new PositionedInputForTest(
+                Arrays.copyOf(encData, encData.length)), key, iv, streamOffset);
+    }
 
     @Test
     public void doTestJCE() throws Exception {
@@ -107,9 +113,13 @@ public class PositionedCryptoInputStreamTest {
 
     protected void testCipher(final String cipherClass) throws Exception {
         doPositionedReadTests(cipherClass);
+        doPositionedReadTests();
         doReadFullyTests(cipherClass);
+        doReadFullyTests();
         doSeekTests(cipherClass);
+        doSeekTests();
         doMultipleReadTest(cipherClass);
+        doMultipleReadTest();
     }
 
     // when there are multiple positioned read actions and one read action,
@@ -144,6 +154,12 @@ public class PositionedCryptoInputStreamTest {
             }
         }
     }
+    
+    private void doMultipleReadTest() throws Exception{
+        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final String cipherClass = in.getCipher().getClass().getName();
+        doMultipleReadTest(cipherClass);
+    }
 
     private void doPositionedReadTests(final String cipherClass) throws Exception {
         // test with different bufferSize when position = 0
@@ -161,6 +177,12 @@ public class PositionedCryptoInputStreamTest {
         testPositionedReadNone(cipherClass, -1, length, bufferSize);
         testPositionedReadNone(cipherClass, dataLen, length, bufferSize);
     }
+    
+    private void doPositionedReadTests() throws Exception {
+    	PositionedCryptoInputStream in = getCryptoInputStream(0);
+    	final String cipherClass = in.getCipher().getClass().getName();
+    	doPositionedReadTests(cipherClass);
+    }
 
     private void doReadFullyTests(final String cipherClass) throws Exception {
         // test with different bufferSize when position = 0
@@ -177,6 +199,12 @@ public class PositionedCryptoInputStreamTest {
         testReadFullyFailed(cipherClass, dataLen - length + 1, length,
                 bufferSize);
     }
+    
+    private void doReadFullyTests() throws Exception {
+        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final String cipherClass = in.getCipher().getClass().getName();
+        doReadFullyTests(cipherClass);
+    }
 
     private void doSeekTests(final String cipherClass) throws Exception {
         // test with different length when position = 0
@@ -187,6 +215,12 @@ public class PositionedCryptoInputStreamTest {
         testSeekLoop(cipherClass, dataLen, length, bufferSize);
         // test exception when position = -1
         testSeekFailed(cipherClass, -1, bufferSize);
+    }
+    
+    private void doSeekTests() throws Exception{
+        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final String cipherClass = in.getCipher().getClass().getName();
+        doSeekTests(cipherClass);
     }
 
     private void testSeekLoop(final String cipherClass, int position, final int length,
@@ -254,7 +288,7 @@ public class PositionedCryptoInputStreamTest {
             // do the position read full until remain < length
             while (position + length <= total) {
                 final byte[] bytes = new byte[length];
-                in.readFully(position, bytes, 0, length);
+                in.readFully(position, bytes);
                 compareByteArray(testData, position, bytes, length);
                 position += length;
             }
@@ -275,6 +309,7 @@ public class PositionedCryptoInputStreamTest {
             // excepted exception
         }
         in.close();
+        in.close(); // Don't throw exception.
     }
 
     // compare the data from pos with length and data2 from 0 with length
