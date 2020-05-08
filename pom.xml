@@ -610,6 +610,14 @@ The following provides more details on the included cryptographic software:
           <ignoredDifferencesFile>${basedir}/clirr-excludes.xml</ignoredDifferencesFile>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+        <configuration>
+          <preparationGoals>verify</preparationGoals>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <reporting>
