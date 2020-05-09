@@ -17,8 +17,6 @@
  */
 package org.apache.commons.crypto;
 
-import org.apache.commons.crypto.random.CryptoRandom;
-
 /**
  * JNI interface of {@link CryptoRandom} implementation for OpenSSL.
  * The native method in this class is defined in

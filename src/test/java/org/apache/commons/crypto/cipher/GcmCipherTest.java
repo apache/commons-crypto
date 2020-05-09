@@ -27,7 +27,6 @@ import javax.crypto.AEADBadTagException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.utils.Utils;
 import org.junit.Assert;
@@ -352,11 +351,11 @@ public class GcmCipherTest {
     private void testGcmEncryption(final String kHex, final String pHex, final String ivHex, final String aadHex,
                                    final String cHex, final String tHex) throws Exception {
 
-        final byte[] keyBytes = DatatypeConverter.parseHexBinary(kHex);
-        final byte[] input = DatatypeConverter.parseHexBinary(pHex);
-        final byte[] ivBytes = DatatypeConverter.parseHexBinary(ivHex);
-        final byte[] aad = DatatypeConverter.parseHexBinary(aadHex);
-        final byte[] expectedOutput = DatatypeConverter.parseHexBinary(cHex+tHex);
+        final byte[] keyBytes = AbstractCipherTest.parseHexBinary(kHex);
+        final byte[] input = AbstractCipherTest.parseHexBinary(pHex);
+        final byte[] ivBytes = AbstractCipherTest.parseHexBinary(ivHex);
+        final byte[] aad = AbstractCipherTest.parseHexBinary(aadHex);
+        final byte[] expectedOutput = AbstractCipherTest.parseHexBinary(cHex+tHex);
 
         final byte[] output = new byte[expectedOutput.length];
 
@@ -377,11 +376,11 @@ public class GcmCipherTest {
     private void testGcmArbitraryLengthUpdate(final String kHex, final String pHex, final String ivHex, final String aadHex,
                                               final String cHex, final String tHex) throws Exception {
 
-        final byte[] keyBytes = DatatypeConverter.parseHexBinary(kHex);
-        final byte[] input = DatatypeConverter.parseHexBinary(pHex);
-        final byte[] ivBytes = DatatypeConverter.parseHexBinary(ivHex);
-        final byte[] aad = DatatypeConverter.parseHexBinary(aadHex);
-        final byte[] expectedOutput = DatatypeConverter.parseHexBinary(cHex+tHex);
+        final byte[] keyBytes = AbstractCipherTest.parseHexBinary(kHex);
+        final byte[] input = AbstractCipherTest.parseHexBinary(pHex);
+        final byte[] ivBytes = AbstractCipherTest.parseHexBinary(ivHex);
+        final byte[] aad = AbstractCipherTest.parseHexBinary(aadHex);
+        final byte[] expectedOutput = AbstractCipherTest.parseHexBinary(cHex+tHex);
 
         final byte[] encOutput = new byte[expectedOutput.length];
         final byte[] decOutput = new byte[input.length];
@@ -434,12 +433,12 @@ public class GcmCipherTest {
     private void testGcmDecryption(final String kHex, final String pHex, final String ivHex, final String aadHex,
                                    final String cHex, final String tHex) throws Exception {
 
-        final byte[] keyBytes = DatatypeConverter.parseHexBinary(kHex);
-        final byte[] plainBytes = DatatypeConverter.parseHexBinary(pHex);
-        final byte[] ivBytes = DatatypeConverter.parseHexBinary(ivHex);
+        final byte[] keyBytes = AbstractCipherTest.parseHexBinary(kHex);
+        final byte[] plainBytes = AbstractCipherTest.parseHexBinary(pHex);
+        final byte[] ivBytes = AbstractCipherTest.parseHexBinary(ivHex);
 
-        final byte[] aad = DatatypeConverter.parseHexBinary(aadHex);
-        final byte[] cipherBytes = DatatypeConverter.parseHexBinary(cHex+tHex);
+        final byte[] aad = AbstractCipherTest.parseHexBinary(aadHex);
+        final byte[] cipherBytes = AbstractCipherTest.parseHexBinary(cHex+tHex);
 
         final byte[] input = cipherBytes;
         final byte[] output = new byte[plainBytes.length];
@@ -460,12 +459,12 @@ public class GcmCipherTest {
     private void testGcmReturnDataAfterTagVerified(final String kHex, final String pHex, final String ivHex, final String aadHex,
                                                    final String cHex, final String tHex) throws Exception {
 
-        final byte[] keyBytes = DatatypeConverter.parseHexBinary(kHex);
-        final byte[] plainBytes = DatatypeConverter.parseHexBinary(pHex);
-        final byte[] ivBytes = DatatypeConverter.parseHexBinary(ivHex);
+        final byte[] keyBytes = AbstractCipherTest.parseHexBinary(kHex);
+        final byte[] plainBytes = AbstractCipherTest.parseHexBinary(pHex);
+        final byte[] ivBytes = AbstractCipherTest.parseHexBinary(ivHex);
 
-        final byte[] aad = DatatypeConverter.parseHexBinary(aadHex);
-        final byte[] cipherBytes = DatatypeConverter.parseHexBinary(cHex+tHex);
+        final byte[] aad = AbstractCipherTest.parseHexBinary(aadHex);
+        final byte[] cipherBytes = AbstractCipherTest.parseHexBinary(cHex+tHex);
 
         final byte[] input = cipherBytes;
         final byte[] output = new byte[plainBytes.length];
@@ -491,11 +490,11 @@ public class GcmCipherTest {
     private void testGcmByteBuffer(final String kHex, final String pHex, final String ivHex, final String aadHex,
                                    final String cHex, final String tHex) throws Exception {
 
-        final byte[] keyBytes = DatatypeConverter.parseHexBinary(kHex);
-        final byte[] plainText = DatatypeConverter.parseHexBinary(pHex);
-        final byte[] ivBytes = DatatypeConverter.parseHexBinary(ivHex);
-        final byte[] aad = DatatypeConverter.parseHexBinary(aadHex);
-        final byte[] cipherText = DatatypeConverter.parseHexBinary(cHex+tHex);
+        final byte[] keyBytes = AbstractCipherTest.parseHexBinary(kHex);
+        final byte[] plainText = AbstractCipherTest.parseHexBinary(pHex);
+        final byte[] ivBytes = AbstractCipherTest.parseHexBinary(ivHex);
+        final byte[] aad = AbstractCipherTest.parseHexBinary(aadHex);
+        final byte[] cipherText = AbstractCipherTest.parseHexBinary(cHex+tHex);
 
         final byte[] encOutput = new byte[cipherText.length];
         final byte[] decOutput = new byte[plainText.length];

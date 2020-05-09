@@ -41,6 +41,8 @@ OSINFO_PROG := $(TARGET)/classes/org/apache/commons/crypto/OsInfo.class
 OS_NAME := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS) --os)
 OS_ARCH := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS) --arch)
 LIB_FOLDER := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS))
+JDK_VER := $(shell $(JAVA) -cp $(TARGET)/classes $(OSINFO_CLASS) --jdk)
+GT_JDK8 := $(shell [ $(JDK_VER) -gt 8 ] && echo true)
 
 commons-crypto := commons-crypto-$(VERSION)
 

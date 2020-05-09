@@ -19,11 +19,9 @@ package org.apache.commons.crypto.cipher;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
@@ -32,7 +30,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
@@ -61,6 +58,7 @@ public abstract class AbstractCipherTest {
     static final byte[] IV = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
             0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
     private CryptoCipher enc, dec;
+    private static final char[] hexCode = "0123456789ABCDEF".toCharArray();
 
     @Before
     public void setup() {
@@ -125,15 +123,11 @@ public abstract class AbstractCipherTest {
             cipherTests = TestData.getTestData(tran);
             assertNotNull(tran, cipherTests);
             for (int i = 0; i != cipherTests.length; i += 5) {
-                final byte[] key = DatatypeConverter
-                        .parseHexBinary(cipherTests[i + 1]);
-                final byte[] iv = DatatypeConverter
-                        .parseHexBinary(cipherTests[i + 2]);
+                final byte[] key = parseHexBinary(cipherTests[i + 1]);
+                final byte[] iv = parseHexBinary(cipherTests[i + 2]);
 
-                final byte[] inputBytes = DatatypeConverter
-                        .parseHexBinary(cipherTests[i + 3]);
-                final byte[] outputBytes = DatatypeConverter
-                        .parseHexBinary(cipherTests[i + 4]);
+                final byte[] inputBytes = parseHexBinary(cipherTests[i + 3]);
+                final byte[] outputBytes = parseHexBinary(cipherTests[i + 4]);
 
                 final ByteBuffer inputBuffer = ByteBuffer
                         .allocateDirect(inputBytes.length);
@@ -235,8 +229,8 @@ public abstract class AbstractCipherTest {
             final byte[] c = new byte[encResult.remaining()];
             encResult.get(c);
             Assert.fail("AES failed encryption - expected "
-                    + new String(DatatypeConverter.printHexBinary(b)) + " got "
-                    + new String(DatatypeConverter.printHexBinary(c)));
+                    + new String(printHexBinary(b)) + " got "
+                    + new String(printHexBinary(c)));
         }
 
         //
@@ -349,5 +343,50 @@ public abstract class AbstractCipherTest {
         return (CryptoCipher) ReflectionUtils.newInstance(
                 ReflectionUtils.getClassByName(cipherClass), props,
                 transformation);
+    }
+    
+    public static byte[] parseHexBinary(String s) {
+        final int len = s.length();
+
+        // "111" is not a valid hex encoding.
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("hexBinary needs to be even-length: " + s);
+        }
+
+        byte[] out = new byte[len / 2];
+
+        for (int i = 0; i < len; i += 2) {
+            int h = hexToBin(s.charAt(i));
+            int l = hexToBin(s.charAt(i + 1));
+            if (h == -1 || l == -1) {
+                throw new IllegalArgumentException("contains illegal character for hexBinary: " + s);
+            }
+
+            out[i / 2] = (byte) (h * 16 + l);
+        }
+
+        return out;
+    }
+
+    private static int hexToBin(char ch) {
+        if ('0' <= ch && ch <= '9') {
+            return ch - '0';
+        }
+        if ('A' <= ch && ch <= 'F') {
+            return ch - 'A' + 10;
+        }
+        if ('a' <= ch && ch <= 'f') {
+            return ch - 'a' + 10;
+        }
+        return -1;
+    }
+    
+    public String printHexBinary(byte[] data) {
+        StringBuilder r = new StringBuilder(data.length * 2);
+        for (byte b : data) {
+            r.append(hexCode[(b >> 4) & 0xF]);
+            r.append(hexCode[(b & 0xF)]);
+        }
+        return r.toString();
     }
 }

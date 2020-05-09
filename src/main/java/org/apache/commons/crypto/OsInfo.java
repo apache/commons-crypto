@@ -20,6 +20,7 @@ package org.apache.commons.crypto;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 /**
  * Provides OS name and architecture name.
@@ -122,6 +123,9 @@ final class OsInfo {
             } else if ("--arch".equals(args[0])) {
                 System.out.print(getArchName());
                 return;
+            } else if ("--jdk".equals(args[0])) {
+                System.out.print(getJDKMajorVersionNumber());
+                return;
             }
         }
 
@@ -182,6 +186,18 @@ final class OsInfo {
             }
         }
         return translateArchNameToFolderName(osArch);
+    }
+    
+    static String getJDKMajorVersionNumber() {
+        return translateJDKStringToMajorVersionNumber(System.getProperty("java.version"));
+    }
+
+    private static String translateJDKStringToMajorVersionNumber(String jdkVersion) {
+        StringTokenizer tokens = new StringTokenizer(jdkVersion, ".");
+        String jdkMajorVersion = tokens.nextToken();
+        if(jdkMajorVersion.equals("1"))
+            jdkMajorVersion = tokens.nextToken();
+        return jdkMajorVersion;
     }
 
     /**
