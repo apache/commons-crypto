@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.stream.input;
 
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
@@ -79,8 +80,8 @@ public class ChannelInput implements Input {
         final int size = (int) Math.min(SKIP_BUFFER_SIZE, remaining);
         final ByteBuffer skipBuffer = getSkipBuf();
         while (remaining > 0) {
-            skipBuffer.clear();
-            skipBuffer.limit((int) Math.min(size, remaining));
+            ((Buffer)skipBuffer).clear();
+            ((Buffer)skipBuffer).limit((int) Math.min(size, remaining));
             nr = read(skipBuffer);
             if (nr < 0) {
                 break;

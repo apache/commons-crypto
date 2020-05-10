@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.jna;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
@@ -110,7 +111,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
             final ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
             final int retVal = OpenSslNativeJna.RAND_bytes(buf, bytes.length);
             throwOnError(retVal);
-            buf.rewind();
+            ((Buffer)buf).rewind();
             buf.get(bytes,0, bytes.length);
         }
     }

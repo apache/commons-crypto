@@ -19,6 +19,7 @@ package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.security.InvalidAlgorithmParameterException;
@@ -269,7 +270,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
             return 0;
         } else if (n <= outBuffer.remaining()) {
             final int pos = outBuffer.position() + (int) n;
-            outBuffer.position(pos);
+            ((Buffer)outBuffer).position(pos);
             return n;
         } else {
             /*
@@ -327,9 +328,9 @@ public class CtrCryptoInputStream extends CryptoInputStream {
         final int toRead = buf.remaining();
         if (toRead <= unread) {
             final int limit = outBuffer.limit();
-            outBuffer.limit(outBuffer.position() + toRead);
+            ((Buffer)outBuffer).limit(outBuffer.position() + toRead);
             buf.put(outBuffer);
-            outBuffer.limit(limit);
+            ((Buffer)outBuffer).limit(limit);
             return toRead;
         }
         buf.put(outBuffer);
@@ -353,7 +354,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
         if (position >= getStreamPosition() && position <= getStreamOffset()) {
             final int forward = (int) (position - getStreamPosition());
             if (forward > 0) {
-                outBuffer.position(outBuffer.position() + forward);
+                ((Buffer)outBuffer).position(outBuffer.position() + forward);
             }
         } else {
             input.seek(position);
@@ -423,18 +424,18 @@ public class CtrCryptoInputStream extends CryptoInputStream {
             return;
         }
 
-        inBuffer.flip();
-        outBuffer.clear();
+        ((Buffer)inBuffer).flip();
+        ((Buffer)outBuffer).clear();
         decryptBuffer(outBuffer);
-        inBuffer.clear();
-        outBuffer.flip();
+        ((Buffer)inBuffer).clear();
+        ((Buffer)outBuffer).flip();
 
         if (padding > 0) {
             /*
              * The plain text and cipher text have a 1:1 mapping, they start at
              * the same position.
              */
-            outBuffer.position(padding);
+            ((Buffer)outBuffer).position(padding);
         }
     }
 
@@ -458,9 +459,9 @@ public class CtrCryptoInputStream extends CryptoInputStream {
             // There is no real data in inBuffer.
             return;
         }
-        inBuffer.flip();
+        ((Buffer)inBuffer).flip();
         decryptBuffer(buf);
-        inBuffer.clear();
+        ((Buffer)inBuffer).clear();
     }
 
     /**
@@ -479,21 +480,21 @@ public class CtrCryptoInputStream extends CryptoInputStream {
         final int limit = buf.limit();
         int n = 0;
         while (n < len) {
-            buf.position(offset + n);
-            buf.limit(offset + n + Math.min(len - n, inBuffer.remaining()));
+            ((Buffer)buf).position(offset + n);
+            ((Buffer)buf).limit(offset + n + Math.min(len - n, inBuffer.remaining()));
             inBuffer.put(buf);
             // Do decryption
             try {
                 decrypt();
-                buf.position(offset + n);
-                buf.limit(limit);
+                ((Buffer)buf).position(offset + n);
+                ((Buffer)buf).limit(limit);
                 n += outBuffer.remaining();
                 buf.put(outBuffer);
             } finally {
                 padding = postDecryption(streamOffset - (len - n));
             }
         }
-        buf.position(pos);
+        ((Buffer)buf).position(pos);
     }
 
     /**
@@ -515,7 +516,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
              */
             resetCipher(position);
             padding = getPadding(position);
-            inBuffer.position(padding);
+            ((Buffer)inBuffer).position(padding);
         }
         return padding;
     }
@@ -587,12 +588,12 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      */
     protected void resetStreamOffset(final long offset) throws IOException {
         streamOffset = offset;
-        inBuffer.clear();
-        outBuffer.clear();
-        outBuffer.limit(0);
+        ((Buffer)inBuffer).clear();
+        ((Buffer)outBuffer).clear();
+        ((Buffer)outBuffer).limit(0);
         resetCipher(offset);
         padding = getPadding(offset);
-        inBuffer.position(padding); // Set proper position for input data.
+        ((Buffer)inBuffer).position(padding); // Set proper position for input data.
     }
 
     /**

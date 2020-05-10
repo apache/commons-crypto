@@ -20,6 +20,7 @@ package org.apache.commons.crypto.stream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.security.InvalidAlgorithmParameterException;
@@ -203,7 +204,7 @@ public class CryptoInputStream extends InputStream implements
         inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
         outBuffer = ByteBuffer.allocateDirect(this.bufferSize
                 + cipher.getBlockSize());
-        outBuffer.limit(0);
+        ((Buffer)outBuffer).limit(0);
 
         initCipher();
     }
@@ -293,14 +294,14 @@ public class CryptoInputStream extends InputStream implements
         while (remaining > 0) {
             if (remaining <= outBuffer.remaining()) {
                 // Skip in the remaining buffer
-                final int pos = outBuffer.position() + (int) remaining;
-                outBuffer.position(pos);
+                final int pos = ((Buffer)outBuffer).position() + (int) remaining;
+                ((Buffer)outBuffer).position(pos);
 
                 remaining = 0;
                 break;
             }
-            remaining -= outBuffer.remaining();
-            outBuffer.clear();
+            remaining -= ((Buffer)outBuffer).remaining();
+            ((Buffer)outBuffer).clear();
 
             // we loop for new data
             nd = 0;
@@ -426,10 +427,10 @@ public class CryptoInputStream extends InputStream implements
         remaining = outBuffer.remaining();
         final int toRead = dst.remaining();
         if (toRead <= remaining) {
-            final int limit = outBuffer.limit();
-            outBuffer.limit(outBuffer.position() + toRead);
+            final int limit = ((Buffer)outBuffer).limit();
+            ((Buffer)outBuffer).limit(((Buffer)outBuffer).position() + toRead);
             dst.put(outBuffer);
-            outBuffer.limit(limit);
+            ((Buffer)outBuffer).limit(limit);
             return toRead;
         }
         dst.put(outBuffer);
@@ -542,8 +543,8 @@ public class CryptoInputStream extends InputStream implements
      */
     protected void decrypt() throws IOException {
         // Prepare the input buffer and clear the out buffer
-        inBuffer.flip();
-        outBuffer.clear();
+        ((Buffer)inBuffer).flip();
+        ((Buffer)outBuffer).clear();
 
         try {
             cipher.update(inBuffer, outBuffer);
@@ -552,8 +553,8 @@ public class CryptoInputStream extends InputStream implements
         }
 
         // Clear the input buffer and prepare out buffer
-        inBuffer.clear();
-        outBuffer.flip();
+        ((Buffer)inBuffer).clear();
+        ((Buffer)outBuffer).flip();
     }
 
     /**
@@ -563,8 +564,8 @@ public class CryptoInputStream extends InputStream implements
      */
     protected void decryptFinal() throws IOException {
         // Prepare the input buffer and clear the out buffer
-        inBuffer.flip();
-        outBuffer.clear();
+        ((Buffer)inBuffer).flip();
+        ((Buffer)outBuffer).clear();
 
         try {
             cipher.doFinal(inBuffer, outBuffer);
@@ -578,8 +579,8 @@ public class CryptoInputStream extends InputStream implements
         }
 
         // Clear the input buffer and prepare out buffer
-        inBuffer.clear();
-        outBuffer.flip();
+        ((Buffer)inBuffer).clear();
+        ((Buffer)outBuffer).flip();
     }
 
     /**

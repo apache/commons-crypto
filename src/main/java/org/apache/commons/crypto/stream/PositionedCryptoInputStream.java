@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
@@ -174,7 +175,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
             final byte[] iv = getInitIV().clone();
             resetCipher(state, position, iv);
             byte padding = getPadding(position);
-            inByteBuffer.position(padding); // Set proper position for input data.
+            ((Buffer)inByteBuffer).position(padding); // Set proper position for input data.
 
             int n = 0;
             while (n < length) {
@@ -213,17 +214,17 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
             // There is no real data in inBuffer.
             return;
         }
-        inByteBuffer.flip();
-        outByteBuffer.clear();
+        ((Buffer)inByteBuffer).flip();
+        ((Buffer)outByteBuffer).clear();
         decryptBuffer(state, inByteBuffer, outByteBuffer);
-        inByteBuffer.clear();
-        outByteBuffer.flip();
+        ((Buffer)inByteBuffer).clear();
+        ((Buffer)outByteBuffer).flip();
         if (padding > 0) {
             /*
              * The plain text and cipher text have a 1:1 mapping, they start at
              * the same position.
              */
-            outByteBuffer.position(padding);
+            ((Buffer)outByteBuffer).position(padding);
         }
     }
 
@@ -281,7 +282,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
              */
             resetCipher(state, position, iv);
             padding = getPadding(position);
-            inByteBuffer.position(padding);
+            ((Buffer)inByteBuffer).position(padding);
         }
         return padding;
     }
@@ -362,7 +363,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      */
     private void returnBuffer(final ByteBuffer buf) {
         if (buf != null) {
-            buf.clear();
+            ((Buffer)buf).clear();
             bufferPool.add(buf);
         }
     }

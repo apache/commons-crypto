@@ -19,6 +19,7 @@ package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 import java.security.InvalidAlgorithmParameterException;
@@ -272,18 +273,18 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
             return;
         }
 
-        inBuffer.flip();
-        outBuffer.clear();
+        ((Buffer)inBuffer).flip();
+        ((Buffer)outBuffer).clear();
         encryptBuffer(outBuffer);
-        inBuffer.clear();
-        outBuffer.flip();
+        ((Buffer)inBuffer).clear();
+        ((Buffer)outBuffer).flip();
 
         if (padding > 0) {
             /*
              * The plain text and cipher text have a 1:1 mapping, they start at
              * the same position.
              */
-            outBuffer.position(padding);
+            ((Buffer)outBuffer).position(padding);
             padding = 0;
         }
 
@@ -330,7 +331,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
         final long counter = streamOffset
                 / cipher.getBlockSize();
         padding = (byte) (streamOffset % cipher.getBlockSize());
-        inBuffer.position(padding); // Set proper position for input data.
+        ((Buffer)inBuffer).position(padding); // Set proper position for input data.
 
         CtrCryptoInputStream.calculateIV(initIV, counter, iv);
         try {

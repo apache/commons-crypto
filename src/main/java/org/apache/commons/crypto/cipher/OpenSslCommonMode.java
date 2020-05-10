@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.cipher;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.spec.AlgorithmParameterSpec;
@@ -58,8 +59,8 @@ class OpenSslCommonMode extends OpenSslFeedbackCipher {
         final int len = OpenSslNative.update(context, input, input.position(),
                 input.remaining(), output, output.position(),
                 output.remaining());
-        input.position(input.limit());
-        output.position(output.position() + len);
+        ((Buffer)input).position(input.limit());
+        ((Buffer)output).position(output.position() + len);
 
         return len;
     }
@@ -97,14 +98,14 @@ class OpenSslCommonMode extends OpenSslFeedbackCipher {
                 input.remaining(), output, output.position(), output.remaining());
         totalLen += len;
 
-        input.position(input.limit());
-        output.position(output.position() + len);
+        ((Buffer)input).position(input.limit());
+        ((Buffer)output).position(output.position() + len);
 
         len = OpenSslNative.doFinal(context, output, output.position(),
                 output.remaining());
         totalLen += len;
 
-        output.position(output.position() + len);
+        ((Buffer)output).position(output.position() + len);
 
         return totalLen;
     }

@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.cipher;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.InvalidAlgorithmParameterException;
@@ -99,8 +100,8 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             len = OpenSslNative.update(context, input, input.position(),
                     input.remaining(), output, output.position(),
                     output.remaining());
-            input.position(input.limit());
-            output.position(output.position() + len);
+            ((Buffer)input).position(input.limit());
+            ((Buffer)output).position(output.position() + len);
         }
 
         return len;
@@ -160,7 +161,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             // set tag to EVP_Cipher for integrity verification in doFinal
             final ByteBuffer tag = ByteBuffer.allocate(getTagLen());
             tag.put(input, input.length - getTagLen(), getTagLen());
-            tag.flip();
+            ((Buffer)tag).flip();
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_SET_TAG.getValue(), getTagLen(), tag);
         } else {
             len = OpenSslNative.updateByteArray(context, input, inputOffset,
@@ -213,7 +214,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
                 // retrieve tag
                 tag.put(inputFinal, inputFinal.length - getTagLen(), getTagLen());
-                tag.flip();
+                ((Buffer)tag).flip();
 
             } else {
                 // if no buffered input, just use the input directly
@@ -225,11 +226,11 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
                         input.remaining() - getTagLen(), output, output.position(),
                         output.remaining());
 
-                input.position(input.position() + len);
+                ((Buffer)input).position(input.position() + len);
 
                 // retrieve tag
                 tag.put(input);
-                tag.flip();
+                ((Buffer)tag).flip();
             }
 
             // set tag to EVP_Cipher for integrity verification in doFinal
@@ -239,15 +240,15 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             len = OpenSslNative.update(context, input, input.position(),
                     input.remaining(), output, output.position(),
                     output.remaining());
-            input.position(input.limit());
+            ((Buffer)input).position(input.limit());
         }
 
         totalLen += len;
-        output.position(output.position() + len);
+        ((Buffer)output).position(output.position() + len);
 
         len = OpenSslNative.doFinal(context, output, output.position(),
                 output.remaining());
-        output.position(output.position() + len);
+        ((Buffer)output).position(output.position() + len);
         totalLen += len;
 
         // Keep the similar behavior as JCE, append the tag to end of output

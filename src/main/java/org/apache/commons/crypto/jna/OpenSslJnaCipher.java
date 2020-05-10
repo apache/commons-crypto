@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.jna;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
@@ -152,8 +153,8 @@ class OpenSslJnaCipher implements CryptoCipher {
         final int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining());
         throwOnError(retVal);
         final int len = outlen[0];
-        inBuffer.position(inBuffer.limit());
-        outBuffer.position(outBuffer.position() + len);
+        ((Buffer)inBuffer).position(inBuffer.limit());
+        ((Buffer)outBuffer).position(outBuffer.position() + len);
         return len;
     }
 
@@ -205,7 +206,7 @@ class OpenSslJnaCipher implements CryptoCipher {
         final int retVal = OpenSslNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
         throwOnError(retVal);
         final int len = uptLen + outlen[0];
-        outBuffer.position(outBuffer.position() + outlen[0]);
+        ((Buffer)outBuffer).position(outBuffer.position() + outlen[0]);
         return len;
     }
 

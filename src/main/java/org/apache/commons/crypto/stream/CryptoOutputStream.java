@@ -20,6 +20,7 @@ package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 import java.security.InvalidAlgorithmParameterException;
@@ -314,12 +315,12 @@ public class CryptoOutputStream extends OutputStream implements
                 // to void copy twice, we set the limit to copy directly
                 final int oldLimit = src.limit();
                 final int newLimit = src.position() + space;
-                src.limit(newLimit);
+                ((Buffer)src).limit(newLimit);
 
                 inBuffer.put(src);
 
                 // restore the old limit
-                src.limit(oldLimit);
+                ((Buffer)src).limit(oldLimit);
 
                 remaining -= space;
                 encrypt();
@@ -352,8 +353,8 @@ public class CryptoOutputStream extends OutputStream implements
      */
     protected void encrypt() throws IOException {
 
-        inBuffer.flip();
-        outBuffer.clear();
+        ((Buffer)inBuffer).flip();
+        ((Buffer)outBuffer).clear();
 
         try {
             cipher.update(inBuffer, outBuffer);
@@ -361,8 +362,8 @@ public class CryptoOutputStream extends OutputStream implements
             throw new IOException(e);
         }
 
-        inBuffer.clear();
-        outBuffer.flip();
+        ((Buffer)inBuffer).clear();
+        ((Buffer)outBuffer).flip();
 
         // write to output
         while (outBuffer.hasRemaining()) {
@@ -376,8 +377,8 @@ public class CryptoOutputStream extends OutputStream implements
      * @throws IOException if an I/O error occurs.
      */
     protected void encryptFinal() throws IOException {
-        inBuffer.flip();
-        outBuffer.clear();
+        ((Buffer)inBuffer).flip();
+        ((Buffer)outBuffer).clear();
 
         try {
             cipher.doFinal(inBuffer, outBuffer);
@@ -389,8 +390,8 @@ public class CryptoOutputStream extends OutputStream implements
             throw new IOException(e);
         }
 
-        inBuffer.clear();
-        outBuffer.flip();
+        ((Buffer)inBuffer).clear();
+        ((Buffer)outBuffer).flip();
 
         // write to output
         while (outBuffer.hasRemaining()) {
