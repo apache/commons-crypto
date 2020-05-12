@@ -42,7 +42,8 @@ before_install:
   - ls -la /usr/local/opt/openssl@1.1/lib
   - ls -la /usr/lib
   - ls -la /usr/local/lib
-  - sudo cp /usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib /usr/local/opt/openssl@1.1/lib/libcrypto.1.1.dylib /usr/lib/
+  - rm -f /usr/lib/libcrypto.dylib
+  - sudo ln -s /usr/local/opt/openssl@1.1/lib/libcrypto.1.1.dylib /usr/lib/libcrypto.dylib
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test jacoco:report coveralls:report -B -V
 after_success: mvn site -B -V
