@@ -430,9 +430,9 @@ The following provides more details on the included cryptographic software:
       </build>
     </profile>
     <profile>
-      <id>jdk11</id>
+      <id>jdkgte10</id>
       <activation>
-        <jdk>11</jdk>
+        <jdk>[10,)</jdk>
       </activation>
       <build>
         <plugins>
