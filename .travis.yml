@@ -37,6 +37,7 @@ before_install:
   - export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
   - export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
   - openssl version -a
+  - ls -la /usr/local/lib
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test jacoco:report coveralls:report -B -V
 after_success: mvn site -B -V
