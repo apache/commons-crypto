@@ -31,8 +31,8 @@ before_install:
     curl -L --cookie 'oraclelicense=accept-securebackup-cookie;' http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip
     sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security
     rm /tmp/policy.zip
-  - brew uninstall libressl
   - brew install openssl
+  - ls -la /usr/local/Cellar/openssl
   - openssl version -a
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test jacoco:report coveralls:report -B -V
