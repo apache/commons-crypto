@@ -31,11 +31,12 @@ before_install:
     curl -L --cookie 'oraclelicense=accept-securebackup-cookie;' http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip -o /tmp/policy.zip
     sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security
     rm /tmp/policy.zip
-  - brew update
   - brew install openssl@1.1 --force
   - export PATH="/usr/local/opt/openssl@1.1/bin:$PATH" >> ~/.bash_profile
   - export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
   - export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+  - export LD_LIBRARY_PATH="/usr/local/opt/openssl@1.1/lib:$LD_LIBRARY_PATH"
+  - export DYLD_LIBRARY_PATH="/usr/local/opt/openssl@1.1/lib:$DYLD_LIBRARY_PATH"
   - openssl version -a
   - ls -la /usr/local/lib
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
