@@ -38,7 +38,8 @@ before_install:
   - export LD_LIBRARY_PATH="/usr/local/opt/openssl@1.1/lib:$LD_LIBRARY_PATH"
   - export DYLD_LIBRARY_PATH="/usr/local/opt/openssl@1.1/lib:$DYLD_LIBRARY_PATH"
   - openssl version -a
-  - ls -la /usr/local/lib
+  - ls -la /usr/local/etc/openssl@1.1
+  - ls -la /usr/local/opt/openssl@1.1/lib
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test jacoco:report coveralls:report -B -V
 after_success: mvn site -B -V
