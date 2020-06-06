@@ -19,19 +19,17 @@ package org.apache.commons.crypto.cipher;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.crypto.spec.GCMParameterSpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.utils.ReflectionUtils;

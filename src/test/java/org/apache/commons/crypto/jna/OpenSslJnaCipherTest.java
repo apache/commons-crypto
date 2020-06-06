@@ -20,7 +20,6 @@ package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.junit.Assume;
-import org.junit.Test;
 
 public class OpenSslJnaCipherTest extends AbstractCipherTest {
 
