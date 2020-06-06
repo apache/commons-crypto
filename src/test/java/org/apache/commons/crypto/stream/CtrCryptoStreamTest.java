@@ -57,7 +57,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     @Override
     protected CtrCryptoInputStream getCryptoInputStream(final String transformation, final Properties props,
             final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
-            boolean withChannel) throws IOException {
+            final boolean withChannel) throws IOException {
         if (withChannel) {
             return new CtrCryptoInputStream(props, Channels.newChannel(bais), key,
                     ((IvParameterSpec)params).getIV());
@@ -96,41 +96,41 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
             }
         }
 
-        StreamInput streamInput = new StreamInput(new ByteArrayInputStream(encData), 0);
+        final StreamInput streamInput = new StreamInput(new ByteArrayInputStream(encData), 0);
         try {
             streamInput.seek(0);
             Assert.fail("Expected UnsupportedOperationException.");
-        } catch (UnsupportedOperationException ex) {
+        } catch (final UnsupportedOperationException ex) {
         	Assert.assertEquals(ex.getMessage(), "Seek is not supported by this implementation");
         }
         try {
             streamInput.read(0, new byte[0], 0, 0);
             Assert.fail("Expected UnsupportedOperationException.");
-        } catch (UnsupportedOperationException ex) {
+        } catch (final UnsupportedOperationException ex) {
             Assert.assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
         }
         Assert.assertEquals(streamInput.available(), encData.length);
 
-        ChannelInput channelInput = new ChannelInput(Channels.newChannel(new ByteArrayInputStream(encData)));
+        final ChannelInput channelInput = new ChannelInput(Channels.newChannel(new ByteArrayInputStream(encData)));
         try {
             channelInput.seek(0);
             Assert.fail("Expected UnsupportedOperationException.");
-        } catch (UnsupportedOperationException ex) {
+        } catch (final UnsupportedOperationException ex) {
             Assert.assertEquals(ex.getMessage(), "Seek is not supported by this implementation");
         }
         try {
             channelInput.read(0, new byte[0], 0, 0);
             Assert.fail("Expected UnsupportedOperationException.");
-        } catch (UnsupportedOperationException ex) {
+        } catch (final UnsupportedOperationException ex) {
             Assert.assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
         }
         Assert.assertEquals(channelInput.available(), 0);
 
-        CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, getCipher(cipherClass),
+        final CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, getCipher(cipherClass),
                 defaultBufferSize, key, iv);
 
-        Properties props = new Properties();
-        String bufferSize = "4096";
+        final Properties props = new Properties();
+        final String bufferSize = "4096";
         props.put(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, bufferSize);
         in.setStreamOffset(smallBufferSize);
 
@@ -144,7 +144,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
         in.close();
 
-        CtrCryptoOutputStream out = new CtrCryptoOutputStream(new ChannelOutput(
+        final CtrCryptoOutputStream out = new CtrCryptoOutputStream(new ChannelOutput(
                 Channels.newChannel(baos)), getCipher(cipherClass),
                 Integer.parseInt(bufferSize), key, iv);
         out.setStreamOffset(smallBufferSize);
@@ -165,15 +165,15 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     protected void doDecryptTest(final String cipherClass, final boolean withChannel)
             throws IOException {
 
-        CtrCryptoInputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        final CtrCryptoInputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
                 getCipher(cipherClass), defaultBufferSize, iv, withChannel);
 
-        ByteBuffer buf = ByteBuffer.allocateDirect(dataLen);
+        final ByteBuffer buf = ByteBuffer.allocateDirect(dataLen);
         buf.put(encData);
         buf.rewind();
         in.decrypt(buf, 0, dataLen);
-        byte[] readData = new byte[dataLen];
-        byte[] expectedData = new byte[dataLen];
+        final byte[] readData = new byte[dataLen];
+        final byte[] expectedData = new byte[dataLen];
         buf.get(readData);
         System.arraycopy(data, 0, expectedData, 0, dataLen);
         Assert.assertArrayEquals(readData, expectedData);
@@ -181,7 +181,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
         try {
             in.decryptBuffer(buf);
             Assert.fail("Expected IOException.");
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Assert.assertEquals(ex.getCause().getClass(), ShortBufferException.class);
         }
 

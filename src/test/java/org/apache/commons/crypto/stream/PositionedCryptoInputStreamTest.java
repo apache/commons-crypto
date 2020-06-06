@@ -156,7 +156,7 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void doMultipleReadTest() throws Exception{
-        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final PositionedCryptoInputStream in = getCryptoInputStream(0);
         final String cipherClass = in.getCipher().getClass().getName();
         doMultipleReadTest(cipherClass);
     }
@@ -179,7 +179,7 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void doPositionedReadTests() throws Exception {
-    	PositionedCryptoInputStream in = getCryptoInputStream(0);
+    	final PositionedCryptoInputStream in = getCryptoInputStream(0);
     	final String cipherClass = in.getCipher().getClass().getName();
     	doPositionedReadTests(cipherClass);
     }
@@ -201,7 +201,7 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void doReadFullyTests() throws Exception {
-        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final PositionedCryptoInputStream in = getCryptoInputStream(0);
         final String cipherClass = in.getCipher().getClass().getName();
         doReadFullyTests(cipherClass);
     }
@@ -218,7 +218,7 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void doSeekTests() throws Exception{
-        PositionedCryptoInputStream in = getCryptoInputStream(0);
+        final PositionedCryptoInputStream in = getCryptoInputStream(0);
         final String cipherClass = in.getCipher().getClass().getName();
         doSeekTests(cipherClass);
     }

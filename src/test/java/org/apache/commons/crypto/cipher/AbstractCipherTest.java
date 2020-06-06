@@ -163,7 +163,7 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void testInvalidKey() throws Exception {
-        for (String transform : transformations) {
+        for (final String transform : transformations) {
             try {
                 final CryptoCipher cipher = getCipher(transform);
                 Assert.assertNotNull(cipher);
@@ -179,7 +179,7 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void testInvalidIV() throws Exception {
-        for (String transform : transformations) {
+        for (final String transform : transformations) {
             try {
                 final CryptoCipher cipher = getCipher(transform);
                 Assert.assertNotNull(cipher);
@@ -195,7 +195,7 @@ public abstract class AbstractCipherTest {
 
     @Test
     public void testInvalidIVClass() throws Exception {
-        for (String transform : transformations) {
+        for (final String transform : transformations) {
             try {
                 final CryptoCipher cipher = getCipher(transform);
                 Assert.assertNotNull(cipher);
