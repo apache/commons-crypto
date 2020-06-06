@@ -113,6 +113,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         }
     }
 
+    @Override
     @Test(expected = InvalidKeyException.class, timeout = 120000)
     public void testInvalidKey() throws Exception {
         Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
@@ -125,6 +126,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         cipher.init(OpenSsl.ENCRYPT_MODE, invalidKey, new IvParameterSpec(IV));
     }
 
+    @Override
     @Test(expected = InvalidAlgorithmParameterException.class, timeout = 120000)
     public void testInvalidIV() throws Exception {
         Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
@@ -137,6 +139,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(invalidIV));
     }
 
+    @Override
     @Test(expected = InvalidAlgorithmParameterException.class, timeout = 120000)
     public void testInvalidIVClass() throws Exception {
         final OpenSsl cipher = OpenSsl.getInstance("AES/CTR/NoPadding");
