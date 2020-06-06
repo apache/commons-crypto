@@ -95,13 +95,12 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             input.get(inputBuf, 0, inputLen);
             inBuffer.write(inputBuf, 0, inputLen);
             return 0;
-        } else {
-            len = OpenSslNative.update(context, input, input.position(),
-                    input.remaining(), output, output.position(),
-                    output.remaining());
-            input.position(input.limit());
-            output.position(output.position() + len);
         }
+        len = OpenSslNative.update(context, input, input.position(),
+                input.remaining(), output, output.position(),
+                output.remaining());
+        input.position(input.limit());
+        output.position(output.position() + len);
 
         return len;
     }
@@ -119,10 +118,9 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             // is successfully verified
             inBuffer.write(input, inputOffset, inputLen);
             return 0;
-        } else {
-            return OpenSslNative.updateByteArray(context, input, inputOffset,
-                    inputLen, output, outputOffset, output.length - outputOffset);
         }
+        return OpenSslNative.updateByteArray(context, input, inputOffset,
+                inputLen, output, outputOffset, output.length - outputOffset);
     }
 
     @Override
