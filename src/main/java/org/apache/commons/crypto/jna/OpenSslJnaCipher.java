@@ -105,8 +105,8 @@ class OpenSslJnaCipher implements CryptoCipher {
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
 
-        if ((algMode == AlgorithmMode.AES_CBC || 
-             algMode == AlgorithmMode.AES_CTR) 
+        if ((algMode == AlgorithmMode.AES_CBC ||
+             algMode == AlgorithmMode.AES_CTR)
             && iv.length != IV_LENGTH) {
             throw new InvalidAlgorithmParameterException("Wrong IV length: must be 16 bytes long");
         }

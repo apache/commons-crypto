@@ -93,8 +93,8 @@ public class PositionedCryptoInputStreamTest {
                 Arrays.copyOf(encData, encData.length)), cipher, bufferSize,
                 key, iv, 0);
     }
-    
-    private PositionedCryptoInputStream getCryptoInputStream(final int streamOffset) 
+
+    private PositionedCryptoInputStream getCryptoInputStream(final int streamOffset)
             throws IOException {
         return new PositionedCryptoInputStream(props, new PositionedInputForTest(
                 Arrays.copyOf(encData, encData.length)), key, iv, streamOffset);
@@ -154,7 +154,7 @@ public class PositionedCryptoInputStreamTest {
             }
         }
     }
-    
+
     private void doMultipleReadTest() throws Exception{
         PositionedCryptoInputStream in = getCryptoInputStream(0);
         final String cipherClass = in.getCipher().getClass().getName();
@@ -177,7 +177,7 @@ public class PositionedCryptoInputStreamTest {
         testPositionedReadNone(cipherClass, -1, length, bufferSize);
         testPositionedReadNone(cipherClass, dataLen, length, bufferSize);
     }
-    
+
     private void doPositionedReadTests() throws Exception {
     	PositionedCryptoInputStream in = getCryptoInputStream(0);
     	final String cipherClass = in.getCipher().getClass().getName();
@@ -199,7 +199,7 @@ public class PositionedCryptoInputStreamTest {
         testReadFullyFailed(cipherClass, dataLen - length + 1, length,
                 bufferSize);
     }
-    
+
     private void doReadFullyTests() throws Exception {
         PositionedCryptoInputStream in = getCryptoInputStream(0);
         final String cipherClass = in.getCipher().getClass().getName();
@@ -216,7 +216,7 @@ public class PositionedCryptoInputStreamTest {
         // test exception when position = -1
         testSeekFailed(cipherClass, -1, bufferSize);
     }
-    
+
     private void doSeekTests() throws Exception{
         PositionedCryptoInputStream in = getCryptoInputStream(0);
         final String cipherClass = in.getCipher().getClass().getName();
