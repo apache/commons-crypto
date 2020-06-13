@@ -10,12 +10,23 @@ Requirements:
 * export JAVA_HOME
 * Maven 3.0 or above
 * Make
-* OpenSSL devel 1.0.1c or above (Openssl library header files are required)
+* OpenSSL devel 1.1.1 or above (OpenSSL library header files are required)
 * GCC
 * G++
 
-For win64 on Ubuntu; apt install x86_64-w64-mingw32-gcc
-For win32 on Ubuntu: apt install gcc-mingw-w64-i686
+Profile win64 on Ubuntu 64-bit:
+apt-get install mingw-w64
+
+apt install x86_64-w64-mingw32-gcc
+
+Profile win32 on Ubuntu 64-bit:
+apt install gcc-mingw-w64-i686
+
+Profile linux32 on Ubuntu 64-bit:
+dpkg --add-architecture i386
+apt-get update
+apt-get install libssl-dev:i386
+sudo apt-get install g++-multilib
 
 ----------------------------------------------------------------------------------
 Install JCE Unlimited Strength Jurisdiction Policy Files:
@@ -47,6 +58,8 @@ Upgrade OpenSSL in Mac:
   $ brew link openssl --force
 
 Get OpenSSL headers: sudo apt -y install libssl-dev
+
+Cross compile to 32-bit from Linux 64-bit: sudo apt-get install gcc-multilib
 
 ----------------------------------------------------------------------------------
 Maven build goals:
