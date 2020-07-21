@@ -19,11 +19,44 @@ language: java
 matrix:
   include:
 
-    - name: "x64 / Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
+    # This job tests x64 and i386 builds. Tests x64 for proper execution.
+    - name: "x64,i386 / Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
       arch: amd64
       os: linux
       dist: trusty
       jdk: openjdk8
+      addons:
+        apt:
+          packages:
+            - gcc-multilib
+            - g++-multilib
+      env:
+         - OPENSSL_HOME=/usr/
+      install: |
+        sudo ln -s /usr/include/x86_64-linux-gnu /usr/include/i386-linux-gnu
+        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Plinux32
+
+    # Job tests win32,win64 builds. But cannot test execution.
+    - name: "win32,win64 / Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
+      arch: amd64
+      os: linux
+      dist: trusty
+      jdk: openjdk8
+      addons:
+        apt:
+          packages:
+            - gcc-mingw-w64
+            - g++-mingw-w64
+            - libssl-dev
+      env:
+         - OPENSSL_HOME=/usr/
+      install: |
+        sudo ln -s /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl/opensslconf.h
+        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin64
+        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin32
+      script: echo DONE
+      after_success: echo DONE
 
     - name: "x64 / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
       arch: amd64
@@ -36,11 +69,10 @@ matrix:
       os: linux
       dist: xenial
       jdk: openjdk8
-      env:
-        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-arm64
       addons:
         apt:
           packages:
+            - openjdk-8-jdk-headless
             - maven
 
     - name: "aarch64 / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
@@ -48,11 +80,10 @@ matrix:
       os: linux
       dist: bionic
       jdk: openjdk8
-      env:
-        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-arm64
       addons:
         apt:
           packages:
+            - openjdk-8-jdk-headless
             - maven
 
     - name: "ppc64le / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
