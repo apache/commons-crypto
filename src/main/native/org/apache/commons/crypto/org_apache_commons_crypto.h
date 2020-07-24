@@ -148,7 +148,7 @@ void *do_version_dlsym(JNIEnv *env, void *handle) {
 #pragma warning(disable:4267)        // Possible loss of data.
 #pragma warning(disable:4996)        // Use of deprecated function.
 
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
 #include <jni.h>
 
