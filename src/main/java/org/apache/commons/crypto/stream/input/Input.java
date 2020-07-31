@@ -34,17 +34,17 @@ public interface Input {
      * <p>
      * An attempt is made to read up to <i>r</i> bytes from the input, where
      * <i>r</i> is the number of bytes remaining in the buffer, that is,
-     * <tt>dst.remaining()</tt>, at the moment this method is invoked.
+     * {@code dst.remaining()}, at the moment this method is invoked.
      *
      * <p>
-     * Suppose that a byte sequence of length <i>n</i> is read, where <tt>0</tt>
-     * &nbsp;<tt>&lt;=</tt>&nbsp;<i>n</i>&nbsp;<tt>&lt;=</tt>&nbsp;<i>r</i>.
+     * Suppose that a byte sequence of length <i>n</i> is read, where {@code 0}
+     * &nbsp;{@code <=}&nbsp;<i>n</i>&nbsp;{@code <=}&nbsp;<i>r</i>.
      * This byte sequence will be transferred into the buffer so that the first
      * byte in the sequence is at index <i>p</i> and the last byte is at index
-     * <i>p</i>&nbsp;<tt>+</tt>&nbsp;<i>n</i>&nbsp;<tt>-</tt>&nbsp;<tt>1</tt>,
+     * <i>p</i>&nbsp;{@code +}&nbsp;<i>n</i>&nbsp;{@code -}&nbsp;{@code 1},
      * where <i>p</i> is the buffer's position at the moment this method is
      * invoked. Upon return the buffer's position will be equal to
-     * <i>p</i>&nbsp;<tt>+</tt>&nbsp;<i>n</i>; its limit will not have changed.
+     * <i>p</i>&nbsp;{@code +}&nbsp;<i>n</i>; its limit will not have changed.
      *
      * @param dst The buffer into which bytes are to be transferred.
      * @return the total number of bytes read into the buffer, or
