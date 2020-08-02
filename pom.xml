@@ -429,7 +429,24 @@ The following provides more details on the included cryptographic software:
         </plugins>
       </build>
     </profile>
-
+    <profile>
+      <id>build</id>
+      <dependencies>
+        <dependency>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>0.33.0</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <build>
