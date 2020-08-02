@@ -64,51 +64,51 @@ matrix:
       dist: bionic
       jdk: openjdk8
 
-    - name: "aarch64 / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
-      arch: arm64
-      os: linux
-      dist: xenial
-      jdk: openjdk8
-      addons:
-        apt:
-          packages:
-            - openjdk-8-jdk-headless
-            - maven
+#    - name: "aarch64 / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
+#      arch: arm64
+#      os: linux
+#      dist: xenial
+#      jdk: openjdk8
+#      addons:
+#        apt:
+#          packages:
+#            - openjdk-8-jdk-headless
+#            - maven
 
-    - name: "aarch64 / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
-      arch: arm64
-      os: linux
-      dist: bionic
-      jdk: openjdk8
-      addons:
-        apt:
-          packages:
-            - openjdk-8-jdk-headless
-            - maven
+#    - name: "aarch64 / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
+#      arch: arm64
+#      os: linux
+#      dist: bionic
+#      jdk: openjdk8
+#      addons:
+#        apt:
+#          packages:
+#            - openjdk-8-jdk-headless
+#            - maven
 
-    - name: "ppc64le / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
-      arch: ppc64le
-      os: linux
-      dist: xenial
-      jdk: openjdk8
-      env:
-        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
-      addons:
-        apt:
-          packages:
-            - maven
+#    - name: "ppc64le / Ubuntu 16.04 / Java 8 / OpenSSL 1.0.x"
+#      arch: ppc64le
+#      os: linux
+#      dist: xenial
+#      jdk: openjdk8
+#      env:
+#        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+#      addons:
+#        apt:
+#          packages:
+#            - maven
 
-    - name: "ppc64le / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
-      arch: ppc64le
-      os: linux
-      dist: bionic
-      jdk: openjdk8
-      env:
-        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
-      addons:
-        apt:
-          packages:
-            - maven
+#    - name: "ppc64le / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
+#      arch: ppc64le
+#      os: linux
+#      dist: bionic
+#      jdk: openjdk8
+#      env:
+#        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+#      addons:
+#        apt:
+#          packages:
+#            - maven
 
     - name: "OS X / Java 8 / LibreSSL 2.2.x"
       os: osx
