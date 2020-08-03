@@ -26,15 +26,10 @@ RUN dpkg --add-architecture i386 && apt-get update && apt-get --assume-yes insta
       && apt-get --assume-yes install gcc-arm-linux-gnueabi && apt-get --assume-yes install g++-arm-linux-gnueabi \
       && apt-get --assume-yes install gcc-arm-linux-gnueabihf && apt-get --assume-yes install g++-arm-linux-gnueabihf \
       && apt-get --assume-yes install gcc-aarch64-linux-gnu && apt-get --assume-yes install g++-aarch64-linux-gnu \
-      && apt-get --assume-yes install mingw-w64 && apt-get --assume-yes install wget && apt-get --assume-yes install curl
-RUN mkdir commons-crypto 
+      && apt-get --assume-yes install mingw-w64 && apt-get --assume-yes install wget && apt-get --assume-yes install curl \
+      && mkdir commons-crypto && cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 COPY . /commons-crypto
 RUN cd commons-crypto && mvn package
 # Build openssl from source to generate the platform-specific opensslconf.h for the cross-compilers
-RUN wget https://www.openssl.org/source/openssl-1.1.1.tar.gz && tar -xvzf openssl-1.1.1.tar.gz && cd openssl-1.1.1 \
-      && ./Configure mingw64 shared --cross-compile-prefix=x86_64-w64-mingw32- && make 
-RUN cd commons-crypto && mvn -DskipTests package -P win64
-RUN cd openssl-1.1.1 && make clean && ./Configure linux-armv4 shared --cross-compile-prefix=arm-linux-gnueabi- && make 
-RUN cd commons-crypto && mvn -DskipTests package -P linux-arm && mvn -DskipTests package -P linux-armhf
-RUN cd openssl-1.1.1 && make clean && ./Configure linux-aarch64 shared --cross-compile-prefix=aarch64-linux-gnu- && make 
-RUN cd commons-crypto && mvn -DskipTests package -P linux-aarch64
+RUN cd commons-crypto && mvn -DskipTests package -P linux-arm && mvn -DskipTests package -P linux-armhf 
+RUN cd commons-crypto && mvn -DskipTests package -P linux-aarch64 && mvn -DskipTests package -P win64
