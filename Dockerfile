@@ -20,16 +20,19 @@
 
 FROM ubuntu:18.04
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+# Install dependencies and tooling.
 RUN dpkg --add-architecture i386 && apt-get update && apt-get --assume-yes install build-essential \
       && apt-get --assume-yes install openjdk-8-jdk && apt-get --assume-yes install maven \
       && apt-get --assume-yes install libssl-dev:i386 && apt-get --assume-yes install libssl-dev \
       && apt-get --assume-yes install gcc-arm-linux-gnueabi && apt-get --assume-yes install g++-arm-linux-gnueabi \
       && apt-get --assume-yes install gcc-arm-linux-gnueabihf && apt-get --assume-yes install g++-arm-linux-gnueabihf \
       && apt-get --assume-yes install gcc-aarch64-linux-gnu && apt-get --assume-yes install g++-aarch64-linux-gnu \
-      && apt-get --assume-yes install mingw-w64 && apt-get --assume-yes install wget && apt-get --assume-yes install curl \
-      && mkdir commons-crypto && cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
+      && apt-get --assume-yes install mingw-w64 \
+# Copy the opensslconf.h file to the base openssl include directory
+      && cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl \
+# Create the build directory.
+      && mkdir commons-crypto 
 COPY . /commons-crypto
-RUN cd commons-crypto && mvn package
-# Build openssl from source to generate the platform-specific opensslconf.h for the cross-compilers
-RUN cd commons-crypto && mvn -DskipTests package -P linux-arm && mvn -DskipTests package -P linux-armhf 
-RUN cd commons-crypto && mvn -DskipTests package -P linux-aarch64 && mvn -DskipTests package -P win64
+# Run the base Linux x86_64 build with tests and then run the cross-compile builds without.
+RUN cd commons-crypto && mvn package && mvn -DskipTests package -P linux-arm && mvn -DskipTests package -P linux-armhf \
+      && mvn -DskipTests package -P linux-aarch64 && mvn -DskipTests package -P win64
