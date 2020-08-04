@@ -57,6 +57,7 @@ public final class ReflectionUtils {
      * getClassByName. {@link #getClassByNameOrNull(String)}.
      */
     private static abstract class NegativeCacheSentinel {
+        // noop
     }
 
     /**

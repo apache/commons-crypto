@@ -64,6 +64,7 @@ public class ChannelOutput implements Output {
      */
     @Override
     public void flush() throws IOException {
+        // noop
     }
 
     /**

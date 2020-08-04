@@ -361,6 +361,7 @@ public class CryptoInputStream extends InputStream implements
      */
     @Override
     public void mark(final int readlimit) {
+        // noop
     }
 
     /**

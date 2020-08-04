@@ -151,5 +151,6 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      */
     @Override
     public void close() {
+        // noop
     }
 }
