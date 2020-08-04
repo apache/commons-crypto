@@ -69,6 +69,8 @@ matrix:
       os: linux
       dist: xenial
       jdk: openjdk8
+      env:
+        - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64
       addons:
         apt:
           packages:
@@ -80,6 +82,8 @@ matrix:
       os: linux
       dist: bionic
       jdk: openjdk8
+      env:
+        - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64
       addons:
         apt:
           packages:
@@ -92,10 +96,11 @@ matrix:
       dist: xenial
       jdk: openjdk8
       env:
-        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+        - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-ppc64el
       addons:
         apt:
           packages:
+            - openjdk-8-jdk-headless
             - maven
 
     - name: "ppc64le / Ubuntu 18.04 / Java 8 / OpenSSL 1.1.x"
@@ -104,10 +109,11 @@ matrix:
       dist: bionic
       jdk: openjdk8
       env:
-        - JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+        - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-ppc64el
       addons:
         apt:
           packages:
+            - openjdk-8-jdk-headless
             - maven
 
     - name: "OS X / Java 8 / LibreSSL 2.2.x"
@@ -123,9 +129,9 @@ before_install:
     sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security
     rm /tmp/policy.zip
   - openssl version -a
-install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-script: mvn test jacoco:report coveralls:report -B -V
-after_success: mvn site -B -V
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Denforcer.skip=true -B -V
+script: mvn test jacoco:report coveralls:report -Denforcer.skip=true -B -V
+after_success: mvn site -Denforcer.skip=true -B -V
 
 cache:
   directories:
