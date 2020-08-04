@@ -18,7 +18,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>50</version>
+    <version>51</version>
   </parent>
 
   <artifactId>commons-crypto</artifactId>
@@ -139,7 +139,7 @@ The following provides more details on the included cryptographic software:
     <!-- This is used by reporting plugins -->
     <project.reporting.outputEncoding>${commons.encoding}</project.reporting.outputEncoding>
 
-    <checkstyle.version>3.0.0</checkstyle.version>
+    <checkstyle.version>3.1.1</checkstyle.version>
     <checkstyle.header.file>${basedir}/LICENSE-header.txt</checkstyle.header.file>
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
 

@@ -31,13 +31,11 @@ limitations under the License.
     <property name="fileExtensions" value="java,xml"/>
   </module>
   <module name="TreeWalker">
-    <property name="cacheFile" value="target/cachefile"/>
     <module name="AvoidStarImport"/>
     <module name="RedundantImport"/>
     <module name="UnusedImports"/>
     <module name="NeedBraces"/>
     <module name="JavadocMethod">
-      <property name="allowUndeclaredRTE" value="true"/>
       <property name="scope" value="protected"/>
     </module>
  </module>

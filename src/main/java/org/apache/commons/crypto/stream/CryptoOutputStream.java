@@ -284,7 +284,7 @@ public class CryptoOutputStream extends OutputStream implements
      * Overrides the {@link java.nio.channels.Channel#isOpen()}. Tells whether or not this channel
      * is open.
      *
-     * @return <tt>true</tt> if, and only if, this channel is open
+     * @return {@code true} if, and only if, this channel is open
      */
     @Override
     public boolean isOpen() {

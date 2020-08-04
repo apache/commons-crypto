@@ -388,7 +388,7 @@ public class CryptoInputStream extends InputStream implements
     /**
      * Overrides the {@link java.nio.channels.Channel#isOpen()}.
      *
-     * @return <tt>true</tt> if, and only if, this channel is open.
+     * @return {@code true} if, and only if, this channel is open.
      */
     @Override
     public boolean isOpen() {
@@ -401,7 +401,7 @@ public class CryptoInputStream extends InputStream implements
      * sequence of bytes from this channel into the given buffer.
      *
      * @param dst The buffer into which bytes are to be transferred.
-     * @return The number of bytes read, possibly zero, or <tt>-1</tt> if the
+     * @return The number of bytes read, possibly zero, or {@code -1} if the
      *         channel has reached end-of-stream.
      * @throws IOException if an I/O error occurs.
      */
