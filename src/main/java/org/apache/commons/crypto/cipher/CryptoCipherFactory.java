@@ -128,6 +128,7 @@ public class CryptoCipherFactory {
             CipherProvider.OPENSSL.getClassName()
             .concat(",")
             .concat(CipherProvider.JCE.getClassName());
+
     /**
      * The private Constructor of {@link CryptoCipherFactory}.
      */
@@ -137,16 +138,16 @@ public class CryptoCipherFactory {
     /**
      * Gets a cipher instance for specified algorithm/mode/padding.
      *
-     * @param props  the configuration properties - uses {@link #CLASSES_KEY}
+     * @param properties  the configuration properties - uses {@link #CLASSES_KEY}
      * @param transformation  algorithm/mode/padding
      * @return CryptoCipher  the cipher  (defaults to OpenSslCipher)
      * @throws GeneralSecurityException if cipher initialize failed
      * @throws IllegalArgumentException if no classname(s) were provided
      */
-    public static CryptoCipher getCryptoCipher(final String transformation,
-                                           final Properties props) throws GeneralSecurityException {
+    public static CryptoCipher getCryptoCipher(final String transformation, final Properties properties)
+        throws GeneralSecurityException {
 
-        final List<String> names = Utils.splitClassNames(getCipherClassString(props), ",");
+        final List<String> names = Utils.splitClassNames(getCipherClassString(properties), ",");
         if (names.size() == 0) {
             throw new IllegalArgumentException("No classname(s) provided");
         }
@@ -158,7 +159,7 @@ public class CryptoCipherFactory {
             try {
                 final Class<?> cls = ReflectionUtils.getClassByName(klass);
                 cipher = ReflectionUtils.newInstance(cls.asSubclass
-                        (CryptoCipher.class), props, transformation);
+                        (CryptoCipher.class), properties, transformation);
                 if (cipher != null) {
                     break;
                 }

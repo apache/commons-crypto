@@ -109,19 +109,19 @@ public class CryptoInputStream extends InputStream implements
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param in the input stream.
+     * @param inputStream the input stream.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoInputStream.
     public CryptoInputStream(final String transformation,
-            final Properties props, final InputStream in, final Key key,
+            final Properties properties, final InputStream inputStream, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
-        this(in, Utils.getCipherInstance(transformation, props),
-                CryptoInputStream.getBufferSize(props), key, params);
+        this(inputStream, Utils.getCipherInstance(transformation, properties),
+                CryptoInputStream.getBufferSize(properties), key, params);
     }
 
     /**
@@ -131,51 +131,51 @@ public class CryptoInputStream extends InputStream implements
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param in the ReadableByteChannel object.
+     * @param channel the ReadableByteChannel object.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoInputStream.
     public CryptoInputStream(final String transformation,
-            final Properties props, final ReadableByteChannel in, final Key key,
+            final Properties properties, final ReadableByteChannel channel, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
-        this(in, Utils.getCipherInstance(transformation, props), CryptoInputStream
-                .getBufferSize(props), key, params);
+        this(channel, Utils.getCipherInstance(transformation, properties), CryptoInputStream
+                .getBufferSize(properties), key, params);
     }
 
     /**
      * Constructs a {@link CryptoInputStream}.
      *
      * @param cipher the cipher instance.
-     * @param in the input stream.
+     * @param inputStream the input stream.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoInputStream(final InputStream in, final CryptoCipher cipher,
+    protected CryptoInputStream(final InputStream inputStream, final CryptoCipher cipher,
             final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
-        this(new StreamInput(in, bufferSize), cipher, bufferSize, key, params);
+        this(new StreamInput(inputStream, bufferSize), cipher, bufferSize, key, params);
     }
 
     /**
      * Constructs a {@link CryptoInputStream}.
      *
-     * @param in the ReadableByteChannel instance.
+     * @param channel the ReadableByteChannel instance.
      * @param cipher the cipher instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoInputStream(final ReadableByteChannel in, final CryptoCipher cipher,
+    protected CryptoInputStream(final ReadableByteChannel channel, final CryptoCipher cipher,
             final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
-        this(new ChannelInput(in), cipher, bufferSize, key, params);
+        this(new ChannelInput(channel), cipher, bufferSize, key, params);
     }
 
     /**

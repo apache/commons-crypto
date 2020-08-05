@@ -164,45 +164,45 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param out the output stream.
+     * @param outputStream the output stream.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoOutputStream.
-    public CtrCryptoOutputStream(final Properties props, final OutputStream out,
+    public CtrCryptoOutputStream(final Properties properties, final OutputStream outputStream,
             final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
-        this(out, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", props),
-                CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
+        this(outputStream, Utils.getCipherInstance(
+                "AES/CTR/NoPadding", properties),
+                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param out the WritableByteChannel instance.
+     * @param channel the WritableByteChannel instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoOutputStream.
-    public CtrCryptoOutputStream(final Properties props, final WritableByteChannel out,
+    public CtrCryptoOutputStream(final Properties properties, final WritableByteChannel channel,
             final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
-        this(out, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", props),
-                CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
+        this(channel, Utils.getCipherInstance(
+                "AES/CTR/NoPadding", properties),
+                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param out the output stream.
+     * @param outputStream the output stream.
      * @param cipher the CryptoCipher instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
@@ -210,10 +210,10 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(final OutputStream out, final CryptoCipher cipher,
+    protected CtrCryptoOutputStream(final OutputStream outputStream, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
-        this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, iv,
+        this(new StreamOutput(outputStream, bufferSize), cipher, bufferSize, key, iv,
                 streamOffset);
     }
 

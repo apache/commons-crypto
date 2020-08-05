@@ -58,12 +58,12 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * properties for constructing a CryptoCipher
      */
-    private final Properties props;
+    private final Properties properties;
 
     /**
      * Constructs a {@link PositionedCryptoInputStream}.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
      * @param in the input data.
      * @param key crypto key for the cipher.
@@ -72,16 +72,16 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by PositionedCryptoInputStream.
-    public PositionedCryptoInputStream(final Properties props, final Input in, final byte[] key,
+    public PositionedCryptoInputStream(final Properties properties, final Input in, final byte[] key,
             final byte[] iv, final long streamOffset) throws IOException {
-        this(props, in, Utils.getCipherInstance("AES/CTR/NoPadding", props),
-                CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
+        this(properties, in, Utils.getCipherInstance("AES/CTR/NoPadding", properties),
+                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
      * Constructs a {@link PositionedCryptoInputStream}.
      *
-     * @param props the props of stream
+     * @param properties the properties of stream
      * @param input the input data.
      * @param cipher the CryptoCipher instance.
      * @param bufferSize the bufferSize.
@@ -90,11 +90,11 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected PositionedCryptoInputStream(final Properties props, final Input input, final CryptoCipher cipher,
+    protected PositionedCryptoInputStream(final Properties properties, final Input input, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
         super(input, cipher, bufferSize, key, iv, streamOffset);
-        this.props = props;
+        this.properties = properties;
     }
 
     /**
@@ -321,7 +321,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         if (state == null) {
             CryptoCipher cryptoCipher;
             try {
-                cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props);
+                cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", properties);
             } catch (final GeneralSecurityException e) {
                 throw new IOException(e);
             }
@@ -392,7 +392,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         }
     }
 
-    private class CipherState {
+    private static class CipherState {
+
         private final CryptoCipher cryptoCipher;
         private boolean reset;
 

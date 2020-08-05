@@ -33,7 +33,6 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.utils.ReflectionUtils;
-import org.apache.commons.crypto.utils.Utils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,10 +46,10 @@ public abstract class AbstractCipherTest {
     // data
     public static final int BYTEBUFFER_SIZE = 1000;
 
-    public String[] cipherTests = null;
-    private Properties props = null;
-    protected String cipherClass = null;
-    protected String[] transformations = null;
+    public String[] cipherTests;
+    private Properties props;
+    protected String cipherClass;
+    protected String[] transformations;
 
     // cipher
     static final byte[] KEY = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
@@ -63,8 +62,8 @@ public abstract class AbstractCipherTest {
     @Before
     public void setup() {
         init();
-        Utils.checkNotNull(cipherClass);
-        Utils.checkNotNull(transformations);
+        assertNotNull("cipherClass", cipherClass);
+        assertNotNull("transformations", transformations);
         props = new Properties();
         props.setProperty(CryptoCipherFactory.CLASSES_KEY,
                 cipherClass);
@@ -153,19 +152,18 @@ public abstract class AbstractCipherTest {
 
     @Test(expected = RuntimeException.class)
     public void testNullTransform() throws Exception {
-        getCipher(null);
+        getCipher(null).close();
     }
 
     @Test(expected = RuntimeException.class)
     public void testInvalidTransform() throws Exception {
-        getCipher("AES/CBR/NoPadding/garbage/garbage");
+        getCipher("AES/CBR/NoPadding/garbage/garbage").close();
     }
 
     @Test
     public void testInvalidKey() throws Exception {
         for (final String transform : transformations) {
-            try {
-                final CryptoCipher cipher = getCipher(transform);
+            try (final CryptoCipher cipher = getCipher(transform)) {
                 Assert.assertNotNull(cipher);
 
                 final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
@@ -180,8 +178,7 @@ public abstract class AbstractCipherTest {
     @Test
     public void testInvalidIV() throws Exception {
         for (final String transform : transformations) {
-            try {
-                final CryptoCipher cipher = getCipher(transform);
+            try (final CryptoCipher cipher = getCipher(transform)) {
                 Assert.assertNotNull(cipher);
 
                 final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
@@ -196,8 +193,7 @@ public abstract class AbstractCipherTest {
     @Test
     public void testInvalidIVClass() throws Exception {
         for (final String transform : transformations) {
-            try {
-                final CryptoCipher cipher = getCipher(transform);
+            try (final CryptoCipher cipher = getCipher(transform)) {
                 Assert.assertNotNull(cipher);
 
                 cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new GCMParameterSpec(IV.length, IV));
@@ -209,46 +205,43 @@ public abstract class AbstractCipherTest {
 
     private void byteBufferTest(final String transformation,
             final byte[] key, final byte[] iv, final ByteBuffer input, final ByteBuffer output)
-            throws Exception {
+        throws Exception {
         final ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
         final ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
 
-        final CryptoCipher enc = getCipher(transformation);
-        enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"),
-                new IvParameterSpec(iv));
+        try (final CryptoCipher enc = getCipher(transformation); final CryptoCipher dec = getCipher(transformation)) {
 
-        final CryptoCipher dec = getCipher(transformation);
-        dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"),
-                new IvParameterSpec(iv));
+            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+            dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
 
-        //
-        // encryption pass
-        //
-        enc.doFinal(input, encResult);
-        input.flip();
-        encResult.flip();
-        if (!output.equals(encResult)) {
-            final byte[] b = new byte[output.remaining()];
-            output.get(b);
-            final byte[] c = new byte[encResult.remaining()];
-            encResult.get(c);
-            Assert.fail("AES failed encryption - expected "
-                    + new String(DatatypeConverter.printHexBinary(b)) + " got "
-                    + new String(DatatypeConverter.printHexBinary(c)));
-        }
+            //
+            // encryption pass
+            //
+            enc.doFinal(input, encResult);
+            input.flip();
+            encResult.flip();
+            if (!output.equals(encResult)) {
+                final byte[] b = new byte[output.remaining()];
+                output.get(b);
+                final byte[] c = new byte[encResult.remaining()];
+                encResult.get(c);
+                Assert.fail("AES failed encryption - expected " + new String(DatatypeConverter.printHexBinary(b))
+                    + " got " + new String(DatatypeConverter.printHexBinary(c)));
+            }
 
-        //
-        // decryption pass
-        //
-        dec.doFinal(encResult, decResult);
-        decResult.flip();
+            //
+            // decryption pass
+            //
+            dec.doFinal(encResult, decResult);
+            decResult.flip();
 
-        if (!input.equals(decResult)) {
-            final byte[] inArray = new byte[input.remaining()];
-            final byte[] decResultArray = new byte[decResult.remaining()];
-            input.get(inArray);
-            decResult.get(decResultArray);
-            Assert.fail();
+            if (!input.equals(decResult)) {
+                final byte[] inArray = new byte[input.remaining()];
+                final byte[] decResultArray = new byte[decResult.remaining()];
+                input.get(inArray);
+                decResult.get(decResultArray);
+                Assert.fail();
+            }
         }
     }
 

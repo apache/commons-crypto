@@ -113,7 +113,7 @@ public final class Utils {
      * Helper method to create a CryptoCipher instance and throws only
      * IOException.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
      * @param transformation the name of the transformation, e.g.,
      * <i>AES/CBC/PKCS5Padding</i>.
@@ -123,10 +123,10 @@ public final class Utils {
      * @throws IOException if an I/O error occurs.
      */
     public static CryptoCipher getCipherInstance(
-            final String transformation, final Properties props)
+            final String transformation, final Properties properties)
             throws IOException {
         try {
-            return CryptoCipherFactory.getCryptoCipher(transformation, props);
+            return CryptoCipherFactory.getCryptoCipher(transformation, properties);
         } catch (final GeneralSecurityException e) {
             throw new IOException(e);
         }

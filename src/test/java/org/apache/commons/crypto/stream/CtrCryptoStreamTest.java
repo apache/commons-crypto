@@ -44,7 +44,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     }
 
     @Override
-    protected CtrCryptoInputStream getCryptoInputStream(
+    protected CtrCryptoInputStream newCryptoInputStream(
             final ByteArrayInputStream bais, final CryptoCipher cipher, final int bufferSize,
             final byte[] iv, final boolean withChannel) throws IOException {
         if (withChannel) {
@@ -55,7 +55,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     }
 
     @Override
-    protected CtrCryptoInputStream getCryptoInputStream(final String transformation, final Properties props,
+    protected CtrCryptoInputStream newCryptoInputStream(final String transformation, final Properties props,
             final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
             final boolean withChannel) throws IOException {
         if (withChannel) {
@@ -66,7 +66,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     }
 
     @Override
-    protected CtrCryptoOutputStream getCryptoOutputStream(
+    protected CtrCryptoOutputStream newCryptoOutputStream(
             final ByteArrayOutputStream baos, final CryptoCipher cipher, final int bufferSize,
             final byte[] iv, final boolean withChannel) throws IOException {
         if (withChannel) {
@@ -77,7 +77,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     }
 
     @Override
-    protected CtrCryptoOutputStream getCryptoOutputStream(final String transformation,
+    protected CtrCryptoOutputStream newCryptoOutputStream(final String transformation,
             final Properties props, final ByteArrayOutputStream baos, final byte[] key,
             final AlgorithmParameterSpec params, final boolean withChannel) throws IOException {
         if (withChannel) {
@@ -165,7 +165,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     protected void doDecryptTest(final String cipherClass, final boolean withChannel)
             throws IOException {
 
-        final CtrCryptoInputStream in = getCryptoInputStream(new ByteArrayInputStream(encData),
+        final CtrCryptoInputStream in = newCryptoInputStream(new ByteArrayInputStream(encData),
                 getCipher(cipherClass), defaultBufferSize, iv, withChannel);
 
         final ByteBuffer buf = ByteBuffer.allocateDirect(dataLen);

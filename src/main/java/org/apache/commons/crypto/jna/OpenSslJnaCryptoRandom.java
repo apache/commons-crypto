@@ -47,9 +47,10 @@ import com.sun.jna.ptr.PointerByReference;
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
 class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
+
     private static final long serialVersionUID = -7128193502768749585L;
     private final boolean rdrandEnabled;
-    private PointerByReference rdrandEngine;
+    private transient PointerByReference rdrandEngine;
 
     /**
      * Constructs a {@link OpenSslJnaCryptoRandom}.

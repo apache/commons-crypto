@@ -92,19 +92,19 @@ public class CryptoOutputStream extends OutputStream implements
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param out the output stream.
+     * @param outputStream the output stream.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoOutputStream.
     public CryptoOutputStream(final String transformation,
-            final Properties props, final OutputStream out, final Key key,
+            final Properties properties, final OutputStream outputStream, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
-        this(out, Utils.getCipherInstance(transformation, props),
-                CryptoInputStream.getBufferSize(props), key, params);
+        this(outputStream, Utils.getCipherInstance(transformation, properties),
+                CryptoInputStream.getBufferSize(properties), key, params);
 
     }
 
@@ -115,7 +115,7 @@ public class CryptoOutputStream extends OutputStream implements
      * <i>AES/CBC/PKCS5Padding</i>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
      * @param out the WritableByteChannel instance.
      * @param key crypto key for the cipher.
@@ -124,27 +124,27 @@ public class CryptoOutputStream extends OutputStream implements
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoOutputStream.
     public CryptoOutputStream(final String transformation,
-            final Properties props, final WritableByteChannel out, final Key key,
+            final Properties properties, final WritableByteChannel out, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
-        this(out, Utils.getCipherInstance(transformation, props), CryptoInputStream
-                .getBufferSize(props), key, params);
+        this(out, Utils.getCipherInstance(transformation, properties), CryptoInputStream
+                .getBufferSize(properties), key, params);
 
     }
 
     /**
      * Constructs a {@link CryptoOutputStream}.
      *
-     * @param out the output stream.
+     * @param outputStream the output stream.
      * @param cipher the CryptoCipher instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoOutputStream(final OutputStream out, final CryptoCipher cipher,
+    protected CryptoOutputStream(final OutputStream outputStream, final CryptoCipher cipher,
             final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
-        this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, params);
+        this(new StreamOutput(outputStream, bufferSize), cipher, bufferSize, key, params);
     }
 
     /**

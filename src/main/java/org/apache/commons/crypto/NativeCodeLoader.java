@@ -140,44 +140,37 @@ final class NativeCodeLoader {
      * @return the library file.
      */
     private static File extractLibraryFile(final String libFolderForCurrentOS,
-            final String libraryFileName, final String targetFolder) {
-        final String nativeLibraryFilePath = libFolderForCurrentOS + "/"
-                + libraryFileName;
+        final String libraryFileName, final String targetFolder) {
+        final String nativeLibraryFilePath = libFolderForCurrentOS + "/" + libraryFileName;
 
         // Attach UUID to the native library file to ensure multiple class
         // loaders
         // can read the libcommons-crypto multiple times.
         final String uuid = UUID.randomUUID().toString();
-        final String extractedLibFileName = String.format("commons-crypto-%s-%s",
-                uuid, libraryFileName);
+        final String extractedLibFileName = String.format("commons-crypto-%s-%s", uuid, libraryFileName);
         final File extractedLibFile = new File(targetFolder, extractedLibFileName);
 
-        InputStream reader = null;
+        InputStream inputStream = null;
         try {
             // Extract a native library file into the target directory
-            reader = NativeCodeLoader.class
-                    .getResourceAsStream(nativeLibraryFilePath);
-            final FileOutputStream writer = new FileOutputStream(extractedLibFile);
-            try {
+            inputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath);
+            try (FileOutputStream writer = new FileOutputStream(extractedLibFile)) {
                 final byte[] buffer = new byte[8192];
                 int bytesRead;
-                while ((bytesRead = reader.read(buffer)) != -1) {
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
                     writer.write(buffer, 0, bytesRead);
                 }
             } finally {
                 // Delete the extracted lib file on JVM exit.
                 extractedLibFile.deleteOnExit();
 
-                writer.close();
-
-                IoUtils.closeQuietly(reader);
-                reader = null;
+                IoUtils.closeQuietly(inputStream);
+                inputStream = null;
             }
 
             // Set executable (x) flag to enable Java to load the native library
-            if (!extractedLibFile.setReadable(true)
-                    || !extractedLibFile.setExecutable(true)
-                    || !extractedLibFile.setWritable(true, true)) {
+            if (!extractedLibFile.setReadable(true) || !extractedLibFile.setExecutable(true)
+                || !extractedLibFile.setWritable(true, true)) {
                 throw new RuntimeException("Invalid path for library path");
             }
 
@@ -187,13 +180,11 @@ final class NativeCodeLoader {
                 InputStream nativeIn = null;
                 InputStream extractedLibIn = null;
                 try {
-                    nativeIn = NativeCodeLoader.class
-                            .getResourceAsStream(nativeLibraryFilePath);
+                    nativeIn = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath);
                     extractedLibIn = new FileInputStream(extractedLibFile);
                     if (!contentsEquals(nativeIn, extractedLibIn)) {
-                        throw new RuntimeException(String.format(
-                                "Failed to write a native library file at %s",
-                                extractedLibFile));
+                        throw new RuntimeException(
+                            String.format("Failed to write a native library file at %s", extractedLibFile));
                     }
                 } finally {
                     if (nativeIn != null) {
@@ -209,7 +200,7 @@ final class NativeCodeLoader {
         } catch (final IOException e) {
             return null;
         } finally {
-            IoUtils.cleanup(reader);
+            IoUtils.closeQuietly(inputStream);
         }
     }
 

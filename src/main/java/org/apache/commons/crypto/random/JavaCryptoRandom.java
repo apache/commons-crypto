@@ -27,6 +27,11 @@ import java.util.Random;
  */
 class JavaCryptoRandom extends Random implements CryptoRandom {
 
+    /**
+     * Generated serialVersionUID.
+     */
+    private static final long serialVersionUID = 5517475898166660050L;
+
     private SecureRandom instance;
 
     /**

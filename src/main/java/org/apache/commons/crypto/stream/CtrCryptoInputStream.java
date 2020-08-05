@@ -84,61 +84,61 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param in the input stream.
+     * @param inputStream the input stream.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    public CtrCryptoInputStream(final Properties props, final InputStream in, final byte[] key,
+    public CtrCryptoInputStream(final Properties properties, final InputStream inputStream, final byte[] key,
             final byte[] iv) throws IOException {
-        this(props, in, key, iv, 0);
+        this(properties, inputStream, key, iv, 0);
     }
 
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param in the ReadableByteChannel instance.
+     * @param channel the ReadableByteChannel instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    public CtrCryptoInputStream(final Properties props, final ReadableByteChannel in,
+    public CtrCryptoInputStream(final Properties properties, final ReadableByteChannel channel,
             final byte[] key, final byte[] iv) throws IOException {
-        this(props, in, key, iv, 0);
+        this(properties, channel, key, iv, 0);
     }
 
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param in the input stream.
+     * @param inputStream the input stream.
      * @param cipher the CryptoCipher instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoInputStream(final InputStream in, final CryptoCipher cipher,
+    protected CtrCryptoInputStream(final InputStream inputStream, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv) throws IOException {
-        this(in, cipher, bufferSize, key, iv, 0);
+        this(inputStream, cipher, bufferSize, key, iv, 0);
     }
 
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param in the ReadableByteChannel instance.
+     * @param channel the ReadableByteChannel instance.
      * @param cipher the cipher instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoInputStream(final ReadableByteChannel in, final CryptoCipher cipher,
+    protected CtrCryptoInputStream(final ReadableByteChannel channel, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv) throws IOException {
-        this(in, cipher, bufferSize, key, iv, 0);
+        this(channel, cipher, bufferSize, key, iv, 0);
     }
 
     /**
@@ -159,26 +159,26 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param in the InputStream instance.
+     * @param inputStream the InputStream instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @param streamOffset the start offset in the stream.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoInputStream.
-    public CtrCryptoInputStream(final Properties props, final InputStream in, final byte[] key,
+    public CtrCryptoInputStream(final Properties properties, final InputStream inputStream, final byte[] key,
             final byte[] iv, final long streamOffset) throws IOException {
-        this(in, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", props),
-                CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
+        this(inputStream, Utils.getCipherInstance(
+                "AES/CTR/NoPadding", properties),
+                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param properties The {@code Properties} class represents a set of
      *        properties.
      * @param in the ReadableByteChannel instance.
      * @param key crypto key for the cipher.
@@ -187,17 +187,17 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoInputStream.
-    public CtrCryptoInputStream(final Properties props, final ReadableByteChannel in,
+    public CtrCryptoInputStream(final Properties properties, final ReadableByteChannel in,
             final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
         this(in, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", props),
-                CryptoInputStream.getBufferSize(props), key, iv, streamOffset);
+                "AES/CTR/NoPadding", properties),
+                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param in the InputStream instance.
+     * @param inputStream the InputStream instance.
      * @param cipher the CryptoCipher instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
@@ -205,17 +205,17 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @param streamOffset the start offset in the stream.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoInputStream(final InputStream in, final CryptoCipher cipher,
+    protected CtrCryptoInputStream(final InputStream inputStream, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
-        this(new StreamInput(in, bufferSize), cipher, bufferSize, key, iv,
+        this(new StreamInput(inputStream, bufferSize), cipher, bufferSize, key, iv,
                 streamOffset);
     }
 
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param in the ReadableByteChannel instance.
+     * @param channel the ReadableByteChannel instance.
      * @param cipher the CryptoCipher instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
@@ -223,10 +223,10 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @param streamOffset the start offset in the stream.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoInputStream(final ReadableByteChannel in, final CryptoCipher cipher,
+    protected CtrCryptoInputStream(final ReadableByteChannel channel, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
-        this(new ChannelInput(in), cipher, bufferSize, key, iv, streamOffset);
+        this(new ChannelInput(channel), cipher, bufferSize, key, iv, streamOffset);
     }
 
     /**
