@@ -116,6 +116,7 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoInputStream.
     public CryptoInputStream(final String transformation,
             final Properties props, final InputStream in, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
@@ -350,29 +351,6 @@ public class CryptoInputStream extends InputStream implements
         cipher.close();
         super.close();
         closed = true;
-    }
-
-    /**
-     * Overrides the {@link java.io.InputStream#mark(int)}. For
-     * {@link CryptoInputStream},we don't support the mark method.
-     *
-     * @param readlimit the maximum limit of bytes that can be read before the
-     *        mark position becomes invalid.
-     */
-    @Override
-    public void mark(final int readlimit) {
-        // noop
-    }
-
-    /**
-     * Overrides the {@link InputStream#reset()}. For {@link CryptoInputStream}
-     * ,we don't support the reset method.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void reset() throws IOException {
-        throw new IOException("Mark/reset not supported");
     }
 
     /**
