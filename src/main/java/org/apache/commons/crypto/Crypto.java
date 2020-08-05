@@ -22,7 +22,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
+import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 
 /**
@@ -122,8 +124,9 @@ public final class Crypto {
     }
 
     /**
-     * The Main of Crypto
-     * @param args don't use the args
+     * The Main of Crypto.
+     *
+     * @param args Not used.
      * @throws Exception if getCryptoRandom or getCryptoCipher get error.
      */
     public static void main(final String args[]) throws Exception {
@@ -137,14 +140,16 @@ public final class Crypto {
             {
                 final Properties props = new Properties();
                 props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
-                CryptoRandomFactory.getCryptoRandom(props);
-                System.out.println("Random instance created OK");
+                try (CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props)){
+                    System.out.println("Random instance created OK");
+                }
             }
             {
                 final Properties props = new Properties();
                 props.setProperty(CryptoCipherFactory.CLASSES_KEY, CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
-                CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props);
-                System.out.println("Cipher instance created OK");
+                try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props)) {
+                    System.out.println("Cipher instance created OK");
+                }
             }
             System.out.println("Additional OpenSSL_version(n) details:");
             for(int j=1;j<6;j++) {
