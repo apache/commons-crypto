@@ -138,6 +138,7 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoInputStream.
     public CryptoInputStream(final String transformation,
             final Properties props, final ReadableByteChannel in, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
