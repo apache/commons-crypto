@@ -34,6 +34,7 @@ matrix:
          - OPENSSL_HOME=/usr/
       install: |
         sudo ln -s /usr/include/x86_64-linux-gnu /usr/include/i386-linux-gnu
+        mvn -version
         mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V --no-transfer-progress
         mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Plinux32 --no-transfer-progress
 
@@ -53,6 +54,7 @@ matrix:
          - OPENSSL_HOME=/usr/
       install: |
         sudo ln -s /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl/opensslconf.h
+        mvn -version
         mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin64 --no-transfer-progress
         mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin32 --no-transfer-progress
       script: echo DONE
