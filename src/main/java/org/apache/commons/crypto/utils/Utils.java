@@ -62,16 +62,16 @@ public final class Utils {
         // default to system
         final Properties defaultedProps = new Properties(System.getProperties());
         try {
-            final InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream(SYSTEM_PROPERTIES_FILE);
-
-            if (is == null) {
-                return defaultedProps; // no configuration file is found
-            }
-            // Load property file
             final Properties fileProps = new Properties();
-            fileProps.load(is);
-            is.close();
+            try (final InputStream is = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream(SYSTEM_PROPERTIES_FILE)) {
+
+                if (is == null) {
+                    return defaultedProps; // no configuration file is found
+                }
+                // Load property file
+                fileProps.load(is);
+            }
             final Enumeration<?> names = fileProps.propertyNames();
             while (names.hasMoreElements()) {
                 final String name = (String) names.nextElement();
