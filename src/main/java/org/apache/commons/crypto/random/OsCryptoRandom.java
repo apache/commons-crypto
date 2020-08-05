@@ -131,7 +131,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
     @Override
     synchronized public void close() {
         if (stream != null) {
-            IoUtils.cleanup(stream);
+            IoUtils.closeQuietly(stream);
             stream = null;
         }
     }

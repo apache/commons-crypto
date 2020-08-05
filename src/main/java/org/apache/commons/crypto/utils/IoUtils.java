@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.utils;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -86,13 +87,25 @@ public final class IoUtils {
      *
      * @param closeables the objects to close.
      */
-    public static void cleanup(final java.io.Closeable... closeables) {
-        for (final java.io.Closeable c : closeables) {
-            if (c != null) {
-                try {
-                    c.close();
-                } catch (final IOException e) { // NOPMD
-                }
+    public static void cleanup(final Closeable... closeables) {
+        if (closeables != null) {
+            for (final Closeable c : closeables) {
+                closeQuietly(c);
+            }
+        }
+    }
+
+    /**
+     * Closes the given {@link Closeable} quietly by ignoring IOException.
+     *
+     * @param closeable The resource to close.
+     * @since 1.1.0
+     */
+    public static void closeQuietly(final Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (final IOException e) { // NOPMD
             }
         }
     }

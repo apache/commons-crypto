@@ -170,7 +170,7 @@ final class NativeCodeLoader {
 
                 writer.close();
 
-                IoUtils.cleanup(reader);
+                IoUtils.closeQuietly(reader);
                 reader = null;
             }
 
