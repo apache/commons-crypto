@@ -71,6 +71,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by PositionedCryptoInputStream.
     public PositionedCryptoInputStream(final Properties props, final Input in, final byte[] key,
             final byte[] iv, final long streamOffset) throws IOException {
         this(props, in, Utils.getCipherInstance("AES/CTR/NoPadding", props),

@@ -167,6 +167,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @param streamOffset the start offset in the stream.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoInputStream.
     public CtrCryptoInputStream(final Properties props, final InputStream in, final byte[] key,
             final byte[] iv, final long streamOffset) throws IOException {
         this(in, Utils.getCipherInstance(
@@ -185,6 +186,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @param streamOffset the start offset in the stream.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoInputStream.
     public CtrCryptoInputStream(final Properties props, final ReadableByteChannel in,
             final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
         this(in, Utils.getCipherInstance(
