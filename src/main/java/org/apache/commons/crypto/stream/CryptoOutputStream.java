@@ -99,7 +99,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoOutputStream.
     public CryptoOutputStream(final String transformation,
             final Properties props, final OutputStream out, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
@@ -122,6 +122,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoOutputStream.
     public CryptoOutputStream(final String transformation,
             final Properties props, final WritableByteChannel out, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
