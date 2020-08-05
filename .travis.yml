@@ -34,8 +34,8 @@ matrix:
          - OPENSSL_HOME=/usr/
       install: |
         sudo ln -s /usr/include/x86_64-linux-gnu /usr/include/i386-linux-gnu
-        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Plinux32
+        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V --no-transfer-progress
+        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Plinux32 --no-transfer-progress
 
     # Job tests win32,win64 builds. But cannot test execution.
     - name: "win32,win64 / Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
@@ -53,8 +53,8 @@ matrix:
          - OPENSSL_HOME=/usr/
       install: |
         sudo ln -s /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl/opensslconf.h
-        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin64
-        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin32
+        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin64 --no-transfer-progress
+        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin32 --no-transfer-progress
       script: echo DONE
       after_success: echo DONE
 
@@ -129,9 +129,9 @@ before_install:
     sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security
     rm /tmp/policy.zip
   - openssl version -a
-install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Denforcer.skip=true -B -V
-script: mvn test jacoco:report coveralls:report -Denforcer.skip=true -B -V
-after_success: mvn site -Denforcer.skip=true -B -V
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Denforcer.skip=true -B -V --no-transfer-progress
+script: mvn test jacoco:report coveralls:report -Denforcer.skip=true -B -V --no-transfer-progress
+after_success: mvn site -Denforcer.skip=true -B -V --no-transfer-progress
 
 cache:
   directories:
