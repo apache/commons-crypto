@@ -162,7 +162,6 @@ The following provides more details on the included cryptographic software:
     <target.name>all</target.name>
     <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
     <junit.version>4.13</junit.version>
-    <slf4j-api.version>1.7.10</slf4j-api.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
