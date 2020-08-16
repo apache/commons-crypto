@@ -28,7 +28,6 @@
                 <include>BUILDING.txt</include>
                 <include>checkstyle.xml</include>
                 <include>CONTRIBUTING.md</include>
-                <include>findbugs-exclude.xml</include>
                 <include>LICENSE.txt</include>
                 <include>Makefile</include>
                 <include>Makefile.common</include>
