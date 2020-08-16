@@ -73,6 +73,7 @@
       <action                    type="update" dev="ggregory" due-to="Geoffrey Blake">Reset JAVA_HOME for aarch64 and ppc builds. Turn off maven-enforcer for Xenial builds #104.</action>
       <action                    type="update" dev="ggregory">Update maven-checkstyle-plugin 3.0.0 -> 3.1.1.</action>
       <action                    type="update" dev="ggregory">Update commons-parent 51 -> 52.</action>
+      <action                    type="update" dev="ggregory">maven-resources-plugin 3.1.0 -> 3.2.0.</action>
     </release>
 
     <release version="1.0.0" date="2016-07-22" description="
