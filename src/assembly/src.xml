@@ -26,16 +26,16 @@
         <fileSet>
             <includes>
                 <include>BUILDING.txt</include>
+                <include>checkstyle.xml</include>
+                <include>CONTRIBUTING.md</include>
+                <include>findbugs-exclude.xml</include>
                 <include>LICENSE.txt</include>
                 <include>Makefile</include>
                 <include>Makefile.common</include>
                 <include>NOTICE.txt</include>
+                <include>pom.xml</include>
                 <include>README.md</include>
                 <include>RELEASE-NOTES.txt</include>
-                <include>findbugs-exclude.xml</include>
-                <include>pom.xml</include>
-                <include>checkstyle.xml</include>
-                <include>CONTRIBUTING.md</include>
             </includes>
         </fileSet>
         <fileSet>
