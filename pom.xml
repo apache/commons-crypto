@@ -154,7 +154,6 @@ The following provides more details on the included cryptographic software:
     <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
   
     <jna.version>5.5.0</jna.version>
-    <commons.changes.onlyCurrentVersion>true</commons.changes.onlyCurrentVersion>
     <commons.jacoco.version>0.8.5</commons.jacoco.version>
 
     <!-- The property "target.name" is used to specify the ant target, The All target will use
