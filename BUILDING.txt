@@ -54,7 +54,7 @@ You can follow your OS distribution instructions to upgrade OpenSSL to a proper 
 
 Upgrade OpenSSL in Mac:
 
-  $ brew install homebrew/versions/openssl101
+  $ brew install openssl101
   $ brew link openssl --force
 
 Get OpenSSL headers: sudo apt -y install libssl-dev
