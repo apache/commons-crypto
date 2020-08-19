@@ -154,8 +154,8 @@ SunOS-x86_64_COMMONS_CRYPTO_FLAGS  :=
 Linux-arm_CC        := $(CROSS_PREFIX)gcc
 Linux-arm_CXX       := $(CROSS_PREFIX)g++
 Linux-arm_STRIP     := $(CROSS_PREFIX)strip
-Linux-arm_CFLAGS    := -include lib/inc_linux/jni_md.h -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
-Linux-arm_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
+Linux-arm_CFLAGS    := -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
+Linux-arm_CXXFLAGS  := -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
 Linux-arm_LINKFLAGS := -shared -static-libgcc
 Linux-arm_LIBNAME   := libcommons-crypto.so
 Linux-arm_COMMONS_CRYPTO_FLAGS:=
@@ -163,8 +163,8 @@ Linux-arm_COMMONS_CRYPTO_FLAGS:=
 Linux-armhf_CC        := $(CROSS_PREFIX)gcc
 Linux-armhf_CXX       := $(CROSS_PREFIX)g++
 Linux-armhf_STRIP     := $(CROSS_PREFIX)strip
-Linux-armhf_CFLAGS    := -include lib/inc_linux/jni_md.h -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=hard
-Linux-armhf_CXXFLAGS  := -include lib/inc_linux/jni_md.h -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=hard
+Linux-armhf_CFLAGS    := -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=hard
+Linux-armhf_CXXFLAGS  := -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=hard
 Linux-armhf_LINKFLAGS := -shared -static-libgcc
 Linux-armhf_LIBNAME   := libcommons-crypto.so
 Linux-armhf_COMMONS_CRYPTO_FLAGS:=
