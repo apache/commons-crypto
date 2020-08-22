@@ -64,47 +64,30 @@ Cross compile to 32-bit from Linux 64-bit: sudo apt-get install gcc-multilib
 ----------------------------------------------------------------------------------
 Maven build goals:
 
-* Clean                     : mvn clean
-* Compile                   : mvn compile
-* Run tests                 : mvn test
-* Run benchmarks            : mvn clean test -Pbenchmark
-* Run test; no JNI build    : mvn clean test -Dmaven.antrun.skip
-* Create JAR                : mvn package
-* Run findbugs              : mvn compile -Pfindbugs
-* Run checkstyle            : mvn compile checkstyle:checkstyle
-* Install JAR in M2 cache   : mvn install
-* Deploy JAR to Maven repo  : mvn deploy
-* Run RAT                   : mvn apache-rat:check
-* Run Clirr                 : mvn clirr:check
-* Build javadocs            : mvn javadoc:javadoc
-* Change version            : mvn versions:set -DnewVersion=NEWVERSION
+* Clean                       : mvn clean
+* Compile                     : mvn compile
+* Run tests                   : mvn test
+* Run Release Audit Check     : mvn apache-rat:check
+* Run API Compatibility Check : mvn japicmp:cmp
+* Build the site              : mvn site
+* Build Javadocs              : mvn javadoc:javadoc -Ddoclint=all
+* Run benchmarks              : mvn clean test -Pbenchmark
+* Run test; no JNI build      : mvn clean test -Dmaven.antrun.skip
+* Create JAR                  : mvn package
+* Run SpotBugs Check          : mvn compile spotbugs:check
+* Run Checkstyle Check        : mvn compile checkstyle:check
+* Install JAR in M2 cache     : mvn install
+* Deploy JAR to Maven repo    : mvn deploy
+* Change version              : mvn versions:set -DnewVersion=NEWVERSION
 
 ----------------------------------------------------------------------------------
 Importing projects to eclipse
 
-Generate eclipse project files.
-
-  $ mvn eclipse:eclipse -DskipTests
-
-At last, import to eclipse by specifying the root directory of the project via
-[File] > [Import] > [Existing Projects into Workspace].
+File menu: Choose Import..., select "Existing Maven Project".
 
 ----------------------------------------------------------------------------------
 Building distributions:
 
-To perform the license release audit, a.k.a. "RAT check", run:
+Please read http://commons.apache.org/releases/index.html
 
-   mvn apache-rat:check
-
-[Once 1.0.0 is out] To perform a Clirr check, run:
-
-   mvn clirr:check
-
-Create binary distribution:
-
-  $ mvn package -DskipTests
-
-Create a local staging version of the website (in /tmp/crypto-site):
-
-  $ mvn clean site; mvn site:stage -DstagingDirectory=/tmp/crypto-site
 
