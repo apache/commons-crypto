@@ -34,7 +34,7 @@ import org.apache.commons.crypto.random.CryptoRandomFactory;
 public final class Crypto {
 
 	/**
-	 * The prefix of all crypto configuration keys
+	 * The prefix of all crypto configuration keys.
 	 */
 	public static final String CONF_PREFIX = "commons.crypto.";
 
@@ -156,8 +156,9 @@ public final class Crypto {
 				final Properties props = new Properties();
 				props.setProperty(CryptoCipherFactory.CLASSES_KEY,
 						CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
-				try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", props)) {
-					System.out.println("Cipher instance created OK: " + cryptoCipher);
+				final String transformation = "AES/CTR/NoPadding";
+				try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(transformation, props)) {
+					System.out.printf("Cipher %s instance created OK: %s%n", transformation, cryptoCipher);
 				}
 			}
 			System.out.println("Additional OpenSSL_version(n) details:");
