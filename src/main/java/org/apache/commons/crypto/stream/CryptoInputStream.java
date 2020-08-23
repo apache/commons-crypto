@@ -60,13 +60,13 @@ public class CryptoInputStream extends InputStream implements
             + "stream.buffer.size";
 
     /** The CryptoCipher instance. */
-    final CryptoCipher cipher; // package protected for access by crypto classes; do not expose futher
+    final CryptoCipher cipher; // package protected for access by crypto classes; do not expose further
 
     /** The buffer size. */
     private final int bufferSize;
 
     /** Crypto key for the cipher. */
-    final Key key; // package protected for access by crypto classes; do not expose futher
+    final Key key; // package protected for access by crypto classes; do not expose further
 
     /** the algorithm parameters */
     private final AlgorithmParameterSpec params;
@@ -80,19 +80,19 @@ public class CryptoInputStream extends InputStream implements
     private boolean finalDone = false;
 
     /** The input data. */
-    Input input; // package protected for access by crypto classes; do not expose futher
+    Input input; // package protected for access by crypto classes; do not expose further
 
     /**
      * Input data buffer. The data starts at inBuffer.position() and ends at to
      * inBuffer.limit().
      */
-    ByteBuffer inBuffer; // package protected for access by crypto classes; do not expose futher
+    ByteBuffer inBuffer; // package protected for access by crypto classes; do not expose further
 
     /**
      * The decrypted data buffer. The data starts at outBuffer.position() and
      * ends at outBuffer.limit().
      */
-    ByteBuffer outBuffer; // package protected for access by crypto classes; do not expose futher
+    ByteBuffer outBuffer; // package protected for access by crypto classes; do not expose further
 
     // stream related configuration keys
     /**
