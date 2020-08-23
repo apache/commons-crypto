@@ -20,14 +20,14 @@ package org.apache.commons.crypto;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.apache.commons.crypto.utils.IoUtils;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -108,7 +108,9 @@ final class NativeCodeLoader {
      */
     private static void debug(final String format, final Object... args) {
         // TODO Find a better way to do this later.
-        // System.out.println(String.format(format, args));
+        if (Boolean.getBoolean(Crypto.CONF_PREFIX + "debug")) {
+            System.out.println(String.format(format, args));
+        }
     }
 
     /**
@@ -127,26 +129,23 @@ final class NativeCodeLoader {
         // Attach UUID to the native library file to ensure multiple class
         // loaders
         // can read the libcommons-crypto multiple times.
-        final String uuid = UUID.randomUUID().toString();
+        final UUID uuid = UUID.randomUUID();
         final String extractedLibFileName = String.format("commons-crypto-%s-%s", uuid, libraryFileName);
         final File extractedLibFile = new File(targetFolder, extractedLibFileName);
 
-        InputStream inputStream = null;
-        try {
+        debug("Extracting '%s' to '%s'...", nativeLibraryFilePath, extractedLibFile);
+        try (InputStream inputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
+            if (inputStream == null) {
+                debug("Resource not found: %s", nativeLibraryFilePath);
+                return null;
+            }
             // Extract a native library file into the target directory
-            inputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath);
-            try (FileOutputStream writer = new FileOutputStream(extractedLibFile)) {
-                final byte[] buffer = new byte[8192];
-                int bytesRead;
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    writer.write(buffer, 0, bytesRead);
-                }
+            try {
+                long byteCount = Files.copy(inputStream, extractedLibFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                debug("Extracted '%s' to '%s': %,d bytes.", nativeLibraryFilePath, extractedLibFile, byteCount);
             } finally {
                 // Delete the extracted lib file on JVM exit.
                 extractedLibFile.deleteOnExit();
-
-                IoUtils.closeQuietly(inputStream);
-                inputStream = null;
             }
 
             // Set executable (x) flag to enable Java to load the native library
@@ -159,18 +158,16 @@ final class NativeCodeLoader {
             // folder
             try (InputStream nativeInputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
                 try (InputStream extractedLibIn = new FileInputStream(extractedLibFile)) {
+                    debug("Validating '%s'...", extractedLibFile);
                     if (!contentsEquals(nativeInputStream, extractedLibIn)) {
                         throw new IllegalStateException(String.format("Failed to write a native library file %s to %s",
                                 nativeLibraryFilePath, extractedLibFile));
                     }
                 }
             }
-            debug("Extracted '%s' to '%s'", nativeLibraryFilePath, extractedLibFile);
             return extractedLibFile;
         } catch (final IOException e) {
             return null;
-        } finally {
-            IoUtils.closeQuietly(inputStream);
         }
     }
 
