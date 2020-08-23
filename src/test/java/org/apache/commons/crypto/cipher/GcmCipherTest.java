@@ -198,7 +198,7 @@ public class GcmCipherTest {
 
         final Random r = new Random();
         final int textLength = r.nextInt(1024*1024);
-        final int ivLength = r.nextInt(60);
+        final int ivLength = r.nextInt(59) + 1;
         final int keyLength = 16;
         final int tagLength = 128;  // bits
         final int aadLength = r.nextInt(128);
