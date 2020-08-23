@@ -78,6 +78,7 @@ final class NativeCodeLoader {
      * @param in2 the input2.
      * @return true if in1 and in2 is equal, else false.
      * @throws IOException if an I/O error occurs.
+     * @since Apache Commons IO 2.5
      */
     @SuppressWarnings("resource")
     private static boolean contentsEquals(final InputStream input1, final InputStream input2) throws IOException {
