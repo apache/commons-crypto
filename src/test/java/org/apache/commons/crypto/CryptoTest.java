@@ -22,22 +22,26 @@ import org.junit.Test;
 
 public class CryptoTest {
 
-    @Test
-    // This test may fail unless the code was built by Maven, as
-    // it relies on the VERSION file being set up correctly
-    public void testGetComponentVersion() {
-        final String version = Crypto.getComponentVersion();
-        Assert.assertNotNull("Should not be null",version);
-        Assert.assertTrue(version,version.matches("^\\d+\\.\\d+.*"));
-    }
+	/**
+	 * This test may fail unless the code was built by Maven, as it relies on the
+	 * VERSION file being set up correctly
+	 */
+	@Test
+	public void testGetComponentName() {
+		final String version = Crypto.getComponentName();
+		Assert.assertNotNull("Should not be null", version);
+		Assert.assertTrue(version, version.matches("^Apache Commons Crypto.*"));
+	}
 
-    @Test
-    // This test may fail unless the code was built by Maven, as
-    // it relies on the VERSION file being set up correctly
-    public void testGetComponentName() {
-        final String version = Crypto.getComponentName();
-        Assert.assertNotNull("Should not be null",version);
-        Assert.assertTrue(version,version.matches("^Apache Commons Crypto.*"));
-    }
+	/**
+	 * This test may fail unless the code was built by Maven, as it relies on the
+	 * VERSION file being set up correctly.
+	 */
+	@Test
+	public void testGetComponentVersion() {
+		final String version = Crypto.getComponentVersion();
+		Assert.assertNotNull("Should not be null", version);
+		Assert.assertTrue(version, version.matches("^\\d+\\.\\d+.*"));
+	}
 
 }
