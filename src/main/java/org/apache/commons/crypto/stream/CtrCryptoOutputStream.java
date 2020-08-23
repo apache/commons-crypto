@@ -21,14 +21,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
+import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -337,9 +333,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
         CtrCryptoInputStream.calculateIV(initIV, counter, iv);
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
-        } catch (final InvalidKeyException e) {
-            throw new IOException(e);
-        } catch (final InvalidAlgorithmParameterException e) {
+        } catch (final GeneralSecurityException e) {
             throw new IOException(e);
         }
         cipherReset = false;
@@ -364,11 +358,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
                 cipher.doFinal(inBuffer, out);
                 cipherReset = true;
             }
-        } catch (final ShortBufferException e) {
-            throw new IOException(e);
-        } catch (final BadPaddingException e) {
-            throw new IOException(e);
-        } catch (final IllegalBlockSizeException e) {
+        } catch (final GeneralSecurityException e) {
             throw new IOException(e);
         }
     }

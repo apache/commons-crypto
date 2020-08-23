@@ -22,16 +22,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
+import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Objects;
 import java.util.Properties;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
@@ -338,9 +335,7 @@ public class CryptoOutputStream extends OutputStream implements
     protected void initCipher() throws IOException {
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key, params);
-        } catch (final InvalidKeyException e) {
-            throw new IOException(e);
-        } catch (final InvalidAlgorithmParameterException e) {
+        } catch (final GeneralSecurityException e) {
             throw new IOException(e);
         }
     }
@@ -382,11 +377,7 @@ public class CryptoOutputStream extends OutputStream implements
 
         try {
             cipher.doFinal(inBuffer, outBuffer);
-        } catch (final ShortBufferException e) {
-            throw new IOException(e);
-        } catch (final IllegalBlockSizeException e) {
-            throw new IOException(e);
-        } catch (final BadPaddingException e) {
+        } catch (final GeneralSecurityException e) {
             throw new IOException(e);
         }
 

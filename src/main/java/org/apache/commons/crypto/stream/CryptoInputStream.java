@@ -22,8 +22,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
+import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Objects;
@@ -469,9 +468,7 @@ public class CryptoInputStream extends InputStream implements
     protected void initCipher() throws IOException {
         try {
             cipher.init(Cipher.DECRYPT_MODE, key, params);
-        } catch (final InvalidKeyException e) {
-            throw new IOException(e);
-        } catch (final InvalidAlgorithmParameterException e) {
+        } catch (final GeneralSecurityException e) {
             throw new IOException(e);
         }
     }

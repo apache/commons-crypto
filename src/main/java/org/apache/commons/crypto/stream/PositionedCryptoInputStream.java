@@ -20,16 +20,11 @@ package org.apache.commons.crypto.stream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
@@ -250,11 +245,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
                 state.getCryptoCipher().doFinal(inByteBuffer, outByteBuffer);
                 state.reset(true);
             }
-        } catch (final ShortBufferException e) {
-            throw new IOException(e);
-        } catch (final IllegalBlockSizeException e) {
-            throw new IOException(e);
-        } catch (final BadPaddingException e) {
+        } catch (final GeneralSecurityException e) {
             throw new IOException(e);
         }
     }
@@ -302,10 +293,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         try {
             state.getCryptoCipher().init(Cipher.DECRYPT_MODE, key,
                     new IvParameterSpec(iv));
-        } catch (final InvalidKeyException e) {
-            throw new IOException(e);
-        } catch (final InvalidAlgorithmParameterException e) {
-            throw new IOException(e);
+        } catch (final GeneralSecurityException e) {
         }
         state.reset(false);
     }

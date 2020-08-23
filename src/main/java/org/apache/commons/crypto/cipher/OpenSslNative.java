@@ -146,7 +146,7 @@ class OpenSslNative {
      *
      * @param context The cipher context address
      * @param type CtrlValues
-     * @param arg
+     * @param arg argument like a tag length
      * @param data byte buffer or null
      * @return return 0 if there is any error, else return 1.
      */
