@@ -80,55 +80,51 @@ final class NativeCodeLoader {
      *
      * @return the jar file.
      */
-    private static File findNativeLibrary() {
-        // Get the properties once
-        final Properties props = Utils.getDefaultProperties();
+	private static File findNativeLibrary() {
+		// Get the properties once
+		final Properties props = Utils.getDefaultProperties();
 
-        // Try to load the library in commons-crypto.lib.path */
-        String nativeLibraryPath = props.getProperty(Crypto.LIB_PATH_KEY);
-        String nativeLibraryName = props.getProperty(Crypto.LIB_NAME_KEY);
+		// Try to load the library in commons-crypto.lib.path */
+		String nativeLibraryPath = props.getProperty(Crypto.LIB_PATH_KEY);
+		String nativeLibraryName = props.getProperty(Crypto.LIB_NAME_KEY);
 
-        // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
-        if (nativeLibraryName == null) {
-            nativeLibraryName = System.mapLibraryName("commons-crypto");
-        }
-        if (nativeLibraryPath != null) {
-            final File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
-            if (nativeLib.exists()) {
-                return nativeLib;
-            }
-        }
+		// Resolve the library file name with a suffix (e.g., dll, .so, etc.)
+		if (nativeLibraryName == null) {
+			nativeLibraryName = System.mapLibraryName("commons-crypto");
+		}
+		if (nativeLibraryPath != null) {
+			final File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
+			if (nativeLib.exists()) {
+				return nativeLib;
+			}
+		}
 
-        // Load an OS-dependent native library inside a jar file
-        nativeLibraryPath = "/org/apache/commons/crypto/native/"
-                + OsInfo.getNativeLibFolderPathForCurrentOS();
-        boolean hasNativeLib = hasResource(nativeLibraryPath + "/"
-                + nativeLibraryName);
-        if (!hasNativeLib) {
-            final String altName = "libcommons-crypto.jnilib";
-            if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + "/" + altName)) {
-                // Fix for openjdk7 for Mac
-                nativeLibraryName = altName;
-                hasNativeLib = true;
-            }
-        }
+		// Load an OS-dependent native library inside a jar file
+		nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolderPathForCurrentOS();
+		boolean hasNativeLib = hasResource(nativeLibraryPath + "/" + nativeLibraryName);
+		if (!hasNativeLib) {
+			final String altName = "libcommons-crypto.jnilib";
+			if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + "/" + altName)) {
+				// Fix for openjdk7 for Mac
+				nativeLibraryName = altName;
+				hasNativeLib = true;
+			}
+		}
 
-        if (!hasNativeLib) {
-            final String errorMessage = String.format(
-                    "no native library is found for os.name=%s and os.arch=%s",
-                    OsInfo.getOSName(), OsInfo.getArchName());
-            throw new RuntimeException(errorMessage);
-        }
+		if (!hasNativeLib) {
+			final String errorMessage = String.format("no native library is found for os.name=%s and os.arch=%s",
+					OsInfo.getOSName(), OsInfo.getArchName());
+			throw new RuntimeException(errorMessage);
+		}
 
-        // Temporary folder for the native lib. Use the value of
-        // commons-crypto.tempdir or java.io.tmpdir
-        final String tempFolder = new File(props.getProperty(Crypto.LIB_TEMPDIR_KEY,
-        System.getProperty("java.io.tmpdir"))).getAbsolutePath();
+		// Temporary folder for the native lib. Use the value of
+		// commons-crypto.tempdir or java.io.tmpdir
+		final String tempFolder = new File(
+				props.getProperty(Crypto.LIB_TEMPDIR_KEY, System.getProperty("java.io.tmpdir"))).getAbsolutePath();
 
-        // Extract and load a native library inside the jar file
-        return extractLibraryFile(nativeLibraryPath, nativeLibraryName,
-                tempFolder);
-    }
+		// Extract and load a native library inside the jar file
+		return extractLibraryFile(nativeLibraryPath, nativeLibraryName, tempFolder);
+	}
 
     /**
      * Extracts the specified library file to the target folder.
