@@ -83,32 +83,32 @@ class OpenSsl11XNativeJna {
     public static native int EVP_CIPHER_CTX_set_padding(PointerByReference c, int pad);
 
     /**
-     * @return an openssl AES evp cipher instance with a 128-bit key CBC mode
+     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_128_cbc();
 
     /**
-     * @return an openssl AES evp cipher instance with a 128-bit key CTR mode
+     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_128_ctr();
 
     /**
-     * @return an openssl AES evp cipher instance with a 192-bit key CBC mode
+     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_192_cbc();
 
     /**
-     * @return an openssl AES evp cipher instance with a 192-bit key CTR mode
+     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_192_ctr();
 
     /**
-     * @return an openssl AES evp cipher instance with a 256-bit key CBC mode
+     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_256_cbc();
 
     /**
-     * @return an openssl AES evp cipher instance with a 256-bit key CTR mode
+     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_256_ctr();
 

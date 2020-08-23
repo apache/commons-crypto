@@ -67,7 +67,7 @@
       <action issue="CRYPTO-131" type="add" dev="britter">Provide FAQ page.</action>
       <action issue="CRYPTO-134" type="fix" dev="sebb">CipherByteBufferExample should not truncate the string</action>
       <action issue="CRYPTO-137" type="fix">Error compiling on Win64 with Mingw.</action>
-      <action issue="CRYPTO-138" type="fix">CipherByteArrayExample fails on openssl 1.1.0g with java.lang.UnsatisfiedLinkError: EVP_CIPHER_CTX_cleanup.</action>
+      <action issue="CRYPTO-138" type="fix">CipherByteArrayExample fails on OpenSSL 1.1.0g with java.lang.UnsatisfiedLinkError: EVP_CIPHER_CTX_cleanup.</action>
       <action issue="CRYPTO-139" type="add">Add support for AARCH64.</action>
       <action issue="CRYPTO-141" type="fix">Errors in native code can leave Java wrappers in bad state.</action>
       <action issue="CRYPTO-141" type="fix" dev="ggregory" due-to="Alex Remily">Intermittent Failure in GCMCipherTest#testGcmTamperedData() #105.</action>
