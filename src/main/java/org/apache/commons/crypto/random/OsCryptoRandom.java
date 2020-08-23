@@ -51,7 +51,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
             try {
                 IoUtils.readFully(stream, reservoir, 0, reservoir.length);
             } catch (final IOException e) {
-                throw new RuntimeException("failed to fill reservoir", e);
+                throw new IllegalStateException("failed to fill reservoir", e);
             }
             pos = 0;
         }
@@ -76,12 +76,12 @@ class OsCryptoRandom extends Random implements CryptoRandom {
             close();
             this.stream = new FileInputStream(randomDevFile);
         } catch (final IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
 
         try {
             fillReservoir(0);
-        } catch (final RuntimeException e) {
+        } catch (final IllegalStateException e) {
             close();
             throw e;
         }

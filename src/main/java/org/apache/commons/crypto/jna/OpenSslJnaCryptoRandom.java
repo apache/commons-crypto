@@ -105,7 +105,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
 
             if(rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
                 close();
-                throw new RuntimeException("rdrand should be used but default is detected");
+                throw new IllegalStateException("rdrand should be used but default is detected");
             }
 
             final ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
@@ -194,7 +194,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
             final NativeLong err = OpenSslNativeJna.ERR_peek_error();
             final String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
             close();
-            throw new RuntimeException("return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
+            throw new IllegalStateException("return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
         }
     }
 }

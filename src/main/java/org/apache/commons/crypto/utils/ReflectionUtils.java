@@ -35,10 +35,8 @@ public final class ReflectionUtils {
     private static final ClassLoader CLASSLOADER;
 
     static {
-        final ClassLoader threadClassLoader = Thread.currentThread()
-                .getContextClassLoader();
-        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader
-                : CryptoCipher.class.getClassLoader();
+        final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : CryptoCipher.class.getClassLoader();
     }
 
     /**
@@ -61,14 +59,14 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Uses the constructor represented by this {@code Constructor} object to
-     * create and initialize a new instance of the constructor's declaring
-     * class, with the specified initialization parameters.
+     * Uses the constructor represented by this {@code Constructor} object to create
+     * and initialize a new instance of the constructor's declaring class, with the
+     * specified initialization parameters.
      *
-     * @param <T> type for the new instance
+     * @param <T>   type for the new instance
      * @param klass the Class object.
-     * @param args array of objects to be passed as arguments to the constructor
-     *        call.
+     * @param args  array of objects to be passed as arguments to the constructor
+     *              call.
      * @return a new object created by calling the constructor this object
      *         represents.
      */
@@ -88,7 +86,7 @@ public final class ReflectionUtils {
             ctor.setAccessible(true);
             return ctor.newInstance(args);
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -99,8 +97,7 @@ public final class ReflectionUtils {
      * @return the class object.
      * @throws ClassNotFoundException if the class is not found.
      */
-    public static Class<?> getClassByName(final String name)
-            throws ClassNotFoundException {
+    public static Class<?> getClassByName(final String name) throws ClassNotFoundException {
         final Class<?> ret = getClassByNameOrNull(name);
         if (ret == null) {
             throw new ClassNotFoundException("Class " + name + " not found");
@@ -109,9 +106,8 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Loads a class by name, returning null rather than throwing an exception
-     * if it couldn't be loaded. This is to avoid the overhead of creating an
-     * exception.
+     * Loads a class by name, returning null rather than throwing an exception if it
+     * couldn't be loaded. This is to avoid the overhead of creating an exception.
      *
      * @param name the class name.
      * @return the class object, or null if it could not be found.
@@ -122,8 +118,7 @@ public final class ReflectionUtils {
         synchronized (CACHE_CLASSES) {
             map = CACHE_CLASSES.get(CLASSLOADER);
             if (map == null) {
-                map = Collections
-                        .synchronizedMap(new WeakHashMap<String, WeakReference<Class<?>>>());
+                map = Collections.synchronizedMap(new WeakHashMap<String, WeakReference<Class<?>>>());
                 CACHE_CLASSES.put(CLASSLOADER, map);
             }
         }
@@ -139,8 +134,7 @@ public final class ReflectionUtils {
                 clazz = Class.forName(name, true, CLASSLOADER);
             } catch (final ClassNotFoundException e) {
                 // Leave a marker that the class isn't found
-                map.put(name, new WeakReference<Class<?>>(
-                        NEGATIVE_CACHE_SENTINEL));
+                map.put(name, new WeakReference<Class<?>>(NEGATIVE_CACHE_SENTINEL));
                 return null;
             }
             // two putters can race here, but they'll put the same class

@@ -148,7 +148,7 @@ public class CryptoRandomFactoryTest {
             Assert.fail("Expected GeneralSecurityException");
         } catch (final GeneralSecurityException e) {
             Throwable cause = e.getCause();
-            Assert.assertEquals(RuntimeException.class, cause.getClass());
+            Assert.assertEquals(IllegalArgumentException.class, cause.getClass());
             cause = cause.getCause();
             Assert.assertEquals(InvocationTargetException.class, cause.getClass());
             cause = cause.getCause();

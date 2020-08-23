@@ -56,7 +56,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     /**
      * Constructs a {@link CryptoCipher} using JNA into OpenSSL
      *
-     * @param props properties for OpenSSL cipher
+     * @param props          properties for OpenSSL cipher
      * @param transformation transformation for OpenSSL cipher
      * @throws GeneralSecurityException if OpenSSL cipher initialize failed
      */
@@ -69,8 +69,8 @@ class OpenSslJnaCipher implements CryptoCipher {
         final Transform transform = tokenizeTransformation(transformation);
         algMode = AlgorithmMode.get(transform.algorithm, transform.mode);
 
-        if(algMode != AlgorithmMode.AES_CBC && algMode != AlgorithmMode.AES_CTR) {
-            throw new GeneralSecurityException("unknown algorithm "+transform.algorithm + "_" + transform.mode);
+        if (algMode != AlgorithmMode.AES_CBC && algMode != AlgorithmMode.AES_CTR) {
+            throw new GeneralSecurityException("unknown algorithm " + transform.algorithm + "_" + transform.mode);
         }
 
         padding = Padding.get(transform.padding);
@@ -81,10 +81,10 @@ class OpenSslJnaCipher implements CryptoCipher {
     /**
      * Initializes the cipher with mode, key and iv.
      *
-     * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
-     * @param key crypto key for the cipher
+     * @param mode   {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
+     * @param key    crypto key for the cipher
      * @param params the algorithm parameters
-     * @throws InvalidKeyException If key length is invalid
+     * @throws InvalidKeyException                If key length is invalid
      * @throws InvalidAlgorithmParameterException if IV length is wrong
      */
     @Override
@@ -105,26 +105,36 @@ class OpenSslJnaCipher implements CryptoCipher {
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
 
-        if ((algMode == AlgorithmMode.AES_CBC ||
-             algMode == AlgorithmMode.AES_CTR)
-            && iv.length != IV_LENGTH) {
+        if ((algMode == AlgorithmMode.AES_CBC || algMode == AlgorithmMode.AES_CTR) && iv.length != IV_LENGTH) {
             throw new InvalidAlgorithmParameterException("Wrong IV length: must be 16 bytes long");
         }
 
-        if(algMode == AlgorithmMode.AES_CBC) {
+        if (algMode == AlgorithmMode.AES_CBC) {
             switch (key.getEncoded().length) {
-                case 16: algo = OpenSslNativeJna.EVP_aes_128_cbc(); break;
-                case 24: algo = OpenSslNativeJna.EVP_aes_192_cbc(); break;
-                case 32: algo = OpenSslNativeJna.EVP_aes_256_cbc(); break;
+            case 16:
+                algo = OpenSslNativeJna.EVP_aes_128_cbc();
+                break;
+            case 24:
+                algo = OpenSslNativeJna.EVP_aes_192_cbc();
+                break;
+            case 32:
+                algo = OpenSslNativeJna.EVP_aes_256_cbc();
+                break;
             default:
                 throw new InvalidKeyException("keysize unsupported (" + key.getEncoded().length + ")");
             }
 
         } else {
             switch (key.getEncoded().length) {
-                case 16: algo = OpenSslNativeJna.EVP_aes_128_ctr(); break;
-                case 24: algo = OpenSslNativeJna.EVP_aes_192_ctr(); break;
-                case 32: algo = OpenSslNativeJna.EVP_aes_256_ctr(); break;
+            case 16:
+                algo = OpenSslNativeJna.EVP_aes_128_ctr();
+                break;
+            case 24:
+                algo = OpenSslNativeJna.EVP_aes_192_ctr();
+                break;
+            case 32:
+                algo = OpenSslNativeJna.EVP_aes_256_ctr();
+                break;
             default:
                 throw new InvalidKeyException("keysize unsupported (" + key.getEncoded().length + ")");
             }
@@ -139,17 +149,17 @@ class OpenSslJnaCipher implements CryptoCipher {
      * Continues a multiple-part encryption/decryption operation. The data is
      * encrypted or decrypted, depending on how this cipher was initialized.
      *
-     * @param inBuffer the input ByteBuffer
+     * @param inBuffer  the input ByteBuffer
      * @param outBuffer the output ByteBuffer
      * @return int number of bytes stored in {@code output}
      * @throws ShortBufferException if there is insufficient space in the output
-     *         buffer
+     *                              buffer
      */
     @Override
-    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
-            throws ShortBufferException {
+    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
         final int[] outlen = new int[1];
-        final int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining());
+        final int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
+                inBuffer.remaining());
         throwOnError(retVal);
         final int len = outlen[0];
         inBuffer.position(inBuffer.limit());
@@ -161,45 +171,48 @@ class OpenSslJnaCipher implements CryptoCipher {
      * Continues a multiple-part encryption/decryption operation. The data is
      * encrypted or decrypted, depending on how this cipher was initialized.
      *
-     * @param input the input byte array
-     * @param inputOffset the offset in input where the input starts
-     * @param inputLen the input length
-     * @param output the byte array for the result
+     * @param input        the input byte array
+     * @param inputOffset  the offset in input where the input starts
+     * @param inputLen     the input length
+     * @param output       the byte array for the result
      * @param outputOffset the offset in output where the result is stored
      * @return the number of bytes stored in output
      * @throws ShortBufferException if there is insufficient space in the output
-     *         byte array
+     *                              byte array
      */
     @Override
-    public int update(final byte[] input, final int inputOffset, final int inputLen,
-            final byte[] output, final int outputOffset) throws ShortBufferException {
+    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output,
+            final int outputOffset) throws ShortBufferException {
         final ByteBuffer outputBuf = ByteBuffer.wrap(output, outputOffset, output.length - outputOffset);
         final ByteBuffer inputBuf = ByteBuffer.wrap(input, inputOffset, inputLen);
         return update(inputBuf, outputBuf);
     }
+
     /**
      * Encrypts or decrypts data in a single-part operation, or finishes a
-     * multiple-part operation. The data is encrypted or decrypted, depending on
-     * how this cipher was initialized.
+     * multiple-part operation. The data is encrypted or decrypted, depending on how
+     * this cipher was initialized.
      *
-     * @param inBuffer the input ByteBuffer
+     * @param inBuffer  the input ByteBuffer
      * @param outBuffer the output ByteBuffer
      * @return int number of bytes stored in {@code output}
-     * @throws BadPaddingException if this cipher is in decryption mode, and
-     *         (un)padding has been requested, but the decrypted data is not
-     *         bounded by the appropriate padding bytes
+     * @throws BadPaddingException       if this cipher is in decryption mode, and
+     *                                   (un)padding has been requested, but the
+     *                                   decrypted data is not bounded by the
+     *                                   appropriate padding bytes
      * @throws IllegalBlockSizeException if this cipher is a block cipher, no
-     *         padding has been requested (only in encryption mode), and the
-     *         total input length of the data processed by this cipher is not a
-     *         multiple of block size; or if this encryption algorithm is unable
-     *         to process the input data provided.
-     * @throws ShortBufferException if the given output buffer is too small to
-     *         hold the result
+     *                                   padding has been requested (only in
+     *                                   encryption mode), and the total input
+     *                                   length of the data processed by this cipher
+     *                                   is not a multiple of block size; or if this
+     *                                   encryption algorithm is unable to process
+     *                                   the input data provided.
+     * @throws ShortBufferException      if the given output buffer is too small to
+     *                                   hold the result
      */
     @Override
     public int doFinal(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
-            throws ShortBufferException, IllegalBlockSizeException,
-            BadPaddingException {
+            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         final int uptLen = update(inBuffer, outBuffer);
         final int[] outlen = new int[1];
         final int retVal = OpenSslNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
@@ -213,93 +226,91 @@ class OpenSslJnaCipher implements CryptoCipher {
      * Encrypts or decrypts data in a single-part operation, or finishes a
      * multiple-part operation.
      *
-     * @param input the input byte array
-     * @param inputOffset the offset in input where the input starts
-     * @param inputLen the input length
-     * @param output the byte array for the result
+     * @param input        the input byte array
+     * @param inputOffset  the offset in input where the input starts
+     * @param inputLen     the input length
+     * @param output       the byte array for the result
      * @param outputOffset the offset in output where the result is stored
      * @return the number of bytes stored in output
-     * @throws ShortBufferException if the given output byte array is too small
-     *         to hold the result
-     * @throws BadPaddingException if this cipher is in decryption mode, and
-     *         (un)padding has been requested, but the decrypted data is not
-     *         bounded by the appropriate padding bytes
+     * @throws ShortBufferException      if the given output byte array is too small
+     *                                   to hold the result
+     * @throws BadPaddingException       if this cipher is in decryption mode, and
+     *                                   (un)padding has been requested, but the
+     *                                   decrypted data is not bounded by the
+     *                                   appropriate padding bytes
      * @throws IllegalBlockSizeException if this cipher is a block cipher, no
-     *         padding has been requested (only in encryption mode), and the
-     *         total input length of the data processed by this cipher is not a
-     *         multiple of block size; or if this encryption algorithm is unable
-     *         to process the input data provided.
+     *                                   padding has been requested (only in
+     *                                   encryption mode), and the total input
+     *                                   length of the data processed by this cipher
+     *                                   is not a multiple of block size; or if this
+     *                                   encryption algorithm is unable to process
+     *                                   the input data provided.
      */
     @Override
-    public int doFinal(final byte[] input, final int inputOffset, final int inputLen,
-            final byte[] output, final int outputOffset) throws ShortBufferException,
-            IllegalBlockSizeException, BadPaddingException {
-        final ByteBuffer outputBuf = ByteBuffer.wrap(output, outputOffset, output.length-outputOffset);
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output,
+            final int outputOffset) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+        final ByteBuffer outputBuf = ByteBuffer.wrap(output, outputOffset, output.length - outputOffset);
         final ByteBuffer inputBuf = ByteBuffer.wrap(input, inputOffset, inputLen);
         return doFinal(inputBuf, outputBuf);
     }
 
-
-
     /**
-     * Continues a multi-part update of the Additional Authentication
-     * Data (AAD).
+     * Continues a multi-part update of the Additional Authentication Data (AAD).
      * <p>
-     * Calls to this method provide AAD to the opensslEngine when operating in
-     * modes such as AEAD (GCM).  If this opensslEngine is operating in
-     * either GCM mode, all AAD must be supplied before beginning
-     * operations on the ciphertext (via the {@code update} and
-     * {@code doFinal} methods).
+     * Calls to this method provide AAD to the opensslEngine when operating in modes
+     * such as AEAD (GCM). If this opensslEngine is operating in either GCM mode,
+     * all AAD must be supplied before beginning operations on the ciphertext (via
+     * the {@code update} and {@code doFinal} methods).
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
-     * @throws IllegalArgumentException if the {@code aad}
-     * byte array is null
-     * @throws IllegalStateException if this opensslEngine is in a wrong state
-     * (e.g., has not been initialized), does not accept AAD, or if
-     * operating in either GCM mode and one of the {@code update}
-     * methods has already been called for the active
-     * encryption/decryption operation
-     * @throws UnsupportedOperationException if the implementation {@code opensslEngine}
-     * doesn't support this operation.
+     * @throws IllegalArgumentException      if the {@code aad} byte array is null
+     * @throws IllegalStateException         if this opensslEngine is in a wrong
+     *                                       state (e.g., has not been initialized),
+     *                                       does not accept AAD, or if operating in
+     *                                       either GCM mode and one of the
+     *                                       {@code update} methods has already been
+     *                                       called for the active
+     *                                       encryption/decryption operation
+     * @throws UnsupportedOperationException if the implementation
+     *                                       {@code opensslEngine} doesn't support
+     *                                       this operation.
      */
     @Override
-    public void updateAAD(final byte[] aad) throws IllegalArgumentException,
-            IllegalStateException, UnsupportedOperationException {
-        //TODO: implement GCM mode using Jna
+    public void updateAAD(final byte[] aad)
+            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
+        // TODO: implement GCM mode using Jna
         throw new UnsupportedOperationException("This is unsupported in Jna Cipher");
     }
 
     /**
-     * Continues a multi-part update of the Additional Authentication
-     * Data (AAD).
+     * Continues a multi-part update of the Additional Authentication Data (AAD).
      * <p>
-     * Calls to this method provide AAD to the opensslEngine when operating in
-     * modes such as AEAD (GCM).  If this opensslEngine is operating in
-     * either GCM mode, all AAD must be supplied before beginning
-     * operations on the ciphertext (via the {@code update} and
-     * {@code doFinal} methods).
+     * Calls to this method provide AAD to the opensslEngine when operating in modes
+     * such as AEAD (GCM). If this opensslEngine is operating in either GCM mode,
+     * all AAD must be supplied before beginning operations on the ciphertext (via
+     * the {@code update} and {@code doFinal} methods).
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
-     * @throws IllegalArgumentException if the {@code aad}
-     * byte array is null
-     * @throws IllegalStateException if this opensslEngine is in a wrong state
-     * (e.g., has not been initialized), does not accept AAD, or if
-     * operating in either GCM mode and one of the {@code update}
-     * methods has already been called for the active
-     * encryption/decryption operation
-     * @throws UnsupportedOperationException if the implementation {@code opensslEngine}
-     * doesn't support this operation.
+     * @throws IllegalArgumentException      if the {@code aad} byte array is null
+     * @throws IllegalStateException         if this opensslEngine is in a wrong
+     *                                       state (e.g., has not been initialized),
+     *                                       does not accept AAD, or if operating in
+     *                                       either GCM mode and one of the
+     *                                       {@code update} methods has already been
+     *                                       called for the active
+     *                                       encryption/decryption operation
+     * @throws UnsupportedOperationException if the implementation
+     *                                       {@code opensslEngine} doesn't support
+     *                                       this operation.
      */
     @Override
-    public void updateAAD(final ByteBuffer aad) throws IllegalArgumentException,
-            IllegalStateException, UnsupportedOperationException {
-        //TODO: implement GCM mode using Jna
+    public void updateAAD(final ByteBuffer aad)
+            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
+        // TODO: implement GCM mode using Jna
         throw new UnsupportedOperationException("This is unsupported in Jna Cipher");
     }
-
-
 
     /**
      * Closes the OpenSSL cipher. Clean the OpenSsl native context.
@@ -326,11 +337,12 @@ class OpenSslJnaCipher implements CryptoCipher {
             if (context != null) {
                 OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             }
-            throw new RuntimeException("return code "+retVal+" from OpenSSL. Err code is "+err+": "+errdesc);
+            throw new IllegalStateException(
+                    "return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
         }
     }
 
-    //TODO DUPLICATED CODE, needs cleanup
+    // TODO DUPLICATED CODE, needs cleanup
     /** Nested class for algorithm, mode and padding. */
     private static class Transform {
         final String algorithm;
@@ -339,9 +351,10 @@ class OpenSslJnaCipher implements CryptoCipher {
 
         /**
          * Constructor of Transform.
+         * 
          * @param algorithm the algorithm name
-         * @param mode the mode name
-         * @param padding the padding name
+         * @param mode      the mode name
+         * @param padding   the padding name
          */
         public Transform(final String algorithm, final String mode, final String padding) {
             this.algorithm = algorithm;
@@ -352,20 +365,20 @@ class OpenSslJnaCipher implements CryptoCipher {
 
     /**
      * Tokenize the transformation.
+     * 
      * @param transformation current transformation
      * @return the Transform
      * @throws NoSuchAlgorithmException if the algorithm is not supported
      */
-    private static Transform tokenizeTransformation(final String transformation)
-            throws NoSuchAlgorithmException {
+    private static Transform tokenizeTransformation(final String transformation) throws NoSuchAlgorithmException {
         if (transformation == null) {
             throw new NoSuchAlgorithmException("No transformation given.");
         }
 
         /*
          * Array containing the components of a Cipher transformation: index 0:
-         * algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding
-         * (e.g., NoPadding)
+         * algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding (e.g.,
+         * NoPadding)
          */
         final String[] parts = new String[3];
         int count = 0;
@@ -374,22 +387,22 @@ class OpenSslJnaCipher implements CryptoCipher {
             parts[count++] = parser.nextToken().trim();
         }
         if (count != 3 || parser.hasMoreTokens()) {
-            throw new NoSuchAlgorithmException(
-                    "Invalid transformation format: " + transformation);
+            throw new NoSuchAlgorithmException("Invalid transformation format: " + transformation);
         }
         return new Transform(parts[0], parts[1], parts[2]);
     }
 
     /**
-     * AlgorithmMode of JNA.  Currently only support AES/CTR/NoPadding.
+     * AlgorithmMode of JNA. Currently only support AES/CTR/NoPadding.
      */
     private enum AlgorithmMode {
         AES_CTR, AES_CBC;
 
         /**
          * Gets the AlgorithmMode instance.
+         * 
          * @param algorithm the algorithm name
-         * @param mode the mode name
+         * @param mode      the mode name
          * @return the AlgorithmMode instance
          * @throws NoSuchAlgorithmException if the algorithm is not support
          */

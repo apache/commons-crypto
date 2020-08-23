@@ -31,40 +31,36 @@ import org.junit.Test;
 
 public class OsCryptoRandomTest extends AbstractRandomTest {
 
-    @Override
-    public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-        // Windows does not have a /dev/random device
-        Assume.assumeTrue(!System.getProperty("os.name").contains("Windows"));
-        final Properties props = new Properties();
-        props.setProperty(
-                CryptoRandomFactory.CLASSES_KEY,
-                OsCryptoRandom.class.getName());
-        final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        assertTrue(
-                "The CryptoRandom should be: " + OsCryptoRandom.class.getName(),
-                random instanceof OsCryptoRandom);
-        return random;
-    }
+	@Override
+	public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
+		// Windows does not have a /dev/random device
+		Assume.assumeTrue(!System.getProperty("os.name").contains("Windows"));
+		final Properties props = new Properties();
+		props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
+		final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+		assertTrue("The CryptoRandom should be: " + OsCryptoRandom.class.getName(), random instanceof OsCryptoRandom);
+		return random;
+	}
 
-    @Test
-    public void testInvalidRandom() {
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
-        // Invalid device
-        props.setProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, "");
-        try {
-            CryptoRandomFactory.getCryptoRandom(props);
-            fail("Expected GeneralSecurityException");
-        } catch (final GeneralSecurityException e) {
-            Throwable cause;
-            cause = e.getCause();
-            Assert.assertEquals(RuntimeException.class, cause.getClass());
-            cause = cause.getCause();
-            Assert.assertEquals(InvocationTargetException.class, cause.getClass());
-            cause = cause.getCause();
-            Assert.assertEquals(RuntimeException.class, cause.getClass());
-            cause = cause.getCause();
-            Assert.assertEquals(FileNotFoundException.class, cause.getClass());
-        }
-    }
+	@Test
+	public void testInvalidRandom() {
+		final Properties props = new Properties();
+		props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
+		// Invalid device
+		props.setProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, "");
+		try {
+			CryptoRandomFactory.getCryptoRandom(props);
+			fail("Expected GeneralSecurityException");
+		} catch (final GeneralSecurityException e) {
+			Throwable cause;
+			cause = e.getCause();
+			Assert.assertEquals(IllegalArgumentException.class, cause.getClass());
+			cause = cause.getCause();
+			Assert.assertEquals(InvocationTargetException.class, cause.getClass());
+			cause = cause.getCause();
+			Assert.assertEquals(IllegalArgumentException.class, cause.getClass());
+			cause = cause.getCause();
+			Assert.assertEquals(FileNotFoundException.class, cause.getClass());
+		}
+	}
 }

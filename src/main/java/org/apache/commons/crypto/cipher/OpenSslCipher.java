@@ -56,7 +56,7 @@ class OpenSslCipher implements CryptoCipher {
 
         final Throwable loadingFailureReason = OpenSsl.getLoadingFailureReason();
         if (loadingFailureReason != null) {
-            throw new RuntimeException(loadingFailureReason);
+            throw new IllegalStateException(loadingFailureReason);
         }
 
         openSslEngine = OpenSsl.getInstance(transformation);
