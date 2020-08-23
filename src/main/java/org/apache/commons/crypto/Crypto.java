@@ -67,15 +67,15 @@ public final class Crypto {
 		 */
 		private static Properties getComponentProperties() {
 			final URL url = Crypto.class.getResource("/org/apache/commons/crypto/component.properties");
+			final Properties versionData = new Properties();
 			if (url != null) {
-				final Properties versionData = new Properties();
 				try (InputStream inputStream = url.openStream()) {
 					versionData.load(inputStream);
 					return versionData;
 				} catch (final IOException e) { // NOPMD
 				}
 			}
-			return new Properties(); // make sure field is not null
+			return versionData;
 		}
 	}
 

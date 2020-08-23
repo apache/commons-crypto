@@ -18,6 +18,7 @@
 package org.apache.commons.crypto;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CryptoTest {
@@ -42,6 +43,26 @@ public class CryptoTest {
 		final String version = Crypto.getComponentVersion();
 		Assert.assertNotNull("Should not be null", version);
 		Assert.assertTrue(version, version.matches("^\\d+\\.\\d+.*"));
+	}
+
+	@Test
+	@Ignore("Mac64 failure with OpenSSL 1.1.1g")
+	public void testMain() throws Throwable {
+		try {
+			Crypto.main(new String[0]);
+		} catch (Throwable e) {
+			Throwable loadingError = Crypto.getLoadingError();
+			System.err.println("Special case; LoadingError = " + loadingError);
+			throw loadingError != null ? loadingError : e;
+		}
+	}
+
+	@Test
+	public void testLoadingError() throws Throwable {
+		Throwable loadingError = Crypto.getLoadingError();
+		if (loadingError != null) {
+			throw loadingError;
+		}
 	}
 
 }
