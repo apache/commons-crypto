@@ -43,13 +43,13 @@ public final class Crypto {
 	 * The configuration key of the path for loading crypto library.
 	 */
 	public static final String LIB_PATH_KEY = Crypto.CONF_PREFIX + "lib.path";
-	
+
 	/**
 	 * The configuration key of the file name for loading crypto library.
 	 */
-	
+
 	public static final String LIB_NAME_KEY = Crypto.CONF_PREFIX + "lib.name";
-	
+
 	/**
 	 * The configuration key of temp directory for extracting crypto library.
 	 * Defaults to "java.io.tempdir" if not found.
@@ -57,7 +57,7 @@ public final class Crypto {
 	public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX + "lib.tempdir";
 
 	private static class ComponentPropertiesHolder {
-	
+
 		static final Properties PROPERTIES = getComponentProperties();
 
 		/**
@@ -136,20 +136,19 @@ public final class Crypto {
 	 * @throws Exception if getCryptoRandom or getCryptoCipher get error.
 	 */
 	public static void main(final String args[]) throws Exception {
-		System.out.println(getComponentName() + " " + getComponentVersion());
+		info("%s %s", getComponentName(), getComponentVersion());
 		if (isNativeCodeLoaded()) {
-			System.out.println("Native code loaded OK: " + OpenSslInfoNative.NativeVersion());
-			System.out.println("Native name: " + OpenSslInfoNative.NativeName());
-			System.out.println("Native built: " + OpenSslInfoNative.NativeTimeStamp());
-			System.out
-					.println("OpenSSL library loaded OK, version: 0x" + Long.toHexString(OpenSslInfoNative.OpenSSL()));
-			System.out.println("OpenSSL library info: " + OpenSslInfoNative.OpenSSLVersion(0));
+			info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
+			info("Native name: %s", OpenSslInfoNative.NativeName());
+			info("Native built: %s", OpenSslInfoNative.NativeTimeStamp());
+			info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslInfoNative.OpenSSL()));
+			info("OpenSSL library info: %s", OpenSslInfoNative.OpenSSLVersion(0));
 			{ // CryptoRandom
 				final Properties props = new Properties();
 				props.setProperty(CryptoRandomFactory.CLASSES_KEY,
 						CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
 				try (CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props)) {
-					System.out.println("Random instance created OK: " + cryptoRandom);
+					info("Random instance created OK: %s", cryptoRandom);
 				}
 			}
 			{ // CryptoCipher
@@ -158,15 +157,27 @@ public final class Crypto {
 						CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
 				final String transformation = "AES/CTR/NoPadding";
 				try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(transformation, props)) {
-					System.out.printf("Cipher %s instance created OK: %s%n", transformation, cryptoCipher);
+					info("Cipher %s instance created OK: %s", transformation, cryptoCipher);
 				}
 			}
-			System.out.println("Additional OpenSSL_version(n) details:");
+			info("Additional OpenSSL_version(n) details:");
 			for (int j = 1; j < 6; j++) {
-				System.out.println(j + ": " + OpenSslInfoNative.OpenSSLVersion(j));
+				info("%s: %s", j, OpenSslInfoNative.OpenSSLVersion(j));
 			}
 		} else {
-			System.out.println("Native load failed: " + getLoadingError());
+			info("Native load failed: %s", getLoadingError());
 		}
 	}
+
+	/**
+	 * Logs info-level messages.
+	 *
+	 * @param format See {@link String#format(String, Object...)}.
+	 * @param args   See {@link String#format(String, Object...)}.
+	 */
+	private static void info(final String format, Object... args) {
+		// TODO Find a better way to do this later.
+		System.out.println(String.format(format, args));
+	}
+
 }
