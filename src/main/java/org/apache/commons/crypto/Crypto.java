@@ -175,7 +175,7 @@ public final class Crypto {
 	 * @param format See {@link String#format(String, Object...)}.
 	 * @param args   See {@link String#format(String, Object...)}.
 	 */
-	private static void info(final String format, Object... args) {
+	private static void info(final String format, final Object... args) {
 		// TODO Find a better way to do this later.
 		System.out.println(String.format(format, args));
 	}
