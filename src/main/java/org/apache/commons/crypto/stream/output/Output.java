@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.stream.output;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -27,7 +28,7 @@ import java.nio.ByteBuffer;
  * mechanism such as {@code OutputStream} or
  * {@code WritableByteChannel}.
  */
-public interface Output {
+public interface Output extends Closeable {
 
     /**
      * Writes a sequence of bytes to this output from the given buffer.

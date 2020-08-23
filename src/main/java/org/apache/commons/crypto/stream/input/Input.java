@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.stream.input;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -27,7 +28,7 @@ import java.nio.ByteBuffer;
  * mechanism such as {@code InputStream} or
  * {@code ReadableByteChannel}.
  */
-public interface Input {
+public interface Input extends Closeable {
     /**
      * Reads a sequence of bytes from input into the given buffer.
      *

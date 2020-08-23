@@ -71,6 +71,8 @@
       <action issue="CRYPTO-139" type="add">Add support for AARCH64.</action>
       <action issue="CRYPTO-141" type="fix">Errors in native code can leave Java wrappers in bad state.</action>
       <action issue="CRYPTO-141" type="fix" dev="ggregory" due-to="Alex Remily">Intermittent Failure in GCMCipherTest#testGcmTamperedData() #105.</action>
+      <action issue="CRYPTO-139" type="add">Make org.apache.commons.crypto.stream.input.Input extend Closeable.</action>
+      <action issue="CRYPTO-139" type="add">Make org.apache.commons.crypto.stream.output.Output extend Closeable.</action>
       <action                    type="update" dev="ggregory" due-to="Geoffrey Blake">Reset JAVA_HOME for aarch64 and ppc builds. Turn off maven-enforcer for Xenial builds #104.</action>
       <action                    type="update" dev="ggregory">Update maven-checkstyle-plugin 3.0.0 -> 3.1.1.</action>
       <action                    type="update" dev="ggregory">Update commons-parent 51 -> 52.</action>
