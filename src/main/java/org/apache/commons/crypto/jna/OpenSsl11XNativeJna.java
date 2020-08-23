@@ -54,7 +54,7 @@ class OpenSsl11XNativeJna {
     /**
      * Generates a human-readable string representing the error code e.
      *
-     * @see <a>https://www.openssl.org/docs/manmaster/crypto/ERR_error_string.html</a>
+     * @see <a href="https://www.openssl.org/docs/man1.1.0/man3/ERR_error_string.html">ERR_error_string</a>
      *
      * @param err
      *            the error code
