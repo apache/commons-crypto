@@ -35,3 +35,4 @@ src/main/resources/com/intel/chimera/native/
 src/main/resources/com/intel/chimera/native/*
 .externalToolBuilders/*
 maven-eclipse.xml
+/libcrypto.dylib
