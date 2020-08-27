@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Locale;
 
 /**
- * Provides OS name and architecture name.
- * Used by the JNI make process to get information from the build environment.
+ * Provides OS name and architecture name. Used by the JNI make process to get
+ * information from the build environment.
  */
 final class OsInfo {
     private final static HashMap<String, String> archMapping = new HashMap<>();
@@ -109,8 +109,7 @@ final class OsInfo {
     }
 
     /**
-     * The main method.
-     * This is used by the JNI make processing in Makefile.common
+     * The main method. This is used by the JNI make processing in Makefile.common
      *
      * @param args the argv.
      */
@@ -154,25 +153,20 @@ final class OsInfo {
     static String getArchName() {
         // if running Linux on ARM, need to determine ABI of JVM
         final String osArch = System.getProperty("os.arch");
-        if (osArch.startsWith("arm")
-                && System.getProperty("os.name").contains("Linux")) {
+        if (osArch.startsWith("arm") && System.getProperty("os.name").contains("Linux")) {
             final String javaHome = System.getProperty("java.home");
             try {
                 // determine if first JVM found uses ARM hard-float ABI
-                final String[] cmdarray = {
-                        "/bin/sh",
-                        "-c",
-                        "find '"
-                                + javaHome
-                                + "' -name 'libjvm.so' | head -1 | xargs readelf -A | "
+                final String[] cmdarray = { "/bin/sh", "-c",
+                        "find '" + javaHome + "' -name 'libjvm.so' | head -1 | xargs readelf -A | "
                                 + "grep 'Tag_ABI_VFP_args: VFP registers'" };
                 final int exitCode = Runtime.getRuntime().exec(cmdarray).waitFor();
                 if (exitCode == 0) {
                     return "armhf";
                 }
-            } catch (final IOException e) { //NOPMD
+            } catch (final IOException e) { // NOPMD
                 // ignored: fall back to "arm" arch (soft-float ABI)
-            } catch (final InterruptedException e) { //NOPMD
+            } catch (final InterruptedException e) { // NOPMD
                 // ignored: fall back to "arm" arch (soft-float ABI)
             }
         } else {
@@ -199,9 +193,7 @@ final class OsInfo {
             return "Linux";
         } else if (osName.contains("AIX")) {
             return "AIX";
-        }
-
-        else {
+        } else {
             return osName.replaceAll("\\W", "");
         }
     }
