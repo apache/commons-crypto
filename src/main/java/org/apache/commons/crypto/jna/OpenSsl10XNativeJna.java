@@ -20,6 +20,8 @@ package org.apache.commons.crypto.jna;
 
 import java.nio.ByteBuffer;
 
+import org.apache.commons.crypto.Crypto;
+
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
@@ -34,7 +36,10 @@ class OpenSsl10XNativeJna {
         boolean ok = false;
         Throwable thrown = null;
         try {
-            Native.register("crypto");
+            final String libName = System.getProperty(Crypto.CONF_PREFIX + OpenSsl10XNativeJna.class.getSimpleName(),
+                    "crypto");
+            OpenSslJna.debug("Native.register('%s')%n", libName);
+            Native.register(libName);
             ok = true;
         } catch (final Exception e) {
             thrown = e;

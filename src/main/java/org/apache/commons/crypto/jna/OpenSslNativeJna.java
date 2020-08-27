@@ -20,6 +20,8 @@ package org.apache.commons.crypto.jna;
 
 import java.nio.ByteBuffer;
 
+import org.apache.commons.crypto.Crypto;
+
 import com.sun.jna.Function;
 import com.sun.jna.NativeLibrary;
 import com.sun.jna.NativeLong;
@@ -41,7 +43,9 @@ class OpenSslNativeJna {
     public static final long VERSION_1_1_X = 0x10100000;
 
     static {
-        final NativeLibrary crypto = NativeLibrary.getInstance("crypto");
+        final String libraryName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
+        OpenSslJna.debug("NativeLibrary.getInstance('%s')%n", libraryName);
+        final NativeLibrary crypto = NativeLibrary.getInstance(libraryName);
         Function version = null;
         try {
             version = crypto.getFunction("SSLeay");

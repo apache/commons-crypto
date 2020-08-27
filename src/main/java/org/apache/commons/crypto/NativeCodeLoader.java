@@ -23,7 +23,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
@@ -109,7 +111,7 @@ final class NativeCodeLoader {
      */
     private static void debug(final String format, final Object... args) {
         // TODO Find a better way to do this later.
-        if (Boolean.getBoolean(Crypto.CONF_PREFIX + "debug")) {
+        if (isDebug()) {
             System.out.println(String.format(format, args));
         }
     }
@@ -127,13 +129,11 @@ final class NativeCodeLoader {
             final String targetFolder) {
         final String nativeLibraryFilePath = libFolderForCurrentOS + "/" + libraryFileName;
 
-        // Attach UUID to the native library file to ensure multiple class
-        // loaders
+        // Attach UUID to the native library file to ensure multiple class loaders
         // can read the libcommons-crypto multiple times.
         final UUID uuid = UUID.randomUUID();
         final String extractedLibFileName = String.format("commons-crypto-%s-%s", uuid, libraryFileName);
         final File extractedLibFile = new File(targetFolder, extractedLibFileName);
-
         debug("Extracting '%s' to '%s'...", nativeLibraryFilePath, extractedLibFile);
         try (InputStream inputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
             if (inputStream == null) {
@@ -142,10 +142,20 @@ final class NativeCodeLoader {
             }
             // Extract a native library file into the target directory
             try {
-                long byteCount = Files.copy(inputStream, extractedLibFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                debug("Extracted '%s' to '%s': %,d bytes.", nativeLibraryFilePath, extractedLibFile, byteCount);
+                final Path path = extractedLibFile.toPath();
+                final long byteCount = Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
+                if (isDebug()) {
+                    debug("Extracted '%s' to '%s': %,d bytes [%s]", nativeLibraryFilePath, extractedLibFile, byteCount,
+                            Files.isExecutable(path) ? "X+" : "X-");
+                    final PosixFileAttributes attributes = Files.readAttributes(path, PosixFileAttributes.class);
+                    if (attributes != null) {
+                        debug("Attributes '%s': %s %s %s", extractedLibFile, attributes.permissions(),
+                                attributes.owner(), attributes.group());
+                    }
+                }
             } finally {
                 // Delete the extracted lib file on JVM exit.
+                debug("Delete on exit: %s", extractedLibFile);
                 extractedLibFile.deleteOnExit();
             }
 
@@ -242,6 +252,10 @@ final class NativeCodeLoader {
         return NativeCodeLoader.class.getResource(path) != null;
     }
 
+    private static boolean isDebug() {
+        return Boolean.getBoolean(Crypto.CONF_PREFIX + "debug");
+    }
+
     /**
      * Checks whether native code is loaded for this platform.
      *
@@ -261,10 +275,14 @@ final class NativeCodeLoader {
             final File nativeLibFile = findNativeLibrary();
             if (nativeLibFile != null) {
                 // Load extracted or specified native library.
-                System.load(nativeLibFile.getAbsolutePath());
+                final String absolutePath = nativeLibFile.getAbsolutePath();
+                debug("System.load('%s')", absolutePath);
+                System.load(absolutePath);
             } else {
                 // Load preinstalled library (in the path -Djava.library.path)
-                System.loadLibrary("commons-crypto");
+                final String libname = "commons-crypto";
+                debug("System.loadLibrary('%s')", libname);
+                System.loadLibrary(libname);
             }
             return null; // OK
         } catch (final Exception t) {

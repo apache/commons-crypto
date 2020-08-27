@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.jna;
 
+import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.random.CryptoRandom;
 
@@ -24,6 +25,19 @@ import org.apache.commons.crypto.random.CryptoRandom;
  * Public class to give access to the package protected class objects
  */
 public final class OpenSslJna {
+
+    /**
+     * Logs debug messages.
+     *
+     * @param format See {@link String#format(String, Object...)}.
+     * @param args   See {@link String#format(String, Object...)}.
+     */
+    static void debug(final String format, final Object... args) {
+        // TODO Find a better way to do this later.
+        if (Boolean.getBoolean(Crypto.CONF_PREFIX + "debug")) {
+            System.out.println(String.format(format, args));
+        }
+    }
 
     /**
      * @return The cipher class of JNA implementation
@@ -40,10 +54,14 @@ public final class OpenSslJna {
     }
 
     /**
-     * @return true if JNA native loads successfully
+     * Logs info-level messages.
+     *
+     * @param format See {@link String#format(String, Object...)}.
+     * @param args   See {@link String#format(String, Object...)}.
      */
-    public static boolean isEnabled() {
-        return OpenSslNativeJna.INIT_OK;
+    private static void info(final String format, final Object... args) {
+        // TODO Find a better way to do this later.
+        System.out.println(String.format(format, args));
     }
 
     /**
@@ -53,6 +71,23 @@ public final class OpenSslJna {
         return OpenSslNativeJna.INIT_ERROR;
     }
 
+    /**
+     * @return true if JNA native loads successfully
+     */
+    public static boolean isEnabled() {
+        return OpenSslNativeJna.INIT_OK;
+    }
+    
+    public static void main(final String[] args) {
+        info("isEnabled(): %s", isEnabled());
+        final Throwable initialisationError = initialisationError();
+        info("initialisationError(): %s", initialisationError);
+        if (initialisationError != null) {
+            System.err.flush(); // helpful for stack traces to not mix in other output.
+            initialisationError.printStackTrace();
+        }
+    }
+    
     /**
      * Retrieves version/build information about OpenSSL library.
      *
