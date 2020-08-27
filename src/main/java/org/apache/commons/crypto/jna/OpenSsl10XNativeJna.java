@@ -267,7 +267,7 @@ class OpenSsl10XNativeJna {
      * @param e
      *            engine reference
      * @return zero if the ENGINE was not already operational and couldn't be successfully
-     *         initialised
+     *         initialized
      */
     public static native int ENGINE_init(PointerByReference e);
 

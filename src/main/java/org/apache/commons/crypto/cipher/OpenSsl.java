@@ -109,7 +109,7 @@ final class OpenSsl {
     /**
      * Gets the failure reason when loading OpenSsl native.
      *
-     * @return the failure reason; null if it was loaded and initialised successfully
+     * @return the failure reason; null if it was loaded and initialized successfully
      */
     public static Throwable getLoadingFailureReason() {
         return loadingFailureReason;
@@ -142,7 +142,7 @@ final class OpenSsl {
      *         specified algorithm.
      * @throws NoSuchPaddingException if {@code transformation} contains a
      *         padding scheme that is not available.
-     * @throws IllegalStateException if native code cannot be initialised
+     * @throws IllegalStateException if native code cannot be initialized
      */
     public static OpenSsl getInstance(final String transformation)
             throws NoSuchAlgorithmException, NoSuchPaddingException {

@@ -66,9 +66,9 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Judges whether native library was successfully loaded and initialised.
+     * Judges whether native library was successfully loaded and initialized.
      *
-     * @return true if library was loaded and initialised
+     * @return true if library was loaded and initialized
      */
     public static boolean isNativeCodeEnabled() {
         return nativeEnabled;
@@ -78,14 +78,14 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      * Constructs a {@link OpenSslCryptoRandom}.
      *
      * @param props the configuration properties - not used
-     * @throws GeneralSecurityException if the native library could not be initialised successfully
+     * @throws GeneralSecurityException if the native library could not be initialized successfully
      */
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OpenSslCryptoRandom(final Properties props) throws GeneralSecurityException { // NOPMD
         if (!nativeEnabled) {
             if (initException != null) {
-                throw new GeneralSecurityException("Native library could not be initialised", initException);
+                throw new GeneralSecurityException("Native library could not be initialized", initException);
             }
             throw new GeneralSecurityException("Native library is not loaded");
         }
