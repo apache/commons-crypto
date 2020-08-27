@@ -1,3 +1,92 @@
+              Apache Commons Crypto 1.1.0
+              RELEASE NOTES
+
+The Apache Commons Crypto team is pleased to announce the release of Apache Commons Crypto 1.1.0
+
+Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
+Standard New Instructions). It provides Java API for both cipher level and Java stream level.
+Developers can use it to implement high performance AES encryption/decryption with the minimum
+code and effort. Please note that Crypto doesn't implement the cryptographic algorithm such as
+AES directly. It wraps to Openssl or JCE which implement the algorithms.
+
+Features
+--------
+
+1. Cipher API for low level cryptographic operations.
+2. Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encryption/decryption.
+3. Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
+4. JNI-based implementation to achieve comparable performance to the native C/C++ version based on OpenSsl.
+5. Portable across various operating systems (currently only Linux/MacOSX/Windows);
+Apache Commons Crypto loads the library according to your machine environment (it checks system properties, `os.name` and `os.arch`).
+6. Simple usage. Add the commons-crypto-(version).jar file to your classpath.
+
+
+Export restrictions
+-------------------
+
+This distribution includes cryptographic software.
+The country in which you currently reside may have restrictions
+on the import, possession, use, and/or re-export to another country,
+of encryption software. BEFORE using any encryption software,
+please check your country's laws, regulations and policies
+concerning the import, possession, or use, and re-export of
+encryption software, to see if this is permitted.
+See <http://www.wassenaar.org/> for more information.
+
+The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS),
+has classified this software as Export Commodity Control Number (ECCN) 5D002.C.1,
+which includes information security software using or performing
+cryptographic functions with asymmetric algorithms.
+The form and manner of this Apache Software Foundation distribution makes
+it eligible for export under the License Exception
+ENC Technology Software Unrestricted (TSU) exception
+(see the BIS Export Administration Regulations, Section 740.13)
+for both object code and source code.
+
+The following provides more details on the included cryptographic software:
+
+* Commons Crypto use [Java Cryptography Extension](http://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html) provided by Java
+* Commons Crypto link to and use [OpenSSL](https://www.openssl.org/) ciphers
+
+Minor release (Java 8 and OpenSSL 1.1.1)
+
+Changes in this version include:
+
+New features:
+o CRYPTO-59:   Support Galois/Counter Mode (GCM).
+o CRYPTO-131:  Provide FAQ page.
+o CRYPTO-139:  Add support for AARCH64.
+o CRYPTO-139:  Make org.apache.commons.crypto.stream.input.Input extend Closeable.
+o CRYPTO-139:  Make org.apache.commons.crypto.stream.output.Output extend Closeable.
+
+Fixed Bugs:
+o CRYPTO-125:  CryptoOutputStream does not call write in a loop when underlying channel works in non-block mode.
+o CRYPTO-134:  CipherByteBufferExample should not truncate the string
+o CRYPTO-137:  Error compiling on Win64 with Mingw.
+o CRYPTO-138:  CipherByteArrayExample fails on OpenSSL 1.1.0g with java.lang.UnsatisfiedLinkError: EVP_CIPHER_CTX_cleanup.
+o CRYPTO-141:  Errors in native code can leave Java wrappers in bad state.
+o CRYPTO-141:  Intermittent Failure in GCMCipherTest#testGcmTamperedData() #105. Thanks to Alex Remily.
+
+Changes:
+o              Add support for ARM.
+o              Add support for ARM-HF.
+o              Reset JAVA_HOME for aarch64 and ppc builds. Turn off maven-enforcer for Xenial builds #104. Thanks to Geoffrey Blake.
+o              Update maven-checkstyle-plugin 3.0.0 -> 3.1.1.
+o              Update commons-parent 51 -> 52.
+o              Update maven-resources-plugin 3.1.0 -> 3.2.0.
+o              Update Apache CLIRR to JApiCmp.
+o              Update FindBugs to SpotBugs.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-crypto/changes-report.html
+
+For complete information on Apache Commons Crypto, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Crypto website:
+
+https://commons.apache.org/proper/commons-crypto/
+
+-----------------------------------------------------------------------------
+
               Apache Commons Crypto 1.0.0
                   RELEASE NOTES
 

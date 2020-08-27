@@ -80,7 +80,7 @@ The following provides more details on the included cryptographic software:
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
 
@@ -104,7 +104,7 @@ The following provides more details on the included cryptographic software:
   <distributionManagement>
     <site>
       <id>commons.site</id>
-      <name>Apache Commons Site SVN</name>
+      <name>Apache Commons Site</name>
       <url>scm:svn:${commons.scmPubUrl}</url>
     </site>
   </distributionManagement>
