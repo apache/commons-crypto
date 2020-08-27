@@ -113,6 +113,9 @@ final class NativeCodeLoader {
         // TODO Find a better way to do this later.
         if (isDebug()) {
             System.out.println(String.format(format, args));
+            if (args != null && args.length > 0 && args[0] instanceof Throwable) {
+                ((Throwable) args[0]).printStackTrace(System.out);
+            }
         }
     }
 
@@ -178,6 +181,7 @@ final class NativeCodeLoader {
             }
             return extractedLibFile;
         } catch (final IOException e) {
+            debug("Ignoring %s", e);
             return null;
         }
     }
