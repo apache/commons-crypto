@@ -138,5 +138,3 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenS
   jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
   return answer;
 }
-
-
