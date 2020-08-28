@@ -79,13 +79,13 @@ o              Update FindBugs to SpotBugs.
 
 
 Testing:
-- darwin64-x86_64-cc; OpenSSL 1.1.1g.
-- debian-amd64; OpenSSL 1.0.1f.
-- debian-amd64; OpenSSL 1.1.1g.
-- Linux x86_64; OpenSSL 1.1.1.
-- Windows 64 (mingw64); OpenSSL 1.1.1d.
-- linux-aarch64; OpenSSL 1.0.2k-fips.
-- debian-arm64; OpenSSL 1.1.1f.
+- darwin64-x86_64-cc; OpenSSL 1.1.1g; thanks to Gary Gregory, Alex Remily.
+- debian-amd64; OpenSSL 1.0.1f; thanks to Gary Gregory.
+- debian-amd64; OpenSSL 1.1.1g; thanks to Bruno P. Kinoshita.
+- Linux x86_64; OpenSSL 1.1.1; thanks to Alex Remily.
+- Windows 64 (mingw64); OpenSSL 1.1.1d; thanks to Alex Remily.
+- linux-aarch64; OpenSSL 1.0.2k-fips; thanks to Geoffrey Blake.
+- debian-arm64; OpenSSL 1.1.1f; thanks to Geoffrey Blake.
 
 Historical list of changes: https://commons.apache.org/proper/commons-crypto/changes-report.html
 
