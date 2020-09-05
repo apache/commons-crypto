@@ -76,8 +76,17 @@ limitations under the License.
 <ul>
     <li>
         <a href="https://commons.apache.org/proper/commons-crypto/download_crypto.cgi">Crypto 1.1.0 (mirrors)</a>
-        requires Java 1.8, built and tested with OpenSSL 1.1.1 (11 Sep 2018).
+        requires Java 1.8, built and tested with:
     </li>
+    <ul>
+      <li>darwin64-x86_64-cc; OpenSSL 1.1.1g</li>
+      <li>debian-amd64; OpenSSL 1.0.1f</li>
+      <li>debian-amd64; OpenSSL 1.1.1g</li>
+      <li>debian-arm64; OpenSSL 1.1.1f</li>
+      <li>linux-aarch64; OpenSSL 1.0.2k-fips</li>
+      <li>Linux x86_64; OpenSSL 1.1.1</li>
+      <li>Windows 64 (mingw64); OpenSSL 1.1.1d</li>
+    </ul>
     <li>
         <a href="https://archive.apache.org/dist/commons/crypto/">Crypto 1.0.0 (archives)</a>
         requires Java 1.7.
