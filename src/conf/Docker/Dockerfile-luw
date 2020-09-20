@@ -1,0 +1,32 @@
+FROM ubuntu:trusty
+
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/
+ENV PATH=$PATH:/opt/apache-maven-3.6.3/bin
+
+RUN pwd ; uname -a && \
+    apt-get update -y && \
+    apt-get install build-essential -y && \
+    apt-get install software-properties-common -y && \
+    apt-get update -y  && \
+    sudo add-apt-repository ppa:openjdk-r/ppa -y && \
+    apt-get update -y && \
+    apt-get install openjdk-8-jdk -y && \
+    apt-get install g++-mingw-w64 -y && \
+    apt-get install gcc-multilib -y && \
+    apt-get install libssl-dev -y && \
+    ln -s /usr/include/x86_64-linux-gnu /usr/include/i386-linux-gnu && \
+    ln -s /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl/opensslconf.h && \
+    apt-get install git -y && \
+    apt-get install wget -y && \
+    cd ~ && \
+    wget http://apache.mirrors.hoobly.com/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
+    cd /opt && \
+    tar -zxf ~/apache-maven-3.6.3-bin.tar.gz && \
+    sudo dpkg --purge --force-depends ca-certificates-java && \
+    apt-get install ca-certificates-java -y && \
+    apt-get install g++-multilib -y && \
+    export OPENSSL_HOME=/usr && \
+    cd ~
+
+
+CMD /bin/bash
