@@ -51,7 +51,7 @@ public class CryptoTest {
 		try {
 			Crypto.main(new String[0]);
 		} catch (Throwable e) {
-			Throwable loadingError = Crypto.getLoadingError();
+			final Throwable loadingError = Crypto.getLoadingError();
 			System.err.println("Special case; LoadingError = " + loadingError);
 			throw loadingError != null ? loadingError : e;
 		}
@@ -59,7 +59,7 @@ public class CryptoTest {
 
 	@Test
 	public void testLoadingError() throws Throwable {
-		Throwable loadingError = Crypto.getLoadingError();
+		final Throwable loadingError = Crypto.getLoadingError();
 		if (loadingError != null) {
 			throw loadingError;
 		}
