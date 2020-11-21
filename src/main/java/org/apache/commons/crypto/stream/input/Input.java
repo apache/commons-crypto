@@ -134,5 +134,6 @@ public interface Input extends Closeable {
      *
      * @throws IOException if an I/O error occurs.
      */
+    @Override
     void close() throws IOException;
 }
