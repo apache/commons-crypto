@@ -17,31 +17,33 @@
  */
 package org.apache.commons.crypto.utils;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class UtilsTest {
     @Test
     public void testSplitOmitEmptyLine() {
         List<String> clazzNames = Utils.splitClassNames("", ",");
-        Assert.assertEquals(Collections.<String> emptyList(), clazzNames);
+        assertEquals(Collections.<String> emptyList(), clazzNames);
 
         clazzNames = Utils.splitClassNames("a,b", ",");
-        Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
+        assertEquals(Arrays.asList("a", "b"), clazzNames);
         clazzNames = Utils.splitClassNames("a,b,", ",");
-        Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
+        assertEquals(Arrays.asList("a", "b"), clazzNames);
         clazzNames = Utils.splitClassNames("a, b,", ",");
-        Assert.assertEquals(Arrays.asList("a", "b"), clazzNames);
+        assertEquals(Arrays.asList("a", "b"), clazzNames);
     }
 
     @Test
     public void testSplitNull() {
-        Assert.assertEquals(Collections.<String> emptyList(), Utils.splitClassNames(null, ","));
+        assertEquals(Collections.<String> emptyList(), Utils.splitClassNames(null, ","));
     }
 
     @Test
@@ -51,6 +53,6 @@ public class UtilsTest {
             "garbage.in",
             "out");
         final Properties allprops = Utils.getProperties(props);
-        Assert.assertEquals(allprops.getProperty("garbage.in"), "out");
+        assertEquals(allprops.getProperty("garbage.in"), "out");
     }
 }

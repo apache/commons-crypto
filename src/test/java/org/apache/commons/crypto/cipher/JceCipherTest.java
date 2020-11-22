@@ -18,12 +18,14 @@
 
 package org.apache.commons.crypto.cipher;
 
+import org.junit.jupiter.api.BeforeAll;
+
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class JceCipherTest extends AbstractCipherTest {
 
@@ -38,15 +40,15 @@ public class JceCipherTest extends AbstractCipherTest {
         cipherClass = JCE_CIPHER_CLASSNAME;
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void checkJceUnlimitedStrength() throws NoSuchAlgorithmException {
         final int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
-        Assert.assertTrue(String.format(
-                "Testing requires support for an AES key length of %d, but " +
-                "the detected maximum key length is %d.  This may indicate " +
-                "that the test environment is missing the JCE Unlimited " +
-                "Strength Jurisdiction Policy Files.",
-                MAX_KEY_LEN_LOWER_BOUND, maxKeyLen),
-                maxKeyLen >= MAX_KEY_LEN_LOWER_BOUND);
+        assertTrue(maxKeyLen >= MAX_KEY_LEN_LOWER_BOUND,
+                String.format(
+                        "Testing requires support for an AES key length of %d, but " +
+                        "the detected maximum key length is %d.  This may indicate " +
+                        "that the test environment is missing the JCE Unlimited " +
+                        "Strength Jurisdiction Policy Files.",
+                        MAX_KEY_LEN_LOWER_BOUND, maxKeyLen));
     }
 }

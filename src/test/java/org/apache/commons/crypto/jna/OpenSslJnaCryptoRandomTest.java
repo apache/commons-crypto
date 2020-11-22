@@ -17,7 +17,6 @@
  */
 package org.apache.commons.crypto.jna;
 
-import static org.junit.Assert.assertTrue;
 
 import java.security.GeneralSecurityException;
 import java.util.Properties;
@@ -25,14 +24,16 @@ import java.util.Properties;
 import org.apache.commons.crypto.random.AbstractRandomTest;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
-import org.junit.Assume;
-import org.junit.Before;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
 
-    @Before
+    @BeforeEach
     public void init() {
-        Assume.assumeTrue(OpenSslJna.isEnabled());
+        Assumptions.assumeTrue(OpenSslJna.isEnabled());
     }
 
     @Override
@@ -43,8 +44,8 @@ public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
                 OpenSslJnaCryptoRandom.class.getName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         assertTrue(
-                "The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName(),
-                random instanceof OpenSslJnaCryptoRandom);
+                random instanceof OpenSslJnaCryptoRandom,
+                "The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName());
         return random;
     }
 

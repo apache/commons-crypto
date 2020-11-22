@@ -18,15 +18,17 @@
 
 package org.apache.commons.crypto;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 
 import java.io.File;
 
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 
 public class NativeCodeLoaderTest {
 
@@ -43,25 +45,25 @@ public class NativeCodeLoaderTest {
 
     @Test
     public void testNativePresent() {
-        Assume.assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
+        assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
         assertNull(NativeCodeLoader.getLoadingError());
     }
 
     @Test
     public void testNativeNotPresent() {
-        Assume.assumeTrue(!NativeCodeLoader.isNativeCodeLoaded());
+        assumeTrue(!NativeCodeLoader.isNativeCodeLoaded());
         assertNotNull(NativeCodeLoader.getLoadingError());
     }
 
     @Test
     public void testCanLoadIfPresent() {
-        Assume.assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
+        assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
         // This will try to reload the library, so should work
         assertNull(NativeCodeLoader.loadLibrary());
     }
 
     @Test
-    @Ignore("Seems to cause issues with other tests on Linux; disable for now")
+    @Disabled("Seems to cause issues with other tests on Linux; disable for now")
     public void testUnSuccessfulLoad() throws Exception {
         final String nameKey = System.getProperty(Crypto.LIB_NAME_KEY);
         final String pathKey = System.getProperty(Crypto.LIB_PATH_KEY);
