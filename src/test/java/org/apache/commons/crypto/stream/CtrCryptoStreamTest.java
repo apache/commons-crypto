@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
@@ -33,13 +34,18 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.StreamInput;
 import org.apache.commons.crypto.stream.output.ChannelOutput;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     @Override
-    public void setUp() throws IOException {
+    public void setUp() {
         transformation = "AES/CTR/NoPadding";
     }
 
@@ -99,32 +105,32 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
         final StreamInput streamInput = new StreamInput(new ByteArrayInputStream(encData), 0);
         try {
             streamInput.seek(0);
-            Assert.fail("Expected UnsupportedOperationException.");
+            fail("Expected UnsupportedOperationException.");
         } catch (final UnsupportedOperationException ex) {
-        	Assert.assertEquals(ex.getMessage(), "Seek is not supported by this implementation");
+        	assertEquals(ex.getMessage(), "Seek is not supported by this implementation");
         }
         try {
             streamInput.read(0, new byte[0], 0, 0);
-            Assert.fail("Expected UnsupportedOperationException.");
+            fail("Expected UnsupportedOperationException.");
         } catch (final UnsupportedOperationException ex) {
-            Assert.assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
+            assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
         }
-        Assert.assertEquals(streamInput.available(), encData.length);
+        assertEquals(streamInput.available(), encData.length);
 
         final ChannelInput channelInput = new ChannelInput(Channels.newChannel(new ByteArrayInputStream(encData)));
         try {
             channelInput.seek(0);
-            Assert.fail("Expected UnsupportedOperationException.");
+            fail("Expected UnsupportedOperationException.");
         } catch (final UnsupportedOperationException ex) {
-            Assert.assertEquals(ex.getMessage(), "Seek is not supported by this implementation");
+            assertEquals(ex.getMessage(), "Seek is not supported by this implementation");
         }
         try {
             channelInput.read(0, new byte[0], 0, 0);
-            Assert.fail("Expected UnsupportedOperationException.");
+            fail("Expected UnsupportedOperationException.");
         } catch (final UnsupportedOperationException ex) {
-            Assert.assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
+            assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
         }
-        Assert.assertEquals(channelInput.available(), 0);
+        assertEquals(channelInput.available(), 0);
 
         final CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, getCipher(cipherClass),
                 defaultBufferSize, key, iv);
@@ -134,13 +140,13 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
         props.put(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, bufferSize);
         in.setStreamOffset(smallBufferSize);
 
-        Assert.assertEquals(CryptoInputStream.getBufferSize(props), Integer.parseInt(bufferSize));
-        Assert.assertEquals(smallBufferSize, in.getStreamOffset());
-        Assert.assertEquals(in.getBufferSize(), 8192);
-        Assert.assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
-        Assert.assertEquals(in.getKey().getAlgorithm(), "AES");
-        Assert.assertEquals(in.getParams().getClass(), IvParameterSpec.class);
-        Assert.assertNotNull(in.getInput());
+        assertEquals(CryptoInputStream.getBufferSize(props), Integer.parseInt(bufferSize));
+        assertEquals(smallBufferSize, in.getStreamOffset());
+        assertEquals(in.getBufferSize(), 8192);
+        assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
+        assertEquals(in.getKey().getAlgorithm(), "AES");
+        assertEquals(in.getParams().getClass(), IvParameterSpec.class);
+        assertNotNull(in.getInput());
 
         in.close();
 
@@ -148,12 +154,13 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
                 Channels.newChannel(baos)), getCipher(cipherClass),
                 Integer.parseInt(bufferSize), key, iv);
         out.setStreamOffset(smallBufferSize);
-        Assert.assertEquals(out.getStreamOffset(), smallBufferSize);
+        assertEquals(out.getStreamOffset(), smallBufferSize);
 
         out.close();
     }
 
-    @Test(timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testDecrypt() throws Exception {
         doDecryptTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, false);
         doDecryptTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, false);
@@ -176,13 +183,13 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
         final byte[] expectedData = new byte[dataLen];
         buf.get(readData);
         System.arraycopy(data, 0, expectedData, 0, dataLen);
-        Assert.assertArrayEquals(readData, expectedData);
+        assertArrayEquals(readData, expectedData);
 
         try {
             in.decryptBuffer(buf);
-            Assert.fail("Expected IOException.");
+            fail("Expected IOException.");
         } catch (final IOException ex) {
-            Assert.assertEquals(ex.getCause().getClass(), ShortBufferException.class);
+            assertEquals(ex.getCause().getClass(), ShortBufferException.class);
         }
 
     }

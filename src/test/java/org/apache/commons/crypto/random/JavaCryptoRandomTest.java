@@ -17,10 +17,12 @@
  */
 package org.apache.commons.crypto.random;
 
-import static org.junit.Assert.assertTrue;
+
 
 import java.security.GeneralSecurityException;
 import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JavaCryptoRandomTest extends AbstractRandomTest {
 
@@ -32,8 +34,8 @@ public class JavaCryptoRandomTest extends AbstractRandomTest {
                 JavaCryptoRandom.class.getName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         assertTrue(
-                "The CryptoRandom should be: " + JavaCryptoRandom.class.getName(),
-                random instanceof JavaCryptoRandom);
+                random instanceof JavaCryptoRandom,
+                "The CryptoRandom should be: " + JavaCryptoRandom.class.getName());
         return random;
     }
 

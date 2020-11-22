@@ -162,7 +162,7 @@ The following provides more details on the included cryptographic software:
     User is able to specify the platform by maven profiles.-->
     <target.name>all</target.name>
     <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
-    <junit.version>4.13</junit.version>
+    <junit.version>5.7.0</junit.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
@@ -707,17 +707,28 @@ The following provides more details on the included cryptographic software:
       </plugin>
     </plugins>
   </reporting>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
       <version>${jna.version}</version>
-      </dependency>
+    </dependency>
+    <!-- testing -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

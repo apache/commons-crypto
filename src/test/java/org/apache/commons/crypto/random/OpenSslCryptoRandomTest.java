@@ -17,27 +17,28 @@
  */
 package org.apache.commons.crypto.random;
 
-import static org.junit.Assert.assertTrue;
 
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.apache.commons.crypto.Crypto;
-import org.junit.Assume;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class OpenSslCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-        Assume.assumeTrue(Crypto.isNativeCodeLoaded());
+        assumeTrue(Crypto.isNativeCodeLoaded());
         final Properties props = new Properties();
         props.setProperty(
                 CryptoRandomFactory.CLASSES_KEY,
                 OpenSslCryptoRandom.class.getName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         assertTrue(
-                "The CryptoRandom should be: " + OpenSslCryptoRandom.class.getName(),
-                random instanceof OpenSslCryptoRandom);
+                random instanceof OpenSslCryptoRandom,
+                "The CryptoRandom should be: " + OpenSslCryptoRandom.class.getName());
         return random;
     }
 

@@ -18,13 +18,15 @@
 
 package org.apache.commons.crypto.stream.input;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.channels.Channels;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * Tests {@link ChannelInput}.

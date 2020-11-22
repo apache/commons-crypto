@@ -28,7 +28,8 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
-import org.junit.Assert;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class AbstractBenchmark {
 
@@ -67,7 +68,7 @@ public abstract class AbstractBenchmark {
         Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, className);
         final CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props);
-        Assert.assertEquals(className, cryptoRandom.getClass().getCanonicalName());
+        assertEquals(className, cryptoRandom.getClass().getCanonicalName());
         return cryptoRandom;
     }
 
@@ -75,7 +76,7 @@ public abstract class AbstractBenchmark {
         Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, className);
         CryptoCipher cipher = CryptoCipherFactory.getCryptoCipher("AES/CBC/PKCS5Padding", properties);
-        Assert.assertEquals(className, cipher.getClass().getCanonicalName());
+        assertEquals(className, cipher.getClass().getCanonicalName());
         return cipher;
     }
 

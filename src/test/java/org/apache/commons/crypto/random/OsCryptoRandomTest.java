@@ -17,28 +17,30 @@
  */
 package org.apache.commons.crypto.random;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 
 public class OsCryptoRandomTest extends AbstractRandomTest {
 
 	@Override
 	public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
 		// Windows does not have a /dev/random device
-		Assume.assumeTrue(!System.getProperty("os.name").contains("Windows"));
+		assumeTrue(!System.getProperty("os.name").contains("Windows"));
 		final Properties props = new Properties();
 		props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
 		final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-		assertTrue("The CryptoRandom should be: " + OsCryptoRandom.class.getName(), random instanceof OsCryptoRandom);
+		assertTrue(random instanceof OsCryptoRandom, "The CryptoRandom should be: " + OsCryptoRandom.class.getName());
 		return random;
 	}
 
@@ -54,13 +56,13 @@ public class OsCryptoRandomTest extends AbstractRandomTest {
 		} catch (final GeneralSecurityException e) {
 			Throwable cause;
 			cause = e.getCause();
-			Assert.assertEquals(IllegalArgumentException.class, cause.getClass());
+			assertEquals(IllegalArgumentException.class, cause.getClass());
 			cause = cause.getCause();
-			Assert.assertEquals(InvocationTargetException.class, cause.getClass());
+			assertEquals(InvocationTargetException.class, cause.getClass());
 			cause = cause.getCause();
-			Assert.assertEquals(IllegalArgumentException.class, cause.getClass());
+			assertEquals(IllegalArgumentException.class, cause.getClass());
 			cause = cause.getCause();
-			Assert.assertEquals(FileNotFoundException.class, cause.getClass());
+			assertEquals(FileNotFoundException.class, cause.getClass());
 		}
 	}
 }

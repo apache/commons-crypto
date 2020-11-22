@@ -17,12 +17,10 @@
  */
 package org.apache.commons.crypto.stream;
 
-import java.io.IOException;
-
 public class CbcPkcs5PaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
-    public void setUp() throws IOException {
+    public void setUp() {
         transformation = "AES/CBC/PKCS5Padding";
     }
 }

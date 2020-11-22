@@ -17,12 +17,11 @@
  */
 package org.apache.commons.crypto.jna;
 
-import java.io.IOException;
 
 public class CbcPkcs5PaddingCipherJnaStreamTest extends AbstractCipherJnaStreamTest {
 
     @Override
-    public void setUp() throws IOException {
+    public void setUp() {
         transformation = "AES/CBC/PKCS5Padding";
     }
 

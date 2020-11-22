@@ -17,9 +17,12 @@
  */
 package org.apache.commons.crypto;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CryptoTest {
 
@@ -30,8 +33,8 @@ public class CryptoTest {
 	@Test
 	public void testGetComponentName() {
 		final String version = Crypto.getComponentName();
-		Assert.assertNotNull("Should not be null", version);
-		Assert.assertTrue(version, version.matches("^Apache Commons Crypto.*"));
+		assertNotNull("Should not be null", version);
+		assertTrue(version.matches("^Apache Commons Crypto.*"), version);
 	}
 
 	/**
@@ -41,12 +44,12 @@ public class CryptoTest {
 	@Test
 	public void testGetComponentVersion() {
 		final String version = Crypto.getComponentVersion();
-		Assert.assertNotNull("Should not be null", version);
-		Assert.assertTrue(version, version.matches("^\\d+\\.\\d+.*"));
+		assertNotNull("Should not be null", version);
+		assertTrue(version.matches("^\\d+\\.\\d+.*"), version);
 	}
 
 	@Test
-	@Ignore("Mac64 failure with OpenSSL 1.1.1g")
+	@Disabled("Mac64 failure with OpenSSL 1.1.1g")
 	public void testMain() throws Throwable {
 		try {
 			Crypto.main(new String[0]);

@@ -30,9 +30,13 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.utils.Utils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class GcmCipherTest {
 
@@ -47,7 +51,7 @@ public class GcmCipherTest {
     private String[] cHex;
     private String[] tHex;
 
-    @Before
+    @BeforeEach
     public void setup() {
         //init
         cipherClass = OpenSslCipher.class.getName();
@@ -193,7 +197,7 @@ public class GcmCipherTest {
         }
     }
 
-    @Test(expected = AEADBadTagException.class)
+    @Test
     public void testGcmTamperedData() throws Exception {
 
         final Random r = new Random();
@@ -230,20 +234,16 @@ public class GcmCipherTest {
         // Tamper the encrypted data.
         encOutput[0] = (byte)(encOutput[0] + 1);
 
-        try {
             final CryptoCipher c = Utils.getCipherInstance(transformation, props);
             final Key key = new SecretKeySpec(keyBytes, "AES");
 
             final GCMParameterSpec iv = new GCMParameterSpec(tagLength, ivBytes);
             c.init(Cipher.DECRYPT_MODE, key, iv);
             c.updateAAD(aadBytes);
-            c.doFinal(encOutput, 0, encOutput.length, decOutput, 0);
+            assertThrows(AEADBadTagException.class,
+                    () -> c.doFinal(encOutput, 0, encOutput.length, decOutput, 0));
             c.close();
-        }
-        catch (final AEADBadTagException ex) {
-            Assert.assertTrue("Tag mismatch!".equals(ex.getMessage()));
-            throw ex;
-        }
+
     }
 
     @Test
@@ -287,7 +287,7 @@ public class GcmCipherTest {
         }
 
         // tag should be the same as JDK's cipher
-        Assert.assertArrayEquals(tag_orig, tag);
+        assertArrayEquals(tag_orig, tag);
 
         // like JDK's decrypt mode. The plaintext+tag is the input for decrypt mode
         // let's verify the add & tag now
@@ -302,7 +302,8 @@ public class GcmCipherTest {
         }
     }
 
-    @Test(expected = AEADBadTagException.class)
+    @Test
+            //(expected = AEADBadTagException.class)
     public void testGMacTamperedData() throws Exception {
         final Random r = new Random();
         final byte[] keyBytes = new byte[32];
@@ -328,25 +329,21 @@ public class GcmCipherTest {
             c.close();
         }
 
-        try {
-            // like JDK's decrypt mode. The plaintext+tag is the input for decrypt mode
-            final CryptoCipher c = Utils.getCipherInstance(transformation, props);
-            final Key key = new SecretKeySpec(keyBytes, "AES");
-            final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
-            c.init(Cipher.DECRYPT_MODE, key, iv);
+        // like JDK's decrypt mode. The plaintext+tag is the input for decrypt mode
+        final CryptoCipher c = Utils.getCipherInstance(transformation, props);
+        final Key key = new SecretKeySpec(keyBytes, "AES");
+        final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
+        c.init(Cipher.DECRYPT_MODE, key, iv);
 
-            // if the origin data is tampered
-            aad[0] = (byte) (aad[0] + 1);
-            c.updateAAD(aad);
+        // if the origin data is tampered
+        aad[0] = (byte) (aad[0] + 1);
+        c.updateAAD(aad);
 
-            c.doFinal(tag, 0, tag.length, input, 0);
-            c.close();
+        assertThrows(AEADBadTagException.class,
+                () -> c.doFinal(tag, 0, tag.length, input, 0));
 
-        }
-        catch (final AEADBadTagException ex) {
-            Assert.assertTrue("Tag mismatch!".equals(ex.getMessage()));
-            throw ex;
-        }
+
+
     }
 
     private void testGcmEncryption(final String kHex, final String pHex, final String ivHex, final String aadHex,
@@ -370,7 +367,7 @@ public class GcmCipherTest {
 
         c.doFinal(input, 0, input.length, output, 0);
 
-        Assert.assertArrayEquals(expectedOutput, output);
+        assertArrayEquals(expectedOutput, output);
         c.close();
     }
 
@@ -402,11 +399,11 @@ public class GcmCipherTest {
 
         int partLen = r.nextInt(input.length);
         int len = enc.update(input, 0, partLen, encOutput, 0);
-        Assert.assertTrue(len == partLen);
+        assertEquals(partLen, len);
         len = enc.doFinal(input, partLen, input.length - partLen, encOutput, partLen);
-        Assert.assertTrue(len == (input.length + (iv.getTLen() >> 3) - partLen));
+        assertEquals((input.length + (iv.getTLen() >> 3) - partLen), len);
 
-        Assert.assertArrayEquals(expectedOutput, encOutput);
+        assertArrayEquals(expectedOutput, encOutput);
         enc.close();
 
         // Decryption
@@ -423,11 +420,11 @@ public class GcmCipherTest {
         final byte[] decInput = encOutput;
         partLen = r.nextInt(input.length);
         len = dec.update(decInput, 0, partLen, decOutput, 0);
-        Assert.assertTrue(len == 0);
+        assertEquals(len, 0);
         len = dec.doFinal(decInput, partLen, decInput.length - partLen, decOutput, 0);
-        Assert.assertTrue(len == input.length);
+        assertEquals(input.length, len);
 
-        Assert.assertArrayEquals(input, decOutput);
+        assertArrayEquals(input, decOutput);
         dec.close();
     }
 
@@ -453,7 +450,7 @@ public class GcmCipherTest {
         c.updateAAD(aad);
         c.doFinal(input, 0, input.length, output, 0);
 
-        Assert.assertArrayEquals(plainBytes, output);
+        assertArrayEquals(plainBytes, output);
         c.close();
     }
 
@@ -480,11 +477,11 @@ public class GcmCipherTest {
 
         //only return recovered data after tag is successfully verified
         int len = c.update(input, 0, input.length, output, 0);
-        Assert.assertTrue(len == 0);
+        assertEquals(len, 0);
         len += c.doFinal(input, input.length, 0, output, 0);
-        Assert.assertTrue(len == plainBytes.length);
+        assertEquals(plainBytes.length, len);
 
-        Assert.assertArrayEquals(plainBytes, output);
+        assertArrayEquals(plainBytes, output);
         c.close();
     }
 
@@ -525,7 +522,7 @@ public class GcmCipherTest {
 
         bfCipherText.flip();
         bfCipherText.get(encOutput);
-        Assert.assertArrayEquals(cipherText, encOutput);
+        assertArrayEquals(cipherText, encOutput);
         c.close();
 
         // Decryption -------------------
@@ -541,7 +538,7 @@ public class GcmCipherTest {
         dec.doFinal(bfCipherText, bfPlainText);
         bfPlainText.flip();
         bfPlainText.get(decOutput);
-        Assert.assertArrayEquals(plainText, decOutput);
+        assertArrayEquals(plainText, decOutput);
         dec.close();
     }
 

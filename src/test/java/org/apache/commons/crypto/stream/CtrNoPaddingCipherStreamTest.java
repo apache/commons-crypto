@@ -17,12 +17,10 @@
  */
 package org.apache.commons.crypto.stream;
 
-import java.io.IOException;
-
 public class CtrNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
-    public void setUp() throws IOException {
+    public void setUp() {
         transformation = "AES/CTR/NoPadding";
     }
 

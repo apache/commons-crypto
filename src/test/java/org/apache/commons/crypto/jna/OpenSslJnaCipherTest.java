@@ -19,13 +19,14 @@
 package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
-import org.junit.Assume;
+
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class OpenSslJnaCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {
-        Assume.assumeTrue(OpenSslJna.isEnabled());
+        assumeTrue(OpenSslJna.isEnabled());
         transformations = new String[] {
                 "AES/CBC/NoPadding",
                 "AES/CBC/PKCS5Padding",

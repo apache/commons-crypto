@@ -22,15 +22,18 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 public abstract class AbstractRandomTest {
 
     public abstract CryptoRandom getCryptoRandom()
             throws GeneralSecurityException;
 
-    @Test(timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testRandomBytes() throws Exception {
         try (CryptoRandom random = getCryptoRandom()) {
             // len = 16
@@ -44,7 +47,8 @@ public abstract class AbstractRandomTest {
         }
     }
 
-    @Test(timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testRandomBytesMultiThreaded() throws Exception {
         final int threadCount = 100;
         try (final CryptoRandom random = getCryptoRandom()) {
