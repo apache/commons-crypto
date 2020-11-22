@@ -17,7 +17,6 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.io.IOException;
 
 class DummyRandom implements CryptoRandom {
 
@@ -27,7 +26,7 @@ class DummyRandom implements CryptoRandom {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
     }
 
     @Override

@@ -17,11 +17,14 @@
  */
 package org.apache.commons.crypto.cipher;
 
+import org.junit.jupiter.api.Test;
+
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class CryptoCipherFactoryTest {
     @Test
@@ -30,9 +33,9 @@ public class CryptoCipherFactoryTest {
                 .getCryptoCipher("AES/CBC/NoPadding");
         final String name = defaultCipher.getClass().getName();
         if (OpenSsl.getLoadingFailureReason() == null) {
-            Assert.assertEquals(OpenSslCipher.class.getName(), name);
+            assertEquals(OpenSslCipher.class.getName(), name);
         } else {
-            Assert.assertEquals(JceCipher.class.getName(), name);
+            assertEquals(JceCipher.class.getName(), name);
         }
     }
 
@@ -44,33 +47,39 @@ public class CryptoCipherFactoryTest {
                 "AES/CBC/NoPadding", properties);
         final String name = defaultCipher.getClass().getName();
         if (OpenSsl.getLoadingFailureReason() == null) {
-            Assert.assertEquals(OpenSslCipher.class.getName(), name);
+            assertEquals(OpenSslCipher.class.getName(), name);
         } else {
-            Assert.assertEquals(JceCipher.class.getName(), name);
+            assertEquals(JceCipher.class.getName(), name);
         }
     }
 
-    @Test(expected = GeneralSecurityException.class)
-    public void testInvalidCipher() throws GeneralSecurityException {
+    @Test
+    public void testInvalidCipher() {
         final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY,
                 "InvalidCipherName");
-        CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties);
+        assertThrows(GeneralSecurityException.class,
+                () -> CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties));
+
     }
 
-    @Test(expected = GeneralSecurityException.class)
-    public void testInvalidTransformation() throws GeneralSecurityException {
+    @Test
+    public void testInvalidTransformation() {
       final Properties properties = new Properties();
-      CryptoCipherFactory.getCryptoCipher("AES/Invalid/NoPadding", properties);
+        assertThrows(GeneralSecurityException.class,
+                () -> CryptoCipherFactory.getCryptoCipher("AES/Invalid/NoPadding", properties));
+
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNoCipher() throws Exception {
+    @Test
+    public void testNoCipher() {
         final Properties properties = new Properties();
         // An empty string currently means use the default
         // However the splitter drops empty fields
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ",");
-        CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties);
+        assertThrows(IllegalArgumentException.class,
+                () -> CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties));
+
     }
 
 }

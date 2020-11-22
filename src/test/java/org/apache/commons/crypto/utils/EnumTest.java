@@ -21,7 +21,7 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory.CipherProvider;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.apache.commons.crypto.random.CryptoRandomFactory.RandomProvider;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the enums used to define the internal implementation classes

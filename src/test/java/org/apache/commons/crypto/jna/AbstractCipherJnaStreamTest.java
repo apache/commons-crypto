@@ -18,25 +18,29 @@
 package org.apache.commons.crypto.jna;
 
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.stream.AbstractCipherStreamTest;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTest {
 
     private static final String CIPHER_OPENSSL_JNA = OpenSslJna.getCipherClass().getName();
 
-    @Before
+    @BeforeEach
     public void init() {
-        Assume.assumeTrue(OpenSslJna.isEnabled());
+        assumeTrue(OpenSslJna.isEnabled());
     }
 
     /** Test skip. */
     @Override
-    @Test(timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testSkip() throws Exception {
         doSkipTest(CIPHER_OPENSSL_JNA, false);
 
@@ -45,7 +49,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
 
     /** Test byte buffer read with different buffer size. */
     @Override
-    @Test(timeout = 120000)
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testByteBufferRead() throws Exception {
         doByteBufferRead(CIPHER_OPENSSL_JNA, false);
 
@@ -54,7 +58,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
 
     /** Test byte buffer write. */
     @Override
-    @Test(timeout = 120000)
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testByteBufferWrite() throws Exception {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         doByteBufferWrite(CIPHER_OPENSSL_JNA, baos, false);

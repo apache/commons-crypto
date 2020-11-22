@@ -17,19 +17,24 @@
  */
 package org.apache.commons.crypto.random;
 
+import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.InvocationTargetException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 
 public class CryptoRandomFactoryTest {
 
-    @Test(expected=NullPointerException.class)
-    public void testNull() throws Exception {
-        CryptoRandomFactory.getCryptoRandom(null);
+    @Test
+    public void testNull() {
+        assertThrows(NullPointerException.class,
+                () -> CryptoRandomFactory.getCryptoRandom(null));
     }
 
     @Test
@@ -46,23 +51,23 @@ public class CryptoRandomFactoryTest {
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         final String name = random.getClass().getName();
         if (OpenSslCryptoRandom.isNativeCodeEnabled()) {
-            Assert.assertEquals(OpenSslCryptoRandom.class.getName(), name);
+            assertEquals(OpenSslCryptoRandom.class.getName(), name);
         } else {
-            Assert.assertEquals(JavaCryptoRandom.class.getName(), name);
+            assertEquals(JavaCryptoRandom.class.getName(), name);
         }
     }
 
     @Test
     public void testGetOSRandom() throws GeneralSecurityException {
         // Windows does not have a /dev/random device
-        Assume.assumeTrue(!System.getProperty("os.name").contains("Windows"));
+        assumeTrue(!System.getProperty("os.name").contains("Windows"));
         final Properties props = new Properties();
         props.setProperty(
             CryptoRandomFactory.CLASSES_KEY,
             CryptoRandomFactory.RandomProvider.OS.getClassName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
 
-        Assert.assertEquals(OsCryptoRandom.class.getName(), random.getClass()
+        assertEquals(OsCryptoRandom.class.getName(), random.getClass()
             .getName());
     }
 
@@ -74,17 +79,19 @@ public class CryptoRandomFactoryTest {
             JavaCryptoRandom.class.getName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
 
-        Assert.assertEquals(JavaCryptoRandom.class.getName(), random.getClass()
+        assertEquals(JavaCryptoRandom.class.getName(), random.getClass()
             .getName());
     }
 
-    @Test(expected = GeneralSecurityException.class)
-    public void testInvalidRandom() throws GeneralSecurityException {
+    @Test
+    public void testInvalidRandom() {
         final Properties properties = new Properties();
         properties.setProperty(
             CryptoRandomFactory.CLASSES_KEY,
             "InvalidCipherName");
-        CryptoRandomFactory.getCryptoRandom(properties);
+
+        assertThrows(GeneralSecurityException.class,
+                () -> CryptoRandomFactory.getCryptoRandom(properties));
     }
 
     @Test
@@ -94,66 +101,54 @@ public class CryptoRandomFactoryTest {
             "org.apache.commons.crypto.cipher",
             "OpenSsl");
         final CryptoRandom rand = CryptoRandomFactory.getCryptoRandom(properties);
-        Assert.assertEquals(OpenSslCryptoRandom.class.getName(), rand.getClass().getName());
+        assertEquals(OpenSslCryptoRandom.class.getName(), rand.getClass().getName());
     }
 
     @Test
     public void testDefaultRandomClass() throws GeneralSecurityException {
         final CryptoRandom rand = CryptoRandomFactory.getCryptoRandom();
-        Assert.assertEquals(OpenSslCryptoRandom.class.getName(), rand.getClass().getName());
+        assertEquals(OpenSslCryptoRandom.class.getName(), rand.getClass().getName());
     }
 
     @Test
     public void testAbstractRandom() {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());
-        try {
-            CryptoRandomFactory.getCryptoRandom(props);
-            Assert.fail("Expected GeneralSecurityException");
-        } catch (final GeneralSecurityException e) {
-            final String message = e.getMessage();
-            Assert.assertTrue(message, message.contains("InstantiationException"));
-        }
-
+        Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final String message = ex.getMessage();
+        assertTrue(message.contains("InstantiationException"), message);
     }
 
     @Test
     public void testDummmyRandom() {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, DummyRandom.class.getName());
-        try {
-            CryptoRandomFactory.getCryptoRandom(props);
-            Assert.fail("Expected GeneralSecurityException");
-        } catch (final GeneralSecurityException e) {
-            final String message = e.getMessage();
-            Assert.assertTrue(message, message.contains("NoSuchMethodException"));
-        }
+        Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final String message = ex.getMessage();
+        assertTrue(message.contains("NoSuchMethodException"), message);
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void testNoClasses() throws Exception {
+    @Test
+    public void testNoClasses() {
         final Properties props = new Properties();
         // An empty string currently means use the default
         // However the splitter drops empty fields
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, ",");
-        CryptoRandomFactory.getCryptoRandom(props);
+        assertThrows(IllegalArgumentException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
     }
 
     @Test
     public void testFailingRandom() {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());
-        try {
-            CryptoRandomFactory.getCryptoRandom(props);
-            Assert.fail("Expected GeneralSecurityException");
-        } catch (final GeneralSecurityException e) {
-            Throwable cause = e.getCause();
-            Assert.assertEquals(IllegalArgumentException.class, cause.getClass());
-            cause = cause.getCause();
-            Assert.assertEquals(InvocationTargetException.class, cause.getClass());
-            cause = cause.getCause();
-            Assert.assertEquals(UnsatisfiedLinkError.class, cause.getClass());
-        }
+        Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+
+        Throwable cause = ex.getCause();
+        assertEquals(IllegalArgumentException.class, cause.getClass());
+        cause = cause.getCause();
+        assertEquals(InvocationTargetException.class, cause.getClass());
+        cause = cause.getCause();
+        assertEquals(UnsatisfiedLinkError.class, cause.getClass());
     }
 
 }

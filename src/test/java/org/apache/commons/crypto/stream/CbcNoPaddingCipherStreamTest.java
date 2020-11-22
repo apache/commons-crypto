@@ -17,12 +17,10 @@
  */
 package org.apache.commons.crypto.stream;
 
-import java.io.IOException;
-
 public class CbcNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
-    public void setUp() throws IOException {
+    public void setUp() {
         transformation = "AES/CBC/NoPadding";
     }
 

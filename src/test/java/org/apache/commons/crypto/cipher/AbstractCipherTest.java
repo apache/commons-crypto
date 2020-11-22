@@ -17,7 +17,6 @@
  */
 package org.apache.commons.crypto.cipher;
 
-import static org.junit.Assert.assertNotNull;
 
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
@@ -33,9 +32,14 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.utils.ReflectionUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public abstract class AbstractCipherTest {
 
@@ -58,11 +62,11 @@ public abstract class AbstractCipherTest {
 			0x08 };
 	private CryptoCipher enc, dec;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		init();
-		assertNotNull("cipherClass", cipherClass);
-		assertNotNull("transformations", transformations);
+		assertNotNull(cipherClass, "cipherClass");
+		assertNotNull(transformations, "transformations");
 		props = new Properties();
 		props.setProperty(CryptoCipherFactory.CLASSES_KEY, cipherClass);
 	}
@@ -123,7 +127,7 @@ public abstract class AbstractCipherTest {
 		for (final String tran : transformations) {
 			/** uses the small data set in {@link TestData} */
 			cipherTests = TestData.getTestData(tran);
-			assertNotNull(tran, cipherTests);
+			assertNotNull(cipherTests, tran);
 			for (int i = 0; i != cipherTests.length; i += 5) {
 				final byte[] key = DatatypeConverter.parseHexBinary(cipherTests[i + 1]);
 				final byte[] iv = DatatypeConverter.parseHexBinary(cipherTests[i + 2]);
@@ -147,27 +151,27 @@ public abstract class AbstractCipherTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testNullTransform() throws Exception {
-		getCipher(null).close();
+	@Test
+	public void testNullTransform() {
+		assertThrows(IllegalArgumentException.class,
+				() -> getCipher(null).close());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalidTransform() throws Exception {
-		getCipher("AES/CBR/NoPadding/garbage/garbage").close();
+	@Test
+	public void testInvalidTransform() {
+		assertThrows(IllegalArgumentException.class,
+				() -> getCipher("AES/CBR/NoPadding/garbage/garbage").close());
 	}
 
 	@Test
 	public void testInvalidKey() throws Exception {
 		for (final String transform : transformations) {
 			try (final CryptoCipher cipher = getCipher(transform)) {
-				Assert.assertNotNull(cipher);
+				assertNotNull(cipher);
 
 				final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
 						0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
-				cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(invalidKey, "AES"), new IvParameterSpec(IV));
-				Assert.fail("Expected InvalidKeyException");
-			} catch (final InvalidKeyException ike) {
+				assertThrows(InvalidKeyException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(invalidKey, "AES"), new IvParameterSpec(IV)));
 			}
 		}
 	}
@@ -176,13 +180,10 @@ public abstract class AbstractCipherTest {
 	public void testInvalidIV() throws Exception {
 		for (final String transform : transformations) {
 			try (final CryptoCipher cipher = getCipher(transform)) {
-				Assert.assertNotNull(cipher);
-
+				assertNotNull(cipher);
 				final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
 						0x0d, 0x0e, 0x0f, 0x11 };
-				cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(invalidIV));
-				Assert.fail("Expected InvalidAlgorithmParameterException");
-			} catch (final InvalidAlgorithmParameterException iape) {
+				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(invalidIV)));
 			}
 		}
 	}
@@ -191,11 +192,8 @@ public abstract class AbstractCipherTest {
 	public void testInvalidIVClass() throws Exception {
 		for (final String transform : transformations) {
 			try (final CryptoCipher cipher = getCipher(transform)) {
-				Assert.assertNotNull(cipher);
-
-				cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new GCMParameterSpec(IV.length, IV));
-				Assert.fail("Should have caught an InvalidAlgorithmParameterException");
-			} catch (final InvalidAlgorithmParameterException iape) {
+				assertNotNull(cipher);
+				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new GCMParameterSpec(IV.length, IV)));
 			}
 		}
 	}
@@ -221,8 +219,8 @@ public abstract class AbstractCipherTest {
 				output.get(b);
 				final byte[] c = new byte[encResult.remaining()];
 				encResult.get(c);
-				Assert.fail("AES failed encryption - expected " + new String(DatatypeConverter.printHexBinary(b))
-						+ " got " + new String(DatatypeConverter.printHexBinary(c)));
+				fail("AES failed encryption - expected " + DatatypeConverter.printHexBinary(b)
+						+ " got " + DatatypeConverter.printHexBinary(c));
 			}
 
 			//
@@ -236,7 +234,7 @@ public abstract class AbstractCipherTest {
 				final byte[] decResultArray = new byte[decResult.remaining()];
 				input.get(inArray);
 				decResult.get(decResultArray);
-				Assert.fail();
+				fail();
 			}
 		}
 	}
@@ -251,13 +249,13 @@ public abstract class AbstractCipherTest {
 		final int n = enc.doFinal(input, 0, input.length, temp, 0);
 		final byte[] cipherText = new byte[n];
 		System.arraycopy(temp, 0, cipherText, 0, n);
-		Assert.assertArrayEquals("byte array encryption error.", output, cipherText);
+		assertArrayEquals(output, cipherText, "byte array encryption error.");
 
 		temp = new byte[cipherText.length + blockSize];
 		final int m = dec.doFinal(cipherText, 0, cipherText.length, temp, 0);
 		final byte[] plainText = new byte[m];
 		System.arraycopy(temp, 0, plainText, 0, m);
-		Assert.assertArrayEquals("byte array decryption error.", input, plainText);
+		assertArrayEquals(input, plainText, "byte array decryption error.");
 	}
 
 	/** test byte array whose data is randomly generated */
@@ -300,12 +298,11 @@ public abstract class AbstractCipherTest {
 				plainPos += dec.doFinal(cipherText, offset, cipherPos % bufferLen, realPlainText, plainPos);
 
 				// verify
-				Assert.assertEquals("random byte array length changes after transformation", dataLen, plainPos);
+				assertEquals(dataLen, plainPos, "random byte array length changes after transformation");
 
 				final byte[] shrinkPlainText = new byte[plainPos];
 				System.arraycopy(realPlainText, 0, shrinkPlainText, 0, plainPos);
-				Assert.assertArrayEquals("random byte array contents changes after transformation", plainText,
-						shrinkPlainText);
+				assertArrayEquals(plainText, shrinkPlainText, "random byte array contents changes after transformation");
 			}
 		}
 	}
