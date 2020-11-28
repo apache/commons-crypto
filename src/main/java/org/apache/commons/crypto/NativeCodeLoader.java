@@ -66,7 +66,7 @@ final class NativeCodeLoader {
      */
     @SuppressWarnings("resource")
     private static BufferedInputStream buffer(final InputStream inputStream) {
-        // reject null early on rather than waiting for IO operation to fail
+        // reject null early on rat her than waiting for IO operation to fail
         // not checked by BufferedInputStream
         Objects.requireNonNull(inputStream, "inputStream");
         return inputStream instanceof BufferedInputStream ? (BufferedInputStream) inputStream
@@ -74,11 +74,11 @@ final class NativeCodeLoader {
     }
 
     /**
-     * Checks whether in1 and in2 is equal.
+     * Checks whether input1 and input2 is equal.
      *
-     * @param in1 the input1.
-     * @param in2 the input2.
-     * @return true if in1 and in2 is equal, else false.
+     * @param input1 the input1.
+     * @param input2 the input2.
+     * @return true if input1 and input2 is equal, else false.
      * @throws IOException if an I/O error occurs.
      * @since Apache Commons IO 2.5
      */
