@@ -76,8 +76,8 @@ final class NativeCodeLoader {
     /**
      * Checks whether in1 and in2 is equal.
      *
-     * @param in1 the input1.
-     * @param in2 the input2.
+     * @param input1 the input1.
+     * @param input2 the input2.
      * @return true if in1 and in2 is equal, else false.
      * @throws IOException if an I/O error occurs.
      * @since Apache Commons IO 2.5
