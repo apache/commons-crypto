@@ -63,7 +63,7 @@
   <body>
     <release version="1.1.1" date="20YY-MM-DD" description="TBD">
       <action                   dev="ggregory" type="update" due-to="Gary Gregory">Update commons.jacoco.version 0.8.5 to 0.8.6 (Fixes Java 15 builds).</action>
-      <action issue="CRYPTO-154" type="add">License header should be plain comment #113.</action>
+      <action issue="CRYPTO-154" type="add">License header should be plain a comment #113.</action>
     </release>  
     <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8 and OpenSSL 1.1.1)">
       <action issue="CRYPTO-59" type="add">Support Galois/Counter Mode (GCM).</action>
