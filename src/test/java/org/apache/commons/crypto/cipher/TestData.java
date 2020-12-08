@@ -58,7 +58,7 @@ public class TestData {
             "ae2d8a571e03ac9c9eb76fac45af8e51",
             "9cfc4e967edb808d679f777bc6702c7d" };
 
-    private static String[] CBCPKCS5PaddingTests = {
+    private static final String[] CBCPKCS5PaddingTests = {
             /*
              * key_len,key,iv,plainText,cipherText
              */
@@ -97,7 +97,7 @@ public class TestData {
             "0397f4f6820b1f9386f14403be5ac16e50213bd473b4874b9bcbf5f318ee686b1d",
             "e232cd6ef50047801ee681ec30f61d53cfd6b0bca02fd03c1b234baa10ea82ac9dab8b960926433a19ce6dea08677e34" };
 
-    private static String[] cipherCTRTests = {
+    private static final String[] cipherCTRTests = {
             /*
              * key_len,key,iv,plainText,cipherText
              */

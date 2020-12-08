@@ -130,6 +130,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
         processAAD();
 
+        final int outputLength = output.length;
         int len;
         if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
             // if GCM-DECRYPT, we have to handle the buffered input
@@ -153,7 +154,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
             final int inputDataLen = inputLenFinal - getTagLen();
             len = OpenSslNative.updateByteArray(context, inputFinal, inputOffsetFinal,
-                    inputDataLen, output, outputOffset, output.length - outputOffset);
+                    inputDataLen, output, outputOffset, outputLength - outputOffset);
 
             // set tag to EVP_Cipher for integrity verification in doFinal
             final ByteBuffer tag = ByteBuffer.allocate(getTagLen());
@@ -162,18 +163,18 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_SET_TAG.getValue(), getTagLen(), tag);
         } else {
             len = OpenSslNative.updateByteArray(context, input, inputOffset,
-                    inputLen, output, outputOffset, output.length - outputOffset);
+                    inputLen, output, outputOffset, outputLength - outputOffset);
         }
 
         len += OpenSslNative.doFinalByteArray(context, output, outputOffset + len,
-                output.length - outputOffset - len);
+                outputLength - outputOffset - len);
 
         // Keep the similar behavior as JCE, append the tag to end of output
         if (this.cipherMode == OpenSsl.ENCRYPT_MODE) {
             ByteBuffer tag;
             tag = ByteBuffer.allocate(getTagLen());
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_GET_TAG.getValue(), getTagLen(), tag);
-            tag.get(output, output.length - getTagLen(), getTagLen());
+            tag.get(output, outputLength - getTagLen(), getTagLen());
             len += getTagLen();
         }
 

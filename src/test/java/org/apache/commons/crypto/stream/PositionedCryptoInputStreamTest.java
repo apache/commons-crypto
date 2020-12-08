@@ -336,9 +336,9 @@ public class PositionedCryptoInputStreamTest {
 
     class PositionedInputForTest implements Input {
 
-        byte[] data;
+        final byte[] data;
         long pos;
-        long count;
+        final long count;
 
         public PositionedInputForTest(final byte[] data) {
             this.data = data;

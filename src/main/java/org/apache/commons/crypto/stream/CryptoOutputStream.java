@@ -222,7 +222,8 @@ public class CryptoOutputStream extends OutputStream implements
     public void write(final byte[] array, int off, int len) throws IOException {
         checkStream();
         Objects.requireNonNull(array, "array");
-        if (off < 0 || len < 0 || off > array.length || len > array.length - off) {
+        final int arrayLength = array.length;
+        if (off < 0 || len < 0 || off > arrayLength || len > arrayLength - off) {
             throw new IndexOutOfBoundsException();
         }
 

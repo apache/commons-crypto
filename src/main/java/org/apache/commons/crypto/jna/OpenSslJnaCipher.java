@@ -108,9 +108,10 @@ class OpenSslJnaCipher implements CryptoCipher {
         if ((algMode == AlgorithmMode.AES_CBC || algMode == AlgorithmMode.AES_CTR) && iv.length != IV_LENGTH) {
             throw new InvalidAlgorithmParameterException("Wrong IV length: must be 16 bytes long");
         }
+        final int keyEncodedLength = key.getEncoded().length;
 
         if (algMode == AlgorithmMode.AES_CBC) {
-            switch (key.getEncoded().length) {
+            switch (keyEncodedLength) {
             case 16:
                 algo = OpenSslNativeJna.EVP_aes_128_cbc();
                 break;
@@ -121,11 +122,11 @@ class OpenSslJnaCipher implements CryptoCipher {
                 algo = OpenSslNativeJna.EVP_aes_256_cbc();
                 break;
             default:
-                throw new InvalidKeyException("keysize unsupported (" + key.getEncoded().length + ")");
+                throw new InvalidKeyException("keysize unsupported (" + keyEncodedLength + ")");
             }
 
         } else {
-            switch (key.getEncoded().length) {
+            switch (keyEncodedLength) {
             case 16:
                 algo = OpenSslNativeJna.EVP_aes_128_ctr();
                 break;
@@ -136,7 +137,7 @@ class OpenSslJnaCipher implements CryptoCipher {
                 algo = OpenSslNativeJna.EVP_aes_256_ctr();
                 break;
             default:
-                throw new InvalidKeyException("keysize unsupported (" + key.getEncoded().length + ")");
+                throw new InvalidKeyException("keysize unsupported (" + keyEncodedLength + ")");
             }
         }
 

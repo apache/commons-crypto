@@ -73,12 +73,13 @@ public final class ReflectionUtils {
     public static <T> T newInstance(final Class<T> klass, final Object... args) {
         try {
             Constructor<T> ctor;
+            final int argsLength = args.length;
 
-            if (args.length == 0) {
+            if (argsLength == 0) {
                 ctor = klass.getDeclaredConstructor();
             } else {
-                final Class<?>[] argClses = new Class[args.length];
-                for (int i = 0; i < args.length; i++) {
+                final Class<?>[] argClses = new Class[argsLength];
+                for (int i = 0; i < argsLength; i++) {
                     argClses[i] = args[i].getClass();
                 }
                 ctor = klass.getDeclaredConstructor(argClses);
@@ -116,11 +117,7 @@ public final class ReflectionUtils {
         Map<String, WeakReference<Class<?>>> map;
 
         synchronized (CACHE_CLASSES) {
-            map = CACHE_CLASSES.get(CLASSLOADER);
-            if (map == null) {
-                map = Collections.synchronizedMap(new WeakHashMap<String, WeakReference<Class<?>>>());
-                CACHE_CLASSES.put(CLASSLOADER, map);
-            }
+            map = CACHE_CLASSES.computeIfAbsent(CLASSLOADER, k -> Collections.synchronizedMap(new WeakHashMap<String, WeakReference<Class<?>>>()));
         }
 
         Class<?> clazz = null;

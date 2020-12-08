@@ -639,10 +639,11 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @param IV the IV for input stream position
      */
     static void calculateIV(final byte[] initIV, long counter, final byte[] IV) {
-        Utils.checkArgument(initIV.length == CryptoCipherFactory.AES_BLOCK_SIZE);
-        Utils.checkArgument(IV.length == CryptoCipherFactory.AES_BLOCK_SIZE);
-
         int i = IV.length; // IV length
+
+        Utils.checkArgument(initIV.length == CryptoCipherFactory.AES_BLOCK_SIZE);
+        Utils.checkArgument(i == CryptoCipherFactory.AES_BLOCK_SIZE);
+
         int j = 0; // counter bytes index
         int sum = 0;
         while (i-- > 0) {
