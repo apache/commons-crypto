@@ -77,12 +77,13 @@ class OpenSslCommonMode extends OpenSslFeedbackCipher {
     public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
             throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         checkState();
+        final int outputLength = output.length;
 
         int len = OpenSslNative.updateByteArray(context, input, inputOffset,
-                inputLen, output, outputOffset, output.length - outputOffset);
+                inputLen, output, outputOffset, outputLength - outputOffset);
 
         len += OpenSslNative.doFinalByteArray(context, output, outputOffset + len,
-                output.length - outputOffset - len);
+                outputLength - outputOffset - len);
 
         return len;
     }

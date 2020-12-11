@@ -50,7 +50,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
 
     private static final long serialVersionUID = -7128193502768749585L;
     private final boolean rdrandEnabled;
-    private transient PointerByReference rdrandEngine;
+    private final transient PointerByReference rdrandEngine;
 
     /**
      * Constructs a {@link OpenSslJnaCryptoRandom}.
@@ -108,11 +108,12 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
                 throw new IllegalStateException("rdrand should be used but default is detected");
             }
 
-            final ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
-            final int retVal = OpenSslNativeJna.RAND_bytes(buf, bytes.length);
+            final int byteLength = bytes.length;
+            final ByteBuffer buf = ByteBuffer.allocateDirect(byteLength);
+            final int retVal = OpenSslNativeJna.RAND_bytes(buf, byteLength);
             throwOnError(retVal);
             buf.rewind();
-            buf.get(bytes,0, bytes.length);
+            buf.get(bytes,0, byteLength);
         }
     }
 
