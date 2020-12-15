@@ -178,11 +178,11 @@ class OpenSsl11XNativeJna {
      */
     public static native void EVP_CIPHER_CTX_free(PointerByReference c);
 
-    /**
-     * Clears all information from a cipher context and free up any allocated * memory associate
-     * with it.
-     *
-     * @param c
+    /*
+      Clears all information from a cipher context and free up any allocated * memory associate
+      with it.
+
+      @param c
      *            openssl evp cipher
      */
 

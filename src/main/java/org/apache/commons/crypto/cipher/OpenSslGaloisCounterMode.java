@@ -62,7 +62,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
         }
 
         this.cipherMode = mode;
-        byte[] iv;
+        final byte[] iv;
         if (params instanceof GCMParameterSpec) {
             final GCMParameterSpec gcmParam = (GCMParameterSpec) params;
             iv = gcmParam.getIV();
@@ -85,7 +85,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
         processAAD();
 
-        int len;
+        final int len;
         if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
             // store internally until doFinal(decrypt) is called because
             // spec mentioned that only return recovered data after tag
@@ -137,7 +137,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
             // and the retrieve the trailing tag from input
             int inputOffsetFinal = inputOffset;
             int inputLenFinal = inputLen;
-            byte[] inputFinal;
+            final byte[] inputFinal;
             if (inBuffer != null && inBuffer.size() > 0) {
                 inBuffer.write(input, inputOffset, inputLen);
                 inputFinal = inBuffer.toByteArray();
@@ -171,7 +171,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
         // Keep the similar behavior as JCE, append the tag to end of output
         if (this.cipherMode == OpenSsl.ENCRYPT_MODE) {
-            ByteBuffer tag;
+            final ByteBuffer tag;
             tag = ByteBuffer.allocate(getTagLen());
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_GET_TAG.getValue(), getTagLen(), tag);
             tag.get(output, outputLength - getTagLen(), getTagLen());
@@ -251,7 +251,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
         // Keep the similar behavior as JCE, append the tag to end of output
         if (this.cipherMode == OpenSsl.ENCRYPT_MODE) {
-            ByteBuffer tag;
+            final ByteBuffer tag;
             tag = ByteBuffer.allocate(getTagLen());
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_GET_TAG.getValue(), getTagLen(), tag);
             output.put(tag);

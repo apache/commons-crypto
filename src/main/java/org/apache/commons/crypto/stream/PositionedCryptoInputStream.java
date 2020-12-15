@@ -237,10 +237,10 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         try {
             final int n = state.getCryptoCipher().update(inByteBuffer, outByteBuffer);
             if (n < inputSize) {
-                /**
-                 * Typically code will not get here. CryptoCipher#update will
-                 * consume all input data and put result in outBuffer.
-                 * CryptoCipher#doFinal will reset the cipher context.
+                /*
+                  Typically code will not get here. CryptoCipher#update will
+                  consume all input data and put result in outBuffer.
+                  CryptoCipher#doFinal will reset the cipher context.
                  */
                 state.getCryptoCipher().doFinal(inByteBuffer, outByteBuffer);
                 state.reset(true);
@@ -307,7 +307,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     private CipherState getCipherState() throws IOException {
         CipherState state = cipherPool.poll();
         if (state == null) {
-            CryptoCipher cryptoCipher;
+            final CryptoCipher cryptoCipher;
             try {
                 cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", properties);
             } catch (final GeneralSecurityException e) {

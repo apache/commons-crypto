@@ -53,11 +53,11 @@ public abstract class AbstractCipherStreamTest {
     protected final byte[] data = new byte[dataLen];
     protected byte[] encData;
     private final Properties props = new Properties();
-    protected byte[] key = new byte[16];
-    protected byte[] iv = new byte[16];
-    protected int count = 10000;
-    protected static int defaultBufferSize = 8192;
-    protected static int smallBufferSize = 1024;
+    protected final byte[] key = new byte[16];
+    protected final byte[] iv = new byte[16];
+    protected final int count = 10000;
+    protected static final int defaultBufferSize = 8192;
+    protected static final int smallBufferSize = 1024;
 
     protected String transformation;
 
@@ -517,7 +517,7 @@ public abstract class AbstractCipherStreamTest {
     }
 
     private void prepareData() throws IOException {
-        CryptoCipher cipher = null;
+        final CryptoCipher cipher;
         try {
             cipher = (CryptoCipher) ReflectionUtils.newInstance(
                     ReflectionUtils.getClassByName(AbstractCipherTest.JCE_CIPHER_CLASSNAME), props,

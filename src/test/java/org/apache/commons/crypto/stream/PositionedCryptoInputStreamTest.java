@@ -68,7 +68,7 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void prepareData() throws IOException {
-        CryptoCipher cipher = null;
+        final CryptoCipher cipher;
         try {
             cipher = (CryptoCipher) ReflectionUtils.newInstance(
                     ReflectionUtils.getClassByName(AbstractCipherTest.JCE_CIPHER_CLASSNAME), props,
