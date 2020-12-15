@@ -38,7 +38,7 @@ public class GcmCipherTest {
 
     Properties props = null;
     String cipherClass = null;
-    String transformation = "AES/GCM/NoPadding";
+    final String transformation = "AES/GCM/NoPadding";
 
     private String[] kHex;
     private String[] pHex;

@@ -160,20 +160,17 @@ public class CryptoCipherFactory {
                 final Class<?> cls = ReflectionUtils.getClassByName(klass);
                 cipher = ReflectionUtils.newInstance(cls.asSubclass
                         (CryptoCipher.class), properties, transformation);
-                if (cipher != null) {
-                    break;
-                }
+                break;
             } catch (final Exception e) {
                 lastException = e;
-                errorMessage.append("{" + klass + "}");
+                errorMessage.append("{").append(klass).append("}");
             }
         }
 
         if (cipher != null) {
             return cipher;
         }
-        errorMessage.append(" is not available or transformation " +
-                transformation + " is not supported.");
+        errorMessage.append(" is not available or transformation ").append(transformation).append(" is not supported.");
         throw new GeneralSecurityException(errorMessage.toString(), lastException);
     }
 

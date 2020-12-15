@@ -72,7 +72,7 @@ public final class ReflectionUtils {
      */
     public static <T> T newInstance(final Class<T> klass, final Object... args) {
         try {
-            Constructor<T> ctor;
+            final Constructor<T> ctor;
             final int argsLength = args.length;
 
             if (argsLength == 0) {
@@ -114,7 +114,7 @@ public final class ReflectionUtils {
      * @return the class object, or null if it could not be found.
      */
     private static Class<?> getClassByNameOrNull(final String name) {
-        Map<String, WeakReference<Class<?>>> map;
+        final Map<String, WeakReference<Class<?>>> map;
 
         synchronized (CACHE_CLASSES) {
             map = CACHE_CLASSES.computeIfAbsent(CLASSLOADER, k -> Collections.synchronizedMap(new WeakHashMap<String, WeakReference<Class<?>>>()));

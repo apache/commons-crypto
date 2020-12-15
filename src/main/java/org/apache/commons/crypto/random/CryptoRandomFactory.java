@@ -196,18 +196,16 @@ public class CryptoRandomFactory {
             try {
                 final Class<?> klass = ReflectionUtils.getClassByName(klassName);
                 random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
-                if (random != null) {
-                    break;
-                }
+                break;
             } catch (final ClassCastException e) {
                 lastException = e;
-                errorMessage.append("Class: [" + klassName + "] is not a CryptoRandom.");
+                errorMessage.append("Class: [").append(klassName).append("] is not a CryptoRandom.");
             } catch (final ClassNotFoundException e) {
                 lastException = e;
-                errorMessage.append("CryptoRandom: [" + klassName + "] not found.");
+                errorMessage.append("CryptoRandom: [").append(klassName).append("] not found.");
             } catch (final Exception e) {
                 lastException = e;
-                errorMessage.append("CryptoRandom: [" + klassName + "] failed with " + e.getMessage());
+                errorMessage.append("CryptoRandom: [").append(klassName).append("] failed with ").append(e.getMessage());
             }
         }
 

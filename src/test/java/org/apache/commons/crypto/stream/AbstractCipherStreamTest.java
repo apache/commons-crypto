@@ -53,11 +53,11 @@ public abstract class AbstractCipherStreamTest {
     protected final byte[] data = new byte[dataLen];
     protected byte[] encData;
     private final Properties props = new Properties();
-    protected byte[] key = new byte[16];
-    protected byte[] iv = new byte[16];
-    protected int count = 10000;
-    protected static int defaultBufferSize = 8192;
-    protected static int smallBufferSize = 1024;
+    protected final byte[] key = new byte[16];
+    protected final byte[] iv = new byte[16];
+    protected final int count = 10000;
+    protected static final int defaultBufferSize = 8192;
+    protected static final int smallBufferSize = 1024;
 
     protected String transformation;
 
