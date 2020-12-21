@@ -503,8 +503,8 @@ public class GcmCipherTest {
         final ByteBuffer bfAAD = ByteBuffer.allocateDirect(aad.length);
         bfAAD.put(aad);
 
-        ByteBuffer bfPlainText;
-        ByteBuffer bfCipherText;
+        final ByteBuffer bfPlainText;
+        final ByteBuffer bfCipherText;
         bfPlainText = ByteBuffer.allocateDirect(plainText.length);
         bfCipherText = ByteBuffer.allocateDirect(encOutput.length);
 
