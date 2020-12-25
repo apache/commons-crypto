@@ -365,7 +365,7 @@ The following provides more details on the included cryptographic software:
       <properties>
         <skipTests>true</skipTests>
         <benchmark>org.apache</benchmark>
-        <jmh.version>1.12</jmh.version>
+        <jmh.version>1.27</jmh.version>
       </properties>
 
       <dependencies>
