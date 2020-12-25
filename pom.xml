@@ -162,7 +162,7 @@ The following provides more details on the included cryptographic software:
     User is able to specify the platform by maven profiles.-->
     <target.name>all</target.name>
     <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
-    <junit.version>4.13</junit.version>
+    <junit.version>4.13.1</junit.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
