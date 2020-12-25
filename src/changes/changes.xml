@@ -86,6 +86,7 @@
       <action                    type="update" dev="ggregory">Update maven-resources-plugin 3.1.0 -> 3.2.0.</action>
       <action                    type="update" dev="ggregory">Update Apache CLIRR to JApiCmp.</action>
       <action                    type="update" dev="ggregory">Update FindBugs to SpotBugs.</action>
+      <action issue="CRYPTO-153" type="update" dev="ggregory" due-to="Arturo Bernal">Bump coveralls-maven-plugin from 3.1.0 to 4.3.0 #112.</action>
     </release>
 
     <release version="1.0.0" date="2016-07-22" description="
