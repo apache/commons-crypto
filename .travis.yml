@@ -36,8 +36,8 @@ matrix:
       install: |
         sudo ln -s /usr/include/x86_64-linux-gnu /usr/include/i386-linux-gnu
         mvn -version
-        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Plinux32
+        mvn -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+        mvn -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Plinux32
 
     # Job tests win32,win64 builds. But cannot test execution.
     - name: "win32,win64 / Ubuntu 14.04 / Java 8 / OpenSSL 1.0.x"
@@ -56,8 +56,8 @@ matrix:
       install: |
         sudo ln -s /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl/opensslconf.h
         mvn -version
-        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin64
-        mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin32
+        mvn -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin64
+        mvn -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pwin32
       script: echo DONE
       after_success: echo DONE
 
@@ -132,7 +132,7 @@ before_install:
     sudo unzip -j -o /tmp/policy.zip *.jar -d $JAVA_HOME/jre/lib/security
     rm /tmp/policy.zip
   - openssl version -a
-install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Denforcer.skip=true -B -V
+install: mvn -DskipTests=true -Dmaven.javadoc.skip=true -Denforcer.skip=true -B -V
 script: mvn test jacoco:report coveralls:report -Denforcer.skip=true -B -V
 after_success: mvn site -Denforcer.skip=true -B -V
 
