@@ -17,7 +17,6 @@
  */
 package org.apache.commons.crypto.random;
 
-import java.io.IOException;
 import java.util.Properties;
 
 class FailingRandom implements CryptoRandom {
@@ -28,7 +27,7 @@ class FailingRandom implements CryptoRandom {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
     }
 
     @Override

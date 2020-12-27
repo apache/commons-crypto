@@ -18,11 +18,15 @@
 
 package org.apache.commons.crypto.cipher;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
@@ -30,15 +34,17 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.GCMParameterSpec;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 
 public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {
-        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         transformations = new String[] {
                 "AES/CBC/NoPadding",
                 "AES/CBC/PKCS5Padding",
@@ -46,24 +52,29 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         cipherClass = OPENSSL_CIPHER_CLASSNAME;
     }
 
-    @Test(expected = NoSuchPaddingException.class, timeout = 120000)
-    public void testInvalidPadding() throws Exception {
-        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-        OpenSsl.getInstance("AES/CTR/NoPadding2");
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
+    public void testInvalidPadding() {
+        assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        assertThrows(NoSuchPaddingException.class,
+                () -> OpenSsl.getInstance("AES/CTR/NoPadding2"));
     }
 
-    @Test(expected = NoSuchAlgorithmException.class, timeout = 120000)
-    public void testInvalidMode() throws Exception {
-        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-        OpenSsl.getInstance("AES/CTR2/NoPadding");
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
+    public void testInvalidMode() {
+        assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        assertThrows(NoSuchAlgorithmException.class,
+                () -> OpenSsl.getInstance("AES/CTR2/NoPadding"));
     }
 
-    @Test(timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testUpdateArguments() throws Exception {
-        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
-        Assert.assertNotNull(cipher);
+        assertNotNull(cipher);
 
         cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(IV));
 
@@ -71,32 +82,28 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         ByteBuffer input = ByteBuffer.allocate(1024);
         ByteBuffer output = ByteBuffer.allocate(1024);
 
-        try {
-            cipher.update(input, output);
-            Assert.fail("Should have failed to accept non-direct buffers.");
-        } catch (final IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().contains(
-                    "Direct buffers are required"));
-        }
+        final ByteBuffer finalInput = input;
+        final ByteBuffer finalOutput = output;
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> cipher.update(finalInput, finalOutput));
+        assertTrue(ex.getMessage().contains("Direct buffers are required"));
 
         // Output buffer length should be sufficient to store output data
         input = ByteBuffer.allocateDirect(1024);
         output = ByteBuffer.allocateDirect(1000);
-        try {
-            cipher.update(input, output);
-            Assert.fail("Failed to check for output buffer size.");
-        } catch (final ShortBufferException e) {
-            Assert.assertTrue(e.getMessage().contains(
-                    "Output buffer is not sufficient"));
-        }
+        final ByteBuffer finalInput1 = input;
+        final ByteBuffer finalOutput1 = output;
+        ex = assertThrows(ShortBufferException.class, () -> cipher.update(finalInput1, finalOutput1));
+        assertTrue(ex.getMessage().contains("Output buffer is not sufficient"));
+
     }
 
-    @Test(timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testDoFinalArguments() throws Exception {
-        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
-        Assert.assertNotNull(cipher);
+        assertNotNull(cipher);
 
         cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(IV));
 
@@ -104,88 +111,74 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         final ByteBuffer input = ByteBuffer.allocate(1024);
         final ByteBuffer output = ByteBuffer.allocate(1024);
 
-        try {
-            cipher.doFinal(input, output);
-            Assert.fail("Should have failed to accept non-direct buffers.");
-        } catch (final IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().contains(
-                    "Direct buffer is required"));
-        }
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> cipher.doFinal(input, output));
+        assertTrue(ex.getMessage().contains("Direct buffer is required"));
     }
 
     @Override
-    @Test(expected = InvalidKeyException.class, timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testInvalidKey() throws Exception {
-        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
-        Assert.assertNotNull(cipher);
+        assertNotNull(cipher);
 
         final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
-        cipher.init(OpenSsl.ENCRYPT_MODE, invalidKey, new IvParameterSpec(IV));
+
+        assertThrows(InvalidKeyException.class,
+                () -> cipher.init(OpenSsl.ENCRYPT_MODE, invalidKey, new IvParameterSpec(IV)));
     }
 
     @Override
-    @Test(expected = InvalidAlgorithmParameterException.class, timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testInvalidIV() throws Exception {
-        Assume.assumeTrue(OpenSsl.getLoadingFailureReason() == null);
+        assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
                 .getInstance("AES/CTR/NoPadding");
-        Assert.assertNotNull(cipher);
+        assertNotNull(cipher);
 
         final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
-        cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(invalidIV));
+
+        assertThrows(InvalidAlgorithmParameterException.class,
+                () -> cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(invalidIV)));
     }
 
     @Override
-    @Test(expected = InvalidAlgorithmParameterException.class, timeout = 120000)
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testInvalidIVClass() throws Exception {
         final OpenSsl cipher = OpenSsl.getInstance("AES/CTR/NoPadding");
-        Assert.assertNotNull(cipher);
+        assertNotNull(cipher);
 
-        cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new GCMParameterSpec(IV.length, IV));
+
+        assertThrows(InvalidAlgorithmParameterException.class,
+                () ->  cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new GCMParameterSpec(IV.length, IV)));
     }
 
     @Test
     public void testCipherLifecycle() throws Exception {
         try (OpenSslCipher cipher = new OpenSslCipher(new Properties(), "AES/CTR/NoPadding")) {
-            try {
-                cipher.update(dummyBuffer(), dummyBuffer());
-                Assert.fail("Should have thrown exception.");
-            } catch (final IllegalStateException ise) {
-                // expected;
-            }
 
+            assertThrows(IllegalStateException.class, () -> cipher.update(dummyBuffer(), dummyBuffer()));
             cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"),
                 new IvParameterSpec(IV));
             cipher.update(dummyBuffer(), dummyBuffer());
 
-            try {
-                cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(new byte[1], "AES"),
-                    new IvParameterSpec(IV));
-                Assert.fail("Should have thrown exception.");
-            } catch (final InvalidKeyException ike) {
-                // expected;
-            }
-
+            assertThrows(InvalidKeyException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(new byte[1], "AES"),
+                    new IvParameterSpec(IV)));
             // Should keep working with previous init parameters.
             cipher.update(dummyBuffer(), dummyBuffer());
             cipher.doFinal(dummyBuffer(), dummyBuffer());
             cipher.close();
 
-            try {
-                cipher.update(dummyBuffer(), dummyBuffer());
-                Assert.fail("Should have thrown exception.");
-            } catch (final IllegalStateException ise) {
-                // expected;
-            }
-
+            assertThrows(IllegalStateException.class, () -> cipher.update(dummyBuffer(), dummyBuffer()));
             cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"),
                 new IvParameterSpec(IV));
             cipher.update(dummyBuffer(), dummyBuffer());
-            cipher.close();
         }
     }
 

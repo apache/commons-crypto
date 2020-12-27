@@ -36,10 +36,13 @@ import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.utils.ReflectionUtils;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class PositionedCryptoInputStreamTest {
 
@@ -58,7 +61,7 @@ public class PositionedCryptoInputStreamTest {
 
     private final String transformation = "AES/CTR/NoPadding";
 
-    @Before
+    @BeforeEach
     public void before() throws IOException {
         final Random random = new SecureRandom();
         random.nextBytes(testData);
@@ -68,7 +71,7 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void prepareData() throws IOException {
-        CryptoCipher cipher = null;
+        final CryptoCipher cipher;
         try {
             cipher = (CryptoCipher) ReflectionUtils.newInstance(
                     ReflectionUtils.getClassByName(AbstractCipherTest.JCE_CIPHER_CLASSNAME), props,
@@ -107,7 +110,7 @@ public class PositionedCryptoInputStreamTest {
 
     @Test
     public void doTestJNI() throws Exception {
-        Assume.assumeTrue(Crypto.isNativeCodeLoaded());
+        assumeTrue(Crypto.isNativeCodeLoaded());
         testCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME);
     }
 
@@ -245,11 +248,7 @@ public class PositionedCryptoInputStreamTest {
             throws Exception {
         final PositionedCryptoInputStream in = getCryptoInputStream(
                 getCipher(cipherClass), bufferSize);
-        try {
-            in.seek(position);
-            Assert.fail("Excepted exception for cannot seek to negative offset.");
-        } catch (final IllegalArgumentException iae) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> in.seek(position));
         in.close();
     }
 
@@ -276,7 +275,7 @@ public class PositionedCryptoInputStreamTest {
         try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
             final byte[] bytes = new byte[length];
             final int n = in.read(position, bytes, 0, length);
-            Assert.assertEquals(n, -1);
+            assertEquals(n, -1);
         }
     }
 
@@ -302,12 +301,7 @@ public class PositionedCryptoInputStreamTest {
         final PositionedCryptoInputStream in = getCryptoInputStream(
                 getCipher(cipherClass), bufferSize);
         final byte[] bytes = new byte[length];
-        try {
-            in.readFully(position, bytes, 0, length);
-            Assert.fail("Expected IOException.");
-        } catch (final IOException ioe) {
-            // excepted exception
-        }
+        assertThrows(IOException.class, () -> in.readFully(position, bytes, 0, length));
         in.close();
         in.close(); // Don't throw exception.
     }
@@ -321,7 +315,7 @@ public class PositionedCryptoInputStreamTest {
         System.arraycopy(data1, pos, expectedData, 0, length);
         // get the real data
         System.arraycopy(data2, 0, realData, 0, length);
-        Assert.assertArrayEquals(expectedData, realData);
+        assertArrayEquals(expectedData, realData);
     }
 
     private CryptoCipher getCipher(final String cipherClass) throws IOException {
@@ -334,7 +328,7 @@ public class PositionedCryptoInputStreamTest {
         }
     }
 
-    class PositionedInputForTest implements Input {
+    static class PositionedInputForTest implements Input {
 
         final byte[] data;
         long pos;
@@ -347,7 +341,7 @@ public class PositionedCryptoInputStreamTest {
         }
 
         @Override
-        public int read(final ByteBuffer dst) throws IOException {
+        public int read(final ByteBuffer dst) {
             final int remaining = (int) (count - pos);
             if (remaining <= 0) {
                 return -1;
@@ -360,7 +354,7 @@ public class PositionedCryptoInputStreamTest {
         }
 
         @Override
-        public long skip(long n) throws IOException {
+        public long skip(long n) {
             if (n <= 0) {
                 return 0;
             }
@@ -375,8 +369,7 @@ public class PositionedCryptoInputStreamTest {
         }
 
         @Override
-        public int read(final long position, final byte[] buffer, final int offset, int length)
-                throws IOException {
+        public int read(final long position, final byte[] buffer, final int offset, int length) {
             Objects.requireNonNull(buffer, "buffer");
             if (offset < 0 || length < 0
                     || length > buffer.length - offset) {
@@ -411,11 +404,11 @@ public class PositionedCryptoInputStreamTest {
         }
 
         @Override
-        public void close() throws IOException {
+        public void close() {
         }
 
         @Override
-        public int available() throws IOException {
+        public int available() {
             return (int) (count - pos);
         }
     }
