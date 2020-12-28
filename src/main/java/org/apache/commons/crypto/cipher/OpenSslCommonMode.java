@@ -41,7 +41,7 @@ class OpenSslCommonMode extends OpenSslFeedbackCipher {
     public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params)
             throws InvalidAlgorithmParameterException {
         this.cipherMode = mode;
-        byte[] iv;
+        final byte[] iv;
         if (params instanceof IvParameterSpec) {
             iv = ((IvParameterSpec) params).getIV();
         } else {

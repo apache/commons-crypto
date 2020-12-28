@@ -96,7 +96,7 @@ class OpenSslJnaCipher implements CryptoCipher {
         if (mode == Cipher.ENCRYPT_MODE) {
             cipherMode = OpenSslNativeJna.OOSL_JNA_ENCRYPT_MODE;
         }
-        byte[] iv;
+        final byte[] iv;
         if (params instanceof IvParameterSpec) {
             iv = ((IvParameterSpec) params).getIV();
         } else {

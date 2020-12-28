@@ -45,37 +45,37 @@ public abstract class AbstractBenchmark {
         super();
     }
 
-    protected void random(String cipherClass) throws Exception {
-        CryptoRandom random = getRandom(cipherClass);
+    protected void random(final String cipherClass) throws Exception {
+        final CryptoRandom random = getRandom(cipherClass);
         random.nextBytes(new byte[1000]);
         random.nextBytes(new byte[1000]);
         random.close();
     }
 
-    protected void encipher(String cipherClass) throws Exception {
-        CryptoCipher enCipher = getCipher(cipherClass);
+    protected void encipher(final String cipherClass) throws Exception {
+        final CryptoCipher enCipher = getCipher(cipherClass);
         enCipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
         final int bufferSize = 1024;
-        ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);
-        ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);
+        final ByteBuffer inBuffer = ByteBuffer.allocateDirect(bufferSize);
+        final ByteBuffer outBuffer = ByteBuffer.allocateDirect(bufferSize);
         inBuffer.put(BUFFER);
         inBuffer.flip();
         enCipher.doFinal(inBuffer, outBuffer);
         enCipher.close();
     }
 
-    protected CryptoRandom getRandom(String className) throws Exception {
-        Properties props = new Properties();
+    protected CryptoRandom getRandom(final String className) throws Exception {
+        final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, className);
         final CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props);
         assertEquals(className, cryptoRandom.getClass().getCanonicalName());
         return cryptoRandom;
     }
 
-    protected CryptoCipher getCipher(String className) throws Exception {
-        Properties properties = new Properties();
+    protected CryptoCipher getCipher(final String className) throws Exception {
+        final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, className);
-        CryptoCipher cipher = CryptoCipherFactory.getCryptoCipher("AES/CBC/PKCS5Padding", properties);
+        final CryptoCipher cipher = CryptoCipherFactory.getCryptoCipher("AES/CBC/PKCS5Padding", properties);
         assertEquals(className, cipher.getClass().getCanonicalName());
         return cipher;
     }

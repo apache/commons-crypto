@@ -50,7 +50,7 @@ public class OsCryptoRandomTest extends AbstractRandomTest {
 		props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
 		// Invalid device
 		props.setProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, "");
-		Exception e = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+		final Exception e = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
 		Throwable cause;
 		cause = e.getCause();
 		assertEquals(IllegalArgumentException.class, cause.getClass());

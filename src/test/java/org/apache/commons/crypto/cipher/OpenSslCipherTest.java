@@ -111,7 +111,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
         final ByteBuffer input = ByteBuffer.allocate(1024);
         final ByteBuffer output = ByteBuffer.allocate(1024);
 
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> cipher.doFinal(input, output));
+        final Exception ex = assertThrows(IllegalArgumentException.class, () -> cipher.doFinal(input, output));
         assertTrue(ex.getMessage().contains("Direct buffer is required"));
     }
 

@@ -240,7 +240,7 @@ public class GcmCipherTest {
         final GCMParameterSpec iv = new GCMParameterSpec(tagLength, ivBytes);
         c.init(Cipher.DECRYPT_MODE, key, iv);
         c.updateAAD(aadBytes);
-        Exception ex = assertThrows(AEADBadTagException.class, () -> c.doFinal(encOutput, 0, encOutput.length, decOutput, 0));
+        final Exception ex = assertThrows(AEADBadTagException.class, () -> c.doFinal(encOutput, 0, encOutput.length, decOutput, 0));
         assertEquals(ex.getMessage(),"Tag mismatch!");
         c.close();
 
@@ -339,7 +339,7 @@ public class GcmCipherTest {
         aad[0] = (byte) (aad[0] + 1);
         c.updateAAD(aad);
 
-        Exception ex = assertThrows(AEADBadTagException.class,
+        final Exception ex = assertThrows(AEADBadTagException.class,
                 () -> c.doFinal(tag, 0, tag.length, input, 0));
         assertEquals(ex.getMessage(), "Tag mismatch!");
 
@@ -501,8 +501,8 @@ public class GcmCipherTest {
         final ByteBuffer bfAAD = ByteBuffer.allocateDirect(aad.length);
         bfAAD.put(aad);
 
-        ByteBuffer bfPlainText;
-        ByteBuffer bfCipherText;
+        final ByteBuffer bfPlainText;
+        final ByteBuffer bfCipherText;
         bfPlainText = ByteBuffer.allocateDirect(plainText.length);
         bfCipherText = ByteBuffer.allocateDirect(encOutput.length);
 
