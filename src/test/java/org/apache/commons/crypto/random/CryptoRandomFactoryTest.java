@@ -114,7 +114,7 @@ public class CryptoRandomFactoryTest {
     public void testAbstractRandom() {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());
-        Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
         final String message = ex.getMessage();
         assertTrue(message.contains("InstantiationException"), message);
     }
@@ -123,7 +123,7 @@ public class CryptoRandomFactoryTest {
     public void testDummmyRandom() {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, DummyRandom.class.getName());
-        Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
         final String message = ex.getMessage();
         assertTrue(message.contains("NoSuchMethodException"), message);
     }
@@ -141,7 +141,7 @@ public class CryptoRandomFactoryTest {
     public void testFailingRandom() {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());
-        Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
 
         Throwable cause = ex.getCause();
         assertEquals(IllegalArgumentException.class, cause.getClass());

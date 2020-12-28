@@ -162,7 +162,7 @@ public abstract class AbstractCipherStreamTest {
             System.arraycopy(data, dataLen - n2, expectedData, 0, n2);
             assertArrayEquals(readData, expectedData);
 
-            Exception e = assertThrows(IllegalArgumentException.class, () -> in.skip(-3));
+            final Exception e = assertThrows(IllegalArgumentException.class, () -> in.skip(-3));
             assertTrue(e.getMessage().contains("Negative skip length"));
 
             // Skip after EOF

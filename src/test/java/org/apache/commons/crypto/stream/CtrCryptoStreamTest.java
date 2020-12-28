@@ -171,7 +171,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
         buf.get(readData);
         System.arraycopy(data, 0, expectedData, 0, dataLen);
         assertArrayEquals(readData, expectedData);
-        Exception ex = assertThrows(IOException.class, () -> in.decryptBuffer(buf));
+        final Exception ex = assertThrows(IOException.class, () -> in.decryptBuffer(buf));
         assertEquals(ex.getCause().getClass(), ShortBufferException.class);
 
     }

@@ -307,7 +307,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     private CipherState getCipherState() throws IOException {
         CipherState state = cipherPool.poll();
         if (state == null) {
-            CryptoCipher cryptoCipher;
+            final CryptoCipher cryptoCipher;
             try {
                 cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", properties);
             } catch (final GeneralSecurityException e) {
