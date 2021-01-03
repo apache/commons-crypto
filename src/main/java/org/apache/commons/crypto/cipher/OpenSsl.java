@@ -29,6 +29,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 
 import org.apache.commons.crypto.Crypto;
+import org.apache.commons.crypto.OpenSslTransform;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -42,50 +43,6 @@ final class OpenSsl {
     public static final int DECRYPT_MODE = 0;
 
     private final OpenSslFeedbackCipher opensslBlockCipher;
-
-    /** Currently only support AES/CTR/NoPadding. */
-    private enum AlgorithmMode {
-        AES_CTR, AES_CBC, AES_GCM;
-
-        /**
-         * Gets the mode.
-         *
-         * @param algorithm the algorithm.
-         * @param mode the mode.
-         * @return the Algorithm mode.
-         * @throws NoSuchAlgorithmException if the algorithm is not available.
-         */
-        static int get(final String algorithm, final String mode)
-                throws NoSuchAlgorithmException {
-            try {
-                return AlgorithmMode.valueOf(algorithm + "_" + mode).ordinal();
-            } catch (final Exception e) {
-                throw new NoSuchAlgorithmException(
-                        "Doesn't support algorithm: " + algorithm
-                                + " and mode: " + mode);
-            }
-        }
-    }
-
-    private enum Padding {
-        NoPadding, PKCS5Padding;
-
-        /**
-         * Gets the Padding instance.
-         *
-         * @param padding the padding.
-         * @return the value of Padding.
-         * @throws NoSuchPaddingException if the padding is not available.
-         */
-        static int get(final String padding) throws NoSuchPaddingException {
-            try {
-                return Padding.valueOf(padding).ordinal();
-            } catch (final Exception e) {
-                throw new NoSuchPaddingException("Doesn't support padding: "
-                        + padding);
-            }
-        }
-    }
 
     private static final Throwable loadingFailureReason;
 
@@ -123,7 +80,7 @@ final class OpenSsl {
      * @param padding the padding.
      */
     private OpenSsl(final long context, final int algorithm, final int padding) {
-        if (algorithm == AlgorithmMode.AES_GCM.ordinal()) {
+        if (algorithm == OpenSslAlgorithmMode.AES_GCM.ordinal()) {
             opensslBlockCipher = new OpenSslGaloisCounterMode(context, algorithm, padding);
         } else {
             opensslBlockCipher = new OpenSslCommonMode(context, algorithm, padding);
@@ -149,42 +106,22 @@ final class OpenSsl {
         if (loadingFailureReason != null) {
             throw new IllegalStateException(loadingFailureReason);
         }
-        final Transform transform = tokenizeTransformation(transformation);
-        final int algorithmMode = AlgorithmMode.get(transform.algorithm,
-                transform.mode);
-        final int padding = Padding.get(transform.padding);
+        final OpenSslTransform openSslTransform = tokenizeTransformation(transformation);
+        final int algorithmMode = OpenSslAlgorithmMode.get(openSslTransform.getAlgorithm(),
+                openSslTransform.getMode()).ordinal();
+        final int padding = OpenSslPadding.get(openSslTransform.getPadding());
         final long context = OpenSslNative.initContext(algorithmMode, padding);
         return new OpenSsl(context, algorithmMode, padding);
-    }
-
-    /** Nested class for algorithm, mode and padding. */
-    private static class Transform {
-        final String algorithm;
-        final String mode;
-        final String padding;
-
-        /**
-         * Constructs a {@link Transform} based on the algorithm, mode and padding.
-         *
-         * @param algorithm the algorithm
-         * @param mode the mode.
-         * @param padding the padding.
-         */
-        public Transform(final String algorithm, final String mode, final String padding) {
-            this.algorithm = algorithm;
-            this.mode = mode;
-            this.padding = padding;
-        }
     }
 
     /**
      * Gets the tokens of transformation.
      *
      * @param transformation the transformation.
-     * @return the {@link Transform} instance.
+     * @return the {@link OpenSslTransform} instance.
      * @throws NoSuchAlgorithmException if the transformation is null.
      */
-    private static Transform tokenizeTransformation(final String transformation)
+    private static OpenSslTransform tokenizeTransformation(final String transformation)
             throws NoSuchAlgorithmException {
         if (transformation == null) {
             throw new NoSuchAlgorithmException("No transformation given.");
@@ -205,7 +142,7 @@ final class OpenSsl {
             throw new NoSuchAlgorithmException(
                     "Invalid transformation format: " + transformation);
         }
-        return new Transform(parts[0], parts[1], parts[2]);
+        return new OpenSslTransform(parts[0], parts[1], parts[2]);
     }
 
     /**
