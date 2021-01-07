@@ -40,8 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GcmCipherTest {
 
-    Properties props = null;
-    String cipherClass = null;
+    Properties props;
+    String cipherClass;
     String transformation = "AES/GCM/NoPadding";
 
     private String[] kHex;

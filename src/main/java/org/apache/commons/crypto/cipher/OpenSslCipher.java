@@ -37,7 +37,7 @@ import javax.crypto.ShortBufferException;
 class OpenSslCipher implements CryptoCipher {
 
     private final OpenSsl openSslEngine;
-    private boolean initialized = false;
+    private boolean initialized;
 
     private final String transformation;
 

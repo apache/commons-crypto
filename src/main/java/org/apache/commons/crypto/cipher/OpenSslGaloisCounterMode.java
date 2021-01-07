@@ -45,7 +45,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     static final int DEFAULT_TAG_LEN = 16;
 
     // buffer for storing input in decryption, not used for encryption
-    private ByteArrayOutputStream inBuffer = null;
+    private ByteArrayOutputStream inBuffer;
 
     public OpenSslGaloisCounterMode(final long context, final int algorithmMode, final int padding) {
         super(context, algorithmMode, padding);

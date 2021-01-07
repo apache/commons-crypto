@@ -76,7 +76,7 @@ public class CryptoInputStream extends InputStream implements
     /**
      * Flag to mark whether do final of the cipher to end the decrypting stream.
      */
-    private boolean finalDone = false;
+    private boolean finalDone;
 
     /** The input data. */
     Input input; // package protected for access by crypto classes; do not expose further
@@ -587,16 +587,16 @@ public class CryptoInputStream extends InputStream implements
             .clean(); */
             final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
             final Class<?>[] interfaces = buffer.getClass().getInterfaces();
+            final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
             for (final Class<?> clazz : interfaces) {
                 if (clazz.getName().equals(SUN_CLASS)) {
-                    final Object[] NO_PARAM = new Object[0];
                     /* DirectBuffer#cleaner() */
                     final Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
-                    final Object cleaner = getCleaner.invoke(buffer, NO_PARAM);
+                    final Object cleaner = getCleaner.invoke(buffer, EMPTY_OBJECT_ARRAY);
                     /* Cleaner#clean() */
                     final Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
-                    cleanMethod.invoke(cleaner, NO_PARAM);
+                    cleanMethod.invoke(cleaner, EMPTY_OBJECT_ARRAY);
                     return;
                 }
             }
