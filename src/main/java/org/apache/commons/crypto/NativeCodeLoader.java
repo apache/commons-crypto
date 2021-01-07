@@ -19,7 +19,6 @@ package org.apache.commons.crypto;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -144,8 +143,9 @@ final class NativeCodeLoader {
                 return null;
             }
             // Extract a native library file into the target directory
+            final Path path;
             try {
-                final Path path = extractedLibFile.toPath();
+                path = extractedLibFile.toPath();
                 final long byteCount = Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
                 if (isDebug()) {
                     debug("Extracted '%s' to '%s': %,d bytes [%s]", nativeLibraryFilePath, extractedLibFile, byteCount,
@@ -171,7 +171,7 @@ final class NativeCodeLoader {
             // Check whether the contents are properly copied from the resource
             // folder
             try (InputStream nativeInputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
-                try (InputStream extractedLibIn = new FileInputStream(extractedLibFile)) {
+                try (InputStream extractedLibIn = Files.newInputStream(path)) {
                     debug("Validating '%s'...", extractedLibFile);
                     if (!contentsEquals(nativeInputStream, extractedLibIn)) {
                         throw new IllegalStateException(String.format("Failed to write a native library file %s to %s",

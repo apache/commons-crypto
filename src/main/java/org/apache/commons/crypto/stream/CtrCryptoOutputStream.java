@@ -57,7 +57,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Underlying stream offset.
      */
-    private long streamOffset = 0;
+    private long streamOffset;
 
     /**
      * The initial IV.
@@ -79,7 +79,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Flag to mark whether the cipher has been reset
      */
-    private boolean cipherReset = false;
+    private boolean cipherReset;
 
     /**
      * Constructs a {@link CtrCryptoOutputStream}.

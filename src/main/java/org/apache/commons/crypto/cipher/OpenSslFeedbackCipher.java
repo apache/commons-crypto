@@ -32,7 +32,7 @@ import org.apache.commons.crypto.utils.Utils;
  */
 abstract class OpenSslFeedbackCipher {
 
-    protected long context = 0;
+    protected long context;
     protected final int algorithmMode;
     protected final int padding;
 
