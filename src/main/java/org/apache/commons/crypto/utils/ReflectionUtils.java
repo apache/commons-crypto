@@ -22,6 +22,8 @@ import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 
@@ -30,7 +32,7 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
  */
 public final class ReflectionUtils {
 
-    private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
+    private static final ConcurrentMap<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new ConcurrentHashMap<>();
 
     private static final ClassLoader CLASSLOADER;
 

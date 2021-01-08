@@ -82,7 +82,9 @@ public class CryptoCipherFactory {
         JCE(JceCipher.class);
 
         private final Class<? extends CryptoCipher> klass;
-
+        /**
+         * The class name of the provider.
+         */
         private final String className;
 
         /**

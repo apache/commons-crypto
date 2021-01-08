@@ -546,14 +546,9 @@ public class CryptoInputStream extends InputStream implements
         try {
             cipher.doFinal(inBuffer, outBuffer);
             finalDone = true;
-        } catch (final ShortBufferException e) {
-            throw new IOException(e);
-        } catch (final IllegalBlockSizeException e) {
-            throw new IOException(e);
-        } catch (final BadPaddingException e) {
+        } catch (final ShortBufferException | IllegalBlockSizeException | BadPaddingException e) {
             throw new IOException(e);
         }
-
         // Clear the input buffer and prepare out buffer
         inBuffer.clear();
         outBuffer.flip();

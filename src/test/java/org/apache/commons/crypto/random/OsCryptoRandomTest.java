@@ -20,7 +20,7 @@ package org.apache.commons.crypto.random;
 import org.junit.jupiter.api.Test;
 
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
@@ -57,9 +57,9 @@ public class OsCryptoRandomTest extends AbstractRandomTest {
 		cause = cause.getCause();
 		assertEquals(InvocationTargetException.class, cause.getClass());
 		cause = cause.getCause();
-		assertEquals(IllegalArgumentException.class, cause.getClass());
+		assertEquals(IllegalStateException.class, cause.getClass());
 		cause = cause.getCause();
-		assertEquals(FileNotFoundException.class, cause.getClass());
+		assertEquals(IOException.class, cause.getClass());
 
 	}
 }

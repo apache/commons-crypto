@@ -35,6 +35,9 @@ import javax.crypto.ShortBufferException;
  * Implements the {@link CryptoCipher} using JCE provider.
  */
 class JceCipher implements CryptoCipher {
+    /**
+     *  The {@link Cipher} object.
+     */
     private final Cipher cipher;
 
     /**

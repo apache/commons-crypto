@@ -35,6 +35,9 @@ public final class Crypto {
 
     private static class ComponentPropertiesHolder {
 
+        /**
+         * Commons properties cipher form component.properties
+         */
         static final Properties PROPERTIES = getComponentProperties();
 
         /**

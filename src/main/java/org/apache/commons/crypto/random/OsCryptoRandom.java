@@ -18,8 +18,10 @@
 package org.apache.commons.crypto.random;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.Random;
 
@@ -35,7 +37,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
 
     private static final int RESERVOIR_LENGTH = 8192;
 
-    private transient FileInputStream stream;
+    private transient InputStream stream;
 
     private final byte[] reservoir = new byte[RESERVOIR_LENGTH];
 
@@ -74,7 +76,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
 
         try {
             close();
-            this.stream = new FileInputStream(randomDevFile);
+            this.stream = Files.newInputStream(Paths.get(randomDevFile.getPath()));
         } catch (final IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -97,7 +99,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
     @Override
     synchronized public void nextBytes(final byte[] bytes) {
         int off = 0;
-        int n = 0;
+        int n;
         while (off < bytes.length) {
             fillReservoir(0);
             n = Math.min(bytes.length - off, reservoir.length - pos);

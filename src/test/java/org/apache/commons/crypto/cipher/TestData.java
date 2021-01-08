@@ -17,10 +17,10 @@
  */
 package org.apache.commons.crypto.cipher;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-public class TestData {
+ public class TestData {
 
     private static final String[] CBCNoPaddingTests = {
     /*
@@ -136,7 +136,7 @@ public class TestData {
             "f0f1f2f3f4f5f6f7f8f9fafbfcfdff01",
             "30c81c46a35ce411e5fbc1191a0a52", "2b0930daa23de94ce87017ba2d8498" };
 
-    private static final Map<String, String[]> testData = new HashMap<>();
+    private static final ConcurrentMap<String, String[]> testData = new ConcurrentHashMap<>();
 
     static {
         testData.put("AES/CBC/NoPadding", CBCNoPaddingTests);
