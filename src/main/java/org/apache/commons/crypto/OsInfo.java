@@ -164,9 +164,7 @@ final class OsInfo {
                 if (exitCode == 0) {
                     return "armhf";
                 }
-            } catch (final IOException e) { // NOPMD
-                // ignored: fall back to "arm" arch (soft-float ABI)
-            } catch (final InterruptedException e) { // NOPMD
+            } catch (final IOException | InterruptedException e) { // NOPMD
                 // ignored: fall back to "arm" arch (soft-float ABI)
             }
         } else {

@@ -97,9 +97,7 @@ final class OpenSsl {
             } else {
                 loadingFailure = Crypto.getLoadingError();
             }
-        } catch (final Exception t) {
-            loadingFailure = t;
-        } catch (final UnsatisfiedLinkError t) {
+        } catch (final Exception | UnsatisfiedLinkError t) {
             loadingFailure = t;
         } finally {
             loadingFailureReason = loadingFailure;

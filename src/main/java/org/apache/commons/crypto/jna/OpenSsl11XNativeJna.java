@@ -41,9 +41,7 @@ class OpenSsl11XNativeJna {
             OpenSslJna.debug("Native.register('%s')%n", libName);
             Native.register(libName);
             ok = true;
-        } catch (final Exception e) {
-            thrown = e;
-        } catch (final UnsatisfiedLinkError e) {
+        } catch (final Exception | UnsatisfiedLinkError e) {
             thrown = e;
         } finally {
             INIT_OK = ok;

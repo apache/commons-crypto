@@ -289,9 +289,7 @@ final class NativeCodeLoader {
                 System.loadLibrary(libname);
             }
             return null; // OK
-        } catch (final Exception t) {
-            return t;
-        } catch (final UnsatisfiedLinkError t) {
+        } catch (final Exception | UnsatisfiedLinkError t) {
             return t;
         }
     }
