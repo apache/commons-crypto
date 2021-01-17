@@ -186,7 +186,7 @@ public class CryptoRandomFactory {
     public static CryptoRandom getCryptoRandom(final Properties props)
             throws GeneralSecurityException {
         final List<String> names = Utils.splitClassNames(getRandomClassString(props), ",");
-        if (names.size() == 0) {
+        if (names.isEmpty()) {
             throw new IllegalArgumentException("No class name(s) provided");
         }
         final StringBuilder errorMessage = new StringBuilder();
