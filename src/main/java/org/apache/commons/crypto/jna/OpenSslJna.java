@@ -77,7 +77,7 @@ public final class OpenSslJna {
     public static boolean isEnabled() {
         return OpenSslNativeJna.INIT_OK;
     }
-    
+
     public static void main(final String[] args) {
         info("isEnabled(): %s", isEnabled());
         final Throwable initialisationError = initialisationError();
@@ -87,7 +87,7 @@ public final class OpenSslJna {
             initialisationError.printStackTrace();
         }
     }
-    
+
     /**
      * Retrieves version/build information about OpenSSL library.
      *

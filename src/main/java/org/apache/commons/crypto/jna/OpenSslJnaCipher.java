@@ -352,7 +352,7 @@ class OpenSslJnaCipher implements CryptoCipher {
 
         /**
          * Constructor of Transform.
-         * 
+         *
          * @param algorithm the algorithm name
          * @param mode      the mode name
          * @param padding   the padding name
@@ -366,7 +366,7 @@ class OpenSslJnaCipher implements CryptoCipher {
 
     /**
      * Tokenize the transformation.
-     * 
+     *
      * @param transformation current transformation
      * @return the Transform
      * @throws NoSuchAlgorithmException if the algorithm is not supported
@@ -401,7 +401,7 @@ class OpenSslJnaCipher implements CryptoCipher {
 
         /**
          * Gets the AlgorithmMode instance.
-         * 
+         *
          * @param algorithm the algorithm name
          * @param mode      the mode name
          * @return the AlgorithmMode instance
