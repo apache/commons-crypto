@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-/**
+import static org.apache.commons.crypto.stream.CryptoInputStream.EOS;
+
+ /**
  * The StreamInput class takes a {@code InputStream} object and wraps it as
  * {@code Input} object acceptable by {@code CryptoInputStream}.
  */
@@ -50,7 +52,7 @@ public class StreamInput implements Input {
      * @param dst The buffer into which bytes are to be transferred.
      *
      * @return the total number of bytes read into the buffer, or
-     *         {@code -1} if there is no more data because the end of the
+     *         {@code EOS (-1)} if there is no more data because the end of the
      *         stream has been reached.
      * @throws IOException if an I/O error occurs.
      */
@@ -60,9 +62,9 @@ public class StreamInput implements Input {
         int read = 0;
         while (remaining > 0) {
             final int n = in.read(buf, 0, Math.min(remaining, bufferSize));
-            if (n == -1) {
+            if (n == EOS) {
                 if (read == 0) {
-                    read = -1;
+                    read = EOS;
                 }
                 break;
             } else if (n > 0) {
@@ -119,7 +121,7 @@ public class StreamInput implements Input {
      * @param offset the start offset in array buffer.
      * @param length the maximum number of bytes to read.
      * @return the total number of bytes read into the buffer, or
-     *         {@code -1} if there is no more data because the end of the
+     *         {@code EOS (-1)} if there is no more data because the end of the
      *         stream has been reached.
      * @throws IOException if an I/O error occurs.
      */
