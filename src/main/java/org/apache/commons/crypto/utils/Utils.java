@@ -209,7 +209,7 @@ public final class Utils {
      */
     public static List<String> splitClassNames(final String clazzNames, final String separator) {
         final List<String> res = new ArrayList<>();
-        if (clazzNames == null || clazzNames.isEmpty()) {
+        if (isEmpty(clazzNames)) {
             return res;
         }
 
@@ -220,6 +220,24 @@ public final class Utils {
             }
         }
         return res;
+    }
+
+    /**
+     * Checks if an String is empty or null.
+     *
+     * <pre>
+     * Utils.isEmpty(null)             = true
+     * Utils.isEmpty("")               = true
+     * Utils.isEmpty("abg")            = false
+     * </pre>
+     *
+     * @param str  the {@code String} to test, may be {@code null}
+     * @return {@code true} if the String is empty or null,
+     * {@code false} otherwise
+     * @since 1.1.1
+     */
+    public static boolean isEmpty(final String str) {
+        return str == null || str.isEmpty();
     }
 
 }
