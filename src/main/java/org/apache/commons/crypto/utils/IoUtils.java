@@ -43,7 +43,7 @@ public final class IoUtils {
      * @param len the maximum number of bytes to read.
      * @throws IOException if an I/O error occurs.
      */
-    public static void readFully(final InputStream in, final byte buf[], int off, final int len)
+    public static void readFully(final InputStream in, final byte[] buf, int off, final int len)
             throws IOException {
         int toRead = len;
         while (toRead > 0) {

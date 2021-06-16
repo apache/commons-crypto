@@ -117,7 +117,7 @@ public final class ReflectionUtils {
         final Map<String, WeakReference<Class<?>>> map;
 
         synchronized (CACHE_CLASSES) {
-            map = CACHE_CLASSES.computeIfAbsent(CLASSLOADER, k -> Collections.synchronizedMap(new WeakHashMap<String, WeakReference<Class<?>>>()));
+            map = CACHE_CLASSES.computeIfAbsent(CLASSLOADER, k -> Collections.synchronizedMap(new WeakHashMap<>()));
         }
 
         Class<?> clazz = null;
@@ -131,11 +131,11 @@ public final class ReflectionUtils {
                 clazz = Class.forName(name, true, CLASSLOADER);
             } catch (final ClassNotFoundException e) {
                 // Leave a marker that the class isn't found
-                map.put(name, new WeakReference<Class<?>>(NEGATIVE_CACHE_SENTINEL));
+                map.put(name, new WeakReference<>(NEGATIVE_CACHE_SENTINEL));
                 return null;
             }
             // two putters can race here, but they'll put the same class
-            map.put(name, new WeakReference<Class<?>>(clazz));
+            map.put(name, new WeakReference<>(clazz));
             return clazz;
         } else if (clazz == NEGATIVE_CACHE_SENTINEL) {
             return null; // not found

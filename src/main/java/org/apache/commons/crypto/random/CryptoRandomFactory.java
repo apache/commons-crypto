@@ -196,9 +196,7 @@ public class CryptoRandomFactory {
             try {
                 final Class<?> klass = ReflectionUtils.getClassByName(klassName);
                 random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
-                if (random != null) {
-                    break;
-                }
+                break;
             } catch (final ClassCastException e) {
                 lastException = e;
                 errorMessage.append("Class: [" + klassName + "] is not a CryptoRandom.");

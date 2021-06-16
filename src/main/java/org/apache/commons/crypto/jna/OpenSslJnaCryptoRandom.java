@@ -142,7 +142,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     final protected int next(final int numBits) {
         Utils.checkArgument(numBits >= 0 && numBits <= 32);
         final int numBytes = (numBits + 7) / 8;
-        final byte b[] = new byte[numBytes];
+        final byte[] b = new byte[numBytes];
         int next = 0;
 
         nextBytes(b);
@@ -161,10 +161,6 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     public void close() {
         closeRdrandEngine();
         OpenSslNativeJna.ENGINE_cleanup();
-
-        //cleanup locks
-        //OpenSslNativeJna.CRYPTO_set_locking_callback(null);
-        //LOCK.unlock();
     }
 
     /**

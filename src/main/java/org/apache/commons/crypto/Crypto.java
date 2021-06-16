@@ -146,7 +146,7 @@ public final class Crypto {
      * @param args Not used.
      * @throws Exception if getCryptoRandom or getCryptoCipher get error.
      */
-    public static void main(final String args[]) throws Exception {
+    public static void main(final String[] args) throws Exception {
         info("%s %s", getComponentName(), getComponentVersion());
         if (isNativeCodeLoaded()) {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
