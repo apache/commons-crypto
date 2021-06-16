@@ -161,7 +161,7 @@ class OpenSsl10XNativeJna {
      * @return 1 for success and 0 for failure.
      */
     public static native int EVP_CipherInit_ex(PointerByReference ctx, PointerByReference cipher,
-            PointerByReference impl, byte key[], byte iv[], int enc);
+            PointerByReference impl, byte[] key, byte[] iv, int enc);
 
     /**
      * Continues a multiple-part encryption/decryption operation.
