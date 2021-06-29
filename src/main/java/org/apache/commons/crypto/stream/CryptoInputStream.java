@@ -102,6 +102,13 @@ public class CryptoInputStream extends InputStream implements
     private static final int MIN_BUFFER_SIZE = 512;
 
     /**
+     * The index value when the end of the stream has been reached {@code -1}.
+     *
+     * @since 1.1
+     */
+    public static final int EOS = -1;
+
+    /**
      * Constructs a {@link CryptoInputStream}.
      *
      * @param transformation the name of the transformation, e.g.,
@@ -213,7 +220,7 @@ public class CryptoInputStream extends InputStream implements
      * Overrides the {@link java.io.InputStream#read()}. Reads the next byte of
      * data from the input stream.
      *
-     * @return the next byte of data, or {@code -1} if the end of the
+     * @return the next byte of data, or {@code EOS (-1)} if the end of the
      *         stream is reached.
      * @throws IOException if an I/O error occurs.
      */
@@ -223,7 +230,7 @@ public class CryptoInputStream extends InputStream implements
         while ((n = read(oneByteBuf, 0, 1)) == 0) { //NOPMD
             /* no op */
         }
-        return (n == -1) ? -1 : oneByteBuf[0] & 0xff;
+        return (n == EOS) ? EOS : oneByteBuf[0] & 0xff;
     }
 
     /**
@@ -380,7 +387,7 @@ public class CryptoInputStream extends InputStream implements
      * sequence of bytes from this channel into the given buffer.
      *
      * @param dst The buffer into which bytes are to be transferred.
-     * @return The number of bytes read, possibly zero, or {@code -1} if the
+     * @return The number of bytes read, possibly zero, or {@code EOS (-1)} if the
      *         channel has reached end-of-stream.
      * @throws IOException if an I/O error occurs.
      */
@@ -397,7 +404,7 @@ public class CryptoInputStream extends InputStream implements
             }
 
             if (nd < 0) {
-                return -1;
+                return EOS;
             }
         }
 
@@ -485,7 +492,7 @@ public class CryptoInputStream extends InputStream implements
      */
     protected int decryptMore() throws IOException {
         if (finalDone) {
-            return -1;
+            return EOS;
         }
 
         final int n = input.read(inBuffer);
@@ -500,7 +507,7 @@ public class CryptoInputStream extends InputStream implements
             }
 
             // End of the stream
-            return -1;
+            return EOS;
         } else if (n == 0) {
             // No data is read, but the stream is not end yet
             return 0;
