@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class UtilsTest {
+ public class UtilsTest {
     @Test
     public void testSplitOmitEmptyLine() {
         List<String> clazzNames = Utils.splitClassNames("", ",");
@@ -54,5 +56,13 @@ public class UtilsTest {
             "out");
         final Properties allprops = Utils.getProperties(props);
         assertEquals(allprops.getProperty("garbage.in"), "out");
+    }
+
+    @Test
+    public void testIsEmpty() {
+        assertTrue(Utils.isEmpty(null));
+        assertTrue(Utils.isEmpty(""));
+        assertFalse(Utils.isEmpty("  "));
+        assertFalse(Utils.isEmpty("abg"));
     }
 }

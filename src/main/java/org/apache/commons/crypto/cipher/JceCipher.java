@@ -17,6 +17,8 @@
  */
 package org.apache.commons.crypto.cipher;
 
+import org.apache.commons.crypto.utils.Utils;
+
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
@@ -49,7 +51,7 @@ class JceCipher implements CryptoCipher {
     public JceCipher(final Properties props, final String transformation)
             throws GeneralSecurityException {
         final String provider = props.getProperty(CryptoCipherFactory.JCE_PROVIDER_KEY);
-        if (provider == null || provider.isEmpty()) {
+        if (Utils.isEmpty(provider)) {
             cipher = Cipher.getInstance(transformation);
         } else {
             cipher = Cipher.getInstance(transformation, provider);
