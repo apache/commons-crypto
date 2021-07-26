@@ -17,6 +17,11 @@
  */
 package org.apache.commons.crypto.stream;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
+
 import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
@@ -36,11 +42,6 @@ import org.apache.commons.crypto.stream.input.StreamInput;
 import org.apache.commons.crypto.stream.output.ChannelOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 

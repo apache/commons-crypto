@@ -18,13 +18,13 @@
 
 package org.apache.commons.crypto.cipher;
 
-import org.junit.jupiter.api.BeforeAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
 
 
 public class JceCipherTest extends AbstractCipherTest {

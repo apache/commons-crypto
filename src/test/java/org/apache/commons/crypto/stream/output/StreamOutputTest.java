@@ -18,13 +18,12 @@
 
 package org.apache.commons.crypto.stream.output;
 
-import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 
 /**

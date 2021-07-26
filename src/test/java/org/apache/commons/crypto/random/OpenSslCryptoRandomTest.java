@@ -18,13 +18,13 @@
 package org.apache.commons.crypto.random;
 
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.apache.commons.crypto.Crypto;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class OpenSslCryptoRandomTest extends AbstractRandomTest {
 

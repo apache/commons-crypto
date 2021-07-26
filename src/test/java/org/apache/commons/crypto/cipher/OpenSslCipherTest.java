@@ -18,8 +18,10 @@
 
 package org.apache.commons.crypto.cipher;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
@@ -30,14 +32,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.crypto.spec.GCMParameterSpec;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 
 public class OpenSslCipherTest extends AbstractCipherTest {

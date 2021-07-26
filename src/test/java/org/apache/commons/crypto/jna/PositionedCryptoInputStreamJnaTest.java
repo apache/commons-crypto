@@ -17,11 +17,11 @@
  */
 package org.apache.commons.crypto.jna;
 
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import org.apache.commons.crypto.stream.PositionedCryptoInputStreamTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  *

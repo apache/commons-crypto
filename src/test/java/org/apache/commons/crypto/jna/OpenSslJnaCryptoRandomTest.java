@@ -18,6 +18,8 @@
 package org.apache.commons.crypto.jna;
 
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
@@ -26,8 +28,6 @@ import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
 

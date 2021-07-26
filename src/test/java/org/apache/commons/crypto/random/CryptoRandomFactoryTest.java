@@ -17,16 +17,16 @@
  */
 package org.apache.commons.crypto.random;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import org.junit.jupiter.api.Test;
 
 
 public class CryptoRandomFactoryTest {

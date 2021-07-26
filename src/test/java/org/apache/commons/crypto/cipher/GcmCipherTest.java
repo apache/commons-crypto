@@ -17,6 +17,10 @@
  */
 package org.apache.commons.crypto.cipher;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.nio.ByteBuffer;
 import java.security.Key;
 import java.util.Arrays;
@@ -32,10 +36,6 @@ import javax.xml.bind.DatatypeConverter;
 import org.apache.commons.crypto.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class GcmCipherTest {

@@ -17,13 +17,13 @@
  */
 package org.apache.commons.crypto.cipher;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 
 public class CryptoCipherFactoryTest {

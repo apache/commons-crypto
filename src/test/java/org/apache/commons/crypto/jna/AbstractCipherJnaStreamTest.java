@@ -17,6 +17,8 @@
  */
 package org.apache.commons.crypto.jna;
 
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +27,6 @@ import org.apache.commons.crypto.stream.AbstractCipherStreamTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTest {
 
