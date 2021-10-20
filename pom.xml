@@ -144,9 +144,9 @@ The following provides more details on the included cryptographic software:
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
 
     <commons.pmd.version>3.14.0</commons.pmd.version>
-    <commons.javadoc.version>3.2.0</commons.javadoc.version>
+    <commons.javadoc.version>3.3.1</commons.javadoc.version>
     <japicmp.skip>false</japicmp.skip>
-    <commons.japicmp.version>0.15.2</commons.japicmp.version>
+    <commons.japicmp.version>0.15.3</commons.japicmp.version>
     
     <clirr.skip>true</clirr.skip>
     
@@ -155,7 +155,7 @@ The following provides more details on the included cryptographic software:
     <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
   
     <jna.version>5.6.0</jna.version>
-    <commons.jacoco.version>0.8.6</commons.jacoco.version>
+    <commons.jacoco.version>0.8.7</commons.jacoco.version>
 
     <!-- The property "target.name" is used to specify the ant target, The All target will use
     OsInfo.java to detect the OS info and arch to generate the native binary for detected platform.
