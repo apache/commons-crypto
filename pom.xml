@@ -154,7 +154,7 @@ The following provides more details on the included cryptographic software:
     <commons.releaseManagerName>Gary Gregory</commons.releaseManagerName>    
     <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
   
-    <jna.version>5.6.0</jna.version>
+    <jna.version>5.9.0</jna.version>
     <commons.jacoco.version>0.8.7</commons.jacoco.version>
 
     <!-- The property "target.name" is used to specify the ant target, The All target will use
