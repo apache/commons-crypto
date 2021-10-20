@@ -139,7 +139,7 @@ The following provides more details on the included cryptographic software:
     <!-- This is used by reporting plugins -->
     <project.reporting.outputEncoding>${commons.encoding}</project.reporting.outputEncoding>
 
-    <checkstyle.version>3.1.1</checkstyle.version>
+    <checkstyle.version>3.1.2</checkstyle.version>
     <checkstyle.header.file>${basedir}/LICENSE-header.txt</checkstyle.header.file>
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
 
@@ -375,7 +375,7 @@ The following provides more details on the included cryptographic software:
       <properties>
         <skipTests>true</skipTests>
         <benchmark>org.apache</benchmark>
-        <jmh.version>1.12</jmh.version>
+        <jmh.version>1.27</jmh.version>
       </properties>
 
       <dependencies>
