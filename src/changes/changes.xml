@@ -62,14 +62,17 @@
 
   <body>
     <release version="1.1.1" date="20YY-MM-DD" description="TBD">
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Update commons.jacoco.version 0.8.5 to 0.8.6 (Fixes Java 15 builds).</action>
+      <!-- FIX -->
       <action issue="CRYPTO-154" type="add">License header should be plain a comment #113.</action>
+      <!-- UPDATE -->
+      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Update commons.jacoco.version 0.8.5 to 0.8.6 (Fixes Java 15 builds).</action>
       <action issue="CRYPTO-155" type="update" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
       <action issue="CRYPTO-151" type="update" due-to="Arturo Bernal">Migrate to Junit 5 #114.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump jna from 5.5.0 to 5.6.0 #123.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Update commons.japicmp.version 0.14.3 -> 0.15.2.</action>
       <action                    type="update" dev="ggregory" due-to="Arturo Bernal">Fix PMD warning and don't init to defaults #128.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump maven-checkstyle-plugin from 3.1.1 to 3.1.2 #130.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump jmh.version from 1.12 to 1.27 #119.</action>
     </release>  
     <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8 and OpenSSL 1.1.1)">
       <action issue="CRYPTO-59" type="add">Support Galois/Counter Mode (GCM).</action>
