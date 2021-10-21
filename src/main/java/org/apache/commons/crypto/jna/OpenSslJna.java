@@ -35,7 +35,7 @@ public final class OpenSslJna {
     static void debug(final String format, final Object... args) {
         // TODO Find a better way to do this later.
         if (Boolean.getBoolean(Crypto.CONF_PREFIX + "debug")) {
-            System.out.println(String.format(format, args));
+            System.out.printf((format) + "%n", args);
         }
     }
 
@@ -61,7 +61,7 @@ public final class OpenSslJna {
      */
     private static void info(final String format, final Object... args) {
         // TODO Find a better way to do this later.
-        System.out.println(String.format(format, args));
+        System.out.printf((format) + "%n", args);
     }
 
     /**

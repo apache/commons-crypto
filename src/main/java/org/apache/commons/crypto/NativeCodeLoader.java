@@ -111,7 +111,7 @@ final class NativeCodeLoader {
     private static void debug(final String format, final Object... args) {
         // TODO Find a better way to do this later.
         if (isDebug()) {
-            System.out.println(String.format(format, args));
+            System.out.printf((format) + "%n", args);
             if (args != null && args.length > 0 && args[0] instanceof Throwable) {
                 ((Throwable) args[0]).printStackTrace(System.out);
             }

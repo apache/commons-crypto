@@ -97,7 +97,7 @@ class OsCryptoRandom extends Random implements CryptoRandom {
     @Override
     synchronized public void nextBytes(final byte[] bytes) {
         int off = 0;
-        int n = 0;
+        int n;
         while (off < bytes.length) {
             fillReservoir(0);
             n = Math.min(bytes.length - off, reservoir.length - pos);

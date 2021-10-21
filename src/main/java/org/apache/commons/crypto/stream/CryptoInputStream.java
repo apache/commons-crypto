@@ -79,7 +79,7 @@ public class CryptoInputStream extends InputStream implements
     private boolean finalDone;
 
     /** The input data. */
-    Input input; // package protected for access by crypto classes; do not expose further
+    final Input input; // package protected for access by crypto classes; do not expose further
 
     /**
      * Input data buffer. The data starts at inBuffer.position() and ends at to

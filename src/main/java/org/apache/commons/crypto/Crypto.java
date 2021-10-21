@@ -128,7 +128,7 @@ public final class Crypto {
      */
     private static void info(final String format, final Object... args) {
         // TODO Find a better way to do this later.
-        System.out.println(String.format(format, args));
+        System.out.printf((format) + "%n", args);
     }
 
     /**
