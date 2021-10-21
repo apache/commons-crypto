@@ -271,6 +271,9 @@ The following provides more details on the included cryptographic software:
       <name>Adam Retter</name>
       <organization>Evolved Binary</organization>
     </contributor>
+    <contributor>
+      <name>Arturo Bernal</name>
+    </contributor>
   </contributors>
 
   <profiles>

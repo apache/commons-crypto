@@ -160,9 +160,7 @@ public class CryptoCipherFactory {
                 final Class<?> cls = ReflectionUtils.getClassByName(klass);
                 cipher = ReflectionUtils.newInstance(cls.asSubclass
                         (CryptoCipher.class), properties, transformation);
-                if (cipher != null) {
-                    break;
-                }
+                break;
             } catch (final Exception e) {
                 lastException = e;
                 errorMessage.append("{" + klass + "}");
