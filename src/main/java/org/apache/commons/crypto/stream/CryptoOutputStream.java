@@ -53,7 +53,7 @@ public class CryptoOutputStream extends OutputStream implements
     private final byte[] oneByteBuf = new byte[1];
 
     /** The output. */
-    final Output output; // package protected for access by rypto classes; do not expose further
+    final Output output; // package protected for access by crypto classes; do not expose further
 
     /** the CryptoCipher instance */
     final CryptoCipher cipher; // package protected for access by crypto classes; do not expose further

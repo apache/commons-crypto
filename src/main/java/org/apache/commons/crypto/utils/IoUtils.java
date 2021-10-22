@@ -69,15 +69,15 @@ public final class IoUtils {
      */
     public static void readFully(final Input in, final long position, final byte[] buffer,
             final int offset, final int length) throws IOException {
-        int nread = 0;
-        while (nread < length) {
-            final int nbytes = in.read(position + nread, buffer, offset + nread,
-                    length - nread);
-            if (nbytes < 0) {
+        int nRead = 0;
+        while (nRead < length) {
+            final int bytes = in.read(position + nRead, buffer, offset + nRead,
+                    length - nRead);
+            if (bytes < 0) {
                 throw new IOException(
                         "End of stream reached before reading fully.");
             }
-            nread += nbytes;
+            nRead += bytes;
         }
     }
 

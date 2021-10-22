@@ -86,7 +86,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param props The {@code Properties} class represents a set of
      *        properties.
-     * @param out the output stream.
+     * @param out the output {@code OutputStream}.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
@@ -101,7 +101,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param props The {@code Properties} class represents a set of
      *        properties.
-     * @param out the WritableByteChannel instance.
+     * @param out the {@code WritableByteChannel} instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
@@ -115,7 +115,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * Constructs a {@link CtrCryptoOutputStream}.
      *
      * @param out the output stream.
-     * @param cipher the CryptoCipher instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -129,8 +129,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param channel the WritableByteChannel instance.
-     * @param cipher the CryptoCipher instance.
+     * @param channel the {@code WritableByteChannel} instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -145,8 +145,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param output the Output instance.
-     * @param cipher the CryptoCipher instance.
+     * @param output the {@code Output} instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -162,7 +162,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param outputStream the output stream.
+     * @param outputStream the output {@code OutputStream}.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @param streamOffset the start offset in the data.
@@ -181,7 +181,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param channel the WritableByteChannel instance.
+     * @param channel the {@code WritableByteChannel} instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @param streamOffset the start offset in the data.
@@ -199,7 +199,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * Constructs a {@link CtrCryptoOutputStream}.
      *
      * @param outputStream the output stream.
-     * @param cipher the CryptoCipher instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -216,8 +216,8 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param channel the WritableByteChannel instance.
-     * @param cipher the CryptoCipher instance.
+     * @param channel the {@code WritableByteChannel} instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -235,7 +235,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * Constructs a {@link CtrCryptoOutputStream}.
      *
      * @param output the output stream.
-     * @param cipher the CryptoCipher instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.

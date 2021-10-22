@@ -179,7 +179,7 @@ public class CryptoRandomFactory {
      * The properties are passed to the generated class.
      *
      * @param props the configuration properties.
-     * @return CryptoRandom  the cryptoRandom object.
+     * @return CryptoRandom  the {@link CryptoRandom} object.
      * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
      * @throws IllegalArgumentException if no classname(s) are provided
      */
@@ -218,9 +218,9 @@ public class CryptoRandomFactory {
     /**
      * Gets the CryptoRandom class.
      *
-     * @param props The {@code Properties} class represents a set of
+     * @param props The {@link Properties} class represents a set of
      *        properties.
-     * @return the CryptoRandom class based on the props.
+     * @return the {@link CryptoRandom} class based on the props.
      */
     private static String getRandomClassString(final Properties props) {
         String randomClassString = props.getProperty(CryptoRandomFactory.CLASSES_KEY, CLASSES_DEFAULT);

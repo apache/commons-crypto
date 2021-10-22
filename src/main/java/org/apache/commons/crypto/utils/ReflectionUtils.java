@@ -72,20 +72,20 @@ public final class ReflectionUtils {
      */
     public static <T> T newInstance(final Class<T> klass, final Object... args) {
         try {
-            final Constructor<T> ctor;
+            final Constructor<T> constructor;
             final int argsLength = args.length;
 
             if (argsLength == 0) {
-                ctor = klass.getDeclaredConstructor();
+                constructor = klass.getDeclaredConstructor();
             } else {
-                final Class<?>[] argClses = new Class[argsLength];
+                final Class<?>[] classes = new Class[argsLength];
                 for (int i = 0; i < argsLength; i++) {
-                    argClses[i] = args[i].getClass();
+                    classes[i] = args[i].getClass();
                 }
-                ctor = klass.getDeclaredConstructor(argClses);
+                constructor = klass.getDeclaredConstructor(classes);
             }
-            ctor.setAccessible(true);
-            return ctor.newInstance(args);
+            constructor.setAccessible(true);
+            return constructor.newInstance(args);
         } catch (final Exception e) {
             throw new IllegalArgumentException(e);
         }

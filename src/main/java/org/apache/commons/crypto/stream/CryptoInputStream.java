@@ -110,7 +110,7 @@ public class CryptoInputStream extends InputStream implements
      * for information about standard transformation names.
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param inputStream the input stream.
+     * @param inputStream the {@code InputStream}.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
@@ -132,7 +132,7 @@ public class CryptoInputStream extends InputStream implements
      * for information about standard transformation names.
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param channel the ReadableByteChannel object.
+     * @param channel the {@code ReadableByteChannel} object.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
@@ -149,7 +149,7 @@ public class CryptoInputStream extends InputStream implements
      * Constructs a {@link CryptoInputStream}.
      *
      * @param cipher the cipher instance.
-     * @param inputStream the input stream.
+     * @param inputStream the {@code InputStream}.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param params the algorithm parameters.

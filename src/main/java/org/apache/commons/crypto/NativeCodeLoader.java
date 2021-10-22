@@ -55,11 +55,11 @@ final class NativeCodeLoader {
 
     /**
      * Returns the given InputStream if it is already a {@link BufferedInputStream},
-     * otherwise creates a BufferedInputStream from the given InputStream.
+     * otherwise creates a {@link java.io.BufferedInputStream} from the given {@link java.io.InputStream}.
      *
-     * @param inputStream the InputStream to wrap or return (not null)
-     * @return the given InputStream or a new {@link BufferedInputStream} for the
-     *         given InputStream
+     * @param inputStream the {@link InputStream} to wrap or return (not {@code null})
+     * @return the given {@link InputStream} or a new {@link BufferedInputStream} for the
+     *         given {@link InputStream}
      * @throws NullPointerException if the input parameter is null
      * @since Apache Commons IO 2.5
      */

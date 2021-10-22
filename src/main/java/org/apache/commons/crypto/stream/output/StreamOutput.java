@@ -35,7 +35,7 @@ public class StreamOutput implements Output {
      * Constructs a {@link org.apache.commons.crypto.stream.output.StreamOutput}
      * .
      *
-     * @param out the OutputStream object.
+     * @param out the {@code OutputStream} object.
      * @param bufferSize the buffersize.
      */
     public StreamOutput(final OutputStream out, final int bufferSize) {

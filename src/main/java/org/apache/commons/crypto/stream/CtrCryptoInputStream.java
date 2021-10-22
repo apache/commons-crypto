@@ -82,7 +82,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      *
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param inputStream the input stream.
+     * @param inputStream the {@code InputStream}.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
@@ -110,8 +110,8 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param inputStream the input stream.
-     * @param cipher the CryptoCipher instance.
+     * @param inputStream the {@code InputStream}.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -125,7 +125,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param channel the ReadableByteChannel instance.
+     * @param channel the {@code ReadableByteChannel} instance.
      * @param cipher the cipher instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
@@ -140,8 +140,8 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param input the input data.
-     * @param cipher the CryptoCipher instance.
+     * @param input the {@code Input} data.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -157,7 +157,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      *
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param inputStream the InputStream instance.
+     * @param inputStream the {@code InputStream} instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @param streamOffset the start offset in the stream.
@@ -193,8 +193,8 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param inputStream the InputStream instance.
-     * @param cipher the CryptoCipher instance.
+     * @param inputStream the {@code InputStream} instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -211,8 +211,8 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Constructs a {@link CtrCryptoInputStream}.
      *
-     * @param channel the ReadableByteChannel instance.
-     * @param cipher the CryptoCipher instance.
+     * @param channel the {@code ReadableByteChannel} instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
@@ -229,7 +229,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * Constructs a {@link CtrCryptoInputStream}.
      *
      * @param input the input data.
-     * @param cipher the CryptoCipher instance.
+     * @param cipher the {@code CryptoCipher} instance.
      * @param bufferSize the bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
