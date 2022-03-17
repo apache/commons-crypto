@@ -77,49 +77,50 @@ public abstract class AbstractCipherTest {
 	public void closeTestNoInit() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
-		final CryptoCipher enc = getCipher(transformations[0]);
-		enc.close();
+		try (final CryptoCipher enc = getCipher(transformations[0])) {
+		    // empty
+		}
 	}
 
 	@Test
 	public void closeTestAfterInit() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
-		final CryptoCipher enc = getCipher(transformations[0]);
-		enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-		enc.close();
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        }
 	}
 
 	@Test
 	public void reInitTest() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
-		final CryptoCipher enc = getCipher(transformations[0]);
-		enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-		enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-		enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-		enc.close();
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        }
 	}
 
 	@Test
-	public void reInitAfterClose() throws Exception {
-		// This test deliberately does not use try with resources in order to control
-		// the sequence of operations exactly
-		final CryptoCipher enc = getCipher(transformations[0]);
-		enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-		enc.close();
-		enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-		enc.close();
-	}
+    public void reInitAfterClose() throws Exception {
+        // This test deliberately does not use try with resources in order to control
+        // the sequence of operations exactly
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.close();
+            enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+        }
+    }
 
 	@Test
 	public void closeTestRepeat() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
-		final CryptoCipher enc = getCipher(transformations[0]);
-		enc.close();
-		enc.close(); // repeat the close
-		enc.close();
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.close();
+            enc.close(); // repeat the close
+        }
 	}
 
 	@Test

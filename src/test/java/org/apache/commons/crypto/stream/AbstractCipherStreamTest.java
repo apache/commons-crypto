@@ -365,16 +365,18 @@ public abstract class AbstractCipherStreamTest {
                 new IvParameterSpec(iv), withChannel));
 
         // Test reading a closed stream.
-        final InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData),
-                getCipher(cipherClass), defaultBufferSize, iv, withChannel);
-        in.close();
+        InputStream closedIn;
+        try (final InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData),
+                getCipher(cipherClass), defaultBufferSize, iv, withChannel)) {
+            closedIn = in;
+        }
         // Throw exception.
-        ex = assertThrows(IOException.class, in::read);
+        ex = assertThrows(IOException.class, closedIn::read);
         assertEquals(ex.getMessage(), "Stream closed");
 
         // Test closing a closed stream.
         try {
-            in.close(); // Don't throw exception on double-close.
+            closedIn.close(); // Don't throw exception on double-close.
         } catch (final IOException ioEx) {
             fail("Should not throw exception closing a closed stream.");
         }
@@ -399,14 +401,14 @@ public abstract class AbstractCipherStreamTest {
         } catch (final IOException ioEx) {
             assertEquals(ioEx.getMessage(), "AES/CTR/NoPadding is required");
         } finally {
-            in.close();
+            closedIn.close();
         }
 
         // Test unsupported operation handling.
         final InputStream inNewCrytptoStr = newCryptoInputStream(new ByteArrayInputStream(encData),
                 getCipher(cipherClass), defaultBufferSize, iv, false);
-        in.mark(0);
-        assertFalse(in.markSupported());
+        closedIn.mark(0);
+        assertFalse(closedIn.markSupported());
         ex = assertThrows(IOException.class, inNewCrytptoStr::reset);
         assertEquals(ex.getMessage(), "mark/reset not supported");
     }

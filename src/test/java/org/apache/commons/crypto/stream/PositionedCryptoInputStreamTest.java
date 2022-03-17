@@ -82,11 +82,11 @@ public class PositionedCryptoInputStreamTest {
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // encryption data
-        final OutputStream out = new CryptoOutputStream(baos, cipher, bufferSize,
-                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
-        out.write(testData);
-        out.flush();
-        out.close();
+        try (final OutputStream out = new CryptoOutputStream(baos, cipher, bufferSize,
+                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv))) {
+            out.write(testData);
+            out.flush();
+        }
         encData = baos.toByteArray();
     }
 
@@ -246,10 +246,9 @@ public class PositionedCryptoInputStreamTest {
     // test for the out of index position, eg, -1.
     private void testSeekFailed(final String cipherClass, final int position, final int bufferSize)
             throws Exception {
-        final PositionedCryptoInputStream in = getCryptoInputStream(
-                getCipher(cipherClass), bufferSize);
-        assertThrows(IllegalArgumentException.class, () -> in.seek(position));
-        in.close();
+        try (final PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+            assertThrows(IllegalArgumentException.class, () -> in.seek(position));
+        }
     }
 
     private void testPositionedReadLoop(final String cipherClass, int position,
@@ -298,12 +297,12 @@ public class PositionedCryptoInputStreamTest {
     // test for the End of file reached before reading fully
     private void testReadFullyFailed(final String cipherClass, final int position,
             final int length, final int bufferSize) throws Exception {
-        final PositionedCryptoInputStream in = getCryptoInputStream(
-                getCipher(cipherClass), bufferSize);
-        final byte[] bytes = new byte[length];
-        assertThrows(IOException.class, () -> in.readFully(position, bytes, 0, length));
-        in.close();
-        in.close(); // Don't throw exception.
+        try (final PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+            final byte[] bytes = new byte[length];
+            assertThrows(IOException.class, () -> in.readFully(position, bytes, 0, length));
+            in.close();
+            in.close(); // Don't throw exception.
+        }
     }
 
     // compare the data from pos with length and data2 from 0 with length
