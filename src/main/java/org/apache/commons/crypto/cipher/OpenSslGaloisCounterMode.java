@@ -292,18 +292,23 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     }
 
     /**
-     * a wrapper of OpenSslNative.ctrl(long context, int type, int arg, byte[] data)
+     * Wraps of OpenSslNative.ctrl(long context, int type, int arg, byte[] data)
      * Since native interface EVP_CIPHER_CTX *ctx, int type, int arg, void *ptr) is generic,
      * it may set/get any native char or long type to the data buffer(ptr).
      * Here we use ByteBuffer and set nativeOrder to handle the endianness.
+     *
+     * @param context The cipher context address
+     * @param type CtrlValues
+     * @param arg argument like a tag length
+     * @param data byte buffer or null
      */
-    private void evpCipherCtxCtrl(final long context, final int type, final int arg, final ByteBuffer bb) {
+    private void evpCipherCtxCtrl(final long context, final int type, final int arg, final ByteBuffer data) {
         checkState();
 
         try {
-            if (bb != null) {
-                bb.order(ByteOrder.nativeOrder());
-                OpenSslNative.ctrl(context, type, arg, bb.array());
+            if (data != null) {
+                data.order(ByteOrder.nativeOrder());
+                OpenSslNative.ctrl(context, type, arg, data.array());
             } else {
                 OpenSslNative.ctrl(context, type, arg, null);
             }
