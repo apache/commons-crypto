@@ -65,6 +65,7 @@ public class GcmCipherTest {
     /**
      * NIST AES Test Vectors
      * http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf
+     * @throws Exception Test failure
      */
     @Test
     public void testGcmNistCase2() throws Exception {
@@ -220,29 +221,27 @@ public class GcmCipherTest {
         final byte[] encOutput = new byte[plainBytes.length + (tagLength >> 3)];
         final byte[] decOutput = new byte[plainBytes.length];
 
-        {
-            final CryptoCipher c = Utils.getCipherInstance(transformation, props);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
             final Key key = new SecretKeySpec(keyBytes, "AES");
 
             final GCMParameterSpec iv = new GCMParameterSpec(tagLength, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
             c.updateAAD(aadBytes);
             c.doFinal(plainBytes, 0, plainBytes.length, encOutput, 0);
-            c.close();
         }
 
         // Tamper the encrypted data.
         encOutput[0] = (byte)(encOutput[0] + 1);
 
-        final CryptoCipher c = Utils.getCipherInstance(transformation, props);
-        final Key key = new SecretKeySpec(keyBytes, "AES");
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
+            final Key key = new SecretKeySpec(keyBytes, "AES");
 
-        final GCMParameterSpec iv = new GCMParameterSpec(tagLength, ivBytes);
-        c.init(Cipher.DECRYPT_MODE, key, iv);
-        c.updateAAD(aadBytes);
-        final Exception ex = assertThrows(AEADBadTagException.class, () -> c.doFinal(encOutput, 0, encOutput.length, decOutput, 0));
-        assertEquals(ex.getMessage(),"Tag mismatch!");
-        c.close();
+            final GCMParameterSpec iv = new GCMParameterSpec(tagLength, ivBytes);
+            c.init(Cipher.DECRYPT_MODE, key, iv);
+            c.updateAAD(aadBytes);
+            final Exception ex = assertThrows(AEADBadTagException.class, () -> c.doFinal(encOutput, 0, encOutput.length, decOutput, 0));
+            assertEquals(ex.getMessage(), "Tag mismatch!");
+        }
 
     }
 
@@ -276,14 +275,12 @@ public class GcmCipherTest {
             c.doFinal(input, 0, input.length, tag_orig, 0);
         }
 
-        {
-            final CryptoCipher c = Utils.getCipherInstance(transformation, props);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
             final Key key = new SecretKeySpec(keyBytes, "AES");
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
             c.updateAAD(aad);
             c.doFinal(input, 0, input.length, tag, 0);
-            c.close();
         }
 
         // tag should be the same as JDK's cipher
@@ -291,14 +288,12 @@ public class GcmCipherTest {
 
         // like JDK's decrypt mode. The plaintext+tag is the input for decrypt mode
         // let's verify the add & tag now
-        {
-            final CryptoCipher c = Utils.getCipherInstance(transformation, props);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
             final Key key = new SecretKeySpec(keyBytes, "AES");
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.DECRYPT_MODE, key, iv);
             c.updateAAD(aad);
             c.doFinal(tag, 0, tag.length, input, 0);
-            c.close();
         }
     }
 
@@ -319,31 +314,27 @@ public class GcmCipherTest {
         r.nextBytes(ivBytes);
         r.nextBytes(aad);
 
-        {
-            final CryptoCipher c = Utils.getCipherInstance(transformation, props);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
             final Key key = new SecretKeySpec(keyBytes, "AES");
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
             c.updateAAD(aad);
             c.doFinal(input, 0, input.length, tag, 0);
-            c.close();
         }
 
         // like JDK's decrypt mode. The plaintext+tag is the input for decrypt mode
-        final CryptoCipher c = Utils.getCipherInstance(transformation, props);
-        final Key key = new SecretKeySpec(keyBytes, "AES");
-        final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
-        c.init(Cipher.DECRYPT_MODE, key, iv);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
+            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
+            c.init(Cipher.DECRYPT_MODE, key, iv);
 
-        // if the origin data is tampered
-        aad[0] = (byte) (aad[0] + 1);
-        c.updateAAD(aad);
+            // if the origin data is tampered
+            aad[0] = (byte) (aad[0] + 1);
+            c.updateAAD(aad);
 
-        final Exception ex = assertThrows(AEADBadTagException.class,
-                () -> c.doFinal(tag, 0, tag.length, input, 0));
-        assertEquals(ex.getMessage(), "Tag mismatch!");
-
-
+            final Exception ex = assertThrows(AEADBadTagException.class, () -> c.doFinal(tag, 0, tag.length, input, 0));
+            assertEquals(ex.getMessage(), "Tag mismatch!");
+        }
 
     }
 
@@ -358,18 +349,18 @@ public class GcmCipherTest {
 
         final byte[] output = new byte[expectedOutput.length];
 
-        final CryptoCipher c = Utils.getCipherInstance(transformation, props);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
 
-        final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = new SecretKeySpec(keyBytes, "AES");
 
-        final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
-        c.init(Cipher.ENCRYPT_MODE, key, iv);
-        c.updateAAD(aad);
+            final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
+            c.init(Cipher.ENCRYPT_MODE, key, iv);
+            c.updateAAD(aad);
 
-        c.doFinal(input, 0, input.length, output, 0);
+            c.doFinal(input, 0, input.length, output, 0);
 
-        assertArrayEquals(expectedOutput, output);
-        c.close();
+            assertArrayEquals(expectedOutput, output);
+        }
     }
 
     private void testGcmArbitraryLengthUpdate(final String kHex, final String pHex, final String ivHex, final String aadHex,
@@ -386,47 +377,48 @@ public class GcmCipherTest {
 
         final Random r = new Random();
 
-        final CryptoCipher enc = Utils.getCipherInstance(transformation, props);
-        final Key key = new SecretKeySpec(keyBytes, "AES");
-        final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
-        enc.init(Cipher.ENCRYPT_MODE, key, iv);
-        if (aad.length > 0) {
-            final int len1 = r.nextInt(aad.length) ;
-            final byte[] aad1 = Arrays.copyOfRange(aad, 0, len1);
-            final byte[] aad2 = Arrays.copyOfRange(aad, len1, aad.length);
-            enc.updateAAD(aad1);
-            enc.updateAAD(aad2);
+        int partLen;
+        int len;
+        try (final CryptoCipher enc = Utils.getCipherInstance(transformation, props)) {
+            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
+            enc.init(Cipher.ENCRYPT_MODE, key, iv);
+            if (aad.length > 0) {
+                final int len1 = r.nextInt(aad.length);
+                final byte[] aad1 = Arrays.copyOfRange(aad, 0, len1);
+                final byte[] aad2 = Arrays.copyOfRange(aad, len1, aad.length);
+                enc.updateAAD(aad1);
+                enc.updateAAD(aad2);
+            }
+
+            partLen = r.nextInt(input.length);
+            len = enc.update(input, 0, partLen, encOutput, 0);
+            assertEquals(partLen, len);
+            len = enc.doFinal(input, partLen, input.length - partLen, encOutput, partLen);
+            assertEquals((input.length + (iv.getTLen() >> 3) - partLen), len);
+
+            assertArrayEquals(expectedOutput, encOutput);
         }
-
-        int partLen = r.nextInt(input.length);
-        int len = enc.update(input, 0, partLen, encOutput, 0);
-        assertEquals(partLen, len);
-        len = enc.doFinal(input, partLen, input.length - partLen, encOutput, partLen);
-        assertEquals((input.length + (iv.getTLen() >> 3) - partLen), len);
-
-        assertArrayEquals(expectedOutput, encOutput);
-        enc.close();
 
         // Decryption
-        final CryptoCipher dec = Utils.getCipherInstance(transformation, props);
-        dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyBytes, "AES"),
-                new GCMParameterSpec(128, ivBytes));
-        if (aad.length > 0) {
-            final int len1 = r.nextInt(aad.length) ;
-            final byte[] aad1 = Arrays.copyOfRange(aad, 0, len1);
-            final byte[] aad2 = Arrays.copyOfRange(aad, len1, aad.length);
-            dec.updateAAD(aad1);
-            dec.updateAAD(aad2);
-        }
-        final byte[] decInput = encOutput;
-        partLen = r.nextInt(input.length);
-        len = dec.update(decInput, 0, partLen, decOutput, 0);
-        assertEquals(len, 0);
-        len = dec.doFinal(decInput, partLen, decInput.length - partLen, decOutput, 0);
-        assertEquals(input.length, len);
+        try (final CryptoCipher dec = Utils.getCipherInstance(transformation, props)) {
+            dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyBytes, "AES"), new GCMParameterSpec(128, ivBytes));
+            if (aad.length > 0) {
+                final int len1 = r.nextInt(aad.length);
+                final byte[] aad1 = Arrays.copyOfRange(aad, 0, len1);
+                final byte[] aad2 = Arrays.copyOfRange(aad, len1, aad.length);
+                dec.updateAAD(aad1);
+                dec.updateAAD(aad2);
+            }
+            final byte[] decInput = encOutput;
+            partLen = r.nextInt(input.length);
+            len = dec.update(decInput, 0, partLen, decOutput, 0);
+            assertEquals(len, 0);
+            len = dec.doFinal(decInput, partLen, decInput.length - partLen, decOutput, 0);
+            assertEquals(input.length, len);
 
-        assertArrayEquals(input, decOutput);
-        dec.close();
+            assertArrayEquals(input, decOutput);
+        }
     }
 
     private void testGcmDecryption(final String kHex, final String pHex, final String ivHex, final String aadHex,
@@ -442,17 +434,17 @@ public class GcmCipherTest {
         final byte[] input = cipherBytes;
         final byte[] output = new byte[plainBytes.length];
 
-        final CryptoCipher c = Utils.getCipherInstance(transformation, props);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
 
-        final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = new SecretKeySpec(keyBytes, "AES");
 
-        final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
-        c.init(Cipher.DECRYPT_MODE, key, iv);
-        c.updateAAD(aad);
-        c.doFinal(input, 0, input.length, output, 0);
+            final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
+            c.init(Cipher.DECRYPT_MODE, key, iv);
+            c.updateAAD(aad);
+            c.doFinal(input, 0, input.length, output, 0);
 
-        assertArrayEquals(plainBytes, output);
-        c.close();
+            assertArrayEquals(plainBytes, output);
+        }
     }
 
     private void testGcmReturnDataAfterTagVerified(final String kHex, final String pHex, final String ivHex, final String aadHex,
@@ -468,22 +460,22 @@ public class GcmCipherTest {
         final byte[] input = cipherBytes;
         final byte[] output = new byte[plainBytes.length];
 
-        final CryptoCipher c = Utils.getCipherInstance(transformation, props);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
 
-        final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = new SecretKeySpec(keyBytes, "AES");
 
-        final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
-        c.init(Cipher.DECRYPT_MODE, key, iv);
-        c.updateAAD(aad);
+            final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
+            c.init(Cipher.DECRYPT_MODE, key, iv);
+            c.updateAAD(aad);
 
-        //only return recovered data after tag is successfully verified
-        int len = c.update(input, 0, input.length, output, 0);
-        assertEquals(len, 0);
-        len += c.doFinal(input, input.length, 0, output, 0);
-        assertEquals(plainBytes.length, len);
+            // only return recovered data after tag is successfully verified
+            int len = c.update(input, 0, input.length, output, 0);
+            assertEquals(len, 0);
+            len += c.doFinal(input, input.length, 0, output, 0);
+            assertEquals(plainBytes.length, len);
 
-        assertArrayEquals(plainBytes, output);
-        c.close();
+            assertArrayEquals(plainBytes, output);
+        }
     }
 
     private void testGcmByteBuffer(final String kHex, final String pHex, final String ivHex, final String aadHex,
@@ -507,40 +499,39 @@ public class GcmCipherTest {
         bfCipherText = ByteBuffer.allocateDirect(encOutput.length);
 
         // Encryption -------------------
-        final CryptoCipher c = Utils.getCipherInstance(transformation, props);
-        final Key key = new SecretKeySpec(keyBytes, "AES");
-        final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
-        c.init(Cipher.ENCRYPT_MODE, key, iv);
+        try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
+            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
+            c.init(Cipher.ENCRYPT_MODE, key, iv);
 
-        bfAAD.flip();
-        c.updateAAD(bfAAD);
+            bfAAD.flip();
+            c.updateAAD(bfAAD);
 
-        bfPlainText.put(plainText);
-        bfPlainText.flip();
-        bfCipherText.position(0);
+            bfPlainText.put(plainText);
+            bfPlainText.flip();
+            bfCipherText.position(0);
 
-        c.doFinal(bfPlainText, bfCipherText);
+            c.doFinal(bfPlainText, bfCipherText);
 
-        bfCipherText.flip();
-        bfCipherText.get(encOutput);
-        assertArrayEquals(cipherText, encOutput);
-        c.close();
+            bfCipherText.flip();
+            bfCipherText.get(encOutput);
+            assertArrayEquals(cipherText, encOutput);
+        }
 
         // Decryption -------------------
-        final CryptoCipher dec = Utils.getCipherInstance(transformation, props);
-        dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyBytes, "AES"),
-                new GCMParameterSpec(128, ivBytes));
-        bfAAD.flip();
-        dec.updateAAD(bfAAD);
-        bfCipherText.clear();
-        bfPlainText.clear();
-        bfCipherText.put(cipherText);
-        bfCipherText.flip();
-        dec.doFinal(bfCipherText, bfPlainText);
-        bfPlainText.flip();
-        bfPlainText.get(decOutput);
-        assertArrayEquals(plainText, decOutput);
-        dec.close();
+        try (final CryptoCipher dec = Utils.getCipherInstance(transformation, props)) {
+            dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyBytes, "AES"), new GCMParameterSpec(128, ivBytes));
+            bfAAD.flip();
+            dec.updateAAD(bfAAD);
+            bfCipherText.clear();
+            bfPlainText.clear();
+            bfCipherText.put(cipherText);
+            bfCipherText.flip();
+            dec.doFinal(bfCipherText, bfPlainText);
+            bfPlainText.flip();
+            bfPlainText.get(decOutput);
+            assertArrayEquals(plainText, decOutput);
+        }
     }
 
     private void initTestData() {
