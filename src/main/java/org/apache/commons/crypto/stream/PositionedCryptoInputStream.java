@@ -291,9 +291,9 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         final long counter = getCounter(position);
         CtrCryptoInputStream.calculateIV(getInitIV(), counter, iv);
         try {
-            state.getCryptoCipher().init(Cipher.DECRYPT_MODE, key,
-                    new IvParameterSpec(iv));
+            state.getCryptoCipher().init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         } catch (final GeneralSecurityException e) {
+            // Ignore
         }
         state.reset(false);
     }
