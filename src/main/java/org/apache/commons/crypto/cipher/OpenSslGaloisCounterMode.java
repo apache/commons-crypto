@@ -301,19 +301,19 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
      * @param type CtrlValues
      * @param arg argument like a tag length
      * @param data byte buffer or null
+     * @return return 0 if there is any error, else return 1.
      */
-    private void evpCipherCtxCtrl(final long context, final int type, final int arg, final ByteBuffer data) {
+    private int evpCipherCtxCtrl(final long context, final int type, final int arg, final ByteBuffer data) {
         checkState();
-
         try {
             if (data != null) {
                 data.order(ByteOrder.nativeOrder());
-                OpenSslNative.ctrl(context, type, arg, data.array());
-            } else {
-                OpenSslNative.ctrl(context, type, arg, null);
+                return OpenSslNative.ctrl(context, type, arg, data.array());
             }
+            return OpenSslNative.ctrl(context, type, arg, null);
         } catch (final Exception e) {
             System.out.println(e.getMessage());
+            return 0;
         }
     }
 }
