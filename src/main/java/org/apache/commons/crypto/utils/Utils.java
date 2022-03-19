@@ -19,6 +19,7 @@ package org.apache.commons.crypto.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -61,15 +62,14 @@ public final class Utils {
     private static Properties createDefaultProperties() {
         // default to system
         final Properties defaultedProps = new Properties(System.getProperties());
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(SYSTEM_PROPERTIES_FILE);
+        if (url == null) {
+            // Fail early when the resource is not found which makes SpotBugs happy on Java 17.
+            return defaultedProps;
+        }
         try {
             final Properties fileProps = new Properties();
-            try (InputStream is = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream(SYSTEM_PROPERTIES_FILE)) {
-
-                if (is == null) {
-                    return defaultedProps; // no configuration file is found
-                }
-                // Load property file
+            try (InputStream is = url.openStream()) {
                 fileProps.load(is);
             }
             final Enumeration<?> names = fileProps.propertyNames();
@@ -81,9 +81,7 @@ public final class Utils {
                 }
             }
         } catch (final Exception ex) {
-            System.err.println("Could not load '"
-                    + SYSTEM_PROPERTIES_FILE
-                    + "' from classpath: " + ex.toString());
+            System.err.println("Could not load '" + SYSTEM_PROPERTIES_FILE + "' from classpath: " + ex.toString());
         }
         return defaultedProps;
     }
