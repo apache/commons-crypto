@@ -66,6 +66,9 @@
       <action issue="CRYPTO-154" type="fix">License header should be plain a comment #113.</action>
       <action                    type="fix" dev="ggregory" due-to="Arturo Bernal">Fix PMD warning and don't init to defaults #128.</action>
       <action                    type="fix" dev="ggregory" due-to="Arturo Bernal">Minor changes #135.</action>
+      <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Port from pre-Java 8 javah tool to Java 8 and up javac with the -h option.</action>
+      <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 11.</action>
+      <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 17.</action>
       <!-- UPDATE -->
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Update commons.jacoco.version 0.8.5 to 0.8.6 (Fixes Java 15 builds).</action>
       <action issue="CRYPTO-155" type="update" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
