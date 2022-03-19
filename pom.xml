@@ -110,11 +110,11 @@ The following provides more details on the included cryptographic software:
   </distributionManagement>
 
   <properties>
-    <commons.release.version>1.1.0</commons.release.version>
+    <commons.release.version>1.1.1</commons.release.version>
     <commons.release.desc>(Java 8)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
-    <commons.bc.version>1.0.0</commons.bc.version>
+    <commons.bc.version>1.1.0</commons.bc.version>
     <commons.componentid>crypto</commons.componentid>
     <commons.module.name>org.apache.commons.crypto</commons.module.name>
     <commons.jira.id>CRYPTO</commons.jira.id>
@@ -143,10 +143,11 @@ The following provides more details on the included cryptographic software:
     <checkstyle.header.file>${basedir}/LICENSE-header.txt</checkstyle.header.file>
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
 
-    <commons.pmd.version>3.15.0</commons.pmd.version>
-    <commons.javadoc.version>3.3.1</commons.javadoc.version>
+    <commons.pmd.version>3.16.0</commons.pmd.version>
+    <commons.javadoc.version>3.3.2</commons.javadoc.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.japicmp.version>0.15.7</commons.japicmp.version>
+    <commons.spotbugs.version>4.5.3.0</commons.spotbugs.version>
     
     <clirr.skip>true</clirr.skip>
     
@@ -154,7 +155,7 @@ The following provides more details on the included cryptographic software:
     <commons.releaseManagerName>Gary Gregory</commons.releaseManagerName>    
     <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
   
-    <jna.version>5.10.0</jna.version>
+    <jna.version>5.9.0</jna.version>
     <commons.jacoco.version>0.8.7</commons.jacoco.version>
 
     <!-- The property "target.name" is used to specify the ant target, The All target will use
@@ -163,6 +164,7 @@ The following provides more details on the included cryptographic software:
     <target.name>all</target.name>
     <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
     <junit.version>5.8.2</junit.version>
+    <commons.surefire.version>3.0.0-M5</commons.surefire.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
@@ -444,10 +446,22 @@ The following provides more details on the included cryptographic software:
       </build>
     </profile>
 
+    <profile>
+      <activation>
+        <jdk>[11.,)</jdk>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+          <version>2.3.6</version>
+        </dependency>
+      </dependencies>
+    </profile>  
   </profiles>
 
   <build>
-    <defaultGoal>clean apache-rat:check install japicmp:cmp spotbugs:check javadoc:javadoc</defaultGoal>
+    <defaultGoal>clean apache-rat:check install japicmp:cmp spotbugs:check pmd:check javadoc:javadoc</defaultGoal>
     <resources>
       <resource>
         <directory>src/main/resources/</directory>

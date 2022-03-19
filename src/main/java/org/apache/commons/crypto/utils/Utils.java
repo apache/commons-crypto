@@ -63,7 +63,7 @@ public final class Utils {
         final Properties defaultedProps = new Properties(System.getProperties());
         try {
             final Properties fileProps = new Properties();
-            try (final InputStream is = Thread.currentThread().getContextClassLoader()
+            try (InputStream is = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(SYSTEM_PROPERTIES_FILE)) {
 
                 if (is == null) {

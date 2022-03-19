@@ -288,7 +288,7 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     }
 
     private int getTagLen() {
-        return tagBitLen < 0 ? DEFAULT_TAG_LEN : (tagBitLen >> 3);
+        return tagBitLen < 0 ? DEFAULT_TAG_LEN : tagBitLen >> 3;
     }
 
     /**

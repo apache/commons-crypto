@@ -52,7 +52,6 @@
   <rule ref="category/java/errorprone.xml/CheckSkipResult"/>
   <rule ref="category/java/errorprone.xml/ClassCastExceptionWithToArray"/>
   <rule ref="category/java/errorprone.xml/DontUseFloatTypeForLoopIndices"/>
-  <rule ref="category/java/errorprone.xml/EmptyCatchBlock"/>
   <rule ref="category/java/errorprone.xml/EmptyFinallyBlock"/>
   <rule ref="category/java/errorprone.xml/EmptyIfStmt"/>
   <rule ref="category/java/errorprone.xml/EmptyInitializer"/>
