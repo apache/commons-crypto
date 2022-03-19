@@ -164,6 +164,14 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_nextRandBytes___3B
     (JNIEnv *env, jobject object, jbyteArray bytes)
 {
+  if (NULL == env) {
+    THROW(env, "java/lang/NullPointerException", "JNIEnv cannot be null.");
+	return JNI_FALSE;
+  }
+  if (NULL == object) {
+    THROW(env, "java/lang/NullPointerException", "Object cannot be null.");
+    return JNI_FALSE;
+  }
   if (NULL == bytes) {
     THROW(env, "java/lang/NullPointerException", "Buffer cannot be null.");
     return JNI_FALSE;
@@ -174,6 +182,10 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRa
     return JNI_FALSE;
   }
   int b_len = (*env)->GetArrayLength(env, bytes);
+  if (b_len < 0) {
+    THROW(env, "java/lang/InternalError", "Cannot get array length.");
+    return JNI_FALSE;
+  }
   int ret = openssl_rand_bytes((unsigned char *)b, b_len);
   (*env)->ReleaseByteArrayElements(env, bytes, b, 0);
 

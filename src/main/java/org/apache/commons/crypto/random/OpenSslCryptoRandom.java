@@ -55,12 +55,31 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
             try {
                 OpenSslCryptoRandomNative.initSR();
                 opensslLoaded = true;
-            } catch (final Exception | UnsatisfiedLinkError t) {
-                except = t;
+            } catch (final Exception | UnsatisfiedLinkError e) {
+                except = e;
             }
         }
         nativeEnabled = opensslLoaded;
         initException = except;
+        //
+        // Check that nextRandBytes works (is this really needed?)
+        try {
+            checkNative();
+        } catch (GeneralSecurityException e) {
+            throw new IllegalStateException(e);
+        }
+        if (!OpenSslCryptoRandomNative.nextRandBytes(new byte[1])) {
+            throw new IllegalStateException("Check of nextRandBytes failed");
+        }
+    }
+
+    private static void checkNative() throws GeneralSecurityException {
+        if (!nativeEnabled) {
+            if (initException != null) {
+                throw new GeneralSecurityException("Native library could not be initialized", initException);
+            }
+            throw new GeneralSecurityException("Native library is not loaded");
+        }
     }
 
     /**
@@ -81,41 +100,16 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OpenSslCryptoRandom(final Properties props) throws GeneralSecurityException { // NOPMD
-        if (!nativeEnabled) {
-            if (initException != null) {
-                throw new GeneralSecurityException("Native library could not be initialized", initException);
-            }
-            throw new GeneralSecurityException("Native library is not loaded");
-        }
-        // Check that nextRandBytes works (is this really needed?)
-        if (!OpenSslCryptoRandomNative.nextRandBytes(new byte[1])) {
-            throw new GeneralSecurityException("Check of nextRandBytes failed");
-        }
+        checkNative();
     }
 
     /**
-     * Generates a user-specified number of random bytes. It's thread-safe.
-     *
-     * @param bytes the array to be filled in with random bytes.
+     * Overrides {@link java.lang.AutoCloseable#close()}.
+     * Does nothing.
      */
     @Override
-    public void nextBytes(final byte[] bytes) {
-        // Constructor ensures that native is enabled here
-        if (!OpenSslCryptoRandomNative.nextRandBytes(bytes)) {
-            // Assume it's a problem with the argument, rather than an internal issue
-            throw new IllegalArgumentException("The nextRandBytes method failed");
-        }
-    }
-
-    /**
-     * Overrides {@link OpenSslCryptoRandom}. For {@link OpenSslCryptoRandom},
-     * we don't need to set seed.
-     *
-     * @param seed the initial seed.
-     */
-    @Override
-    public void setSeed(final long seed) {
-        // Self-seeding.
+    public void close() {
+        // noop
     }
 
     /**
@@ -144,11 +138,27 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link java.lang.AutoCloseable#close()}.
-     * Does nothing.
+     * Generates a user-specified number of random bytes. It's thread-safe.
+     *
+     * @param bytes the array to be filled in with random bytes.
      */
     @Override
-    public void close() {
-        // noop
+    public void nextBytes(final byte[] bytes) {
+        // Constructor ensures that native is enabled here
+        if (!OpenSslCryptoRandomNative.nextRandBytes(bytes)) {
+            // Assume it's a problem with the argument, rather than an internal issue
+            throw new IllegalArgumentException("The nextRandBytes method failed");
+        }
+    }
+
+    /**
+     * Overrides {@link OpenSslCryptoRandom}. For {@link OpenSslCryptoRandom},
+     * we don't need to set seed.
+     *
+     * @param seed the initial seed.
+     */
+    @Override
+    public void setSeed(final long seed) {
+        // Self-seeding.
     }
 }
