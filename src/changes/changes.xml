@@ -81,6 +81,7 @@
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.javadoc.version 3.2.0 -> 3.3.1 #138.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump net.java.dev.jna:jna 5.6.0 -> 5.10.0 #139.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump maven-pmd-plugin from 3.14.0 to 3.15.0 #140.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/checkout from 2 to 3 #149.</action>
     </release>
     <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8 and OpenSSL 1.1.1)">
       <action issue="CRYPTO-59" type="add">Support Galois/Counter Mode (GCM).</action>
