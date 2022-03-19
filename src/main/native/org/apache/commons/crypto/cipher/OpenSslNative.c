@@ -27,7 +27,7 @@
 #undef JNIEXPORT
 #endif
 #define JNIEXPORT __attribute__((__visibility__("default")))
-#include "OpenSslNative.h"
+#include "org_apache_commons_crypto_cipher_OpenSslNative.h"
 
 #ifdef UNIX
 static EVP_CIPHER_CTX * (*dlsym_EVP_CIPHER_CTX_new)(void);

@@ -465,6 +465,10 @@ The following provides more details on the included cryptographic software:
             <excludes>
               <exclude>**/package-info.java</exclude>
             </excludes>
+            <compilerArgs>
+              <compilerArg>-h</compilerArg>
+              <compilerArg>target/jni-classes</compilerArg>
+            </compilerArgs>
           </configuration>
         </plugin>
         <plugin>

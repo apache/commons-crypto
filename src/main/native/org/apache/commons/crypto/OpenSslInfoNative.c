@@ -36,7 +36,7 @@
 #undef JNIEXPORT
 #endif
 #define JNIEXPORT __attribute__((__visibility__("default")))
-#include "OpenSslInfoNative.h"
+#include "org_apache_commons_crypto_OpenSslInfoNative.h"
 
 #ifdef UNIX
 static unsigned long (*dlsym_OpenSSL_version_num) (void);

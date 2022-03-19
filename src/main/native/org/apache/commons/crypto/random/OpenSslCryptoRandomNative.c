@@ -38,7 +38,7 @@
 #undef JNIEXPORT
 #endif
 #define JNIEXPORT __attribute__((__visibility__("default")))
-#include "OpenSslCryptoRandomNative.h"
+#include "org_apache_commons_crypto_random_OpenSslCryptoRandomNative.h"
 
 #ifdef UNIX
 static void * (*dlsym_CRYPTO_malloc) (int, const char *, int);
