@@ -70,6 +70,8 @@
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 11.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 17.</action>
       <!-- UPDATE -->
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/checkout from 2 to 3 #149.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.7 to 3 #150.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Update commons.jacoco.version 0.8.5 to 0.8.7 (Fixes Java 15 builds).</action>
       <action issue="CRYPTO-155" type="update" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
       <action issue="CRYPTO-151" type="update" due-to="Arturo Bernal">Migrate to Junit 5 #114.</action>
@@ -83,9 +85,7 @@
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump jacoco-maven-plugin 0.6.6 -> 0.8.8 #138, #154.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.javadoc.version 3.2.0 -> 3.3.2 #138.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump maven-pmd-plugin from 3.14.0 to 3.16.0 #140.</action>
-      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/checkout from 2 to 3 #149.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump taglist-maven-plugin from 2.4 to 3.0.0 #147.</action>
-      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.7 to 3 #150.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump spotbugs-maven-plugin from 4.5.3.0 to 4.6.0.0 #152.</action>
     </release>
     <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8 and OpenSSL 1.1.1)">
