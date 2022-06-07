@@ -70,7 +70,7 @@
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 11.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 17.</action>
       <!-- UPDATE -->
-      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.3 #150.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.4 #150.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/checkout from 2 to 3 #149.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump actions/setup-java from 2 to 3.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Update commons.jacoco.version 0.8.5 to 0.8.7 (Fixes Java 15 builds).</action>
