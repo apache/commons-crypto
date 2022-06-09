@@ -259,6 +259,8 @@ static FARPROC WINAPI do_version_dlsym(JNIEnv *env, HMODULE handle) {
 #define AES_CTR 0
 #define AES_CBC 1
 #define AES_GCM 2
+#define SM4_CTR 3
+#define SM4_CBC 4
 
 #define NOPADDING 0
 #define PKCS5PADDING 1
