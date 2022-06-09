@@ -162,7 +162,7 @@ The following provides more details on the included cryptographic software:
     OsInfo.java to detect the OS info and arch to generate the native binary for detected platform.
     User is able to specify the platform by maven profiles.-->
     <target.name>all</target.name>
-    <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
+    <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     <junit.version>5.8.2</junit.version>
     <commons.surefire.version>3.0.0-M5</commons.surefire.version>
 
