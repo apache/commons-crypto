@@ -16,13 +16,15 @@
 name: "CodeQL"
 
 on:
+  # allow direct trigger
+  workflow_dispatch:
   push:
     paths-ignore:
-      - '**/workflows/maven.yml'
+      - '**/workflows/*.yml'
     branches: [ master ]
   pull_request:
     paths-ignore:
-      - '**/workflows/maven.yml'
+      - '**/workflows/*.yml'
     # The branches below must be a subset of the branches above
     branches: [ master ]
   schedule:
