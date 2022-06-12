@@ -15,7 +15,13 @@
 
 name: Coverage
 
-on: [push, pull_request]
+on: 
+  push:
+    paths-ignore:
+      - '**/workflows/maven.yml'
+  pull_request:
+    paths-ignore:
+      - '**/workflows/maven.yml'
 
 permissions:
   contents: read
