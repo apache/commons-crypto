@@ -52,6 +52,11 @@ static EVP_CIPHER * (*dlsym_EVP_aes_128_cbc)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_256_gcm)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_192_gcm)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_128_gcm)(void);
+static ENGINE * (*dlsym_ENGINE_by_id) (const char *);
+static int (*dlsym_ENGINE_init) (ENGINE *);
+static int (*dlsym_ENGINE_finish) (ENGINE *);
+static int (*dlsym_ENGINE_free) (ENGINE *);
+static int (*dlsym_ENGINE_set_default_ciphers) (ENGINE *);
 #endif
 
 #ifdef WINDOWS
@@ -181,6 +186,11 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CipherInit_ex, env, openssl, "EVP_CipherInit_ex");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CipherUpdate, env, openssl, "EVP_CipherUpdate");
   LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CipherFinal_ex, env, openssl, "EVP_CipherFinal_ex");
+  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_by_id, env, openssl, "ENGINE_by_id");
+  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_init, env, openssl, "ENGINE_init");
+  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_finish, env, openssl, "ENGINE_finish");
+  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_free, env, openssl, "ENGINE_free");
+  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_set_default_ciphers, env, openssl, "ENGINE_set_default_ciphers");
 #endif
 
 #ifdef WINDOWS
@@ -686,6 +696,35 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_clean
 {
   EVP_CTX_Wrapper *wrapper = CTX_WRAPPER(ctx);
   free_context_wrapper(wrapper);
+}
+
+JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_engineSetDefaultCiphers
+  (JNIEnv *env, jclass clazz, jstring engineId)
+{
+  const char* eId = (*env)->GetStringUTFChars(env, engineId, 0);
+  ENGINE *e = dlsym_ENGINE_by_id(eId);
+
+  if (!e) {
+    char msg[64] = {0};
+    snprintf(msg, sizeof(msg), "Not found engine: %s", eId);
+    THROW(env, "java/lang/InternalError", msg);
+    return;
+  }
+  (*env)->ReleaseStringUTFChars(env, engineId, eId);
+
+  if (dlsym_ENGINE_init(e) != 1) {
+    dlsym_ENGINE_free(e);
+    THROW(env, "java/lang/InternalError", "Error in ENGINE_init.");
+    return;
+  }
+
+  if (dlsym_ENGINE_set_default_ciphers(e) != 1) {
+    THROW(env, "java/lang/InternalError", "Error in ENGINE_set_default_ciphers.");
+    return;
+  }
+  dlsym_ENGINE_finish(e);
+  dlsym_ENGINE_free(e);
+  return;
 }
 
 static int check_update_max_output_len(EVP_CTX_Wrapper *wrapper, int input_len, int max_output_len)

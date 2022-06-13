@@ -35,6 +35,10 @@ public class CryptoCipherFactory {
      */
     public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX
             + "cipher.jce.provider";
+
+    public static final String CIPHER_ENGINE_KEY = Crypto.CONF_PREFIX
+            + "cipher.engine";
+
     /**
      * The configuration key of the CryptoCipher implementation class.
      * <p>

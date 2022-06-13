@@ -279,6 +279,11 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
         }
     }
 
+    @Override
+    public void engineSetDefaultCiphers(String engineId) {
+        OpenSslNative.engineSetDefaultCiphers(engineId);
+    }
+
     private void processAAD() {
         if (aadBuffer != null && aadBuffer.size() > 0) {
             OpenSslNative.updateByteArray(context, aadBuffer.toByteArray(),
