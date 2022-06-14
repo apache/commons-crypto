@@ -84,6 +84,11 @@ typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_cbc)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_256_gcm)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_192_gcm)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_gcm)(void);
+typedef ENGINE * (__cdecl *__dlsym_ENGINE_by_id)(const char *);
+typedef int (__cdecl *__dlsym_ENGINE_init)(ENGINE *);
+typedef int (__cdecl *__dlsym_ENGINE_finish)(ENGINE *);
+typedef int (__cdecl *__dlsym_ENGINE_free)(ENGINE *);
+typedef int (__cdecl *__dlsym_ENGINE_set_default_ciphers)(ENGINE *);
 static __dlsym_EVP_CIPHER_CTX_new dlsym_EVP_CIPHER_CTX_new;
 static __dlsym_EVP_CIPHER_CTX_free dlsym_EVP_CIPHER_CTX_free;
 static __dlsym_EVP_CIPHER_CTX_set_padding dlsym_EVP_CIPHER_CTX_set_padding;
@@ -104,6 +109,11 @@ static __dlsym_EVP_aes_128_cbc dlsym_EVP_aes_128_cbc;
 static __dlsym_EVP_aes_256_gcm dlsym_EVP_aes_256_gcm;
 static __dlsym_EVP_aes_192_gcm dlsym_EVP_aes_192_gcm;
 static __dlsym_EVP_aes_128_gcm dlsym_EVP_aes_128_gcm;
+static __dlsym_ENGINE_by_id dlsym_ENGINE_by_id;
+static __dlsym_ENGINE_init dlsym_ENGINE_init;
+static __dlsym_ENGINE_finish dlsym_ENGINE_finish;
+static __dlsym_ENGINE_free dlsym_ENGINE_free;
+static __dlsym_ENGINE_set_default_ciphers dlsym_ENGINE_set_default_ciphers;
 #endif
 
 #ifdef UNIX
@@ -216,6 +226,17 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
                       env, openssl, "EVP_CipherUpdate");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherFinal_ex, dlsym_EVP_CipherFinal_ex,  \
                       env, openssl, "EVP_CipherFinal_ex");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_by_id, dlsym_ENGINE_by_id,  \
+                        env, openssl, "ENGINE_by_id");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_init, dlsym_ENGINE_init,  \
+                        env, openssl, "ENGINE_init");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_finish, dlsym_ENGINE_finish,  \
+                        env, openssl, "ENGINE_finish");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_free, dlsym_ENGINE_free,  \
+                        env, openssl, "ENGINE_free");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_set_default_ciphers, dlsym_ENGINE_set_default_ciphers,  \
+                        env, openssl, "ENGINE_set_default_ciphers");
+
 #endif
 
   loadAes(env, openssl);
