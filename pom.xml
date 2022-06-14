@@ -585,7 +585,7 @@ The following provides more details on the included cryptographic software:
               <goal>run</goal>
             </goals>
             <configuration>
-              <target name="make" unless="maven.make.skip">
+              <target name="make">
                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                 <exec executable="make" failonerror="true" dir="${project.basedir}">
                   <env key="VERSION" value="${project.version}" />

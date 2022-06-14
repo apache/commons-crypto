@@ -22,8 +22,6 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.commons.crypto.utils.Utils;
-
 /**
  * A CryptoRandom of Java implementation.
  */
@@ -77,23 +75,5 @@ class JavaCryptoRandom extends Random implements CryptoRandom {
     @Override
     public void nextBytes(final byte[] bytes) {
         instance.nextBytes(bytes);
-    }
-
-    /**
-     * Overrides Random#next(). Generates an integer containing the
-     * user-specified number of random bits(right justified, with leading
-     * zeros).
-     *
-     * @param numBits number of random bits to be generated, where 0
-     *        {@literal <=} {@code numBits} {@literal <=} 32.
-     * @return int an {@code int} containing the user-specified number of
-     *         random bits (right justified, with leading zeros).
-     */
-    @Override
-    protected int next(final int numBits) {
-        Utils.checkArgument(numBits >= 0 && numBits <= 32);
-		// Can't simply invoke instance.next(bits) here, because that is package protected.
-		// But, this should do.
-		return  instance.nextInt() >>> (Integer.SIZE - numBits);
     }
 }
