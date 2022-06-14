@@ -26,8 +26,8 @@ jobs:
       matrix:
         # os: [macos-latest, ubuntu-latest, windows-latest]
         # java: [ 8, 11, 17 ]
-        # Trying to fix Windows build
-        os: [windows-latest]
+        # Trying to fix macOS build
+        os: [macos-latest]
         java: [ 8 ]
         experimental: [false]
 #        include:
