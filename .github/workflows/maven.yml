@@ -60,8 +60,6 @@ jobs:
     - name: Find missing file
       run: |
         cd \
-        ruby -rfind -e "Find.find('.').each{|x| puts x if x.end_with? 'openssl'}"
-        d:
-        ruby -rfind -e "Find.find('.').each{|x| puts x if x.end_with? 'openssl'}"
+        ruby -rfind -e "Find.find('.').each{|x| puts x if x.end_with? 'aes.h'}"
     # - name: Build with Maven
     #   run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
