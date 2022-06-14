@@ -378,4 +378,7 @@ final class OpenSsl {
         clean();
     }
 
+    public void engineSetDefaultCiphers(String engineId){
+        opensslBlockCipher.engineSetDefaultCiphers(engineId);
+    }
 }

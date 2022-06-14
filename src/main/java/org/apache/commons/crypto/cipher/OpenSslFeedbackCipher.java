@@ -61,6 +61,8 @@ abstract class OpenSslFeedbackCipher {
 
     abstract void updateAAD(byte[] aad);
 
+    abstract void engineSetDefaultCiphers(String engineId);
+
     public void clean() {
         if (context != 0) {
             OpenSslNative.clean(context);

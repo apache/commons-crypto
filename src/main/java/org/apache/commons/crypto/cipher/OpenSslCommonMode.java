@@ -116,4 +116,9 @@ class OpenSslCommonMode extends OpenSslFeedbackCipher {
                 "The underlying Cipher implementation "
                         + "does not support this method");
     }
+
+    @Override
+    public void engineSetDefaultCiphers(String engineId) {
+        OpenSslNative.engineSetDefaultCiphers(engineId);
+    }
 }

@@ -159,4 +159,6 @@ class OpenSslNative {
      * @param context The cipher context address
      */
     public native static void clean(long context);
+
+    public native static void engineSetDefaultCiphers(String engineId);
 }
