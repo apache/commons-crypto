@@ -59,7 +59,6 @@ jobs:
       run: openssl version
     - name: Find missing file
       run: |
-        c:
         cd \
         dir aes.h /s
     # - name: Build with Maven
