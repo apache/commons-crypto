@@ -147,7 +147,7 @@ The following provides more details on the included cryptographic software:
     <commons.javadoc.version>3.3.2</commons.javadoc.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.japicmp.version>0.15.7</commons.japicmp.version>
-    <commons.spotbugs.version>4.7.0.0</commons.spotbugs.version>
+    <commons.spotbugs.version>4.6.0.0</commons.spotbugs.version>
     <!-- commons.animal-sniffer.version 1.21 fails on Java 17. -->
     <commons.animal-sniffer.version>1.20</commons.animal-sniffer.version>
     
