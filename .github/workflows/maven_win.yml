@@ -66,8 +66,7 @@ jobs:
     #     ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
     #     set
     - name: Build with Maven
-      env:
-        OPENSSL_HOME: "C:\\Miniconda\\pkgs\\openssl-1.1.1n-h2bbff1b_0\\Library"
       run: |
         env
+        set OPENSSL_HOME "C:\Miniconda\pkgs\openssl-1.1.1n-h2bbff1b_0\Library"
         mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
