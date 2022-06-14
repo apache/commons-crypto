@@ -70,28 +70,25 @@
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Port from pre-Java 8 javah tool to Java 8 and up javac with the -h option.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 11.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 17.</action>
-      <!-- ADD -->
-      <action                    type="fix" dev="ggregory" due-to="Gary Gregory, Dependabot">Add github/codeql-action 2 #159.</action>
       <!-- UPDATE -->
-      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.4 #150.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/checkout from 2 to 3 #149.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.3 #150.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump actions/setup-java from 2 to 3.</action>
+      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Update commons.jacoco.version 0.8.5 to 0.8.7 (Fixes Java 15 builds).</action>
       <action issue="CRYPTO-155" type="update" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
       <action issue="CRYPTO-151" type="update" due-to="Arturo Bernal">Migrate to Junit 5 #114.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump jna from 5.5.0 to 5.11.0 #123, #139, #153.</action>
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.japicmp.version from 0.14.3 to 0.15.7.</action>
+      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Update commons.japicmp.version 0.14.3 -> 0.15.7.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump maven-checkstyle-plugin from 3.1.1 to 3.1.2 #130.</action>
-      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump jmh.version from 1.12 to 1.35 #119, #157.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump jmh.version from 1.12 to 1.34 #119.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump exec-maven-plugin from 1.6.0 to 3.0.0 #121.</action>
-      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump maven-antrun-plugin from 1.8 to 3.1.0 #120, #158.</action>
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.japicmp.version from 0.15.2 to 0.15.7 #138.</action>
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump jacoco-maven-plugin from 0.6.6 to 0.8.8 #138, #154.</action>
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.javadoc.version from 3.2.0 to 3.4.0 #138.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump maven-antrun-plugin from 1.8 to 3.0.0 #120.</action>
+      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.japicmp.version 0.15.2 -> 0.15.7 #138.</action>
+      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump jacoco-maven-plugin 0.6.6 -> 0.8.8 #138, #154.</action>
+      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.javadoc.version 3.2.0 -> 3.3.2 #138.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump maven-pmd-plugin from 3.14.0 to 3.16.0 #140.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump taglist-maven-plugin from 2.4 to 3.0.0 #147.</action>
-      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump spotbugs-maven-plugin from 4.5.3.0 to 4.7.0.0 #152, #160.</action>
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-parent from 52 to 53.</action>
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.surefire.version from 3.0.0-M5 to 3.0.0-M7.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump spotbugs-maven-plugin from 4.5.3.0 to 4.6.0.0 #152.</action>
     </release>
     <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8 and OpenSSL 1.1.1)">
       <action issue="CRYPTO-59" type="add">Support Galois/Counter Mode (GCM).</action>
