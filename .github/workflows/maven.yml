@@ -58,6 +58,6 @@ jobs:
     - name: OpenSSL version
       run: openssl version
     - name: Find missing file
-      run: find /usr -name aes.h || true
+      run: find /usr -name aes.h
     - name: Build with Maven
       run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
