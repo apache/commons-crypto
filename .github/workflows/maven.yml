@@ -15,15 +15,7 @@
 
 name: Java CI
 
-on:
-  # allow direct trigger
-  workflow_dispatch:
-  push:
-    paths-ignore:
-      - '**/workflows/*.yml'
-  pull_request:
-    paths-ignore:
-      - '**/workflows/*.yml'
+on: [push, pull_request]
 
 jobs:
   build:
@@ -32,8 +24,11 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
-        java: [ 8, 11, 17 ]
+        # os: [macos-latest, ubuntu-latest, windows-latest]
+        # java: [ 8, 11, 17 ]
+        # Trying to fix Windows build
+        os: [windows-latest]
+        java: [ 8 ]
         experimental: [false]
 #        include:
 #          - java: 18-ea
@@ -62,5 +57,11 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version
-    - name: Build with Maven
-      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
+    - name: Find missing file
+      run: |
+        cd \
+        ruby -rfind -e "Find.find('.').each{|x| puts x if x.end_with? 'openssl'}"
+        d:
+        ruby -rfind -e "Find.find('.').each{|x| puts x if x.end_with? 'openssl'}"
+    # - name: Build with Maven
+    #   run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false

@@ -16,14 +16,12 @@
 name: Coverage
 
 on: 
-  # allow direct trigger
-  workflow_dispatch:
   push:
     paths-ignore:
-      - '**/workflows/*.yml'
+      - '**/workflows/maven.yml'
   pull_request:
     paths-ignore:
-      - '**/workflows/*.yml'
+      - '**/workflows/maven.yml'
 
 permissions:
   contents: read
