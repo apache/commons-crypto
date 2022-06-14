@@ -24,7 +24,7 @@ on:
   # trigger outselves on change
   push:
     paths:
-      - '**/workflows/maven_win.yml'
+      - **/workflows/maven_win.yml
 
 jobs:
   build:
