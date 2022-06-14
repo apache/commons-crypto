@@ -15,7 +15,15 @@
 
 name: Java CI
 
-on: [push, pull_request]
+on:
+  # allow direct trigger
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '**/workflows/*.yml'
+  pull_request:
+    paths-ignore:
+      - '**/workflows/*.yml'
 
 jobs:
   build:
@@ -24,8 +32,7 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [macos-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
         java: [ 8, 11, 17 ]
         experimental: [false]
 #        include:
@@ -53,5 +60,15 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
+    - name: OpenSSL version
+      run: openssl version
     - name: Build with Maven
+      # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
+      # It's not clear how one is supposed to find the correct setting;
+      # The value below was found by searching for openssl files under C (warning: slow)
+      # Other possible values are:
+      # "C:\\Miniconda\\pkgs\\openssl-1.1.1n-h2bbff1b_0\\Library"
+      # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
+      env:
+        OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false

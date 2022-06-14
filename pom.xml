@@ -18,7 +18,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>52</version>
+    <version>53</version>
   </parent>
 
   <artifactId>commons-crypto</artifactId>
@@ -144,10 +144,12 @@ The following provides more details on the included cryptographic software:
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
 
     <commons.pmd.version>3.16.0</commons.pmd.version>
-    <commons.javadoc.version>3.3.2</commons.javadoc.version>
+    <commons.javadoc.version>3.4.0</commons.javadoc.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.japicmp.version>0.15.7</commons.japicmp.version>
-    <commons.spotbugs.version>4.6.0.0</commons.spotbugs.version>
+    <commons.spotbugs.version>4.7.0.0</commons.spotbugs.version>
+    <!-- commons.animal-sniffer.version 1.21 fails on Java 17. -->
+    <commons.animal-sniffer.version>1.20</commons.animal-sniffer.version>
     
     <clirr.skip>true</clirr.skip>
     
@@ -162,9 +164,9 @@ The following provides more details on the included cryptographic software:
     OsInfo.java to detect the OS info and arch to generate the native binary for detected platform.
     User is able to specify the platform by maven profiles.-->
     <target.name>all</target.name>
-    <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
+    <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     <junit.version>5.8.2</junit.version>
-    <commons.surefire.version>3.0.0-M5</commons.surefire.version>
+    <commons.surefire.version>3.0.0-M7</commons.surefire.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
@@ -380,7 +382,7 @@ The following provides more details on the included cryptographic software:
       <properties>
         <skipTests>true</skipTests>
         <benchmark>org.apache</benchmark>
-        <jmh.version>1.34</jmh.version>
+        <jmh.version>1.35</jmh.version>
       </properties>
 
       <dependencies>
@@ -583,7 +585,7 @@ The following provides more details on the included cryptographic software:
               <goal>run</goal>
             </goals>
             <configuration>
-              <target name="make">
+              <target name="make" unless="maven.make.skip">
                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                 <exec executable="make" failonerror="true" dir="${project.basedir}">
                   <env key="VERSION" value="${project.version}" />
