@@ -15,10 +15,6 @@
 
 name: Java CI Win
 
-# This is a temporary workflow for use in debugging the Windows build
-# At present it fails to find the header file openssl/aes.h
-# Not clear yet if that is missing or in an unexpected place.
-
 on:
   workflow_dispatch:
 
@@ -33,6 +29,16 @@ jobs:
         os: [windows-latest]
         java: [ 8 ]
         experimental: [false]
+#        include:
+#          - java: 18-ea
+#            os: ubuntu-latest
+#            experimental: true        
+#          - java: 18-ea
+#            os: windows-latest
+#            experimental: true        
+#          - java: 18-ea
+#            os: macos-latest
+#            experimental: true        
       fail-fast: false
         
     steps:
@@ -53,10 +59,8 @@ jobs:
     - name: Find missing file
       run: |
         cd \
-        dir
-        ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
+        ruby -rfind -e "Find.find('.').each{|x| puts x if x.end_with? 'openssl'}"
         d:
-        dir
-        ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
+        ruby -rfind -e "Find.find('.').each{|x| puts x if x.end_with? 'openssl'}"
     # - name: Build with Maven
     #   run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
