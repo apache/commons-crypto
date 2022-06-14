@@ -62,7 +62,7 @@ class OpenSslCipher implements CryptoCipher {
         openSslEngine = OpenSsl.getInstance(transformation);
 
         String engineId = props.getProperty(CryptoCipherFactory.CIPHER_ENGINE_KEY);
-        if(engineId != null && !engineId.isEmpty()) {
+        if (engineId != null && !engineId.isEmpty()) {
             openSslEngine.engineSetDefaultCiphers(engineId);
         }
     }
