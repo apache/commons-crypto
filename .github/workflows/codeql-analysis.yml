@@ -17,12 +17,8 @@ name: "CodeQL"
 
 on:
   push:
-    paths-ignore:
-      - '**/workflows/maven.yml'
     branches: [ master ]
   pull_request:
-    paths-ignore:
-      - '**/workflows/maven.yml'
     # The branches below must be a subset of the branches above
     branches: [ master ]
   schedule:
