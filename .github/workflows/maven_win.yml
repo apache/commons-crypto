@@ -21,10 +21,6 @@ name: Java CI Win
 
 on:
   workflow_dispatch:
-  # trigger outselves on change
-  push:
-    paths:
-      - **/workflows/maven_win.yml
 
 jobs:
   build:
