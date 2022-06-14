@@ -56,12 +56,10 @@ jobs:
       run: openssl version
     - name: Find missing file
       run: |
-        c:
         cd \
         dir
         ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
         d:
-        cd \
         dir
         ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
     # - name: Build with Maven
