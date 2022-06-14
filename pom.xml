@@ -166,7 +166,7 @@ The following provides more details on the included cryptographic software:
     <target.name>all</target.name>
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     <junit.version>5.8.2</junit.version>
-    <commons.surefire.version>3.0.0-M7</commons.surefire.version>
+    <commons.surefire.version>3.0.0-M5</commons.surefire.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>

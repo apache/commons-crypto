@@ -90,7 +90,6 @@
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump taglist-maven-plugin from 2.4 to 3.0.0 #147.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump spotbugs-maven-plugin from 4.5.3.0 to 4.7.0.0 #152, #160.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-parent from 52 to 53.</action>
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.surefire.version from 3.0.0-M5 to 3.0.0-M7.</action>
     </release>
     <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8 and OpenSSL 1.1.1)">
       <action issue="CRYPTO-59" type="add">Support Galois/Counter Mode (GCM).</action>
