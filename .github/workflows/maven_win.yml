@@ -54,19 +54,18 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version
-    # - name: Find missing file
-    #   run: |
-    #     c:
-    #     cd \
-    #     dir
-    #     ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
-    #     d:
-    #     cd \
-    #     dir
-    #     ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
-    #     set
+    - name: Find missing file
+      run: |
+        c:
+        cd \
+        dir
+        ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
+        d:
+        cd \
+        dir
+        ruby -rfind -e "Find.find('.').each{|x| puts x if x.include? 'openssl'}"
+        set
     - name: Build with Maven
       run: |
-        set
         set OPENSSL_HOME "C:\Miniconda\pkgs\openssl-1.1.1n-h2bbff1b_0\Library"
         mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
