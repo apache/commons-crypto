@@ -154,8 +154,8 @@ SunOS-x86_64_COMMONS_CRYPTO_FLAGS  :=
 Linux-arm_CC        := $(CROSS_PREFIX)gcc
 Linux-arm_CXX       := $(CROSS_PREFIX)g++
 Linux-arm_STRIP     := $(CROSS_PREFIX)strip
-Linux-arm_CFLAGS    := -Ilib/inc_linux -I"$(JAVA_HOME)include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
-Linux-arm_CXXFLAGS  := -Ilib/inc_linux -I"$(JAVA_HOME)include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
+Linux-arm_CFLAGS    := -Ilib/inc_linux -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
+Linux-arm_CXXFLAGS  := -Ilib/inc_linux -I"$(JAVA_HOME)/include" -O2 -fPIC -fvisibility=hidden -mfloat-abi=softfp
 Linux-arm_LINKFLAGS := -shared -static-libgcc
 Linux-arm_LIBNAME   := libcommons-crypto.so
 Linux-arm_COMMONS_CRYPTO_FLAGS:=
