@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Script to build native files under Docker
+
 set -e
 
 cd /home/crypto # must agree with virtual mount in docker-compose.yaml

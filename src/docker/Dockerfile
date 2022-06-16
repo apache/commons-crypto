@@ -51,9 +51,7 @@ RUN dpkg --add-architecture i386 && apt-get update \
 RUN wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
 && tar xf apache-maven-*.tar.gz -C /opt && ln -s /opt/apache-maven-3.6.3 /opt/maven
 
-WORKDIR /home/build
-
-COPY build.sh .
+WORKDIR /home/crypto
 
 CMD /bin/bash
 

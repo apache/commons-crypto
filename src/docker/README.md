@@ -18,12 +18,15 @@
 # Building with Docker
 
 ```
+  cd src/docker
   docker compose build crypto
 ```
 
 # Running with Docker
 
 ```
+  cd src/docker
   docker compose run crypto # run shell
+  OR
   docker compose run --entrypoint ./build.sh crypto # run build
 ```
