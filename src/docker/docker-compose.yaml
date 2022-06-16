@@ -20,5 +20,5 @@ services:
     build: .
     # mount the source and Maven repo
     volumes:
-      - ..:/home/crypto
+      - ../..:/home/crypto
       - ~/.m2/repository:/root/.m2/repository
