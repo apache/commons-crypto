@@ -37,7 +37,7 @@ RUN pwd ; uname -a && \
     apt-get install git -y && \
     apt-get install wget -y && \
     cd ~ && \
-    wget http://apache.mirrors.hoobly.com/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
+    wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
     cd /opt && \
     tar -zxf ~/apache-maven-3.6.3-bin.tar.gz && \
     sudo dpkg --purge --force-depends ca-certificates-java && \
