@@ -18,5 +18,12 @@
 # Building with Docker
 
 ```
-  docker image build -t apache/commons-crypto:<VERSION>
+  docker compose build crypto
+```
+
+# Running with Docker
+
+```
+  docker compose run crypto # run shell
+  docker compose run --entrypoint ./build.sh crypto # run build
 ```
