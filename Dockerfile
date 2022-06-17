@@ -37,7 +37,7 @@ RUN apt-get update && apt-get --assume-yes install software-properties-common \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure \
 # The default Maven with 14.04 doesn't support the required HTTPS protocol by default.
-      && wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
+      && wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
       && tar xf apache-maven-*.tar.gz -C /opt && ln -s /opt/apache-maven-3.6.3 /opt/maven \
 # Copy the opensslconf.h file to the base openssl include directory.
       && cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl \
