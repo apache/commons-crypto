@@ -46,7 +46,7 @@ RUN apt-get update && apt-get --assume-yes install software-properties-common \
 COPY . /commons-crypto
 # Run the 64-bit builds.
 RUN cd commons-crypto && mvn package && mvn -DskipTests package -P linux-aarch64 \
-      && mvn -DskipTests package -P win64
+      && mvn -DskipTests package -P win64 
 # Install 32-bit dependencies and tooling.
 RUN dpkg --add-architecture i386 && apt-get update \
       && apt-get --assume-yes install libssl-dev:i386 \
@@ -56,4 +56,11 @@ RUN dpkg --add-architecture i386 && apt-get update \
       && apt-get --assume-yes install g++-arm-linux-gnueabihf
 # Run the 32-bit builds.
 RUN cd commons-crypto && mvn -DskipTests package -P linux-armhf \
-      && mvn -DskipTests package -P linux-arm
+      && mvn -DskipTests package -P linux-arm \
+      && mvn -DskipTests package -P win32
+# Install multilib and run the linux32 build.  Installing multilib overwrites the existing gcc
+# installations.
+RUN apt-get --assume-yes install gcc-multilib \
+      && apt-get --assume-yes install g++-multilib \
+      && cd commons-crypto && mvn -DskipTests package -P linux32
+# Export the artifact from the container at /commons-crypto/target/artifact-id.jar
