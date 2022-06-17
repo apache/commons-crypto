@@ -25,6 +25,12 @@ which are used to build Linux and Windows native code files (see build.sh for th
 The image uses virtual mounts for the source code and Maven repository, so the output
 of the build is available on the host system and can be included in a subsequent release
 build.
+
+The binary jar is built from the contents of target/classes, so any additional native objects can be added to the build by copying them to the appropriate directory under
+target/classes/org/apache/commons/crypto/native before creating the release.
+For example, the macOS object can be added as
+target/classes/org/apache/commons/crypto/native/Mac/x86_64/libcommons-crypto.jnilib
+
 # Building with Docker
 
 ```
