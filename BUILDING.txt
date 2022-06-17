@@ -8,9 +8,9 @@ Requirements:
 * Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy
   Files (if running unit tests)
 * export JAVA_HOME
-* Maven 3.0 or above
+* Maven 3.3.9 or above
 * Make
-* OpenSSL devel 1.1.1 or above (OpenSSL library header files are required)
+* OpenSSL devel 1.1.1 (OpenSSL library header files are required)
 * GCC
 * G++
 
@@ -46,7 +46,7 @@ Check OpenSSL version:
 
   $ openssl version
 
-If it is not 1.0.1c or above, upgrade OpenSSL version to 1.0.1c or above:
+If it is not 1.1.1, upgrade OpenSSL version to 1.1.1:
 
 Upgrade OpenSSL in Linux:
 
@@ -54,7 +54,7 @@ You can follow your OS distribution instructions to upgrade OpenSSL to a proper 
 
 Upgrade OpenSSL in Mac:
 
-  $ brew install openssl101
+  $ brew install openssl111
   $ brew link openssl --force
 
 Get OpenSSL headers: sudo apt -y install libssl-dev
