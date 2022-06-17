@@ -20,8 +20,12 @@
         (Advanced Encryption
         Standard New Instructions). It provides Java API for both cipher level and Java stream
         level. Developers can use it to implement high performance AES encryption/decryption with
-        the minimum code and effort. Please note that Apache Commons Crypto doesn't implement the cryptographic
-        algorithm such as AES directly. It wraps to Openssl or JCE which implement the algorithms.
+        the minimum code and effort. 
+      </p>
+      <p>
+        Please note that Apache Commons Crypto doesn't implement the cryptographic
+        algorithm such as AES directly. It wraps Openssl or JCE which implement the algorithms.
+        OpenSSL 1.1.1 is required for building and running.
       </p>
       <subsection name="Interfaces Overview">
         <p>Interfaces and classes used by the various implementation in the sub-packages.</p>
@@ -61,8 +65,12 @@
       <subsection name ="Usage">
           <h4>Prerequisites</h4>
           <p>
-            Commons Crypto relies on standard JDK 1.7 (or above) and OpenSSL 1.0.1c (or above) for production
-            deployment.
+            Commons Crypto relies on standard JDK 1.8 (or above) and OpenSSL 1.1.1 for production
+            deployment. 
+            If it is installed, the command <code>openssl version</code> can be used to show the version.
+          </p>
+          <p>OpenSSL may already be installed on your system; if not, please visit
+            <a href="https://www.openssl.org/">OpenSSL.org</a> for information on installation.
           </p>
           <h4>Using Commons Crypto in your Apache Maven build</h4>
           <p>
@@ -78,7 +86,7 @@
         <h4>Usage of Random API</h4>
         <p>
           CryptoRandom provides a cryptographically strong random number generators.
-          The default implementation will use Intel® Digital Random Number Generator (DRNG)
+          The default implementation will use Intel&reg; Digital Random Number Generator (DRNG)
           for accelerating the random generation.
         </p>
 
@@ -89,7 +97,7 @@
           Cipher provides an cryptographic interface for encryption and decryption.
           We provide two kind of implementations: JCE Cipher and Openssl Cipher. The
           JCE implementation uses JCE provider and the Openssl implementation uses
-          Intel® AES New Instructions (Intel® AES NI).
+          Intel&reg; AES New Instructions (Intel&reg; AES NI).
         </p>
         <h5>Usage of Byte Array Encryption/Decryption</h5>
 
