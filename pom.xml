@@ -169,7 +169,7 @@ The following provides more details on the included cryptographic software:
     <commons.surefire.version>3.0.0-M7</commons.surefire.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
-    <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
+    <maven.buildNumber.timestampFormat>yyyy-MM-dd HH:mm:ssZ</maven.buildNumber.timestampFormat>
   </properties>
 
   <developers>
