@@ -1,117 +1,213 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
-  license agreements. See the NOTICE file distributed with this work for additional
-  information regarding copyright ownership. The ASF licenses this file to
-  You under the Apache License, Version 2.0 (the "License"); you may not use
-  this file except in compliance with the License. You may obtain a copy of
-  the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
-  by applicable law or agreed to in writing, software distributed under the
-  License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
-  OF ANY KIND, either express or implied. See the License for the specific
-  language governing permissions and limitations under the License. -->
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
 <document>
-  <properties>
-    <title>Commons Crypto - User guide</title>
-    <author email="dev@commons.apache.org">Commons Documentation Team</author>
-  </properties>
-  <body>
-    <section name="User guide">
-      <p>Apache Commons Crypto is a cryptographic library optimized with AES-NI
-        (Advanced Encryption
-        Standard New Instructions). It provides Java API for both cipher level and Java stream
-        level. Developers can use it to implement high performance AES encryption/decryption with
-        the minimum code and effort. Please note that Apache Commons Crypto doesn't implement the cryptographic
-        algorithm such as AES directly. It wraps to Openssl or JCE which implement the algorithms.
-      </p>
-      <subsection name="Interfaces Overview">
-        <p>Interfaces and classes used by the various implementation in the sub-packages.</p>
-        <table>
-          <tr>
-            <td width="150">
-              <a href="apidocs/index.html">random
-              </a>
-            </td>
-            <td>
-              The interface for CryptoRandom.
-            </td>
-          </tr>
-          <tr>
-            <td width="150">
-              <a href="apidocs/index.html">cipher
-              </a>
-            </td>
-            <td>
-              The interface of cryptographic cipher for encryption and decryption.
-            </td>
-          </tr>
-          <tr>
-            <td width="150">
-              <a href="apidocs/index.html">stream
-              </a>
-            </td>
-            <td>
-              The interface wraps the underlying stream and it automatically encrypts
-              the stream when data is written and decrypts the stream when data is
-              read.
-            </td>
-          </tr>
-        </table>
-      </subsection>
+	<properties>
+		<title>Commons Crypto - User guide</title>
+		<author email="dev@commons.apache.org">Commons Documentation Team</author>
+	</properties>
+	<body>
+		<section name="User Guide">
+			<p>Apache Commons Crypto is a Java wrapper around certain common
+				features of OpenSSL, and also supports corresponding JCE features.
+				As such, it provides near-native performance to the Java developer
+				via a Java API. It provides Java API for both cipher level and Java
+				stream level, leveraging AES-NI (Advanced Encryption Standard New
+				Instructions) when run on supported hardware. Developers can use it
+				to implement high performance AES encryption/decryption with minimal
+				code and effort. Note that Apache Commons Crypto doesn't implement
+				the cryptographic algorithms directly, but instead delegates to
+				OpenSSL or JCE as algorithm providers.
+			</p>
+			<subsection name="Building from Source">
+				<p>
+					As of release 1.1.0, Apache Commons Crypto supports the following
+					architectures:
+					<ul>Windows x86</ul>
+					<ul>Windows x86_64</ul>
+					<ul>OSX x86_64</ul>
+					<ul>Linux x86</ul>
+					<ul>Linux x86_64</ul>
+					<ul>Linux aarch64</ul>
+					<ul>Linux arm</ul>
+					<ul>Linux armhf</ul>
+					Each supported platform has a corresponding JNI library that must
+					be compiled to the target native architecture during the build
+					process. This native compilation renders an Apache Commons Crypto
+					build more complex than a typical Java build that compiles only to
+					the JVM. A developer's first build experience with Apache Commons
+					Crypto will likely be a single architecture build. Single
+					architecture builds are generally performed by developers working
+					on new features in their local development environment.
+					Multi-platform builds are generally performed during the release
+					process. Single architecture builds for release 1.1.0 have been
+					performed and tested on Windows x86_64, Linux x86_64 and OSX
+					x86_64. The balance of builds have been cross-compiled on Ubuntu
+					14.04 and tested on their respective architectures.
+					<h4>Prerequisites</h4>
+					<ul>Unix System (Linux or Mac), or Windows with MinGW</ul>
+					<ul>JDK 8 or above (environment variable JAVA_HOME must be set)
+					</ul>
+					<ul>Java Cryptography Extension (JCE) Unlimited Strength
+						Jurisdiction Policy Files (if running unit tests)
+					</ul>
+					<ul>export JAVA_HOME</ul>
+					<ul>Maven 3.0 or above</ul>
+					<ul>Make</ul>
+					<ul>OpenSSL devel 1.1.1 or above (OpenSSL library header files are
+						required)
+					</ul>
+					<ul> GCC</ul>
+					<ul> G++</ul>
+					<h4>Single Architecture Build</h4>
+					Once the prerequisites have been met, run the single architecture
+					build using the standard Maven build process.
+					<h4>Multi-architecture Build</h4>
+					The Apache Commons Crypto team recommends performing a
+					multi-platform build by running the Dockerfile from the project
+					base directory, and then copying the artifact from the resulting
+					container to your host. For a combination of legal, licensing and
+					technical reasons, the Mac build must be performed on Mac OSX--not
+					cross compiled--so it is not included in the Dockerfile. If you
+					endeavor to produce a multi-platform build that includes the JNI
+					libraries for OSX, you must run the OSX build locally on a Mac
+					first, and then you can run the Dockerfile to perform the balance
+					of the builds. The Dockerfile will copy the output of the OSX build
+					into the container, where it will become a part of the complete
+					build.
+				</p>
+			</subsection>
+			<subsection name="Interfaces Overview">
+				<p>Interfaces and classes used by the various implementation in the
+					sub-packages.
+				</p>
+				<table>
+					<tr>
+						<td width="150">
+							<a href="apidocs/index.html">random
+							</a>
+						</td>
+						<td>
+							The interface for CryptoRandom.
+						</td>
+					</tr>
+					<tr>
+						<td width="150">
+							<a href="apidocs/index.html">cipher
+							</a>
+						</td>
+						<td>
+							The interface of cryptographic cipher for encryption and
+							decryption.
+						</td>
+					</tr>
+					<tr>
+						<td width="150">
+							<a href="apidocs/index.html">stream
+							</a>
+						</td>
+						<td>
+							The interface wraps the underlying stream and it
+							automatically
+							encrypts
+							the stream when data is written and
+							decrypts the stream when data
+							is
+							read.
+						</td>
+					</tr>
+				</table>
+			</subsection>
 
-      <subsection name ="Usage">
-          <h4>Prerequisites</h4>
-          <p>
-            Commons Crypto relies on standard JDK 1.7 (or above) and OpenSSL 1.0.1c (or above) for production
-            deployment.
-          </p>
-          <h4>Using Commons Crypto in your Apache Maven build</h4>
-          <p>
-            To build with Apache Maven, add the dependencies listed below to your pom.xml file.
-          </p>
-<pre>
-&lt;dependency&gt;<br/>
-    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;<br/>
-    &lt;artifactId&gt;commons-crypto&lt;/artifactId&gt;<br/>
-    &lt;version&gt;1.1.0&lt;/version&gt;<br/>
-&lt;/dependency&gt;<br/>
-</pre>
-        <h4>Usage of Random API</h4>
-        <p>
-          CryptoRandom provides a cryptographically strong random number generators.
-          The default implementation will use Intel® Digital Random Number Generator (DRNG)
-          for accelerating the random generation.
-        </p>
+			<subsection name="Usage">
+				<h4>Prerequisites</h4>
+				<p>
+					Commons Crypto relies on standard JDK 1.7 (or above) and OpenSSL
+					1.0.1c
+					(or above) for production
+					deployment.
+				</p>
+				<h4>Using Commons Crypto in your Apache Maven build</h4>
+				<p>
+					To build with Apache Maven, add the dependencies listed below to
+					your pom.xml file.
+				</p>
+				<pre>
+					&lt;dependency&gt;
+					<br />
+					&lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+					<br />
+					&lt;artifactId&gt;commons-crypto&lt;/artifactId&gt;
+					<br />
+					&lt;version&gt;1.1.0&lt;/version&gt;
+					<br />
+					&lt;/dependency&gt;
+					<br />
+				</pre>
+				<h4>Usage of Random API</h4>
+				<p>
+					CryptoRandom provides a cryptographically strong random number
+					generators.
+					The default implementation will use Intel® Digital
+					Random Number
+					Generator (DRNG)
+					for accelerating the random
+					generation.
+				</p>
 
-        <a href="xref-test/org/apache/commons/crypto/examples/RandomExample.html">RandomExample.java</a>
+				<a
+					href="xref-test/org/apache/commons/crypto/examples/RandomExample.html">RandomExample.java</a>
 
-        <h4>Usage of Cipher API</h4>
-        <p>
-          Cipher provides an cryptographic interface for encryption and decryption.
-          We provide two kind of implementations: JCE Cipher and Openssl Cipher. The
-          JCE implementation uses JCE provider and the Openssl implementation uses
-          Intel® AES New Instructions (Intel® AES NI).
-        </p>
-        <h5>Usage of Byte Array Encryption/Decryption</h5>
+				<h4>Usage of Cipher API</h4>
+				<p>
+					Cipher provides an cryptographic interface for encryption and
+					decryption.
+					We provide two kind of implementations: JCE Cipher and
+					Openssl
+					Cipher. The
+					JCE implementation uses JCE provider and the
+					Openssl implementation
+					uses
+					Intel® AES New Instructions (Intel® AES
+					NI).
+				</p>
+				<h5>Usage of Byte Array Encryption/Decryption</h5>
 
-        <a href="xref-test/org/apache/commons/crypto/examples/CipherByteArrayExample.html">CipherByteArrayExample.java</a>
+				<a
+					href="xref-test/org/apache/commons/crypto/examples/CipherByteArrayExample.html">CipherByteArrayExample.java</a>
 
-        <h5>Usage of ByteBuffer Encryption/Decryption</h5>
+				<h5>Usage of ByteBuffer Encryption/Decryption</h5>
 
-        <a href="xref-test/org/apache/commons/crypto/examples/CipherByteBufferExample.html">CipherByteBufferExample.java</a>
+				<a
+					href="xref-test/org/apache/commons/crypto/examples/CipherByteBufferExample.html">CipherByteBufferExample.java</a>
 
 
-        <h4>Usage of Stream API</h4>
-        <p>
-          Stream provides the data encryption and decryption in stream manner. We provide CryptoInputStream,
-          CTRCryptoInputStream, PositionedCryptoInputStream implementations for InputStream and CryptoOutputStream,
-          CTRCryptoOutputStream implementations for OutputStream.
-        </p>
-        <h5>Usage of stream encryption/decryption</h5>
+				<h4>Usage of Stream API</h4>
+				<p>
+					Stream provides the data encryption and decryption in stream
+					manner. We
+					provide CryptoInputStream,
+					CTRCryptoInputStream,
+					PositionedCryptoInputStream implementations for InputStream and
+					CryptoOutputStream,
+					CTRCryptoOutputStream implementations for
+					OutputStream.
+				</p>
+				<h5>Usage of stream encryption/decryption</h5>
 
-        <a href="xref-test/org/apache/commons/crypto/examples/StreamExample.html">StreamExample.java</a>
+				<a
+					href="xref-test/org/apache/commons/crypto/examples/StreamExample.html">StreamExample.java</a>
 
-      </subsection>
-    </section>
-  </body>
+			</subsection>
+		</section>
+	</body>
 </document>
 

@@ -16,7 +16,6 @@ Requirements:
 
 Profile win64 on Ubuntu 64-bit:
 apt-get install mingw-w64
-
 apt install x86_64-w64-mingw32-gcc
 
 Profile win32 on Ubuntu 64-bit:
@@ -42,20 +41,9 @@ Copy downloaded local_policy.jar and US_export_policy.jar to <java-home>/jre/lib
 ----------------------------------------------------------------------------------
 Verify OpenSSL version:
 
-Check OpenSSL version:
-
   $ openssl version
 
 If it is not 1.0.1c or above, upgrade OpenSSL version to 1.0.1c or above:
-
-Upgrade OpenSSL in Linux:
-
-You can follow your OS distribution instructions to upgrade OpenSSL to a proper version.
-
-Upgrade OpenSSL in Mac:
-
-  $ brew install openssl101
-  $ brew link openssl --force
 
 Get OpenSSL headers: sudo apt -y install libssl-dev
 
