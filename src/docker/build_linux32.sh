@@ -15,21 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Script to build native files under Docker
+# Script to build linux32 native file under Docker
+
+# MUST not be run before build.sh
 
 set -e
 
 cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 
-# Run the 64-bit builds.
-mvn package
-mvn -DskipTests package -P linux-aarch64
-mvn -DskipTests package -P win64
-mvn -DskipTests package -P linux64
-
-# Run the 32-bit builds.
-mvn -DskipTests package -P linux-armhf
-mvn -DskipTests package -P linux-arm
-mvn -DskipTests package -P win32
-
-# see separate script for optional linux32 build
+# Needed for linux32, but causes linux 64 builds to fail
+apt-get --assume-yes install g++-multilib
+mvn -DskipTests package -P linux32
