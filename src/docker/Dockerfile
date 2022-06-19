@@ -56,10 +56,3 @@ RUN wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.
 WORKDIR /home/crypto
 
 CMD /bin/bash
-
-# How to build:
-# cd docker
-# docker compose build [crypto]
-
-# To run:
-# docker compose run [--entrypoint ./build.sh] crypto
