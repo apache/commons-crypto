@@ -132,10 +132,9 @@
 					cross compiled--so it is not included in the Dockerfile. If you
 					endeavor to produce a multi-platform build that includes the JNI
 					libraries for OSX, you must run the OSX build locally on a Mac
-					first, and then you can run the Dockerfile to perform the balance
-					of the builds. The Dockerfile will copy the output of the OSX build
-					into the container, where it will become a part of the complete
-					build.
+					first, and then run the Dockerfile to perform the balance of the
+					builds. The Dockerfile will copy the output of the OSX build into
+					the container, where it will become a part of the complete build.
 				</p>
 			</subsection>
 			<subsection name="Interfaces Overview">
@@ -172,7 +171,8 @@
 							automatically
 							encrypts
 							the stream when data is written and
-							decrypts the stream when data
+							decrypts the stream
+							when data
 							is
 							read.
 						</td>
@@ -287,13 +287,10 @@
 
 				<h4>Usage of Stream API</h4>
 				<p>
-					Stream provides the data encryption and decryption in stream
-					manner. We
-					provide CryptoInputStream,
-					CTRCryptoInputStream,
+					Stream provides the data encryption and decryption in stream manner. We
+					provide CryptoInputStream, CTRCryptoInputStream,
 					PositionedCryptoInputStream implementations for InputStream and
-					CryptoOutputStream,
-					CTRCryptoOutputStream implementations for
+					CryptoOutputStream, CTRCryptoOutputStream implementations for
 					OutputStream.
 				</p>
 				<h5>Usage of stream encryption/decryption</h5>

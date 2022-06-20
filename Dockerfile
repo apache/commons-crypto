@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This file runs builds for the Linux-x86_64, Linux aarch64, Linux-arm, Linux-armfh and Win64 
-# architectures.  It copies the contents of the build host's project directory (commons-crypto) 
+# This file runs builds for the Linux-x86_64, Linux aarch64, Linux-arm, Linux-armfh and Win64 and  
+# Win32 architectures.  It copies the contents of the build host's project directory (commons-crypto) 
 # into the docker image, builds and tests the x86_64 build natively, and then cross compiles the 
 # remaining builds.  If you run this script from a Mac after a successful Mac build, the build in  
 # the resuing Docker image will also include the Mac build by virtue of the initial project directory
@@ -37,7 +37,7 @@ RUN apt-get update && apt-get --assume-yes install software-properties-common \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure \
 # The default Maven with 14.04 doesn't support the required HTTPS protocol by default.
-      && wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
+      && wget --no-check-certificate https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
       && tar xf apache-maven-*.tar.gz -C /opt && ln -s /opt/apache-maven-3.6.3 /opt/maven \
 # Copy the opensslconf.h file to the base openssl include directory.
       && cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl \
