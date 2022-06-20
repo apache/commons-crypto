@@ -45,6 +45,7 @@ Verify OpenSSL version:
 
 If it is not 1.1.1, upgrade OpenSSL version to 1.1.1:
 
+<<<<<<< HEAD
 <<<<<<< Upstream, based on upstream/master
 Upgrade OpenSSL in Linux:
 
@@ -57,6 +58,8 @@ Upgrade OpenSSL in Mac:
 
 =======
 >>>>>>> 974c3cd Updated build documentation.
+=======
+>>>>>>> branch 'master' of https://github.com/aremily/commons-crypto.git
 Get OpenSSL headers: sudo apt -y install libssl-dev
 
 Cross compile to 32-bit from Linux 64-bit: sudo apt-get install gcc-multilib
