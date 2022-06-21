@@ -31,14 +31,14 @@ target/classes/org/apache/commons/crypto/native before creating the release.
 For example, the macOS object can be added as
 target/classes/org/apache/commons/crypto/native/Mac/x86_64/libcommons-crypto.jnilib
 
-# Building with Docker
+# Building the Docker image
 
 ```
   cd src/docker
   docker compose build crypto
 ```
 
-# Running with Docker
+# Running the Docker image
 
 ```
   cd src/docker
@@ -48,3 +48,30 @@ target/classes/org/apache/commons/crypto/native/Mac/x86_64/libcommons-crypto.jni
   docker compose run --entrypoint src/docker/build_linux32.sh crypto # optionally run linux32 build
   # N.B. the linux32 build needs an additional install, but that causes linux 64 bit builds to fail.
 ```
+
+# Creating a release candidate using macOS
+
+This is the easiest if the release manager has access to a macOS host.
+
+The steps are:
+
+- mvn clean
+- cd src/docker
+- docker compose run --entrypoint src/docker/build.sh crypto
+- docker compose run --entrypoint src/docker/build_linux32.sh crypto # optional
+- cd ../..
+
+Now perform the release (don't run mvn clean!)
+- mvn release ...
+
+# Creating a release candidate using another OS
+
+If the Release Manager (RM) does not have access to a macOS system, they will need to obtain a copy
+of the macOS native binary from another Commons developer. 
+
+The process starts as above, but just before using the host system to build the release,
+add the macOS binary to the workspace at:
+
+```target/classes/org/apache/commons/crypto/native/Mac/x86_64/libcommons-crypto.jnilib```
+
+The release can then be created in the normal way.
