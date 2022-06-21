@@ -19,28 +19,28 @@
         <p>Apache Commons Crypto is a Java wrapper around certain common features of OpenSSL, and also supports corresponding JCE features.  As such, it provides near-native performance to the Java developer via a Java API. It provides Java API for both cipher level and Java stream level, leveraging AES-NI (Advanced Encryption Standard New Instructions) when run on supported hardware. Developers can use it to implement high performance AES encryption and decryption with minimal code and effort. Note that Apache Commons Crypto doesn't implement the cryptographic algorithms directly, but instead delegates to OpenSSL or JCE as algorithm providers.</p>
         <subsection name="Building from Source">
           <p>As of release 1.1.0, Apache Commons Crypto supports the following architectures:</p>
-            <ul>Windows x86</ul>
-            <ul>Windows x86_64</ul>
-            <ul>OSX x86_64</ul>
-            <ul>Linux x86</ul>
-            <ul>Linux x86_64</ul>
-            <ul>Linux aarch64</ul>
-            <ul>Linux arm</ul>
-            <ul>Linux armhf</ul>
+            <li>Windows x86</li>
+            <li>Windows x86_64</li>
+            <li>OSX x86_64</li>
+            <li>Linux x86</li>
+            <li>Linux x86_64</li>
+            <li>Linux aarch64</li>
+            <li>Linux arm</li>
+            <li>Linux armhf</li><br/>
           <p>Each supported platform has a corresponding JNI library that must be compiled to the target native architecture during the build process. This native compilation renders an Apache Commons Crypto build more complex than a typical Java build that compiles only to the JVM. A developer's first build experience with Apache Commons Crypto will likely be a single architecture build. Single architecture builds are generally performed by developers working on new features in their local development environment. Multi-platform builds are generally performed during the release process. Single architecture builds for release 1.1.0 have been performed and tested on Windows x86_64, Linux x86_64 and OSX x86_64. The balance of builds have been cross-compiled on Ubuntu 14.04 and tested on their respective architectures.</p>
           <h4>Prerequisites</h4>
-            <ul>Unix System (Linux or Mac), or Windows with MinGW</ul>
-            <ul>JDK 8 or above (environment variable JAVA_HOME must be set)</ul>
-            <ul>Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files (if running unit tests)</ul>
-            <ul>export JAVA_HOME</ul>
-            <ul>Maven 3.0 or above</ul>
-            <ul>Make</ul>
-            <ul>OpenSSL devel 1.1.1 or above (OpenSSL library header files are required) </ul>
-            <ul> GCC</ul>
-            <ul> G++</ul>
+            <li>Unix System (Linux or Mac), or Windows with MinGW</li>
+            <li>JDK 8 or above (environment variable JAVA_HOME must be set)</li>
+            <li>Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files (if running unit tests)</li>
+            <li>export JAVA_HOME</li>
+            <li>Maven 3.1.1 or above</li>
+            <li>Make</li>
+            <li>OpenSSL devel 1.1.1 or above (OpenSSL library header files are required) </li>
+            <li>GCC</li>
+            <li>G++</li>
           <h4>Single Architecture Build</h4>
             <p>Once the prerequisites have been met, run the single architecture build using the standard Maven build process.</p>
-          <h4>Multi-architecture Build</h4>
+          <h4>Multi Architecture Build</h4>
             <p>The Apache Commons Crypto team recommends performing a multi-platform build by running the Dockerfile from the project base directory, and then copying the artifact from the resulting container to your host. For a combination of legal, licensing and technical reasons, the Mac build must be performed on a Mac--not cross compiled--so it is not included in the Dockerfile. If you endeavor to produce a multi-platform build that includes the JNI libraries for OSX, you must run the OSX build locally on a Mac first, and then run the Dockerfile to perform the balance of the builds. The Dockerfile will copy the output of the OSX build into the container, where it will become a part of the complete build.</p>
         </subsection>
         <subsection name="Interfaces Overview">
@@ -67,16 +67,15 @@
         </subsection>
         <subsection name="Usage">
           <h4>Prerequisites</h4>
-            <p>Commons Crypto relies on standard JDK 1.8 (or above) and OpenSSL 1.1.1 for production deployment. If it is installed, the command <code>openssl version</code> can be used to show the version.</p>
-            <p>OpenSSL may already be installed on your system; if not, please visit <a href="https://www.openssl.org/">OpenSSL.org</a>for information on installation.</p>
+            <p>Commons Crypto relies on standard JDK 1.8 (or above) and supports OpenSSL 1.0.x and 1.1.x for production deployment. OpenSSL may already be installed on your system; if so, the command <code>openssl version</code> can be used to show the version.  If not please visit <a href="https://www.openssl.org/">OpenSSL.org</a> for information on installation.</p>
           <h4>Using Commons Crypto in your Apache Maven build</h4>
-            <p>To build with Apache Maven, add the dependencies listed below to your pom.xml file. </p>
-              <pre>&lt;dependency&gt;
-                <br />&lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
-                <br />&lt;artifactId&gt;commons-crypto&lt;/artifactId&gt;
-                <br />&lt;version&gt;1.1.0&lt;/version&gt;
-                <br /> &lt;/dependency&gt;
-                <br />
+            <p>To build with Apache Maven, add the dependencies listed below to your pom.xml file. Note that version 1.1.0 is fully backwards compatible with previous versions, so new projects should use version 1.1.0 and existing projects can upgrade seamlessly.</p>
+              <pre>
+&lt;dependency&gt;<br/>
+    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;<br/>        
+    &lt;artifactId&gt;commons-crypto&lt;/artifactId&gt;<br/>
+    &lt;version&gt;1.1.0&lt;/version&gt;<br/>
+&lt;/dependency&gt;
               </pre>
           <h4>Usage of Random API</h4>
             <p>CryptoRandom provides a cryptographically strong random number generators. The default implementation will use Intel® Digital Random Number Generator (DRNG)for accelerating the random generation. </p>
