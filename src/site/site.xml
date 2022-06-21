@@ -27,7 +27,7 @@
             <item name="Overview"      href="/index.html"/>
             <item name="Download"
                    href="https://commons.apache.org/proper/commons-crypto/download_crypto.cgi"/>
-            <item name="Users guide"   href="/userguide.html"/>
+            <item name="User Guide"   href="/userguide.html"/>
             <item name="FAQ"           href="/faq.html"/>
             <item name="Javadoc"       href="/apidocs/index.html"/>
         </menu>
