@@ -18,7 +18,7 @@
       <section name="User Guide">
         <p>Apache Commons Crypto is a Java wrapper around certain common features of OpenSSL, and also supports corresponding JCE features.  As such, it provides near-native performance to the Java developer via a Java API. It provides Java API for both cipher level and Java stream level, leveraging AES-NI (Advanced Encryption Standard New Instructions) when run on supported hardware. Developers can use it to implement high performance AES encryption and decryption with minimal code and effort. Note that Apache Commons Crypto doesn't implement the cryptographic algorithms directly, but instead delegates to OpenSSL or JCE as algorithm providers.</p>
         <subsection name="Building from Source">
-          <p>As of release 1.1.0, Apache Commons Crypto supports the following architectures:
+          <p>As of release 1.1.0, Apache Commons Crypto supports the following architectures:</p>
             <ul>Windows x86</ul>
             <ul>Windows x86_64</ul>
             <ul>OSX x86_64</ul>
@@ -27,7 +27,7 @@
             <ul>Linux aarch64</ul>
             <ul>Linux arm</ul>
             <ul>Linux armhf</ul>
-          Each supported platform has a corresponding JNI library that must be compiled to the target native architecture during the build process. This native compilation renders an Apache Commons Crypto build more complex than a typical Java build that compiles only to the JVM. A developer's first build experience with Apache Commons Crypto will likely be a single architecture build. Single architecture builds are generally performed by developers working on new features in their local development environment. Multi-platform builds are generally performed during the release process. Single architecture builds for release 1.1.0 have been performed and tested on Windows x86_64, Linux x86_64 and OSX x86_64. The balance of builds have been cross-compiled on Ubuntu 14.04 and tested on their respective architectures.
+          <p>Each supported platform has a corresponding JNI library that must be compiled to the target native architecture during the build process. This native compilation renders an Apache Commons Crypto build more complex than a typical Java build that compiles only to the JVM. A developer's first build experience with Apache Commons Crypto will likely be a single architecture build. Single architecture builds are generally performed by developers working on new features in their local development environment. Multi-platform builds are generally performed during the release process. Single architecture builds for release 1.1.0 have been performed and tested on Windows x86_64, Linux x86_64 and OSX x86_64. The balance of builds have been cross-compiled on Ubuntu 14.04 and tested on their respective architectures.</p>
           <h4>Prerequisites</h4>
             <ul>Unix System (Linux or Mac), or Windows with MinGW</ul>
             <ul>JDK 8 or above (environment variable JAVA_HOME must be set)</ul>
@@ -39,9 +39,9 @@
             <ul> GCC</ul>
             <ul> G++</ul>
           <h4>Single Architecture Build</h4>
-            Once the prerequisites have been met, run the single architecture build using the standard Maven build process.
+            <p>Once the prerequisites have been met, run the single architecture build using the standard Maven build process.</p>
           <h4>Multi-architecture Build</h4>
-            The Apache Commons Crypto team recommends performing a multi-platform build by running the Dockerfile from the project base directory, and then copying the artifact from the resulting container to your host. For a combination of legal, licensing and technical reasons, the Mac build must be performed on a Mac--not cross compiled--so it is not included in the Dockerfile. If you endeavor to produce a multi-platform build that includes the JNI libraries for OSX, you must run the OSX build locally on a Mac first, and then run the Dockerfile to perform the balance of the builds. The Dockerfile will copy the output of the OSX build into the container, where it will become a part of the complete build.</p>
+            <p>The Apache Commons Crypto team recommends performing a multi-platform build by running the Dockerfile from the project base directory, and then copying the artifact from the resulting container to your host. For a combination of legal, licensing and technical reasons, the Mac build must be performed on a Mac--not cross compiled--so it is not included in the Dockerfile. If you endeavor to produce a multi-platform build that includes the JNI libraries for OSX, you must run the OSX build locally on a Mac first, and then run the Dockerfile to perform the balance of the builds. The Dockerfile will copy the output of the OSX build into the container, where it will become a part of the complete build.</p>
         </subsection>
         <subsection name="Interfaces Overview">
           <p>Interfaces and classes used by the various implementation in the sub-packages.</p>
