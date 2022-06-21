@@ -36,7 +36,7 @@ limitations under the License.
     <module name="UnusedImports"/>
     <module name="NeedBraces"/>
     <module name="JavadocMethod">
-      <property name="scope" value="protected"/>
+      <property name="accessModifiers" value="protected, public"/>
     </module>
  </module>
 </module>
