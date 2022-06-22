@@ -21,15 +21,23 @@ set -e
 
 cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 
+# Ensure the correct config file is installed
+cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
+
 # Run the 64-bit builds.
 mvn package
-mvn -DskipTests package -P linux-aarch64
-mvn -DskipTests package -P win64
-mvn -DskipTests package -P linux64
+
+# use process-classes rather than package to speed up builds
+mvn -DskipTests -Drat.skip process-classes -P linux-aarch64
+mvn -DskipTests -Drat.skip process-classes -P win64
+mvn -DskipTests -Drat.skip process-classes -P linux64
+
+# Ensure the correct config file is installed
+cp /usr/include/i386-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 
 # Run the 32-bit builds.
-mvn -DskipTests package -P linux-armhf
-mvn -DskipTests package -P linux-arm
-mvn -DskipTests package -P win32
+mvn -DskipTests -Drat.skip process-classes -P linux-armhf
+mvn -DskipTests -Drat.skip process-classes -P linux-arm
+mvn -DskipTests -Drat.skip process-classes -P win32
 
 # see separate script for optional linux32 build

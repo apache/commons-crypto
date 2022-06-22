@@ -36,9 +36,7 @@ RUN apt-get update && apt-get --assume-yes install software-properties-common \
       && apt-get --assume-yes install mingw-w64 \
       && apt-get --assume-yes install wget \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
-      && /var/lib/dpkg/info/ca-certificates-java.postinst configure \
-# Copy the opensslconf.h file to the base openssl include directory.
-      && cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
+      && /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 # Install 32-bit dependencies and tooling.
 RUN dpkg --add-architecture i386 && apt-get update \
