@@ -71,8 +71,6 @@ native: $(NATIVE_DLL)
 $(NATIVE_DLL): $(COMMONS_CRYPTO_OUT)/$(LIBNAME)
 	@mkdir -p $(@D)
 	cp $< $@
-	@mkdir -p $(NATIVE_TARGET_DIR)
-	cp $< $(NATIVE_TARGET_DIR)/$(LIBNAME)
 
 win32:
 	$(MAKE) native CROSS_PREFIX=i686-w64-mingw32- OS_NAME=Windows OS_ARCH=x86
