@@ -13,12 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This file runs builds for the Linux-x86_64, Linux aarch64, Linux-arm, Linux-armfh and Win64 
-# architectures.  It copies the contents of the build host's project directory (commons-crypto) 
-# into the docker image, builds and tests the x86_64 build natively, and then cross compiles the 
-# remaining builds.  If you run this script from a Mac after a successful Mac build, the build in  
-# the resuing Docker image will also include the Mac build by virtue of the initial project directory
-# copy.
+# This file creates a Docker image for use in building various native binaries
+# for Linux 64-bit and 32-bit, and Windows 64-bit and 32-bit.
+# See the README for further details.
 
 FROM ubuntu:18.04
 
