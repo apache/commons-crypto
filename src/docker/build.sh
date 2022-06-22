@@ -41,3 +41,6 @@ mvn -DskipTests -Drat.skip process-classes -P linux-arm
 mvn -DskipTests -Drat.skip process-classes -P win32
 
 # see separate script for optional linux32 build
+
+# Show generated files
+find target/classes/org/apache/commons/crypto/native -type f -ls
