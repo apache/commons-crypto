@@ -27,8 +27,8 @@ on:
       - '**/workflows/*.yml'
     # The branches below must be a subset of the branches above
     branches: [ master ]
-  schedule:
-    - cron: '33 9 * * 4'
+  # schedule:
+  #   - cron: '33 9 * * 4'
 
 jobs:
   analyze:
