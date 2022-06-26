@@ -100,7 +100,7 @@ final class OsInfo {
         archMapping.put("power_pc", PPC);
         archMapping.put("power_rs", PPC);
 
-        // TODO: PowerPC 64bit mappings
+        // PowerPC 64bit mappings
         archMapping.put(PPC64, PPC64);
         archMapping.put("power64", PPC64);
         archMapping.put("powerpc64", PPC64);
