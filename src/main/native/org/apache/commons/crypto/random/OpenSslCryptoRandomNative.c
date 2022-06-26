@@ -119,8 +119,8 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
   }
-  LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
 #ifdef UNIX
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
   dlerror();  // Clear any existing error
   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_malloc, env, openssl, "CRYPTO_malloc");
   LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_free, env, openssl, "CRYPTO_free");
@@ -141,6 +141,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 #endif
 
 #ifdef WINDOWS
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
   LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_malloc, dlsym_CRYPTO_malloc, env, openssl, "CRYPTO_malloc");
   LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_free, dlsym_CRYPTO_free, env, openssl, "CRYPTO_free");
   LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_by_id, dlsym_ENGINE_by_id, env, openssl, "ENGINE_by_id");

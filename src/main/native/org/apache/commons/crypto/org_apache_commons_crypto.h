@@ -94,15 +94,31 @@ void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
   return func_ptr;
 }
 
+/**
+ * A helper function to dlsym a 'symbol' from a given library-handle.
+ * Allows for fallback symbol name.
+ *
+ * @param env jni handle to report contingencies.
+ * @param handle handle to the dlopen'ed library.
+ * @param symbol symbol to load.
+ * @param fallback alternate symbol to load
+ * @return returns the address where the symbol is loaded in memory,
+ *         <code>NULL</code> on error.
+ */
 static __attribute__ ((unused))
-void *do_version_dlsym(JNIEnv *env, void *handle) {
+void *do_dlsym_fallback(JNIEnv *env, void *handle, const char *symbol, const char *fallback) {
   if (!env || !handle) {
     THROW(env, "java/lang/InternalError", NULL);
       return NULL;
   }
-  void *func_ptr = dlsym(handle, "OpenSSL_version_num");
+  char *error = NULL;
+  void *func_ptr = dlsym(handle, symbol);
   if (func_ptr == NULL) {
-    func_ptr = dlsym(handle, "SSLeay");
+    func_ptr = dlsym(handle, fallback);
+  }
+  if ((error = dlerror()) != NULL) {
+      THROW(env, "java/lang/UnsatisfiedLinkError", symbol);
+      return NULL;
   }
   return func_ptr;
 }
@@ -113,10 +129,10 @@ void *do_version_dlsym(JNIEnv *env, void *handle) {
     return; \
   }
 
-/* A macro to dlsym the appropriate OpenSSL version number function. */
-#define LOAD_OPENSSL_VERSION_FUNCTION(func_ptr, env, handle) \
-  if ((func_ptr = do_version_dlsym(env, handle)) == NULL) { \
-    THROW(env, "java/lang/Error", NULL); \
+/* A macro to dlsym the requisite dynamic symbol (with fallback) and bail-out on error. */
+#define LOAD_DYNAMIC_SYMBOL_FALLBACK(func_ptr, env, handle, symbol, fallback) \
+  if ((func_ptr = do_dlsym_fallback(env, handle, symbol, fallback)) == NULL) { \
+    return; \
   }
 #endif
 // Unix part end
@@ -188,24 +204,42 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
   return func_ptr;
 }
 
-static FARPROC WINAPI do_version_dlsym(JNIEnv *env, HMODULE handle) {
+/* A helper macro to dlsym the requisite dynamic symbol and bail-out on error. */
+#define LOAD_DYNAMIC_SYMBOL_FALLBACK(func_type, func_ptr, env, handle, symbol, fallback) \
+  if ((func_ptr = (func_type) do_dlsym_fallback(env, handle, symbol, fallback)) == NULL) { \
+    return; \
+  }
+
+/**
+ * A helper function to dynamic load a 'symbol' from a given library-handle.
+ *
+ * @param env jni handle to report contingencies.
+ * @param handle handle to the dynamic library.
+ * @param symbol symbol to load.
+ * @param fallback alternate symbol to load.
+ * @return returns the address where the symbol is loaded in memory,
+ *         <code>NULL</code> on error.
+ */
+static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symbol, LPCSTR fallback) {
+  DWORD dwErrorCode = ERROR_SUCCESS;
   FARPROC func_ptr = NULL;
-  if (!env || !handle) {
+
+  if (!env || !handle || !symbol) {
     THROW(env, "java/lang/InternalError", NULL);
     return NULL;
   }
-  func_ptr = GetProcAddress(handle, "OpenSSL_version_num");
-  if (func_ptr == NULL) {
-    func_ptr = GetProcAddress(handle, "SSLeay");
+
+  func_ptr = GetProcAddress(handle, symbol);
+  if (func_ptr == NULL)
+  {
+    func_ptr = GetProcAddress(handle, fallback);
+    if (func_ptr == NULL)
+    {
+      THROW(env, "java/lang/UnsatisfiedLinkError", symbol);
+    }
   }
   return func_ptr;
 }
-
-/* A macro to dlsym the appropriate OpenSSL version number function. */
-#define LOAD_OPENSSL_VERSION_FUNCTION(func_ptr, env, handle) \
-  if ((func_ptr = (__dlsym_OpenSSL_version_num) do_version_dlsym(env, handle)) == NULL) { \
-    THROW(env, "java/lang/Error", NULL); \
-  }
 #endif
 // Windows part end
 

@@ -57,20 +57,13 @@ static void get_methods(JNIEnv *env, void *openssl)
 static void get_methods(JNIEnv *env, HMODULE openssl)
 #endif
 {
-  LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
 #ifdef UNIX
-  if (dlsym_OpenSSL_version_num() > VERSION_1_1_X) {
-    LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
-  } else {
-    LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
-  }
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
 #endif
 #ifdef WINDOWS
-  if (dlsym_OpenSSL_version_num() > VERSION_1_1_X) {
-    LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
-  } else {
-    LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
-  }
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
 #endif
 }
 
