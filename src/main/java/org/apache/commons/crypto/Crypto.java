@@ -150,7 +150,7 @@ public final class Crypto {
      * @throws Exception if getCryptoRandom or getCryptoCipher get error.
      */
     public static void main(final String[] args) throws Exception {
-        quiet = (args.length ==1 && args[0].equals("-q"));
+        quiet = args.length ==1 && args[0].equals("-q");
         info("%s %s", getComponentName(), getComponentVersion());
         if (isNativeCodeLoaded()) {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
