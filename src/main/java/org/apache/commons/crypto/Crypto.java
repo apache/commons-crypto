@@ -120,6 +120,8 @@ public final class Crypto {
         return NativeCodeLoader.getLoadingError();
     }
 
+    private static boolean quiet = false;
+
     /**
      * Logs info-level messages.
      *
@@ -127,8 +129,9 @@ public final class Crypto {
      * @param args   See {@link String#format(String, Object...)}.
      */
     private static void info(final String format, final Object... args) {
-        // TODO Find a better way to do this later.
-        System.out.println(String.format(format, args));
+        if (!quiet) { // suppress output for testing
+          System.out.println(String.format(format, args));
+        }
     }
 
     /**
@@ -147,6 +150,7 @@ public final class Crypto {
      * @throws Exception if getCryptoRandom or getCryptoCipher get error.
      */
     public static void main(final String[] args) throws Exception {
+        quiet = (args.length ==1 && args[0].equals("-q"));
         info("%s %s", getComponentName(), getComponentVersion());
         if (isNativeCodeLoaded()) {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());

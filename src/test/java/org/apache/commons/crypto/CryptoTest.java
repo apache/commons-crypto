@@ -49,13 +49,7 @@ public class CryptoTest {
 
 	@Test
 	public void testMain() throws Throwable {
-		try {
-			Crypto.main(new String[0]);
-		} catch (final Throwable e) {
-			final Throwable loadingError = Crypto.getLoadingError();
-			System.err.println("Special case; LoadingError = " + loadingError);
-			throw loadingError != null ? loadingError : e;
-		}
+		Crypto.main(new String[]{"-q"}); // output causes issues for testing
     assertTrue(true, "Completed OK");
 	}
 
