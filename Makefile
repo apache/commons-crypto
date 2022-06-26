@@ -20,6 +20,10 @@ include Makefile.common
 COMMONS_CRYPTO_OUT:=$(TARGET)/$(commons-crypto)-$(os_arch)
 COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpenSslCryptoRandomNative.o OpenSslNative.o OpenSslInfoNative.o)
 
+# Shorthand for local dependencies
+CRYPTO_H:=$(SRC_NATIVE)/org/apache/commons/crypto/org_apache_commons_crypto.h lib/include/config.h
+CRYPTO_RANDOM_H:=$(SRC_NATIVE)/org/apache/commons/crypto/random/org_apache_commons_crypto_random.h
+
 # Windows uses different path separators
 ifeq ($(OS_NAME),Windows)
   DELTREE := CMD /C DEL /S/Q
@@ -46,15 +50,15 @@ all: $(NATIVE_DLL)
 $#(TARGET)/jni-classes/org/apache/commons/crypto/OpenSslInfoNative.h: $(TARGET)/classes/org/apache/commons/crypto/OpenSslInfoNative.class
 #	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.OpenSslInfoNative
 
-$(COMMONS_CRYPTO_OUT)/OpenSslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpenSslNative.c $(TARGET)/jni-classes/org_apache_commons_crypto_cipher_OpenSslNative.h
+$(COMMONS_CRYPTO_OUT)/OpenSslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpenSslNative.c $(CRYPTO_H) $(TARGET)/jni-classes/org_apache_commons_crypto_cipher_OpenSslNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(COMMONS_CRYPTO_OUT)/OpenSslCryptoRandomNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c $(TARGET)/jni-classes/org_apache_commons_crypto_random_OpenSslCryptoRandomNative.h
+$(COMMONS_CRYPTO_OUT)/OpenSslCryptoRandomNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c $(CRYPTO_H) $(CRYPTO_RANDOM_H) $(TARGET)/jni-classes/org_apache_commons_crypto_random_OpenSslCryptoRandomNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(COMMONS_CRYPTO_OUT)/OpenSslInfoNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/OpenSslInfoNative.c $(TARGET)/jni-classes/org_apache_commons_crypto_OpenSslInfoNative.h
+$(COMMONS_CRYPTO_OUT)/OpenSslInfoNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/OpenSslInfoNative.c $(CRYPTO_H) $(TARGET)/jni-classes/org_apache_commons_crypto_OpenSslInfoNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -DVERSION='"$(VERSION)"' -DPROJECT_NAME='"$(PROJECT_NAME)"' -I"$(TARGET)/jni-classes" -c $< -o $@
 
