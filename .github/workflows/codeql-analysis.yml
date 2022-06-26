@@ -73,7 +73,7 @@ jobs:
     #    uses a compiled language
 
     - name: Build with Maven
-      run: mvn package
+      run: mvn package  --no-transfer-progress
 #      make bootstrap
 #      make release
 
