@@ -73,7 +73,8 @@ jobs:
     #    uses a compiled language
 
     - name: Build with Maven
-      run: mvn -V package  --no-transfer-progress
+      # Try to suppress unwanted output
+      run: mvn -V package  --no-transfer-progress  -DargLine="--illegal-access=deny"
 #      make bootstrap
 #      make release
 
