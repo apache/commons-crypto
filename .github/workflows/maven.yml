@@ -63,9 +63,10 @@ jobs:
     - name: OpenSSL version
       run: openssl version
     - name: Set argline
-      if: ${{ matrix.java != '8' }}
+      run: echo $argLine
       env:
         argLine: -DargLine="--illegal-access=deny"
+      if: ${{ matrix.java != '8' }}
     - name: Build with Maven
       # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
       # It's not clear how one is supposed to find the correct setting;
