@@ -49,8 +49,10 @@ public class CryptoTest {
 
 	@Test
 	public void testMain() throws Throwable {
+    // Check that Crypt.main will actually run tests
+    assertTrue(Crypto.isNativeCodeLoaded(), "Native code loaded OK");
 		Crypto.main(new String[]{"-q"}); // output causes issues for testing
-    assertTrue(true, "Completed OK");
+    assertTrue(Crypto.isNativeCodeLoaded(), "Completed OK");
 	}
 
 	@Test
