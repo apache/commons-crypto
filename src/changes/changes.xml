@@ -64,7 +64,8 @@
     <release version="1.1.1" date="20YY-MM-DD" description="TBD">
       <action issue="CRYPTO-160" type="fix" dev="jochen">Enhance the quality of JavaCryptoRandom as a subclass of Random by overwriting Random.next(int).</action>
       <!-- FIX -->
-      <action issue="CRYPTO-154" type="fix">License header should be plain a comment #113.</action>
+      <action issue="CRYPTO-163" type="fix">Makefile does not recompile objects if local include files are changed</action>
+      <action issue="CRYPTO-154" type="fix">License header should be a plain comment #113.</action>
       <action                    type="fix" dev="ggregory" due-to="Arturo Bernal">Fix PMD warning and don't init to defaults #128.</action>
       <action                    type="fix" dev="ggregory" due-to="Arturo Bernal">Minor changes #135.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Port from pre-Java 8 javah tool to Java 8 and up javac with the -h option.</action>
