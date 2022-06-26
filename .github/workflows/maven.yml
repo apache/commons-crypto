@@ -62,6 +62,10 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version
+    - name: Set argline
+      if: ${{ matrix.java != '8' }}
+      env:
+        argLine: -DargLine="--illegal-access=deny"
     - name: Build with Maven
       # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
       # It's not clear how one is supposed to find the correct setting;
@@ -72,4 +76,4 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       # Temporarily add  -DargLine="--illegal-access=deny" to avoid native output crash
-      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false -DargLine="--illegal-access=deny"
+      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false $argLine
