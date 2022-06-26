@@ -25,7 +25,7 @@ cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 
 # Run the 64-bit builds.
-mvn package
+mvn -V package
 
 # use process-classes rather than package to speed up builds
 mvn -DskipTests -Drat.skip process-classes -P linux-aarch64
