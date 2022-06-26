@@ -71,4 +71,5 @@ jobs:
       # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
+      # Temporarily add  -DargLine="--illegal-access=deny" to avoid native output crash
+      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false -DargLine="--illegal-access=deny"
