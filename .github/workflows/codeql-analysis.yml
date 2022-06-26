@@ -74,7 +74,7 @@ jobs:
 
     - name: Build with Maven
       # Try to suppress unwanted output
-      run: mvn -V package  --no-transfer-progress  -DargLine="--illegal-access=deny"
+      run: mvn -V package  --no-transfer-progress  -DargLine="--illegal-access=deny" -DforkCount=0
 #      make bootstrap
 #      make release
 
