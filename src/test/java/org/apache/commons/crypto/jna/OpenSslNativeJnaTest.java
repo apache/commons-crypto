@@ -19,17 +19,12 @@
 package org.apache.commons.crypto.jna;
 
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenSslNativeJnaTest {
 
     @Test
     public void test() {
-        if (OpenSslJna.isEnabled()) {
-            System.out.println("** INFO: JNA is using: " + OpenSslJna.OpenSSLVersion(0));
-        } else {
-            System.out.printf("** WARN: Could not enable JNA; detected lib VERSION 0x%x: %s%n", OpenSslNativeJna.VERSION,
-                    OpenSslJna.initialisationError().getMessage());
-            // OpenSslJna.initialisationError().printStackTrace();
-        }
+        assertTrue(OpenSslJna.isEnabled(), String.format("JNA loaded OK for lib version 0x%x: ", OpenSslNativeJna.VERSION));
     }
 }
