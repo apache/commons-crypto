@@ -60,6 +60,7 @@ class OpenSslNativeJna {
         } else {
             VERSION = VERSION_1_0_X;
         }
+        OpenSslJna.debug(String.format("Detected version 0x%x", VERSION));
 
         if (VERSION == VERSION_1_1_X) {
             INIT_OK = OpenSsl11XNativeJna.INIT_OK;
