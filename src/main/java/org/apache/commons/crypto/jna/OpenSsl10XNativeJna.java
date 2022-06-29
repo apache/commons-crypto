@@ -47,12 +47,16 @@ class OpenSsl10XNativeJna {
     }
 
     /**
+     * @see <a href="https://www.openssl.org/docs/man1.0.2/man3/SSLeay.html">Version Number</a>
+     *
      * @return OPENSSL_VERSION_NUMBER which is a numeric release version identifier
      */
     public static native NativeLong SSLeay();
 
     /**
      * Retrieves version/build information about OpenSSL library.
+     *
+     * @see <a href="https://www.openssl.org/docs/man1.0.2/man3/SSLeay_version.html">Version Info</a>
      *
      * @param type
      *            type can be SSLEAY_VERSION, SSLEAY_CFLAGS, SSLEAY_BUILT_ON...
