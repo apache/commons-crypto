@@ -53,12 +53,13 @@ jobs:
 
     # Override Java default
     # Java 11 complains about illegal access; drop this override when sorted
-#    - name: Set up JDK ${{ matrix.java }}
-#      if: ${{ matrix.language == 'java' }}
-#      uses: actions/setup-java@v3
-#      with:
-#        distribution: 'temurin'
-#        java-version: ${{ matrix.java }}
+    # Also complains: "Corrupted channel by directly writing to native stream in forked JVM 1"
+   - name: Set up JDK ${{ matrix.java }}
+     if: ${{ matrix.language == 'java' }}
+     uses: actions/setup-java@v3
+     with:
+       distribution: 'temurin'
+       java-version: ${{ matrix.java }}
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -83,7 +84,7 @@ jobs:
     #    uses a compiled language
 
     - name: Build with Maven
-      run: mvn -V package  --no-transfer-progress -Drat.skip -DargLine=--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+      run: mvn -V package  --no-transfer-progress -Drat.skip -Danimal.sniffer.skip -DargLine=--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
 #      make bootstrap
 #      make release
 
