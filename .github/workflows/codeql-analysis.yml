@@ -73,8 +73,7 @@ jobs:
     #    uses a compiled language
 
     - name: Build with Maven
-      # Try to suppress unwanted output
-      run: mvn -V package  --no-transfer-progress  -DargLine="--illegal-access=deny" -DforkCount=0
+      run: mvn -V package  --no-transfer-progress -Drat.skip -Danimal.sniffer.skip
 #      make bootstrap
 #      make release
 
