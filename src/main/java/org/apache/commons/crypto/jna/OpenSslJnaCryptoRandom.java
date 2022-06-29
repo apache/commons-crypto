@@ -49,8 +49,8 @@ import com.sun.jna.ptr.PointerByReference;
 class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
 
     private static final long serialVersionUID = -7128193502768749585L;
-    private final boolean rdrandEnabled;
-    private final transient PointerByReference rdrandEngine;
+    private final boolean readRandomEnabled;
+    private final transient PointerByReference pointerByReference;
 
     /**
      * Constructs a {@link OpenSslJnaCryptoRandom}.
@@ -64,18 +64,18 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
             throw new GeneralSecurityException("Could not enable JNA access", OpenSslJna.initialisationError());
         }
 
-        boolean rdrandLoaded = false;
+        boolean readRandom = false;
         try {
             OpenSslNativeJna.ENGINE_load_rdrand();
-            rdrandEngine = OpenSslNativeJna.ENGINE_by_id("rdrand");
+            pointerByReference = OpenSslNativeJna.ENGINE_by_id("rdrand");
             final int ENGINE_METHOD_RAND = 0x0008;
-            if(rdrandEngine != null) {
-                final int rc = OpenSslNativeJna.ENGINE_init(rdrandEngine);
+            if(pointerByReference != null) {
+                final int rc = OpenSslNativeJna.ENGINE_init(pointerByReference);
 
                 if(rc != 0) {
-                    final int rc2 = OpenSslNativeJna.ENGINE_set_default(rdrandEngine, ENGINE_METHOD_RAND);
+                    final int rc2 = OpenSslNativeJna.ENGINE_set_default(pointerByReference, ENGINE_METHOD_RAND);
                     if(rc2 != 0) {
-                        rdrandLoaded = true;
+                        readRandom = true;
                     }
                 }
             }
@@ -84,9 +84,9 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
             throw new NoSuchAlgorithmException();
         }
 
-        rdrandEnabled = rdrandLoaded;
+        readRandomEnabled = readRandom;
 
-        if(!rdrandLoaded) {
+        if(!readRandom) {
             closeRdrandEngine();
         }
     }
@@ -103,7 +103,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
             //this method is synchronized for now
             //to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
 
-            if(rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
+            if(readRandomEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
                 close();
                 throw new IllegalStateException("rdrand should be used but default is detected");
             }
@@ -172,9 +172,9 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      */
     private void closeRdrandEngine() {
 
-        if(rdrandEngine != null) {
-            OpenSslNativeJna.ENGINE_finish(rdrandEngine);
-            OpenSslNativeJna.ENGINE_free(rdrandEngine);
+        if(pointerByReference != null) {
+            OpenSslNativeJna.ENGINE_finish(pointerByReference);
+            OpenSslNativeJna.ENGINE_free(pointerByReference);
         }
     }
 
@@ -184,7 +184,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      * @return true if rdrand is used, false if default engine is used
      */
     public boolean isRdrandEnabled() {
-        return rdrandEnabled;
+        return readRandomEnabled;
     }
 
     /**
@@ -193,9 +193,9 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     private void throwOnError(final int retVal) {
         if (retVal != 1) {
             final NativeLong err = OpenSslNativeJna.ERR_peek_error();
-            final String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
+            final String errDesc = OpenSslNativeJna.ERR_error_string(err, null);
             close();
-            throw new IllegalStateException("return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
+            throw new IllegalStateException("return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errDesc);
         }
     }
 }

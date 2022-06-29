@@ -157,10 +157,10 @@ final class OsInfo {
             final String javaHome = System.getProperty("java.home");
             try {
                 // determine if first JVM found uses ARM hard-float ABI
-                final String[] cmdarray = { "/bin/sh", "-c",
+                final String[] commandArray = { "/bin/sh", "-c",
                         "find '" + javaHome + "' -name 'libjvm.so' | head -1 | xargs readelf -A | "
                                 + "grep 'Tag_ABI_VFP_args: VFP registers'" };
-                final int exitCode = Runtime.getRuntime().exec(cmdarray).waitFor();
+                final int exitCode = Runtime.getRuntime().exec(commandArray).waitFor();
                 if (exitCode == 0) {
                     return "armhf";
                 }

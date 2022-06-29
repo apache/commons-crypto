@@ -111,18 +111,18 @@ class OsCryptoRandom extends Random implements CryptoRandom {
      * Overrides Random#next(). Generates the next pseudorandom number.
      * Subclasses should override this, as this is used by all other methods.
      *
-     * @param nbits random bits.
+     * @param bits random bits.
      * @return the next pseudorandom value from this random number generator's
      *         sequence.
      */
     @Override
-    synchronized protected int next(final int nbits) {
+    synchronized protected int next(final int bits) {
         fillReservoir(4);
         int n = 0;
         for (int i = 0; i < 4; i++) {
             n = (n << 8) | (reservoir[pos++] & 0xff);
         }
-        return n & (0xffffffff >> (32 - nbits));
+        return n & (0xffffffff >> (32 - bits));
     }
 
     /**

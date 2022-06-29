@@ -139,7 +139,7 @@ class OpenSsl11XNativeJna {
      *            cipher context
      * @param bout
      *            output byte buffer
-     * @param outl
+     * @param lout
      *            output length
      * @param in
      *            input byte buffer
@@ -147,7 +147,7 @@ class OpenSsl11XNativeJna {
      *            input length
      * @return 1 for success and 0 for failure.
      */
-    public static native int EVP_CipherUpdate(PointerByReference ctx, ByteBuffer bout, int[] outl,
+    public static native int EVP_CipherUpdate(PointerByReference ctx, ByteBuffer bout, int[] lout,
             ByteBuffer in, int inl);
 
     /**
@@ -157,12 +157,12 @@ class OpenSsl11XNativeJna {
      *            cipher context
      * @param bout
      *            output byte buffer
-     * @param outl
+     * @param lout
      *            output length
      * @return 1 for success and 0 for failure.
      */
     public static native int EVP_CipherFinal_ex(PointerByReference ctx, ByteBuffer bout,
-            int[] outl);
+            int[] lout);
 
     /**
      * Clears all information from a cipher context and free up any allocated memory associate with
@@ -172,14 +172,6 @@ class OpenSsl11XNativeJna {
      *            openssl evp cipher
      */
     public static native void EVP_CIPHER_CTX_free(PointerByReference c);
-
-    /**
-     * Clears all information from a cipher context and free up any allocated * memory associate
-     * with it.
-     *
-     * @param c
-     *            openssl evp cipher
-     */
 
     // Random generator
     /**

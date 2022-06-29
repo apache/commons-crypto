@@ -113,7 +113,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Overrides Random#next(). Generates an integer containing the
+     * Overrides {@code Random#next()}. Generates an integer containing the
      * user-specified number of random bits(right justified, with leading
      * zeros).
      *

@@ -158,11 +158,11 @@ class OpenSslJnaCipher implements CryptoCipher {
      */
     @Override
     public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
-        final int[] outlen = new int[1];
-        final int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
+        final int[] outLen = new int[1];
+        final int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outLen, inBuffer,
                 inBuffer.remaining());
         throwOnError(retVal);
-        final int len = outlen[0];
+        final int len = outLen[0];
         inBuffer.position(inBuffer.limit());
         outBuffer.position(outBuffer.position() + len);
         return len;
@@ -333,13 +333,13 @@ class OpenSslJnaCipher implements CryptoCipher {
     private void throwOnError(final int retVal) {
         if (retVal != 1) {
             final NativeLong err = OpenSslNativeJna.ERR_peek_error();
-            final String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
+            final String errorDescription = OpenSslNativeJna.ERR_error_string(err, null);
 
             if (context != null) {
                 OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
             }
             throw new IllegalStateException(
-                    "return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
+                    "return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errorDescription);
         }
     }
 
