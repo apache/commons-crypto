@@ -146,7 +146,7 @@ class OpenSsl11XNativeJna {
      * @return 1 for success and 0 for failure.
      */
     public static native int EVP_CipherInit_ex(PointerByReference ctx, PointerByReference cipher,
-            PointerByReference impl, byte key[], byte iv[], int enc);
+            PointerByReference impl, byte[] key, byte[] iv, int enc);
 
     /**
      * Continues a multiple-part encryption/decryption operation.
@@ -215,6 +215,9 @@ class OpenSsl11XNativeJna {
      * @return 1 on success, 0 otherwise.
      */
     public static native int RAND_bytes(ByteBuffer buf, int num);
+
+    // ENGINE API: https://www.openssl.org/docs/man1.1.1/man3/ENGINE_add.html
+    // (The above page includes all the ENGINE functions used below)
 
     /**
      * Releases all functional references.

@@ -53,13 +53,14 @@ class OpenSsl10XNativeJna {
 
     /**
      * @see <a href="https://www.openssl.org/docs/man1.0.2/man3/SSLeay.html">Version Number</a>
-     * (does not appear to be used yet)
+     * TODO (does not appear to be used yet)
      * @return OPENSSL_VERSION_NUMBER which is a numeric release version identifier
      */
     public static native NativeLong SSLeay();
 
     /**
      * Retrieves version/build information about OpenSSL library.
+     * This is returned by {@link OpenSslNativeJna#OpenSSLVersion(int)}
      *
      * @see <a href="https://www.openssl.org/docs/man1.0.2/man3/SSLeay_version.html">Version Info</a>
      *
@@ -70,6 +71,7 @@ class OpenSsl10XNativeJna {
      */
     public static native String SSLeay_version(int type);
 
+    // TODO: NOT USED?
     /**
      * Registers the error strings for all libcrypto functions.
      */
@@ -100,6 +102,7 @@ class OpenSsl10XNativeJna {
      */
     public static native PointerByReference EVP_CIPHER_CTX_new();
 
+    // TODO: NOT USED?
     /**
      * EVP_CIPHER_CTX_init() remains as an alias for EVP_CIPHER_CTX_reset
      *
@@ -244,6 +247,8 @@ class OpenSsl10XNativeJna {
      * @return 1 on success, 0 otherwise.
      */
     public static native int RAND_bytes(ByteBuffer buf, int num);
+
+    // ENGINE API: https://www.openssl.org/docs/man1.0.2/man3/engine.html
 
     /**
      * Releases all functional references.

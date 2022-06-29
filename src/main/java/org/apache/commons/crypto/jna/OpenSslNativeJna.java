@@ -82,6 +82,7 @@ class OpenSslNativeJna {
         return OpenSsl10XNativeJna.ENGINE_by_id(string);
     }
 
+    // TODO: native method returns int
     public static void ENGINE_finish(final PointerByReference rdrandEngine) {
         if (VERSION == VERSION_1_1_X) {
             OpenSsl11XNativeJna.ENGINE_finish(rdrandEngine);
@@ -90,6 +91,7 @@ class OpenSslNativeJna {
         }
     }
 
+    // TODO: native method returns int
     public static void ENGINE_free(final PointerByReference rdrandEngine) {
         if (VERSION == VERSION_1_1_X) {
             OpenSsl11XNativeJna.ENGINE_free(rdrandEngine);
@@ -183,6 +185,7 @@ class OpenSslNativeJna {
         return OpenSsl10XNativeJna.EVP_CIPHER_CTX_new();
     }
 
+    // TODO: native method returns int
     public static void EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding) {
         if (VERSION == VERSION_1_1_X) {
             OpenSsl11XNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
@@ -254,6 +257,7 @@ class OpenSslNativeJna {
         OpenSsl10XNativeJna.ENGINE_load_rdrand();
     }
 
+    // TODO: native method returns int
     public static void ENGINE_cleanup() {
         if (VERSION == VERSION_1_1_X) {
             return;
