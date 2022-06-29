@@ -36,7 +36,10 @@ class OpenSsl11XNativeJna {
         boolean ok = false;
         Throwable thrown = null;
         try {
-            Native.register(OpenSslNativeJna.CRYPTO_LIBRARY);
+            final String libName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(),
+                    "crypto");
+            OpenSslJna.debug("Native.register('%s')%n", libName);
+            Native.register(libName);
             ok = true;
         } catch (final Exception | UnsatisfiedLinkError e) {
             thrown = e;
@@ -67,7 +70,7 @@ class OpenSsl11XNativeJna {
     /**
      * Generates a human-readable string representing the error code e.
      *
-     * @see <a href="https://www.openssl.org/docs/man1.1.1/man3/ERR_error_string.html">ERR_error_string</a>
+     * @see <a href="https://www.openssl.org/docs/man1.1.0/man3/ERR_error_string.html">ERR_error_string</a>
      *
      * @param err
      *            the error code
@@ -143,7 +146,7 @@ class OpenSsl11XNativeJna {
      * @return 1 for success and 0 for failure.
      */
     public static native int EVP_CipherInit_ex(PointerByReference ctx, PointerByReference cipher,
-            PointerByReference impl, byte[] key, byte[] iv, int enc);
+            PointerByReference impl, byte key[], byte iv[], int enc);
 
     /**
      * Continues a multiple-part encryption/decryption operation.

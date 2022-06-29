@@ -36,7 +36,10 @@ class OpenSsl10XNativeJna {
         boolean ok = false;
         Throwable thrown = null;
         try {
-            Native.register(OpenSslNativeJna.CRYPTO_LIBRARY);
+            final String libName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(),
+                    "crypto");
+            OpenSslJna.debug("Native.register('%s')%n", libName);
+            Native.register(libName);
             ok = true;
         } catch (final Exception | UnsatisfiedLinkError e) {
             thrown = e;

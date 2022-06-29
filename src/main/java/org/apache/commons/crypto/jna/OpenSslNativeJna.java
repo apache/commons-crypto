@@ -42,16 +42,13 @@ class OpenSslNativeJna {
     public static final long VERSION_1_0_X = 0x10000000;
     public static final long VERSION_1_1_X = 0x10100000;
 
-    // Pass the library alreaded to OpenSsl10XNativeJna and OpenSsl11XNativeJna 
-    static final NativeLibrary CRYPTO_LIBRARY;
     static {
-        final String library_name = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
-        OpenSslJna.debug("NativeLibrary.getInstance('%s')%n", library_name);
-        CRYPTO_LIBRARY = NativeLibrary.getInstance(library_name);
-        OpenSslJna.debug("%s%n", CRYPTO_LIBRARY.toString()); // show what was loaded
+        final String libraryName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
+        OpenSslJna.debug("NativeLibrary.getInstance('%s')%n", libraryName);
+        final NativeLibrary crypto = NativeLibrary.getInstance(libraryName);
         Function version = null;
         try {
-            version = CRYPTO_LIBRARY.getFunction("SSLeay");
+            version = crypto.getFunction("SSLeay");
         } catch (final UnsatisfiedLinkError e) {
             // Swallow the Error.
         }
