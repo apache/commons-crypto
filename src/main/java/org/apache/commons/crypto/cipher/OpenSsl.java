@@ -378,4 +378,12 @@ final class OpenSsl {
         clean();
     }
 
+    /**
+     * Use engine by default for symmetric cipher operations.
+     *
+     * @param engineId the id of engine
+     */
+    public void engineSetDefaultCiphers(String engineId) {
+        opensslBlockCipher.engineSetDefaultCiphers(engineId);
+    }
 }

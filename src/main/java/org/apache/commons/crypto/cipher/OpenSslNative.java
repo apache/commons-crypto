@@ -159,4 +159,11 @@ class OpenSslNative {
      * @param context The cipher context address
      */
     public native static void clean(long context);
+
+    /**
+     * Use engine by default for symmetric cipher operations.
+     *
+     * @param engineId The id of engine
+     */
+    public native static void engineSetDefaultCiphers(String engineId);
 }
