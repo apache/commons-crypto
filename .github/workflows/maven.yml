@@ -78,3 +78,7 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       # Temporarily add  -DargLine="--illegal-access=deny" to avoid native output crash
       run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false $argLine
+    - name: Run sample programs
+      run: |
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
