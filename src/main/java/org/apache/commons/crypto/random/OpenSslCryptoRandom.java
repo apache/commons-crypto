@@ -123,7 +123,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
      *         random bits (right justified, with leading zeros).
      */
     @Override
-    final protected int next(final int numBits) {
+    protected final int next(final int numBits) {
         Utils.checkArgument(numBits >= 0 && numBits <= 32);
         final int numBytes = (numBits + 7) / 8;
         final byte[] b = new byte[numBytes];
@@ -139,6 +139,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
 
     /**
      * Generates a user-specified number of random bytes. It's thread-safe.
+     * Overrides {@link Random}. 
      *
      * @param bytes the array to be filled in with random bytes.
      */
@@ -152,13 +153,13 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link OpenSslCryptoRandom}. For {@link OpenSslCryptoRandom},
-     * we don't need to set seed.
+     * Overrides {@link Random} (which is synchronized).
+     * We don't need to set seed for this class.
      *
      * @param seed the initial seed.
      */
     @Override
-    public void setSeed(final long seed) {
+    public synchronized void setSeed(final long seed) {
         // Self-seeding.
     }
 }
