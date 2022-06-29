@@ -84,7 +84,8 @@ jobs:
     #    uses a compiled language
 
     - name: Build with Maven
-      run: mvn -V package  --no-transfer-progress -Drat.skip -Danimal.sniffer.skip -DargLine=--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+      # -DargLine=--add-opens=java.base/sun.nio.ch=ALL-UNNAMED (not with Java 8)
+      run: mvn -V package  --no-transfer-progress -Drat.skip -Danimal.sniffer.skip
 #      make bootstrap
 #      make release
 
