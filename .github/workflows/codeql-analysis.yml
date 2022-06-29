@@ -54,12 +54,12 @@ jobs:
     # Override Java default
     # Java 11 complains about illegal access; drop this override when sorted
     # Also complains: "Corrupted channel by directly writing to native stream in forked JVM 1"
-   - name: Set up JDK ${{ matrix.java }}
-     if: ${{ matrix.language == 'java' }}
-     uses: actions/setup-java@v3
-     with:
-       distribution: 'temurin'
-       java-version: ${{ matrix.java }}
+    - name: Set up JDK ${{ matrix.java }}
+      if: ${{ matrix.language == 'java' }}
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: ${{ matrix.java }}
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
