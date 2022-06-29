@@ -617,7 +617,7 @@ public class CryptoInputStream extends InputStream implements
      * */
     static int getBufferSize(final Properties props) {
         final String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY);
-        if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
+        if (Utils.isEmpty(bufferSizeStr)) {
             return CryptoInputStream.STREAM_BUFFER_SIZE_DEFAULT;
         }
         return Integer.parseInt(bufferSizeStr);
