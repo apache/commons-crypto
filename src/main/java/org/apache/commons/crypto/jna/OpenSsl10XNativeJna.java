@@ -46,9 +46,11 @@ class OpenSsl10XNativeJna {
         }
     }
 
+    // Try to keep methods aligned across versions
+
     /**
      * @see <a href="https://www.openssl.org/docs/man1.0.2/man3/SSLeay.html">Version Number</a>
-     *
+     * (does not appear to be used yet)
      * @return OPENSSL_VERSION_NUMBER which is a numeric release version identifier
      */
     public static native NativeLong SSLeay();
