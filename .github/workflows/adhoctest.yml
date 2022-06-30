@@ -31,8 +31,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [macos-latest, windows-latest]
-        os: [macos-latest]
+        os: [macos-latest, windows-latest]
+        # os: [macos-latest]
         java: [ 8 ]
         # ref: [ 'rel/commons-crypto-1.1.0', master ]
         ref: [ master ]
@@ -60,10 +60,14 @@ jobs:
     #   if: always()
     #   run: |
     #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
-    - name: Find OpenSSL
-      if: always()
+    - name: Find OpenSSL Mac
+      if: always() && ${{ matrix.os == 'macos-latest' }}
       run: |
         for i in $(which -a openssl) ; do  echo $i; $i version ; echo ""; done
+    - name: Find OpenSSL Win
+      if: always() && ${{ matrix.os == 'windows-latest' }}
+      run: |
+        where /T openssl
     - name: env sort
       if: always()
       run: |
