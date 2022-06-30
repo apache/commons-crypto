@@ -35,7 +35,7 @@ class OpenSslCryptoRandomNative {
     /**
      * Declares a native method to initialize SR.
      */
-    public native static void initSR();
+    public static native void initSR();
 
     /**
      * Judges whether use {@link OpenSslCryptoRandomNative} to generate the
@@ -45,5 +45,5 @@ class OpenSslCryptoRandomNative {
      * @return true if use {@link OpenSslCryptoRandomNative} to generate the
      *         user-specified number of random bits.
      */
-    public native static boolean nextRandBytes(byte[] bytes);
+    public static native boolean nextRandBytes(byte[] bytes);
 }

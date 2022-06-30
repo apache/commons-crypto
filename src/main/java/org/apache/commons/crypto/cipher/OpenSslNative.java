@@ -34,7 +34,7 @@ class OpenSslNative {
     /**
      * Declares a native method to initialize JNI field and method IDs.
      */
-    public native static void initIDs();
+    public static native void initIDs();
 
     /**
      * Declares a native method to initialize the cipher context.
@@ -43,7 +43,7 @@ class OpenSslNative {
      * @param padding The padding name of cipher
      * @return the context address of cipher
      */
-    public native static long initContext(int algorithm, int padding);
+    public static native long initContext(int algorithm, int padding);
 
     /**
      * Declares a native method to initialize the cipher context.
@@ -56,7 +56,7 @@ class OpenSslNative {
      * @param iv crypto iv
      * @return the context address of cipher
      */
-    public native static long init(long context, int mode, int alg,
+    public static native long init(long context, int mode, int alg,
                                    int padding, byte[] key, byte[] iv);
 
     /**
@@ -72,7 +72,7 @@ class OpenSslNative {
      * @param maxOutputLength The maximum length for output
      * @return The number of bytes stored in output
      */
-    public native static int update(long context, ByteBuffer input,
+    public static native int update(long context, ByteBuffer input,
             int inputOffset, int inputLength, ByteBuffer output,
             int outputOffset, int maxOutputLength);
 
@@ -89,7 +89,7 @@ class OpenSslNative {
      * @param maxOutputLength The maximum length for output
      * @return The number of bytes stored in output
      */
-    public native static int updateByteArray(long context, byte[] input,
+    public static native int updateByteArray(long context, byte[] input,
             int inputOffset, int inputLength, byte[] output, int outputOffset,
             int maxOutputLength);
 
@@ -106,7 +106,7 @@ class OpenSslNative {
      * @param maxOutputLength The maximum length for output
      * @return The number of bytes stored in output
      */
-    public native static int updateByteArrayByteBuffer(long context, byte[] input,
+    public static native int updateByteArrayByteBuffer(long context, byte[] input,
                                                        int inputOffset, int inputLength,
                                                        ByteBuffer output, int outputOffset, int maxOutputLength);
 
@@ -120,7 +120,7 @@ class OpenSslNative {
      * @param maxOutputLength The maximum length for output
      * @return The number of bytes stored in output
      */
-    public native static int doFinal(long context, ByteBuffer output,
+    public static native int doFinal(long context, ByteBuffer output,
             int offset, int maxOutputLength);
 
     /**
@@ -133,7 +133,7 @@ class OpenSslNative {
      * @param maxOutputLength The maximum length for output
      * @return The number of bytes stored in output
      */
-    public native static int doFinalByteArray(long context, byte[] output,
+    public static native int doFinalByteArray(long context, byte[] output,
             int offset, int maxOutputLength);
 
     /**
@@ -150,7 +150,7 @@ class OpenSslNative {
      * @param data byte buffer or null
      * @return return 0 if there is any error, else return 1.
      */
-    public native static int ctrl(long context, int type, int arg, byte[] data);
+    public static native int ctrl(long context, int type, int arg, byte[] data);
 
 
     /**
@@ -158,5 +158,5 @@ class OpenSslNative {
      *
      * @param context The cipher context address
      */
-    public native static void clean(long context);
+    public static native void clean(long context);
 }
