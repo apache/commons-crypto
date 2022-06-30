@@ -68,6 +68,7 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
         where /T openssl
+      shell: cmd
     - name: env sort
       if: always()
       run: |
