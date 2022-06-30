@@ -64,16 +64,20 @@ jobs:
       if: always()
       run: |
         for i in $(which -a openssl) ; do  echo $i; $i version ; echo ""; done
-    - name: Find Crypto Libraries
+    - name: env sort
       if: always()
       run: |
-        ls -l /usr/lib/libcrypto*.dylib
-    - name: Find Crypto Libraries
-      if: always()
-      run: |
-        ls -l /usr/local/lib/libcrypto*.dylib
-    - name: Find Crypto Libraries
-      if: always()
-      run: |
-        ls -l /opt/local/lib/libcrypto*.dylib
-        find 2>/dev/null /opt/local/lib -name libcrypto*.dylib -ls
+        env | sort
+    # - name: Find Crypto Libraries
+    #   if: always()
+    #   run: |
+    #     ls -l /usr/lib/libcrypto*.dylib
+    # - name: Find Crypto Libraries
+    #   if: always()
+    #   run: |
+    #     ls -l /usr/local/lib/libcrypto*.dylib
+    # - name: Find Crypto Libraries
+    #   if: always()
+    #   run: |
+    #     ls -l /opt/local/lib/libcrypto*.dylib
+    #     find 2>/dev/null /opt/local/lib -name libcrypto*.dylib -ls
