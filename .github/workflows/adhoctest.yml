@@ -15,6 +15,8 @@
 
 name: Java AdHoc
 
+# Check for openssl and crypto installs
+
 on:
   # allow direct trigger
   workflow_dispatch:
@@ -29,31 +31,42 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        # os: [macos-latest, windows-latest]
+        os: [macos-latest]
         java: [ 8 ]
-        ref: [ 'rel/commons-crypto-1.1.0', master ]
+        # ref: [ 'rel/commons-crypto-1.1.0', master ]
+        ref: [ master ]
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-#        ref: 'CRYPTO-1.0.0' # failed
-        ref: ${{ matrix.ref }}
-    - name: Set up JDK ${{ matrix.java }}
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: ${{ matrix.java }}
+    # - uses: actions/checkout@v3
+    #   with:
+    #     ref: ${{ matrix.ref }}
+    # - name: Set up JDK ${{ matrix.java }}
+    #   uses: actions/setup-java@v3
+    #   with:
+    #     distribution: 'temurin'
+    #     java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version
-    - name: Build with Maven
-      env:
-        OPENSSL_HOME: "C:\\Miniconda\\Library"
-      run: mvn -V test -D"rat.skip" -D"animal.sniffer.skip" --no-transfer-progress -DtrimStackTrace=false
-    - name: Run sample Crypto
+    # - name: Build with Maven
+    #   env:
+    #     OPENSSL_HOME: "C:\\Miniconda\\Library"
+    #   run: mvn -V test -D"rat.skip" -D"animal.sniffer.skip" --no-transfer-progress -DtrimStackTrace=false
+    # - name: Run sample Crypto
+    #   run: |
+    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
+    # - name: Run sample OpenSslJna
+    #   if: always()
+    #   run: |
+    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
+    - name: Find OpenSSL
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
-    - name: Run sample OpenSslJna
-      if: always()
+        if: always()
+        for i in $(which -a openssl) ; do  echo $i; $i version ; echo ""; done
+    - name: Find Crypto Libraries
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
+        if: always()
+        find 2>/dev/null /usr/lib       -name libcrypto*.dylib -ls || true
+        find 2>/dev/null /usr/local/lib -name libcrypto*.dylib -ls || true
+        find 2>/dev/null /opt/local/lib -name libcrypto*.dylib -ls || true
