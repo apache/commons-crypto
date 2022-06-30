@@ -67,6 +67,13 @@ jobs:
     - name: Find Crypto Libraries
       if: always()
       run: |
-        find 2>/dev/null /usr/lib       -name libcrypto*.dylib -ls || true
-        find 2>/dev/null /usr/local/lib -name libcrypto*.dylib -ls || true
-        find 2>/dev/null /opt/local/lib -name libcrypto*.dylib -ls || true
+        ls -l /usr/lib/libcrypto*.dylib
+    - name: Find Crypto Libraries
+      if: always()
+      run: |
+        ls -l /usr/local/lib/libcrypto*.dylib
+    - name: Find Crypto Libraries
+      if: always()
+      run: |
+        ls -l /opt/local/lib/libcrypto*.dylib
+        find 2>/dev/null /opt/local/lib -name libcrypto*.dylib -ls
