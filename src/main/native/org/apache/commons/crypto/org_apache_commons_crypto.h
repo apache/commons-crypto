@@ -66,7 +66,6 @@
  * Unix definitions
  */
 #ifdef UNIX
-#include <config.h>
 #include <dlfcn.h>
 #include <jni.h>
 
