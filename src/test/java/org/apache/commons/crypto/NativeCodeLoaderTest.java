@@ -49,6 +49,12 @@ public class NativeCodeLoaderTest {
     }
 
     @Test
+    @Disabled("Causes crash on Ubuntu when compiled with Java 17")
+    // The following error is reported:
+    // "Corrupted channel by directly writing to native stream in forked JVM 1"
+    // Note that this appears during a subsequent test, and does not
+    // happen every time.
+    // At this point it is not known where the native stream is written.
     public void testCanLoadIfPresent() {
         assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
         // This will try to reload the library, so should work
@@ -57,6 +63,9 @@ public class NativeCodeLoaderTest {
 
     @Test
     @Disabled("Seems to cause issues with other tests on Linux; disable for now")
+    // It causes problems because the system properties are temporarily changed.
+    // However properties are only fetched once, thus the test either corrupts the settings
+    // or does not work, depending on the order of tests.
     public void testUnSuccessfulLoad() throws Exception {
         final String nameKey = System.getProperty(Crypto.LIB_NAME_KEY);
         final String pathKey = System.getProperty(Crypto.LIB_PATH_KEY);
