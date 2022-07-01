@@ -68,7 +68,10 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
         where /T openssl
+        echo "==="
         where /T libcrypto.dll
+        echo "==="
+        dir C:\Program Files\OpenSSL\bin\
       shell: cmd
     - name: env sort
       if: always()
