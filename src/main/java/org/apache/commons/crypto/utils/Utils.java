@@ -38,52 +38,51 @@ public final class Utils {
 
     private static class DefaultPropertiesHolder {
         static final Properties DEFAULT_PROPERTIES = createDefaultProperties();
-     }
+
+        /**
+         * Loads system properties when configuration file of the name
+         * {@link #SYSTEM_PROPERTIES_FILE} is found.
+         *
+         * @return the default properties
+         */
+        private static Properties createDefaultProperties() {
+          // default to system
+          final Properties defaultedProps = new Properties(System.getProperties());
+          final URL url = Thread.currentThread().getContextClassLoader().getResource(SYSTEM_PROPERTIES_FILE);
+          if (url == null) {
+              // Fail early when the resource is not found which makes SpotBugs happy on Java 17.
+              return defaultedProps;
+          }
+          try {
+              final Properties fileProps = new Properties();
+              try (InputStream is = url.openStream()) {
+                  fileProps.load(is);
+              }
+              final Enumeration<?> names = fileProps.propertyNames();
+              while (names.hasMoreElements()) {
+                  final String name = (String) names.nextElement();
+                  // ensure System properties override ones in the file so one can override the file on the command line
+                  if (System.getProperty(name) == null) {
+                      defaultedProps.setProperty(name, fileProps.getProperty(name));
+                  }
+              }
+          } catch (final Exception ex) {
+              System.err.println("Could not load '" + SYSTEM_PROPERTIES_FILE + "' from classpath: " + ex.toString());
+          }
+          return defaultedProps;
+      }
+   }
 
     /**
      * The file name of configuration file.
-     * TODO is there any need for it to have the CONF_PREFIX?
+     *
      */
-    private static final String SYSTEM_PROPERTIES_FILE = Crypto.CONF_PREFIX
-            + "properties";
+    private static final String SYSTEM_PROPERTIES_FILE = Crypto.CONF_PREFIX + "properties";
 
     /**
      * The private constructor of {@link Utils}.
      */
     private Utils() {
-    }
-
-    /**
-     * Loads system properties when configuration file of the name
-     * {@link #SYSTEM_PROPERTIES_FILE} is found.
-     *
-     * @return the default properties
-     */
-    private static Properties createDefaultProperties() {
-        // default to system
-        final Properties defaultedProps = new Properties(System.getProperties());
-        final URL url = Thread.currentThread().getContextClassLoader().getResource(SYSTEM_PROPERTIES_FILE);
-        if (url == null) {
-            // Fail early when the resource is not found which makes SpotBugs happy on Java 17.
-            return defaultedProps;
-        }
-        try {
-            final Properties fileProps = new Properties();
-            try (InputStream is = url.openStream()) {
-                fileProps.load(is);
-            }
-            final Enumeration<?> names = fileProps.propertyNames();
-            while (names.hasMoreElements()) {
-                final String name = (String) names.nextElement();
-                // ensure System properties override ones in the file so one can override the file on the command line
-                if (System.getProperty(name) == null) {
-                    defaultedProps.setProperty(name, fileProps.getProperty(name));
-                }
-            }
-        } catch (final Exception ex) {
-            System.err.println("Could not load '" + SYSTEM_PROPERTIES_FILE + "' from classpath: " + ex.toString());
-        }
-        return defaultedProps;
     }
 
     /**
