@@ -31,8 +31,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
-        # os: [macos-latest]
+        # os: [macos-latest, windows-latest]
+        os: [windows-latest]
         java: [ 8 ]
         # ref: [ 'rel/commons-crypto-1.1.0', master ]
         ref: [ master ]
@@ -68,21 +68,9 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
         where /T openssl
+        where /T libcrypto.dll
       shell: cmd
     - name: env sort
       if: always()
       run: |
         env | sort
-    # - name: Find Crypto Libraries
-    #   if: always()
-    #   run: |
-    #     ls -l /usr/lib/libcrypto*.dylib
-    # - name: Find Crypto Libraries
-    #   if: always()
-    #   run: |
-    #     ls -l /usr/local/lib/libcrypto*.dylib
-    # - name: Find Crypto Libraries
-    #   if: always()
-    #   run: |
-    #     ls -l /opt/local/lib/libcrypto*.dylib
-    #     find 2>/dev/null /opt/local/lib -name libcrypto*.dylib -ls
