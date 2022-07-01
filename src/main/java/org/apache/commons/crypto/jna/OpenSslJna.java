@@ -78,13 +78,13 @@ public final class OpenSslJna {
         return OpenSslNativeJna.INIT_OK;
     }
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws Throwable {
         info("isEnabled(): %s", isEnabled());
         final Throwable initialisationError = initialisationError();
         info("initialisationError(): %s", initialisationError);
         if (initialisationError != null) {
             System.err.flush(); // helpful for stack traces to not mix in other output.
-            initialisationError.printStackTrace();
+            throw initialisationError; // propagate to make error obvious
         }
     }
 
