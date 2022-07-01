@@ -71,7 +71,7 @@ jobs:
         echo "==="
         where /T libcrypto.dll
         echo "==="
-        dir C:\Program Files\OpenSSL\bin\
+        dir "C:\Program Files\OpenSSL\bin\"
       shell: cmd
     - name: env sort
       if: always()
