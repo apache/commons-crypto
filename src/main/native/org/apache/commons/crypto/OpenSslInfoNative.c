@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+// identify caller to the include file (to avoid unnecessary define of _GNU_SOURCE)
+#define ORG_APACHE_COMMONS_OPENSSLINFONATIVE_C
 #include "org_apache_commons_crypto.h"
 
 #include <stdio.h>
@@ -50,6 +52,8 @@ static __dlsym_OpenSSL_version_num dlsym_OpenSSL_version_num;
 static __dlsym_OpenSSL_version dlsym_OpenSSL_version;
 #endif
 
+static char dynamicLibraryPath[80];  // where was the crypto library found?
+
 #ifdef UNIX
 static void get_methods(JNIEnv *env, void *openssl)
 #endif
@@ -60,11 +64,19 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
 #ifdef UNIX
   LOAD_DYNAMIC_SYMBOL_FALLBACK(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
   LOAD_DYNAMIC_SYMBOL_FALLBACK(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
+  Dl_info info;
+  (void) dladdr(dlsym_OpenSSL_version_num, &info); // ignore the return code
+  strncpy(dynamicLibraryPath, info.dli_fname, sizeof(dynamicLibraryPath) - 1); // allow for null
 #endif
 #ifdef WINDOWS
   LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
   LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
-#endif
+  LPWSTR lpFilename;
+  WCHAR buffer[80];
+  lpFilename = buffer;
+  (void) GetModuleFileName(openssl, lpFilename, sizeof(buffer)); // ignore return code
+  wcstombs(dynamicLibraryPath, buffer, sizeof(dynamicLibraryPath));
+  #endif
 }
 
 static int load_library(JNIEnv *env)
@@ -129,5 +141,25 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenS
     return NULL;
   }
   jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
+  return answer;
+}
+
+JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_DLLName
+  (JNIEnv *env, jclass clazz)
+{
+  if (!load_library(env)) {
+    return NULL;
+  }
+  jstring answer = (*env)->NewStringUTF(env, COMMONS_CRYPTO_OPENSSL_LIBRARY);
+  return answer;
+}
+
+JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_DLLPath
+  (JNIEnv *env, jclass clazz)
+{
+  if (!load_library(env)) {
+    return NULL;
+  }
+  jstring answer = (*env)->NewStringUTF(env, dynamicLibraryPath);
   return answer;
 }

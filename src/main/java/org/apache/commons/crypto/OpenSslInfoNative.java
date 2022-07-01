@@ -65,4 +65,18 @@ class OpenSslInfoNative {
      * @return The text variant of the version number and the release date.
      */
     public static native String OpenSSLVersion(int type);
+
+    /**
+     * Return the name used to load the dynamic linked library.
+     *
+     * @return the name used to load the library (e.g. crypto.dll)
+     */
+    public static native String DLLName();
+
+    /**
+     * Return the path to the loaded dynamic linked library.
+     * [Currently not implemented on Windows]
+     * @return the path to the library that was loaded; may be null.
+     */
+    public static native String DLLPath();
 }

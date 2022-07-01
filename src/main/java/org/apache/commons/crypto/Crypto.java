@@ -158,6 +158,8 @@ public final class Crypto {
             info("Native built: %s", OpenSslInfoNative.NativeTimeStamp());
             info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslInfoNative.OpenSSL()));
             info("OpenSSL library info: %s", OpenSslInfoNative.OpenSSLVersion(0));
+            info("DLL name: %s", OpenSslInfoNative.DLLName());
+            info("DLL path: %s", OpenSslInfoNative.DLLPath());
             { // CryptoRandom
                 final Properties props = new Properties();
                 props.setProperty(CryptoRandomFactory.CLASSES_KEY,

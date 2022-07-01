@@ -66,6 +66,12 @@
  * Unix definitions
  */
 #ifdef UNIX
+#ifdef ORG_APACHE_COMMONS_OPENSSLINFONATIVE_C
+#ifndef MAC_OS
+// needed for access to dladdr
+#define _GNU_SOURCE
+#endif
+#endif
 #include <dlfcn.h>
 #include <jni.h>
 
