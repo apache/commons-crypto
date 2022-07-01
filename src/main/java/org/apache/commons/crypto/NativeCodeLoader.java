@@ -38,6 +38,8 @@ import org.apache.commons.crypto.utils.Utils;
  */
 final class NativeCodeLoader {
 
+    private static final String NATIVE_LIBNAME = "commons-crypto";
+
     /**
      * End of file pseudo-character.
      */
@@ -45,7 +47,7 @@ final class NativeCodeLoader {
 
     private static final Throwable loadingError;
 
-    private final static boolean nativeCodeLoaded;
+    private static final boolean nativeCodeLoaded;
 
     static {
         loadingError = loadLibrary(); // will be null if loaded OK
@@ -197,12 +199,8 @@ final class NativeCodeLoader {
 
         // Try to load the library in commons-crypto.lib.path */
         String nativeLibraryPath = props.getProperty(Crypto.LIB_PATH_KEY);
-        String nativeLibraryName = props.getProperty(Crypto.LIB_NAME_KEY);
+        String nativeLibraryName = props.getProperty(Crypto.LIB_NAME_KEY, System.mapLibraryName(NATIVE_LIBNAME));
 
-        // Resolve the library file name with a suffix (e.g., dll, .so, etc.)
-        if (nativeLibraryName == null) {
-            nativeLibraryName = System.mapLibraryName("commons-crypto");
-        }
         if (nativeLibraryPath != null) {
             final File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
             if (nativeLib.exists()) {
@@ -284,7 +282,7 @@ final class NativeCodeLoader {
                 System.load(absolutePath);
             } else {
                 // Load preinstalled library (in the path -Djava.library.path)
-                final String libname = "commons-crypto";
+                final String libname = NATIVE_LIBNAME;
                 debug("System.loadLibrary('%s')", libname);
                 System.loadLibrary(libname);
             }
