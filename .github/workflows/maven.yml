@@ -61,7 +61,7 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
-      run: openssl version
+      run: openssl version -a
     - name: Build with Maven
       # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
       # It's not clear how one is supposed to find the correct setting;
