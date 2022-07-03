@@ -62,11 +62,6 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version
-    - name: Set argline
-      run: echo $argLine
-      env:
-        argLine: -DargLine="--illegal-access=deny"
-      if: ${{ matrix.java != '8' }}
     - name: Build with Maven
       # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
       # It's not clear how one is supposed to find the correct setting;
@@ -76,9 +71,11 @@ jobs:
       # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-      # Temporarily add  -DargLine="--illegal-access=deny" to avoid native output crash
-      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false $argLine
-    - name: Run sample programs
+      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
+    - name: Run Crypto (JNI)
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
+    - name: Run OpenSslJna (JNA)
+      if: always()
+      run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
