@@ -31,8 +31,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
-        # os: [windows-latest]
+        # os: [macos-latest, windows-latest]
+        os: [macos-latest]
         java: [ 8 ]
         # ref: [ 'rel/commons-crypto-1.1.0', master ]
         ref: [ master ]
@@ -64,9 +64,10 @@ jobs:
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
         for i in $(which -a openssl) ; do  echo $i; $i version ; echo ""; done
-        find /usr/lib -name libcrypto*.dylib -ls
-        find /usr/local/lib -name libcrypto*.dylib -ls
-        find /opt/local/lib -name libcrypto*.dylib -ls
+        set -v
+        find /usr/lib -name libcrypto*.dylib -ls || true
+        find /usr/local -name libcrypto*.dylib -ls || true
+        find /opt/local/lib -name libcrypto*.dylib -ls || true
     - name: Find OpenSSL Win
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
