@@ -76,14 +76,14 @@ jobs:
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
     - name: Run OpenSslJna (JNA - macOS)
-      if: always() && ${{ matrix.os == 'macos-latest' }}
+      if: ${{ matrix.os == 'macos-latest' }}
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/lib"
     - name: Run OpenSslJna (JNA - Ubuntu)
-      if: always() && ${{ matrix.os == 'ubuntu-latest' }}
+      if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
     - name: Run OpenSslJna (JNA - Windows)
-      if: always() && ${{ matrix.os == 'windows-latest' }}
+      if: ${{ matrix.os == 'windows-latest' }}
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:\Program Files\OpenSSL\bin"
