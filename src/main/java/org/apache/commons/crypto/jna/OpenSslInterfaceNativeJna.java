@@ -29,62 +29,62 @@ import com.sun.jna.NativeLong;
  */
 interface OpenSslInterfaceNativeJna {
 
-    public boolean _INIT_OK();
+    boolean _INIT_OK();
 
-    public Throwable _INIT_ERROR();
+    Throwable _INIT_ERROR();
 
-    public PointerByReference _ENGINE_by_id(final String string);
+    PointerByReference _ENGINE_by_id(final String string);
 
-    public int _ENGINE_finish(final PointerByReference rdrandEngine);
+    int _ENGINE_finish(final PointerByReference rdrandEngine);
 
-    public int _ENGINE_free(final PointerByReference rdrandEngine);
+    int _ENGINE_free(final PointerByReference rdrandEngine);
 
-    public int _ENGINE_init(final PointerByReference rdrandEngine);
+    int _ENGINE_init(final PointerByReference rdrandEngine);
 
-    public int _ENGINE_set_default(final PointerByReference rdrandEngine, final int flags);
+    int _ENGINE_set_default(final PointerByReference rdrandEngine, final int flags);
 
-    public String _ERR_error_string(final NativeLong err, final char[] buff);
+    String _ERR_error_string(final NativeLong err, final char[] buff);
 
-    public NativeLong _ERR_peek_error();
+    NativeLong _ERR_peek_error();
 
-    public PointerByReference _EVP_aes_128_cbc();
+    PointerByReference _EVP_aes_128_cbc();
 
-    public PointerByReference _EVP_aes_128_ctr();
+    PointerByReference _EVP_aes_128_ctr();
 
-    public PointerByReference _EVP_aes_192_cbc();
+    PointerByReference _EVP_aes_192_cbc();
 
-    public PointerByReference _EVP_aes_192_ctr();
+    PointerByReference _EVP_aes_192_ctr();
 
-    public PointerByReference _EVP_aes_256_cbc();
+    PointerByReference _EVP_aes_256_cbc();
 
-    public PointerByReference _EVP_aes_256_ctr();
+    PointerByReference _EVP_aes_256_ctr();
 
-    public void _EVP_CIPHER_CTX_free(final PointerByReference context);
+    void _EVP_CIPHER_CTX_free(final PointerByReference context);
 
-    public PointerByReference _EVP_CIPHER_CTX_new();
+    PointerByReference _EVP_CIPHER_CTX_new();
 
-    public int _EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding);
+    int _EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding);
 
-    public int _EVP_CipherFinal_ex(final PointerByReference context, final ByteBuffer outBuffer,
+    int _EVP_CipherFinal_ex(final PointerByReference context, final ByteBuffer outBuffer,
             final int[] outlen);
 
-    public int _EVP_CipherInit_ex(final PointerByReference context, final PointerByReference algo,
+    int _EVP_CipherInit_ex(final PointerByReference context, final PointerByReference algo,
             final PointerByReference impl, final byte[] encoded, final byte[] iv, final int cipherMode);
 
-    public int _EVP_CipherUpdate(final PointerByReference context, final ByteBuffer outBuffer,
+    int _EVP_CipherUpdate(final PointerByReference context, final ByteBuffer outBuffer,
             final int[] outlen, final ByteBuffer inBuffer, final int remaining);
 
-    public int _RAND_bytes(final ByteBuffer buf, final int length);
+    int _RAND_bytes(final ByteBuffer buf, final int length);
 
-    public PointerByReference _RAND_get_rand_method();
+    PointerByReference _RAND_get_rand_method();
 
-    public PointerByReference _RAND_SSLeay();
+    PointerByReference _RAND_SSLeay();
 
-    public String _OpenSSL_version(final int i);
+    String _OpenSSL_version(final int i);
 
-    public void _ENGINE_load_rdrand();
+    void _ENGINE_load_rdrand();
 
-    public int _ENGINE_cleanup();
+    int _ENGINE_cleanup();
 
-    public void _EVP_CIPHER_CTX_cleanup(final PointerByReference context);
+    void _EVP_CIPHER_CTX_cleanup(final PointerByReference context);
 }
