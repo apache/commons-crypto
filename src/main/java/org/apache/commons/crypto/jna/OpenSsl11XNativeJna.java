@@ -26,7 +26,7 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
 
-class OpenSsl11XNativeJna {
+class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
 
     static final boolean INIT_OK;
 
@@ -266,5 +266,121 @@ class OpenSsl11XNativeJna {
      * @return engine instance
      */
     public static native PointerByReference ENGINE_by_id(String id);
+
+    // ================== instance interface methods ==================
+
+    public boolean _INIT_OK() {
+        return INIT_OK;
+    }
+
+    public Throwable _INIT_ERROR() {
+        return INIT_ERROR;
+    }
+
+    public PointerByReference _ENGINE_by_id(String string) {
+        return ENGINE_by_id(string);
+    }
+
+    public int _ENGINE_finish(PointerByReference rdrandEngine) {
+        return ENGINE_finish(rdrandEngine);
+    }
+
+    public int _ENGINE_free(PointerByReference rdrandEngine) {
+        return ENGINE_free(rdrandEngine);
+    }
+
+    public int _ENGINE_init(PointerByReference rdrandEngine) {
+        return ENGINE_init(rdrandEngine);
+    }
+
+    public int _ENGINE_set_default(PointerByReference rdrandEngine, int flags) {
+        return ENGINE_set_default(rdrandEngine, flags);
+    }
+
+    public String _ERR_error_string(NativeLong err, char[] buff) {
+        return ERR_error_string(err, buff);
+    }
+
+    public NativeLong _ERR_peek_error() {
+        return ERR_peek_error();
+    }
+
+    public PointerByReference _EVP_aes_128_cbc() {
+        return EVP_aes_128_cbc();
+    }
+
+    public PointerByReference _EVP_aes_128_ctr() {
+        return EVP_aes_128_ctr();
+    }
+
+    public PointerByReference _EVP_aes_192_cbc() {
+        return EVP_aes_192_cbc();
+    }
+
+    public PointerByReference _EVP_aes_192_ctr() {
+        return EVP_aes_192_ctr();
+    }
+
+    public PointerByReference _EVP_aes_256_cbc() {
+        return EVP_aes_256_cbc();
+    }
+
+    public PointerByReference _EVP_aes_256_ctr() {
+        return EVP_aes_256_ctr();
+    }
+
+    public void _EVP_CIPHER_CTX_free(PointerByReference context) {
+        EVP_CIPHER_CTX_free(context);
+    }
+
+    public PointerByReference _EVP_CIPHER_CTX_new() {
+        return EVP_CIPHER_CTX_new();
+    }
+
+    public int _EVP_CIPHER_CTX_set_padding(PointerByReference context, int padding) {
+        return EVP_CIPHER_CTX_set_padding(context, padding);
+    }
+
+    public int _EVP_CipherFinal_ex(PointerByReference context, ByteBuffer outBuffer, int[] outlen) {
+        return EVP_CipherFinal_ex(context, outBuffer, outlen);
+    }
+
+    public int _EVP_CipherInit_ex(PointerByReference context, PointerByReference algo, PointerByReference impl, byte[] encoded,
+            byte[] iv, int cipherMode) {
+        return EVP_CipherInit_ex(context, algo, impl, encoded, iv, cipherMode);
+    }
+
+    public int _EVP_CipherUpdate(PointerByReference context, ByteBuffer outBuffer, int[] outlen, ByteBuffer inBuffer,
+            int remaining) {
+        return EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, remaining);
+    }
+
+    public int _RAND_bytes(ByteBuffer buf, int length) {
+        return RAND_bytes(buf, length) ;
+    }
+
+    public PointerByReference _RAND_get_rand_method() {
+        return RAND_get_rand_method();
+    }
+
+    public PointerByReference _RAND_SSLeay() {
+        return null; // Not available
+    }
+
+    public String _OpenSSL_version(int i) {
+        return OpenSSL_version(i);
+    }
+
+    public void _ENGINE_load_rdrand() {
+        // Not available
+    }
+
+    public int _ENGINE_cleanup() {
+        return 0; // Not available
+    }
+
+    public void _EVP_CIPHER_CTX_cleanup(PointerByReference context) {
+        // Not available
+    }
 
 }

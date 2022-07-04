@@ -26,7 +26,7 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
 
-class OpenSsl10XNativeJna implements OpenSslInterfaceNativeJna {
+class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
 
     static final boolean INIT_OK;
 
@@ -52,7 +52,6 @@ class OpenSsl10XNativeJna implements OpenSslInterfaceNativeJna {
     // Try to keep methods aligned across versions
 
     /**
-     * @see <a href="https://www.openssl.org/docs/man1.0.2/man3/SSLeay.html">Version Number</a>
      * TODO (does not appear to be used yet)
      * @return OPENSSL_VERSION_NUMBER which is a numeric release version identifier
      */
@@ -61,8 +60,6 @@ class OpenSsl10XNativeJna implements OpenSslInterfaceNativeJna {
     /**
      * Retrieves version/build information about OpenSSL library.
      * This is returned by {@link OpenSslNativeJna#OpenSSLVersion(int)}
-     *
-     * @see <a href="https://www.openssl.org/docs/man1.0.2/man3/SSLeay_version.html">Version Info</a>
      *
      * @param type
      *            type can be SSLEAY_VERSION, SSLEAY_CFLAGS, SSLEAY_BUILT_ON...
@@ -305,12 +302,6 @@ class OpenSsl10XNativeJna implements OpenSslInterfaceNativeJna {
      */
     public static native PointerByReference ENGINE_by_id(String id);
 
-    /**
-     * Initializes the engine.
-     */
-    public static native void ENGINE_load_rdrand();
-
-
     // ================== instance interface methods ==================
 
     public boolean _INIT_OK() {
@@ -416,7 +407,7 @@ class OpenSsl10XNativeJna implements OpenSslInterfaceNativeJna {
     }
 
     public void _ENGINE_load_rdrand() {
-        ENGINE_load_rdrand();
+        // Not available
     }
 
     public int _ENGINE_cleanup() {
