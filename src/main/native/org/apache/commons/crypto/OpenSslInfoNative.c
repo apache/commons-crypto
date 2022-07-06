@@ -83,11 +83,11 @@ static int load_library(JNIEnv *env)
 {
   char msg[100];
 #ifdef UNIX
-  void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  void *openssl = open_library(env);
 #endif
 
 #ifdef WINDOWS
-  HMODULE openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
+  HMODULE openssl = open_library(env);
 #endif
 
   if (!openssl) {
@@ -147,9 +147,6 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenS
 JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_DLLName
   (JNIEnv *env, jclass clazz)
 {
-  if (!load_library(env)) {
-    return NULL;
-  }
   jstring answer = (*env)->NewStringUTF(env, COMMONS_CRYPTO_OPENSSL_LIBRARY);
   return answer;
 }

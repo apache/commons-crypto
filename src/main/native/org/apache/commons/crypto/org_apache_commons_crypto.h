@@ -62,6 +62,8 @@
     if ((*env)->ExceptionCheck(env)) return (ret); \
   }
 
+void close_library();
+
 /**
  * Unix definitions
  */
@@ -74,6 +76,8 @@
 #endif
 #include <dlfcn.h>
 #include <jni.h>
+
+void *open_library(JNIEnv *env);
 
 /**
  * A helper function to dlsym a 'symbol' from a given library-handle.
@@ -176,6 +180,8 @@ void *do_dlsym_fallback(JNIEnv *env, void *handle, const char *symbol, const cha
 #if !defined(__MINGW32__) /* does not appear to be needed on MinGW */
 #define snprintf(a, b ,c, d) _snprintf_s((a), (b), _TRUNCATE, (c), (d))
 #endif
+
+HMODULE open_library(JNIEnv *env);
 
 /* A helper macro to dlsym the requisite dynamic symbol and bail-out on error. */
 #define LOAD_DYNAMIC_SYMBOL(func_type, func_ptr, env, handle, symbol) \

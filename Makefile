@@ -18,7 +18,7 @@
 include Makefile.common
 
 COMMONS_CRYPTO_OUT:=$(TARGET)/$(commons-crypto)-$(os_arch)
-COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpenSslCryptoRandomNative.o OpenSslNative.o OpenSslInfoNative.o)
+COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpenSslCryptoRandomNative.o OpenSslNative.o OpenSslInfoNative.o DynamicLoader.o)
 
 # Shorthand for local dependencies
 CRYPTO_H:=$(SRC_NATIVE)/org/apache/commons/crypto/org_apache_commons_crypto.h lib/include/config.h
@@ -61,6 +61,10 @@ $(COMMONS_CRYPTO_OUT)/OpenSslCryptoRandomNative.o : $(SRC_NATIVE)/org/apache/com
 $(COMMONS_CRYPTO_OUT)/OpenSslInfoNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/OpenSslInfoNative.c $(CRYPTO_H) $(TARGET)/jni-classes/org_apache_commons_crypto_OpenSslInfoNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -DVERSION='"$(VERSION)"' -DPROJECT_NAME='"$(PROJECT_NAME)"' -I"$(TARGET)/jni-classes" -c $< -o $@
+
+$(COMMONS_CRYPTO_OUT)/DynamicLoader.o : $(SRC_NATIVE)/org/apache/commons/crypto/DynamicLoader.c $(CRYPTO_H)
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(COMMONS_CRYPTO_OUT)/$(LIBNAME): $(COMMONS_CRYPTO_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $+ $(LINKFLAGS)

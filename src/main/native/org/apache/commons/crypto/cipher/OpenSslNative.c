@@ -148,11 +148,11 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
 {
   char msg[1000];
 #ifdef UNIX
-  void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
+  void *openssl = open_library(env);
 #endif
 
 #ifdef WINDOWS
-  HMODULE openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
+  HMODULE openssl = open_library(env);
 #endif
 
   if (!openssl) {

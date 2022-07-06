@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -221,4 +222,23 @@ public final class Utils {
         return res;
     }
 
+    /*
+     * Override the default DLL name if jni.library.path is a valid directory
+     * @param name - the default name, passed from native code
+     * @return the updated library path
+     * This method is designed for use from the DynamicLoader native code.
+     * Although it could all be implemented in native code, this hook method
+     * makes maintenance easier.
+     * The code is intended for use with macOS where SIP makes it hard to override
+     * the environment variables needed to override the DLL search path. It also
+     * works for Linux, but is not (currently) used or needed for Windows.
+     * N.B. Do not change the method name or its signature!
+     */
+    static String libraryPath(final String name) {
+        final String override = System.getProperty("jni.library.path");
+        if (override != null && new File(override).isDirectory()) {
+            return new File(override, name).getPath();
+        }
+        return name;
+    }
 }
