@@ -74,7 +74,7 @@
       <!-- ADD -->
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory, Dependabot">Add github/codeql-action 2 #159.</action>
       <!-- UPDATE -->
-      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.4 #150.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.5 #150.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/checkout from 2 to 3 #149.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump actions/setup-java from 2 to 3.</action>
       <action issue="CRYPTO-155" type="update" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
