@@ -259,10 +259,9 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param position the offset from the start of the stream.
      * @param iv the iv.
      * @return the padding.
-     * @throws IOException if an I/O error occurs.
      */
     private byte postDecryption(final CipherState state, final ByteBuffer inByteBuffer,
-            final long position, final byte[] iv) throws IOException {
+            final long position, final byte[] iv) {
         byte padding = 0;
         if (state.isReset()) {
             /*
