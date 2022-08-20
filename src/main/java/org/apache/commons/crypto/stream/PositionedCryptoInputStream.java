@@ -284,10 +284,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param state the CipherState instance.
      * @param position the offset from the start of the stream.
      * @param iv the iv.
-     * @throws IOException if an I/O error occurs.
      */
-    private void resetCipher(final CipherState state, final long position, final byte[] iv)
-            throws IOException {
+    private void resetCipher(final CipherState state, final long position, final byte[] iv) {
         final long counter = getCounter(position);
         CtrCryptoInputStream.calculateIV(getInitIV(), counter, iv);
         try {
