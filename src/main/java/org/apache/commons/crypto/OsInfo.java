@@ -118,7 +118,8 @@ final class OsInfo {
             if ("--os".equals(args[0])) {
                 System.out.print(getOSName());
                 return;
-            } else if ("--arch".equals(args[0])) {
+            }
+            if ("--arch".equals(args[0])) {
                 System.out.print(getArchName());
                 return;
             }
@@ -185,15 +186,17 @@ final class OsInfo {
     private static String translateOSNameToFolderName(final String osName) {
         if (osName.contains("Windows")) {
             return "Windows";
-        } else if (osName.contains("Mac")) {
-            return "Mac";
-        } else if (osName.contains("Linux")) {
-            return "Linux";
-        } else if (osName.contains("AIX")) {
-            return "AIX";
-        } else {
-            return osName.replaceAll("\\W", "");
         }
+        if (osName.contains("Mac")) {
+            return "Mac";
+        }
+        if (osName.contains("Linux")) {
+            return "Linux";
+        }
+        if (osName.contains("AIX")) {
+            return "AIX";
+        }
+        return osName.replaceAll("\\W", "");
     }
 
     /**

@@ -63,14 +63,13 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
         this.cipherMode = mode;
         final byte[] iv;
-        if (params instanceof GCMParameterSpec) {
-            final GCMParameterSpec gcmParam = (GCMParameterSpec) params;
-            iv = gcmParam.getIV();
-            this.tagBitLen = gcmParam.getTLen();
-        } else {
+        if (!(params instanceof GCMParameterSpec)) {
             // other AlgorithmParameterSpec is not supported now.
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
+        final GCMParameterSpec gcmParam = (GCMParameterSpec) params;
+        iv = gcmParam.getIV();
+        this.tagBitLen = gcmParam.getTLen();
 
         if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
             inBuffer = new ByteArrayOutputStream();
@@ -212,7 +211,6 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
                 // retrieve tag
                 tag.put(inputFinal, inputFinal.length - getTagLen(), getTagLen());
-                tag.flip();
 
             } else {
                 // if no buffered input, just use the input directly
@@ -228,8 +226,8 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
 
                 // retrieve tag
                 tag.put(input);
-                tag.flip();
             }
+            tag.flip();
 
             // set tag to EVP_Cipher for integrity verification in doFinal
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_SET_TAG.getValue(),
@@ -270,13 +268,12 @@ class OpenSslGaloisCounterMode extends OpenSslFeedbackCipher {
     @Override
     public void updateAAD(final byte[] aad) {
         // must be called after initialized.
-        if (aadBuffer != null) {
-            aadBuffer.write(aad, 0, aad.length);
-        } else {
+        if (aadBuffer == null) {
             // update has already been called
             throw new IllegalStateException
                     ("Update has been called; no more AAD data");
         }
+        aadBuffer.write(aad, 0, aad.length);
     }
 
     private void processAAD() {

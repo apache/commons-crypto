@@ -97,13 +97,12 @@ class OpenSslJnaCipher implements CryptoCipher {
             cipherMode = OpenSslNativeJna.OOSL_JNA_ENCRYPT_MODE;
         }
         final byte[] iv;
-        if (params instanceof IvParameterSpec) {
-            iv = ((IvParameterSpec) params).getIV();
-        } else {
+        if (!(params instanceof IvParameterSpec)) {
             // other AlgorithmParameterSpec such as GCMParameterSpec is not
             // supported now.
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
+        iv = ((IvParameterSpec) params).getIV();
 
         if ((algMode == AlgorithmMode.AES_CBC || algMode == AlgorithmMode.AES_CTR) && iv.length != IV_LENGTH) {
             throw new InvalidAlgorithmParameterException("Wrong IV length: must be 16 bytes long");

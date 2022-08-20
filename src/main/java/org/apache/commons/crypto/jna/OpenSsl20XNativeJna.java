@@ -315,32 +315,32 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     }
 
     @Override
-    public PointerByReference _ENGINE_by_id(String string) {
+    public PointerByReference _ENGINE_by_id(final String string) {
         return ENGINE_by_id(string);
     }
 
     @Override
-    public int _ENGINE_finish(PointerByReference rdrandEngine) {
+    public int _ENGINE_finish(final PointerByReference rdrandEngine) {
         return ENGINE_finish(rdrandEngine);
     }
 
     @Override
-    public int _ENGINE_free(PointerByReference rdrandEngine) {
+    public int _ENGINE_free(final PointerByReference rdrandEngine) {
         return ENGINE_free(rdrandEngine);
     }
 
     @Override
-    public int _ENGINE_init(PointerByReference rdrandEngine) {
+    public int _ENGINE_init(final PointerByReference rdrandEngine) {
         return ENGINE_init(rdrandEngine);
     }
 
     @Override
-    public int _ENGINE_set_default(PointerByReference rdrandEngine, int flags) {
+    public int _ENGINE_set_default(final PointerByReference rdrandEngine, final int flags) {
         return ENGINE_set_default(rdrandEngine, flags);
     }
 
     @Override
-    public String _ERR_error_string(NativeLong err, char[] buff) {
+    public String _ERR_error_string(final NativeLong err, final char[] buff) {
         return ERR_error_string(err, buff);
     }
 
@@ -380,7 +380,7 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     }
 
     @Override
-    public void _EVP_CIPHER_CTX_free(PointerByReference context) {
+    public void _EVP_CIPHER_CTX_free(final PointerByReference context) {
         EVP_CIPHER_CTX_free(context);
     }
 
@@ -390,29 +390,29 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     }
 
     @Override
-    public int _EVP_CIPHER_CTX_set_padding(PointerByReference context, int padding) {
+    public int _EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding) {
         return EVP_CIPHER_CTX_set_padding(context, padding);
     }
 
     @Override
-    public int _EVP_CipherFinal_ex(PointerByReference context, ByteBuffer outBuffer, int[] outlen) {
+    public int _EVP_CipherFinal_ex(final PointerByReference context, final ByteBuffer outBuffer, final int[] outlen) {
         return EVP_CipherFinal_ex(context, outBuffer, outlen);
     }
 
     @Override
-    public int _EVP_CipherInit_ex(PointerByReference context, PointerByReference algo, PointerByReference impl, byte[] encoded,
-            byte[] iv, int cipherMode) {
+    public int _EVP_CipherInit_ex(final PointerByReference context, final PointerByReference algo, final PointerByReference impl, final byte[] encoded,
+            final byte[] iv, final int cipherMode) {
         return EVP_CipherInit_ex(context, algo, impl, encoded, iv, cipherMode);
     }
 
     @Override
-    public int _EVP_CipherUpdate(PointerByReference context, ByteBuffer outBuffer, int[] outlen, ByteBuffer inBuffer,
-            int remaining) {
+    public int _EVP_CipherUpdate(final PointerByReference context, final ByteBuffer outBuffer, final int[] outlen, final ByteBuffer inBuffer,
+            final int remaining) {
         return EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, remaining);
     }
 
     @Override
-    public int _RAND_bytes(ByteBuffer buf, int length) {
+    public int _RAND_bytes(final ByteBuffer buf, final int length) {
         return RAND_bytes(buf, length) ;
     }
 
@@ -427,7 +427,7 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     }
 
     @Override
-    public String _OpenSSL_version(int i) {
+    public String _OpenSSL_version(final int i) {
         return SSLeay_version(i);
     }
 
@@ -442,7 +442,7 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     }
 
     @Override
-    public void _EVP_CIPHER_CTX_cleanup(PointerByReference context) {
+    public void _EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
         EVP_CIPHER_CTX_cleanup(context);
     }
 }

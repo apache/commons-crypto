@@ -44,7 +44,7 @@ class OpenSslNativeJna {
     public static final long VERSION_2_0_X = 0x20000000;
 
     private static final OpenSslInterfaceNativeJna JnaImplementation;
-  
+
     static {
         final String libraryName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
         OpenSslJna.debug("NativeLibrary.getInstance('%s')%n", libraryName);

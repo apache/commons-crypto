@@ -65,7 +65,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
         // Check that nextRandBytes works (is this really needed?)
         try {
             checkNative();
-        } catch (GeneralSecurityException e) {
+        } catch (final GeneralSecurityException e) {
             throw new IllegalStateException(e);
         }
         if (!OpenSslCryptoRandomNative.nextRandBytes(new byte[1])) {
@@ -139,7 +139,7 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
 
     /**
      * Generates a user-specified number of random bytes. It's thread-safe.
-     * Overrides {@link Random}. 
+     * Overrides {@link Random}.
      *
      * @param bytes the array to be filled in with random bytes.
      */

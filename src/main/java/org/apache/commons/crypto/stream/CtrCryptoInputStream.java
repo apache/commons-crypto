@@ -265,27 +265,27 @@ public class CtrCryptoInputStream extends CryptoInputStream {
 
         if (n == 0) {
             return 0;
-        } else if (n <= outBuffer.remaining()) {
+        }
+        if (n <= outBuffer.remaining()) {
             final int pos = outBuffer.position() + (int) n;
             outBuffer.position(pos);
             return n;
-        } else {
-            /*
-             * Subtract outBuffer.remaining() to see how many bytes we need to
-             * skip in the underlying stream. Add outBuffer.remaining() to the
-             * actual number of skipped bytes in the underlying stream to get
-             * the number of skipped bytes from the user's point of view.
-             */
-            n -= outBuffer.remaining();
-            long skipped = input.skip(n);
-            if (skipped < 0) {
-                skipped = 0;
-            }
-            final long pos = streamOffset + skipped;
-            skipped += outBuffer.remaining();
-            resetStreamOffset(pos);
-            return skipped;
         }
+        /*
+         * Subtract outBuffer.remaining() to see how many bytes we need to
+         * skip in the underlying stream. Add outBuffer.remaining() to the
+         * actual number of skipped bytes in the underlying stream to get
+         * the number of skipped bytes from the user's point of view.
+         */
+        n -= outBuffer.remaining();
+        long skipped = input.skip(n);
+        if (skipped < 0) {
+            skipped = 0;
+        }
+        final long pos = streamOffset + skipped;
+        skipped += outBuffer.remaining();
+        resetStreamOffset(pos);
+        return skipped;
     }
 
     /**

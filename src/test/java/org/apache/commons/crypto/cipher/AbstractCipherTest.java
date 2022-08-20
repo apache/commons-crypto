@@ -275,7 +275,7 @@ public abstract class AbstractCipherTest {
 
 			// check update method with inputs whose sizes are the multiple of
 			// block size or not
-			final int[] bufferLenList = new int[] { 2 * 1024 - 128, 2 * 1024 - 125 };
+			final int[] bufferLenList = { 2 * 1024 - 128, 2 * 1024 - 125 };
 			for (final int bufferLen : bufferLenList) {
 				resetCipher(transformation, key, iv);
 

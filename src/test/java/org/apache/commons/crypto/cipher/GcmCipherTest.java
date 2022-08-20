@@ -252,7 +252,7 @@ public class GcmCipherTest {
 
         final Random r = new Random();
         final byte[] keyBytes = new byte[32];
-        final byte[] input = new byte[0];  // no input for GMAC
+        final byte[] input = {};  // no input for GMAC
         final byte[] ivBytes = new byte[16];
 
         final byte[] tag_orig = new byte[16]; // JDK's tag
@@ -302,7 +302,7 @@ public class GcmCipherTest {
     public void testGMacTamperedData() throws Exception {
         final Random r = new Random();
         final byte[] keyBytes = new byte[32];
-        final byte[] input = new byte[0];
+        final byte[] input = {};
         final byte[] ivBytes = new byte[16];
 
         final byte[] tag = new byte[16];

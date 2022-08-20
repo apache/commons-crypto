@@ -137,11 +137,11 @@ public final class ReflectionUtils {
             // two putters can race here, but they'll put the same class
             map.put(name, new WeakReference<>(clazz));
             return clazz;
-        } else if (clazz == NEGATIVE_CACHE_SENTINEL) {
-            return null; // not found
-        } else {
-            // cache hit
-            return clazz;
         }
+        if (clazz == NEGATIVE_CACHE_SENTINEL) {
+            return null; // not found
+        }
+        // cache hit
+        return clazz;
     }
 }

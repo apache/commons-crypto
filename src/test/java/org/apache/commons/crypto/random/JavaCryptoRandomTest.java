@@ -18,7 +18,6 @@
 package org.apache.commons.crypto.random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,7 +25,6 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.commons.crypto.utils.Utils;
 import org.junit.jupiter.api.Test;
 
 public class JavaCryptoRandomTest extends AbstractRandomTest {
@@ -47,7 +45,7 @@ public class JavaCryptoRandomTest extends AbstractRandomTest {
     public void testNextIntIsntActuallyRandomNextInt() throws Exception {
     	final CryptoRandom cr = getCryptoRandom();
     	final Random r = (Random) cr;
-    	final long seed = 1654421930011l; // System.getCurrentMillis() on 2022-June-05, 11:39
+    	final long seed = 1654421930011L; // System.getCurrentMillis() on 2022-June-05, 11:39
     	final Random otherRandom = new Random(seed);
     	final Random otherRandom2 = new Random();
     	otherRandom2.setSeed(seed);

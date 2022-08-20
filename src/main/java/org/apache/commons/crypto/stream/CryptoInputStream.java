@@ -252,7 +252,8 @@ public class CryptoInputStream extends InputStream implements
         Objects.requireNonNull(array, "array");
         if (off < 0 || len < 0 || len > array.length - off) {
             throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
+        }
+        if (len == 0) {
             return 0;
         }
 
@@ -508,13 +509,13 @@ public class CryptoInputStream extends InputStream implements
 
             // End of the stream
             return EOS;
-        } else if (n == 0) {
+        }
+        if (n == 0) {
             // No data is read, but the stream is not end yet
             return 0;
-        } else {
-            decrypt();
-            return outBuffer.remaining();
         }
+        decrypt();
+        return outBuffer.remaining();
     }
 
     /**
@@ -590,7 +591,7 @@ public class CryptoInputStream extends InputStream implements
             .clean(); */
             final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
             final Class<?>[] interfaces = buffer.getClass().getInterfaces();
-            final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+            final Object[] EMPTY_OBJECT_ARRAY = {};
 
             for (final Class<?> clazz : interfaces) {
                 if (clazz.getName().equals(SUN_CLASS)) {

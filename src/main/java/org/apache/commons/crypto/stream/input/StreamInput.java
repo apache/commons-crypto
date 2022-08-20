@@ -67,7 +67,8 @@ public class StreamInput implements Input {
                     read = EOS;
                 }
                 break;
-            } else if (n > 0) {
+            }
+            if (n > 0) {
                 dst.put(buf, 0, n);
                 read += n;
                 remaining -= n;

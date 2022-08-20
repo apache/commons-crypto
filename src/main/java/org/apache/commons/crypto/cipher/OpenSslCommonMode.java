@@ -42,12 +42,11 @@ class OpenSslCommonMode extends OpenSslFeedbackCipher {
             throws InvalidAlgorithmParameterException {
         this.cipherMode = mode;
         final byte[] iv;
-        if (params instanceof IvParameterSpec) {
-            iv = ((IvParameterSpec) params).getIV();
-        } else {
+        if (!(params instanceof IvParameterSpec)) {
             // other AlgorithmParameterSpec is not supported now.
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
+        iv = ((IvParameterSpec) params).getIV();
         context = OpenSslNative.init(context, mode, algorithmMode, padding, key, iv);
     }
 

@@ -148,12 +148,11 @@ public class PositionedCryptoInputStreamTest {
                     compareByteArray(testData, position, bytes2, pn2);
                 }
 
-                if (n > 0) {
-                    compareByteArray(testData, position, buf.array(), n);
-                    position += n;
-                } else {
+                if (n <= 0) {
                     break;
                 }
+                compareByteArray(testData, position, buf.array(), n);
+                position += n;
             }
         }
     }
@@ -233,12 +232,11 @@ public class PositionedCryptoInputStreamTest {
                 in.seek(position);
                 final ByteBuffer buf = ByteBuffer.allocate(length);
                 final int n = in.read(buf);
-                if (n > 0) {
-                    compareByteArray(testData, position, buf.array(), n);
-                    position += n;
-                } else {
+                if (n <= 0) {
                     break;
                 }
+                compareByteArray(testData, position, buf.array(), n);
+                position += n;
             }
         }
     }
@@ -258,12 +256,11 @@ public class PositionedCryptoInputStreamTest {
             while (position < total) {
                 final byte[] bytes = new byte[length];
                 final int n = in.read(position, bytes, 0, length);
-                if (n >= 0) {
-                    compareByteArray(testData, position, bytes, n);
-                    position += n;
-                } else {
+                if (n < 0) {
                     break;
                 }
+                compareByteArray(testData, position, bytes, n);
+                position += n;
             }
         }
     }
@@ -394,7 +391,8 @@ public class PositionedCryptoInputStreamTest {
         public void seek(final long position) throws IOException {
             if (pos < 0) {
                 throw new IOException("Negative seek offset");
-            } else if (position >= 0 && position < count) {
+            }
+            if (position >= 0 && position < count) {
                 pos = position;
             } else {
                 // to the end of file
