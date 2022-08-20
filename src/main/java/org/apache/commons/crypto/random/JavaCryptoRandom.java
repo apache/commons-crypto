@@ -92,8 +92,8 @@ class JavaCryptoRandom extends Random implements CryptoRandom {
     @Override
     protected int next(final int numBits) {
         Utils.checkArgument(numBits >= 0 && numBits <= 32);
-		// Can't simply invoke instance.next(bits) here, because that is package protected.
-		// But, this should do.
-		return  instance.nextInt() >>> (Integer.SIZE - numBits);
+        // Can't simply invoke instance.next(bits) here, because that is package protected.
+        // But, this should do.
+        return instance.nextInt() >>> (Integer.SIZE - numBits);
     }
 }
