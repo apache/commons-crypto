@@ -313,116 +313,144 @@ class OpenSsl10XNativeJna implements OpenSslInterfaceNativeJna {
 
     // ================== instance interface methods ==================
 
+    @Override
     public boolean _INIT_OK() {
         return INIT_OK;
     }
 
+    @Override
     public Throwable _INIT_ERROR() {
         return INIT_ERROR;
     }
 
+    @Override
     public PointerByReference _ENGINE_by_id(String string) {
         return ENGINE_by_id(string);
     }
 
+    @Override
     public int _ENGINE_finish(PointerByReference rdrandEngine) {
         return ENGINE_finish(rdrandEngine);
     }
 
+    @Override
     public int _ENGINE_free(PointerByReference rdrandEngine) {
         return ENGINE_free(rdrandEngine);
     }
 
+    @Override
     public int _ENGINE_init(PointerByReference rdrandEngine) {
         return ENGINE_init(rdrandEngine);
     }
 
+    @Override
     public int _ENGINE_set_default(PointerByReference rdrandEngine, int flags) {
         return ENGINE_set_default(rdrandEngine, flags);
     }
 
+    @Override
     public String _ERR_error_string(NativeLong err, char[] buff) {
         return ERR_error_string(err, buff);
     }
 
+    @Override
     public NativeLong _ERR_peek_error() {
         return ERR_peek_error();
     }
 
+    @Override
     public PointerByReference _EVP_aes_128_cbc() {
         return EVP_aes_128_cbc();
     }
 
+    @Override
     public PointerByReference _EVP_aes_128_ctr() {
         return EVP_aes_128_ctr();
     }
 
+    @Override
     public PointerByReference _EVP_aes_192_cbc() {
         return EVP_aes_192_cbc();
     }
 
+    @Override
     public PointerByReference _EVP_aes_192_ctr() {
         return EVP_aes_192_ctr();
     }
 
+    @Override
     public PointerByReference _EVP_aes_256_cbc() {
         return EVP_aes_256_cbc();
     }
 
+    @Override
     public PointerByReference _EVP_aes_256_ctr() {
         return EVP_aes_256_ctr();
     }
 
+    @Override
     public void _EVP_CIPHER_CTX_free(PointerByReference context) {
         EVP_CIPHER_CTX_free(context);
     }
 
+    @Override
     public PointerByReference _EVP_CIPHER_CTX_new() {
         return EVP_CIPHER_CTX_new();
     }
 
+    @Override
     public int _EVP_CIPHER_CTX_set_padding(PointerByReference context, int padding) {
         return EVP_CIPHER_CTX_set_padding(context, padding);
     }
 
+    @Override
     public int _EVP_CipherFinal_ex(PointerByReference context, ByteBuffer outBuffer, int[] outlen) {
         return EVP_CipherFinal_ex(context, outBuffer, outlen);
     }
 
+    @Override
     public int _EVP_CipherInit_ex(PointerByReference context, PointerByReference algo, PointerByReference impl, byte[] encoded,
             byte[] iv, int cipherMode) {
         return EVP_CipherInit_ex(context, algo, impl, encoded, iv, cipherMode);
     }
 
+    @Override
     public int _EVP_CipherUpdate(PointerByReference context, ByteBuffer outBuffer, int[] outlen, ByteBuffer inBuffer,
             int remaining) {
         return EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, remaining);
     }
 
+    @Override
     public int _RAND_bytes(ByteBuffer buf, int length) {
         return RAND_bytes(buf, length) ;
     }
 
+    @Override
     public PointerByReference _RAND_get_rand_method() {
         return RAND_get_rand_method();
     }
 
+    @Override
     public PointerByReference _RAND_SSLeay() {
         return RAND_SSLeay();
     }
 
+    @Override
     public String _OpenSSL_version(int i) {
         return SSLeay_version(i);
     }
 
+    @Override
     public void _ENGINE_load_rdrand() {
         ENGINE_load_rdrand();
     }
 
+    @Override
     public int _ENGINE_cleanup() {
         return ENGINE_cleanup();
     }
 
+    @Override
     public void _EVP_CIPHER_CTX_cleanup(PointerByReference context) {
         EVP_CIPHER_CTX_cleanup(context);
     }
