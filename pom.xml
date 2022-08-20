@@ -463,7 +463,7 @@ The following provides more details on the included cryptographic software:
   </profiles>
 
   <build>
-    <defaultGoal>clean apache-rat:check install japicmp:cmp spotbugs:check pmd:check javadoc:javadoc</defaultGoal>
+    <defaultGoal>clean apache-rat:check install japicmp:cmp spotbugs:check pmd:check checkstyle:check javadoc:javadoc</defaultGoal>
     <resources>
       <resource>
         <directory>src/main/resources/</directory>
