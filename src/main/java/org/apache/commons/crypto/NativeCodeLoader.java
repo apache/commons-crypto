@@ -58,12 +58,14 @@ final class NativeCodeLoader {
     /**
      * Returns the given InputStream if it is already a {@link BufferedInputStream},
      * otherwise creates a BufferedInputStream from the given InputStream.
+     * <p>
+     * Copied from Apache Commons IO 2.5.
+     * </p>
      *
      * @param inputStream the InputStream to wrap or return (not null)
      * @return the given InputStream or a new {@link BufferedInputStream} for the
      *         given InputStream
      * @throws NullPointerException if the input parameter is null
-     * @since Apache Commons IO 2.5
      */
     @SuppressWarnings("resource")
     private static BufferedInputStream buffer(final InputStream inputStream) {
@@ -76,12 +78,14 @@ final class NativeCodeLoader {
 
     /**
      * Checks whether in1 and in2 is equal.
+     * <p>
+     * Copied from Apache Commons IO 2.5.
+     * </p>
      *
      * @param input1 the input1.
      * @param input2 the input2.
      * @return true if in1 and in2 is equal, else false.
      * @throws IOException if an I/O error occurs.
-     * @since Apache Commons IO 2.5
      */
     @SuppressWarnings("resource")
     private static boolean contentsEquals(final InputStream input1, final InputStream input2) throws IOException {
