@@ -49,7 +49,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3.0.2
 
     # Override Java default
     # Java 11 complains about illegal access; drop this override when sorted

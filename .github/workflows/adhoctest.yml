@@ -46,7 +46,7 @@ jobs:
       fail-fast: false
 
     steps:
-    # - uses: actions/checkout@v3
+    # - uses: actions/checkout@v3.0.2
     #   with:
     #     ref: ${{ matrix.ref }}
     # - name: Set up JDK ${{ matrix.java }}
