@@ -152,8 +152,6 @@ The following provides more details on the included cryptographic software:
     <!-- commons.animal-sniffer.version 1.21 fails on Java 17. -->
     <commons.animal-sniffer.version>1.20</commons.animal-sniffer.version>
     
-    <clirr.skip>true</clirr.skip>
-    
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.releaseManagerName>Gary Gregory</commons.releaseManagerName>    
     <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
