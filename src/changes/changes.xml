@@ -92,7 +92,7 @@
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump pmd from 6.44.0 to 6.48.0.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump taglist-maven-plugin from 2.4 to 3.0.0 #147.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump spotbugs-maven-plugin from 4.5.3.0 to 4.7.2.0 #152, #160, #168, #174, #179.</action>
-      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-parent from 52 to 53.</action>
+      <action                    type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-parent from 52 to 54 #182</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.surefire.version from 3.0.0-M5 to 3.0.0-M7.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump maven-resources-plugin from 3.2.0 to 3.3.0 #172.</action>
     </release>
