@@ -71,13 +71,13 @@
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Port from pre-Java 8 javah tool to Java 8 and up javac with the -h option.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 11.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 17.</action>
+      <action issue="CRYPTO-155" type="fix" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
       <!-- ADD -->
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory, Dependabot">Add github/codeql-action 2 #159.</action>
       <!-- UPDATE -->
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.9 #150, #184.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to 3.0.2 #149.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump actions/setup-java from 2 to 3.</action>
-      <action issue="CRYPTO-155" type="update" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
       <action issue="CRYPTO-151" type="update" due-to="Arturo Bernal, Dependabot">Migrate to Junit 5.9.1 #114, #171, #183.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump jna from 5.5.0 to 5.12.1 #123, #139, #153, #167.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.japicmp.version from 0.14.3 to 0.16.0.</action>
