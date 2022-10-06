@@ -25,6 +25,9 @@ on:
     paths-ignore:
       - '**/workflows/*.yml'
 
+permissions:
+  contents: read
+
 jobs:
   build:
 
