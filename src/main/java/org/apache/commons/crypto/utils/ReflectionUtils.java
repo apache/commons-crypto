@@ -19,6 +19,7 @@ package org.apache.commons.crypto.utils;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -79,9 +80,7 @@ public final class ReflectionUtils {
                 ctor = klass.getDeclaredConstructor();
             } else {
                 final Class<?>[] argClses = new Class[argsLength];
-                for (int i = 0; i < argsLength; i++) {
-                    argClses[i] = args[i].getClass();
-                }
+                Arrays.setAll(argClses, i -> args[i].getClass());
                 ctor = klass.getDeclaredConstructor(argClses);
             }
             ctor.setAccessible(true);
