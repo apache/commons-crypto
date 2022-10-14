@@ -76,7 +76,7 @@
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory, Dependabot">Add github/codeql-action 2 #159.</action>
       <!-- UPDATE -->
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.9 #150, #184.</action>
-      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to 3.0.2 #149.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to 3.1.0 #149, #187.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump actions/setup-java from 2 to 3.5.1.</action>
       <action issue="CRYPTO-151" type="update" due-to="Arturo Bernal, Dependabot">Migrate to Junit 5.9.1 #114, #171, #183.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump jna from 5.5.0 to 5.12.1 #123, #139, #153, #167.</action>
