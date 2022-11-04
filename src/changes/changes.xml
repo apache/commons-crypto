@@ -78,6 +78,7 @@
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.9 #150, #184.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to 3.1.0 #149, #187.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump actions/setup-java from 2 to 3.6.0 #190.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump actions/upload-artifact from 3.1.0 to 3.1.1 #192.</action>
       <action issue="CRYPTO-151" type="update" due-to="Arturo Bernal, Dependabot">Migrate to Junit 5.9.1 #114, #171, #183.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump jna from 5.5.0 to 5.12.1 #123, #139, #153, #167.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.japicmp.version from 0.14.3 to 0.16.0.</action>
