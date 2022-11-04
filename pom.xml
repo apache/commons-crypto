@@ -739,17 +739,6 @@ The following provides more details on the included cryptographic software:
       </plugin>
     </plugins>
   </reporting>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.junit</groupId>
-        <artifactId>junit-bom</artifactId>
-        <version>${commons.junit.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>net.java.dev.jna</groupId>
