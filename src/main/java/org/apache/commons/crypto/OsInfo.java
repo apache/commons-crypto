@@ -169,9 +169,9 @@ final class OsInfo {
                 // ignored: fall back to "arm" arch (soft-float ABI)
             }
         } else {
-            final String lc = osArch.toLowerCase(Locale.US);
-            if (archMapping.containsKey(lc)) {
-                return archMapping.get(lc);
+            final String string = archMapping.get(osArch.toLowerCase(Locale.US));
+            if (string != null) {
+                return string;
             }
         }
         return translateArchNameToFolderName(osArch);
