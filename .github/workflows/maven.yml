@@ -35,7 +35,8 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        # ubuntu-latest uses OpenSSL 3 which breaks tests
+        os: [macos-latest, ubuntu-18.04, windows-latest]
         java: [ 8, 11, 17 ]
         experimental: [false]
 #        include:
