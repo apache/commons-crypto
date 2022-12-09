@@ -20,6 +20,7 @@ package org.apache.commons.crypto.cipher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
@@ -41,16 +42,17 @@ public class CryptoCipherFactoryTest {
     }
 
     @Test
-    public void testEmptyCipher() throws GeneralSecurityException {
+    public void testEmptyCipher() throws GeneralSecurityException, IOException {
         final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ""); // TODO should this really mean use the default?
-        final CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
-                AES.CBC_NO_PADDING, properties);
-        final String name = defaultCipher.getClass().getName();
-        if (OpenSsl.getLoadingFailureReason() == null) {
-            assertEquals(OpenSslCipher.class.getName(), name);
-        } else {
-            assertEquals(JceCipher.class.getName(), name);
+        try (CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
+                AES.CBC_NO_PADDING, properties)) {
+            final String name = defaultCipher.getClass().getName();
+            if (OpenSsl.getLoadingFailureReason() == null) {
+                assertEquals(OpenSslCipher.class.getName(), name);
+            } else {
+                assertEquals(JceCipher.class.getName(), name);
+            }
         }
     }
 
