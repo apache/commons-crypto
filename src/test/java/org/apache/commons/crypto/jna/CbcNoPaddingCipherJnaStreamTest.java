@@ -17,11 +17,12 @@
  */
 package org.apache.commons.crypto.jna;
 
+import org.apache.commons.crypto.utils.AES;
 
 public class CbcNoPaddingCipherJnaStreamTest extends AbstractCipherJnaStreamTest {
 
     @Override
     public void setUp() {
-        transformation = "AES/CBC/NoPadding";
+        transformation = AES.CBC_NO_PADDING;
     }
 }

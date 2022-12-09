@@ -24,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
 
+import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.BeforeAll;
 
 
@@ -34,15 +35,15 @@ public class JceCipherTest extends AbstractCipherTest {
     @Override
     public void init() {
         transformations = new String[] {
-                "AES/CBC/NoPadding",
-                "AES/CBC/PKCS5Padding",
-                "AES/CTR/NoPadding"};
+                AES.CBC_NO_PADDING,
+                AES.CBC_PKCS5_PADDING,
+                AES.CTR_NO_PADDING};
         cipherClass = JCE_CIPHER_CLASSNAME;
     }
 
     @BeforeAll
     public static void checkJceUnlimitedStrength() throws NoSuchAlgorithmException {
-        final int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
+        final int maxKeyLen = Cipher.getMaxAllowedKeyLength(AES.ALGORITHM);
         assertTrue(maxKeyLen >= MAX_KEY_LEN_LOWER_BOUND,
                 String.format(
                         "Testing requires support for an AES key length of %d, but " +

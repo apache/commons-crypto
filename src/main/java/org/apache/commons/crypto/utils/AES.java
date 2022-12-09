@@ -1,4 +1,4 @@
- /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,15 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.crypto.stream;
+package org.apache.commons.crypto.utils;
 
-import org.apache.commons.crypto.utils.AES;
+import javax.crypto.spec.SecretKeySpec;
 
-public class CtrNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
+/**
+ * Creates AES objects
+ *
+ * @since 1.2.0
+ */
+public class AES {
 
-    @Override
-    public void setUp() {
-        transformation = AES.CTR_NO_PADDING;
+    /** The AES algorithm name. */
+    public static final String ALGORITHM = "AES";
+
+    public static final String CBC_NO_PADDING = "AES/CBC/NoPadding";
+    public static final String CBC_PKCS5_PADDING = "AES/CBC/PKCS5Padding";
+    public static final String CTR_NO_PADDING = "AES/CTR/NoPadding";
+
+    public static SecretKeySpec newSecretKeySpec(final byte[] key) {
+        return new SecretKeySpec(key, ALGORITHM);
     }
 
 }

@@ -26,6 +26,7 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
+import org.apache.commons.crypto.utils.AES;
 
 /**
  * Provides diagnostic information about Commons Crypto and keys for native
@@ -172,9 +173,8 @@ public final class Crypto {
                 final Properties props = new Properties();
                 props.setProperty(CryptoCipherFactory.CLASSES_KEY,
                         CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
-                final String transformation = "AES/CTR/NoPadding";
-                try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(transformation, props)) {
-                    info("Cipher %s instance created OK: %s", transformation, cryptoCipher);
+                try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, props)) {
+                    info("Cipher %s instance created OK: %s", AES.CTR_NO_PADDING, cryptoCipher);
                 }
             }
             info("Additional OpenSSL_version(n) details:");

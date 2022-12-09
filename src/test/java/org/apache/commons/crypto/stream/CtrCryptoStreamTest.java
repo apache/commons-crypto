@@ -40,6 +40,7 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.StreamInput;
 import org.apache.commons.crypto.stream.output.ChannelOutput;
+import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -47,7 +48,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() {
-        transformation = "AES/CTR/NoPadding";
+        transformation = AES.CTR_NO_PADDING;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     }
 
     @Override
-    protected CtrCryptoInputStream newCryptoInputStream(final String transformation, final Properties props,
+    protected CryptoInputStream newCryptoInputStream(final String transformation, final Properties props,
             final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
             final boolean withChannel) throws IOException {
         if (withChannel) {
@@ -130,7 +131,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
         assertEquals(smallBufferSize, in.getStreamOffset());
         assertEquals(in.getBufferSize(), 8192);
         assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
-        assertEquals(in.getKey().getAlgorithm(), "AES");
+        assertEquals(in.getKey().getAlgorithm(), AES.ALGORITHM);
         assertEquals(in.getParams().getClass(), IvParameterSpec.class);
         assertNotNull(in.getInput());
 

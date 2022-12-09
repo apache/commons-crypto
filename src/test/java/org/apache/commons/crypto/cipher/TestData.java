@@ -20,6 +20,8 @@ package org.apache.commons.crypto.cipher;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.crypto.utils.AES;
+
 public class TestData {
 
     private static final String[] CBCNoPaddingTests = {
@@ -139,9 +141,9 @@ public class TestData {
     private static final Map<String, String[]> testData = new HashMap<>();
 
     static {
-        testData.put("AES/CBC/NoPadding", CBCNoPaddingTests);
-        testData.put("AES/CBC/PKCS5Padding", CBCPKCS5PaddingTests);
-        testData.put("AES/CTR/NoPadding", cipherCTRTests);
+        testData.put(AES.CBC_NO_PADDING, CBCNoPaddingTests);
+        testData.put(AES.CBC_PKCS5_PADDING, CBCPKCS5PaddingTests);
+        testData.put(AES.CTR_NO_PADDING, cipherCTRTests);
     }
 
     public static String[] getTestData(final String transformation) {

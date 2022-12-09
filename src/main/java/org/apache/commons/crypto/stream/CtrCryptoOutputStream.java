@@ -26,12 +26,12 @@ import java.util.Properties;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.output.ChannelOutput;
 import org.apache.commons.crypto.stream.output.Output;
 import org.apache.commons.crypto.stream.output.StreamOutput;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -172,7 +172,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     public CtrCryptoOutputStream(final Properties properties, final OutputStream outputStream,
             final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
         this(outputStream, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", properties),
+                AES.CTR_NO_PADDING, properties),
                 CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
@@ -191,7 +191,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     public CtrCryptoOutputStream(final Properties properties, final WritableByteChannel channel,
             final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
         this(channel, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", properties),
+                AES.CTR_NO_PADDING, properties),
                 CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
@@ -245,7 +245,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     protected CtrCryptoOutputStream(final Output output, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
-        super(output, cipher, bufferSize, new SecretKeySpec(key, "AES"),
+        super(output, cipher, bufferSize, AES.newSecretKeySpec(key),
                 new IvParameterSpec(iv));
 
         CryptoInputStream.checkStreamCipher(cipher);

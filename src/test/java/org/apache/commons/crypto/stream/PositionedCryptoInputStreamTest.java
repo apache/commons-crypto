@@ -40,6 +40,7 @@ import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.Input;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ public class PositionedCryptoInputStreamTest {
     private final int lengthLess = length - 1;
     private final int lengthMore = length + 1;
 
-    private final String transformation = "AES/CTR/NoPadding";
+    private final String transformation = AES.CTR_NO_PADDING;
 
     @BeforeEach
     public void before() throws IOException {
@@ -83,7 +84,7 @@ public class PositionedCryptoInputStreamTest {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // encryption data
         try (final OutputStream out = new CryptoOutputStream(baos, cipher, bufferSize,
-                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv))) {
+                AES.newSecretKeySpec(key), new IvParameterSpec(iv))) {
             out.write(testData);
             out.flush();
         }

@@ -39,6 +39,7 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.stream.input.StreamInput;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -632,8 +633,8 @@ public class CryptoInputStream extends InputStream implements
      */
     static void checkStreamCipher(final CryptoCipher cipher)
             throws IOException {
-        if (!cipher.getAlgorithm().equals("AES/CTR/NoPadding")) {
-            throw new IOException("AES/CTR/NoPadding is required");
+        if (!cipher.getAlgorithm().equals(AES.CTR_NO_PADDING)) {
+            throw new IOException(AES.CTR_NO_PADDING + " is required");
         }
     }
 

@@ -22,7 +22,7 @@
   </parent>
 
   <artifactId>commons-crypto</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Apache Commons Crypto</name>
@@ -110,7 +110,7 @@ The following provides more details on the included cryptographic software:
   </distributionManagement>
 
   <properties>
-    <commons.release.version>1.1.1</commons.release.version>
+    <commons.release.version>1.2.0</commons.release.version>
     <commons.release.desc>(Java 8)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>

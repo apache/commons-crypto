@@ -36,6 +36,7 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -46,9 +47,9 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     public void init() {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         transformations = new String[] {
-                "AES/CBC/NoPadding",
-                "AES/CBC/PKCS5Padding",
-                "AES/CTR/NoPadding"};
+                AES.CBC_NO_PADDING,
+                AES.CBC_PKCS5_PADDING,
+                AES.CTR_NO_PADDING};
         cipherClass = OPENSSL_CIPHER_CLASSNAME;
     }
 
@@ -73,7 +74,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     public void testUpdateArguments() throws Exception {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
-                .getInstance("AES/CTR/NoPadding");
+                .getInstance(AES.CTR_NO_PADDING);
         assertNotNull(cipher);
 
         cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(IV));
@@ -102,7 +103,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     public void testDoFinalArguments() throws Exception {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
-                .getInstance("AES/CTR/NoPadding");
+                .getInstance(AES.CTR_NO_PADDING);
         assertNotNull(cipher);
 
         cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new IvParameterSpec(IV));
@@ -121,7 +122,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     public void testInvalidKey() throws Exception {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
-                .getInstance("AES/CTR/NoPadding");
+                .getInstance(AES.CTR_NO_PADDING);
         assertNotNull(cipher);
 
         final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
@@ -137,7 +138,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     public void testInvalidIV() throws Exception {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
-                .getInstance("AES/CTR/NoPadding");
+                .getInstance(AES.CTR_NO_PADDING);
         assertNotNull(cipher);
 
         final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
@@ -151,7 +152,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testInvalidIVClass() throws Exception {
-        final OpenSsl cipher = OpenSsl.getInstance("AES/CTR/NoPadding");
+        final OpenSsl cipher = OpenSsl.getInstance(AES.CTR_NO_PADDING);
         assertNotNull(cipher);
 
 
@@ -161,14 +162,14 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Test
     public void testCipherLifecycle() throws Exception {
-        try (OpenSslCipher cipher = new OpenSslCipher(new Properties(), "AES/CTR/NoPadding")) {
+        try (OpenSslCipher cipher = new OpenSslCipher(new Properties(), AES.CTR_NO_PADDING)) {
 
             assertThrows(IllegalStateException.class, () -> cipher.update(dummyBuffer(), dummyBuffer()));
-            cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"),
+            cipher.init(OpenSsl.ENCRYPT_MODE, AES.newSecretKeySpec(KEY),
                 new IvParameterSpec(IV));
             cipher.update(dummyBuffer(), dummyBuffer());
 
-            assertThrows(InvalidKeyException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(new byte[1], "AES"),
+            assertThrows(InvalidKeyException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, AES.newSecretKeySpec(new byte[1]),
                     new IvParameterSpec(IV)));
             // Should keep working with previous init parameters.
             cipher.update(dummyBuffer(), dummyBuffer());
@@ -176,7 +177,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
             cipher.close();
 
             assertThrows(IllegalStateException.class, () -> cipher.update(dummyBuffer(), dummyBuffer()));
-            cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"),
+            cipher.init(OpenSsl.ENCRYPT_MODE, AES.newSecretKeySpec(KEY),
                 new IvParameterSpec(IV));
             cipher.update(dummyBuffer(), dummyBuffer());
         }

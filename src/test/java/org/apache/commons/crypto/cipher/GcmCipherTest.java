@@ -33,6 +33,7 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +41,10 @@ import org.junit.jupiter.api.Test;
 
 public class GcmCipherTest {
 
+    private static final String GCM_NO_PADDING = "AES/GCM/NoPadding";
     Properties props;
     String cipherClass;
-    String transformation = "AES/GCM/NoPadding";
+    String transformation = GCM_NO_PADDING;
 
     private String[] kHex;
     private String[] pHex;
@@ -222,7 +224,7 @@ public class GcmCipherTest {
         final byte[] decOutput = new byte[plainBytes.length];
 
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
 
             final GCMParameterSpec iv = new GCMParameterSpec(tagLength, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
@@ -234,7 +236,7 @@ public class GcmCipherTest {
         encOutput[0] = (byte)(encOutput[0] + 1);
 
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
 
             final GCMParameterSpec iv = new GCMParameterSpec(tagLength, ivBytes);
             c.init(Cipher.DECRYPT_MODE, key, iv);
@@ -268,7 +270,7 @@ public class GcmCipherTest {
 
         {
             final Cipher c = Cipher.getInstance(transformation);
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
             c.updateAAD(aad);
@@ -276,7 +278,7 @@ public class GcmCipherTest {
         }
 
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
             c.updateAAD(aad);
@@ -289,7 +291,7 @@ public class GcmCipherTest {
         // like JDK's decrypt mode. The plaintext+tag is the input for decrypt mode
         // let's verify the add & tag now
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.DECRYPT_MODE, key, iv);
             c.updateAAD(aad);
@@ -315,7 +317,7 @@ public class GcmCipherTest {
         r.nextBytes(aad);
 
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
             c.updateAAD(aad);
@@ -324,7 +326,7 @@ public class GcmCipherTest {
 
         // like JDK's decrypt mode. The plaintext+tag is the input for decrypt mode
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.DECRYPT_MODE, key, iv);
 
@@ -351,7 +353,7 @@ public class GcmCipherTest {
 
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
 
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
 
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
@@ -380,7 +382,7 @@ public class GcmCipherTest {
         int partLen;
         int len;
         try (final CryptoCipher enc = Utils.getCipherInstance(transformation, props)) {
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             enc.init(Cipher.ENCRYPT_MODE, key, iv);
             if (aad.length > 0) {
@@ -402,7 +404,7 @@ public class GcmCipherTest {
 
         // Decryption
         try (final CryptoCipher dec = Utils.getCipherInstance(transformation, props)) {
-            dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyBytes, "AES"), new GCMParameterSpec(128, ivBytes));
+            dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(keyBytes), new GCMParameterSpec(128, ivBytes));
             if (aad.length > 0) {
                 final int len1 = r.nextInt(aad.length);
                 final byte[] aad1 = Arrays.copyOfRange(aad, 0, len1);
@@ -436,7 +438,7 @@ public class GcmCipherTest {
 
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
 
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
 
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.DECRYPT_MODE, key, iv);
@@ -462,7 +464,7 @@ public class GcmCipherTest {
 
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
 
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
 
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.DECRYPT_MODE, key, iv);
@@ -500,7 +502,7 @@ public class GcmCipherTest {
 
         // Encryption -------------------
         try (final CryptoCipher c = Utils.getCipherInstance(transformation, props)) {
-            final Key key = new SecretKeySpec(keyBytes, "AES");
+            final Key key = AES.newSecretKeySpec(keyBytes);
             final GCMParameterSpec iv = new GCMParameterSpec(128, ivBytes);
             c.init(Cipher.ENCRYPT_MODE, key, iv);
 
@@ -520,7 +522,7 @@ public class GcmCipherTest {
 
         // Decryption -------------------
         try (final CryptoCipher dec = Utils.getCipherInstance(transformation, props)) {
-            dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyBytes, "AES"), new GCMParameterSpec(128, ivBytes));
+            dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(keyBytes), new GCMParameterSpec(128, ivBytes));
             bfAAD.flip();
             dec.updateAAD(bfAAD);
             bfCipherText.clear();

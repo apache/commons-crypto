@@ -30,6 +30,7 @@ import javax.crypto.spec.IvParameterSpec;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.input.Input;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.IoUtils;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -69,7 +70,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by PositionedCryptoInputStream.
     public PositionedCryptoInputStream(final Properties properties, final Input in, final byte[] key,
             final byte[] iv, final long streamOffset) throws IOException {
-        this(properties, in, Utils.getCipherInstance("AES/CTR/NoPadding", properties),
+        this(properties, in, Utils.getCipherInstance(AES.CTR_NO_PADDING, properties),
                 CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
@@ -306,7 +307,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         if (state == null) {
             final CryptoCipher cryptoCipher;
             try {
-                cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", properties);
+                cryptoCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, properties);
             } catch (final GeneralSecurityException e) {
                 throw new IOException(e);
             }

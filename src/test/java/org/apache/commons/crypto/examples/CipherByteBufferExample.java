@@ -27,6 +27,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -35,11 +36,11 @@ import org.apache.commons.crypto.utils.Utils;
 public class CipherByteBufferExample {
 
     public static void main(final String[] args) throws Exception {
-        final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"), "AES");
+        final SecretKeySpec key = AES.newSecretKeySpec(getUTF8Bytes("1234567890123456"));
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
         final Properties properties = new Properties();
         //Creates a CryptoCipher instance with the transformation and properties.
-        final String transform = "AES/CBC/PKCS5Padding";
+        final String transform = AES.CBC_PKCS5_PADDING;
         final ByteBuffer outBuffer;
         final int bufferSize = 1024;
         final int updateBytes;

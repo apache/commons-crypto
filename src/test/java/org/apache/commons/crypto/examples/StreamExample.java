@@ -30,6 +30,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.stream.CryptoInputStream;
 import org.apache.commons.crypto.stream.CryptoOutputStream;
+import org.apache.commons.crypto.utils.AES;
 
 /**
  * Example showing how to use stream encryption and decryption.
@@ -37,10 +38,10 @@ import org.apache.commons.crypto.stream.CryptoOutputStream;
 public class StreamExample {
 
     public static void main(final String []args) throws IOException {
-        final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"),"AES");
+        final SecretKeySpec key = AES.newSecretKeySpec(getUTF8Bytes("1234567890123456"));
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
         final Properties properties = new Properties();
-        final String transform = "AES/CBC/PKCS5Padding";
+        final String transform = AES.CBC_PKCS5_PADDING;
 
         final String input = "hello world!";
         //Encryption with CryptoOutputStream.

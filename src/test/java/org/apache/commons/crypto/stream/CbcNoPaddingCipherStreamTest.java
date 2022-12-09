@@ -17,11 +17,13 @@
  */
 package org.apache.commons.crypto.stream;
 
+import org.apache.commons.crypto.utils.AES;
+
 public class CbcNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() {
-        transformation = "AES/CBC/NoPadding";
+        transformation = AES.CBC_NO_PADDING;
     }
 
 }

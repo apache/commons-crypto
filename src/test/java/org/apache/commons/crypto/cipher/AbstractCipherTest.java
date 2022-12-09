@@ -37,6 +37,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,18 +88,22 @@ public abstract class AbstractCipherTest {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
         }
 	}
+
+    SecretKeySpec newSecretKeySpec() {
+        return AES.newSecretKeySpec(KEY);
+    }
 
 	@Test
 	public void reInitTest() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-            enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
-            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
         }
 	}
 
@@ -107,9 +112,9 @@ public abstract class AbstractCipherTest {
         // This test deliberately does not use try with resources in order to control
         // the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
             enc.close();
-            enc.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(IV));
+            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
         }
     }
 
@@ -172,7 +177,7 @@ public abstract class AbstractCipherTest {
 
 				final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
 						0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
-				assertThrows(InvalidKeyException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(invalidKey, "AES"), new IvParameterSpec(IV)));
+				assertThrows(InvalidKeyException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, AES.newSecretKeySpec(invalidKey), new IvParameterSpec(IV)));
 			}
 		}
 	}
@@ -184,7 +189,7 @@ public abstract class AbstractCipherTest {
 				assertNotNull(cipher);
 				final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
 						0x0d, 0x0e, 0x0f, 0x11 };
-				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new IvParameterSpec(invalidIV)));
+				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(invalidIV)));
 			}
 		}
 	}
@@ -194,7 +199,7 @@ public abstract class AbstractCipherTest {
 		for (final String transform : transformations) {
 			try (final CryptoCipher cipher = getCipher(transform)) {
 				assertNotNull(cipher);
-				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, new SecretKeySpec(KEY, "AES"), new GCMParameterSpec(IV.length, IV)));
+				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, newSecretKeySpec(), new GCMParameterSpec(IV.length, IV)));
 			}
 		}
 	}
@@ -206,8 +211,8 @@ public abstract class AbstractCipherTest {
 
 		try (final CryptoCipher enc = getCipher(transformation); final CryptoCipher dec = getCipher(transformation)) {
 
-			enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
-			dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+			enc.init(Cipher.ENCRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
+			dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
 
 			//
 			// encryption pass
@@ -265,7 +270,7 @@ public abstract class AbstractCipherTest {
 
 		// AES_CBC_NOPADDING only accepts data whose size is the multiple of
 		// block size
-		final int[] dataLenList = transformation.equals("AES/CBC/NoPadding") ? new int[] { 10 * 1024 }
+		final int[] dataLenList = transformation.equals(AES.CBC_NO_PADDING) ? new int[] { 10 * 1024 }
 				: new int[] { 10 * 1024, 10 * 1024 - 3 };
 		for (final int dataLen : dataLenList) {
 			final byte[] plainText = new byte[dataLen];
@@ -313,9 +318,9 @@ public abstract class AbstractCipherTest {
 		enc = getCipher(transformation);
 		dec = getCipher(transformation);
 
-		enc.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+		enc.init(Cipher.ENCRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
 
-		dec.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+		dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
 	}
 
 	private CryptoCipher getCipher(final String transformation) throws ClassNotFoundException {

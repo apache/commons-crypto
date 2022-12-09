@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
+import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.Test;
 
 
@@ -30,7 +31,7 @@ public class CryptoCipherFactoryTest {
     @Test
     public void testDefaultCipher() throws GeneralSecurityException {
         final CryptoCipher defaultCipher = CryptoCipherFactory
-                .getCryptoCipher("AES/CBC/NoPadding");
+                .getCryptoCipher(AES.CTR_NO_PADDING);
         final String name = defaultCipher.getClass().getName();
         if (OpenSsl.getLoadingFailureReason() == null) {
             assertEquals(OpenSslCipher.class.getName(), name);
@@ -44,7 +45,7 @@ public class CryptoCipherFactoryTest {
         final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ""); // TODO should this really mean use the default?
         final CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(
-                "AES/CBC/NoPadding", properties);
+                AES.CBC_NO_PADDING, properties);
         final String name = defaultCipher.getClass().getName();
         if (OpenSsl.getLoadingFailureReason() == null) {
             assertEquals(OpenSslCipher.class.getName(), name);
@@ -59,7 +60,7 @@ public class CryptoCipherFactoryTest {
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY,
                 "InvalidCipherName");
         assertThrows(GeneralSecurityException.class,
-                () -> CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties));
+                () -> CryptoCipherFactory.getCryptoCipher(AES.CBC_NO_PADDING, properties));
 
     }
 
@@ -78,7 +79,7 @@ public class CryptoCipherFactoryTest {
         // However the splitter drops empty fields
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ",");
         assertThrows(IllegalArgumentException.class,
-                () -> CryptoCipherFactory.getCryptoCipher("AES/CBC/NoPadding", properties));
+                () -> CryptoCipherFactory.getCryptoCipher(AES.CBC_NO_PADDING, properties));
 
     }
 

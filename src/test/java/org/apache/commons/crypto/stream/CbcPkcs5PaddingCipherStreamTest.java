@@ -17,10 +17,12 @@
  */
 package org.apache.commons.crypto.stream;
 
+import org.apache.commons.crypto.utils.AES;
+
 public class CbcPkcs5PaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() {
-        transformation = "AES/CBC/PKCS5Padding";
+        transformation = AES.CBC_PKCS5_PADDING;
     }
 }

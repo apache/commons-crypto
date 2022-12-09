@@ -49,6 +49,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -349,17 +350,17 @@ public abstract class AbstractCipherStreamTest {
 
         // Test InvalidAlgorithmParameters
        Exception ex = assertThrows(IOException.class, () -> newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData),
-                new SecretKeySpec(key, "AES"), new GCMParameterSpec(0, new byte[0]), withChannel));
+               AES.newSecretKeySpec(key), new GCMParameterSpec(0, new byte[0]), withChannel));
         assertEquals(ex.getMessage(),"Illegal parameters");
         // Test InvalidAlgorithmParameters
         ex =  assertThrows(IOException.class, () -> newCryptoOutputStream(transformation, props, baos,
-                new SecretKeySpec(key, "AES"), new GCMParameterSpec(0,
+                AES.newSecretKeySpec(key), new GCMParameterSpec(0,
                         new byte[0]), withChannel));
         assertEquals(ex.getMessage(),"Illegal parameters");
 
         // Test Invalid Key
         assertThrows(IOException.class, () -> newCryptoInputStream(transformation,props, new ByteArrayInputStream(encData),
-                new SecretKeySpec(new byte[10], "AES"), new IvParameterSpec(iv), withChannel));
+                AES.newSecretKeySpec(new byte[10]), new IvParameterSpec(iv), withChannel));
         // Test Invalid Key
         assertThrows(IOException.class, () -> newCryptoOutputStream(transformation, props, baos, new byte[10],
                 new IvParameterSpec(iv), withChannel));
@@ -432,7 +433,7 @@ public abstract class AbstractCipherStreamTest {
         assertEquals(CryptoInputStream.getBufferSize(props), Integer.parseInt(bufferSize));
         assertEquals(in.getBufferSize(), defaultBufferSize);
         assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
-        assertEquals(in.getKey().getAlgorithm(), "AES");
+        assertEquals(in.getKey().getAlgorithm(), AES.ALGORITHM);
         assertEquals(in.getParams().getClass(), IvParameterSpec.class);
         assertNotNull(in.getInput());
 
@@ -489,7 +490,7 @@ public abstract class AbstractCipherStreamTest {
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (OutputStream out = new CryptoOutputStream(baos, cipher,
-                defaultBufferSize, new SecretKeySpec(key, "AES"),
+                defaultBufferSize, AES.newSecretKeySpec(key),
                 new IvParameterSpec(iv))) {
             out.write(data);
             out.flush();
@@ -533,20 +534,20 @@ public abstract class AbstractCipherStreamTest {
             throws IOException {
         if (withChannel) {
             return new CryptoInputStream(Channels.newChannel(bais), cipher,
-                    bufferSize, new SecretKeySpec(key, "AES"),
+                    bufferSize, AES.newSecretKeySpec(key),
                     new IvParameterSpec(iv));
         }
         return new CryptoInputStream(bais, cipher, bufferSize,
-                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+                AES.newSecretKeySpec(key), new IvParameterSpec(iv));
     }
 
     protected CryptoInputStream newCryptoInputStream(final String transformation, final Properties props,
     	    final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
     	    final boolean withChannel) throws IOException {
         if (withChannel) {
-    	    return new CryptoInputStream(transformation, props, Channels.newChannel(bais), new SecretKeySpec(key, "AES"), params);
+    	    return new CryptoInputStream(transformation, props, Channels.newChannel(bais), AES.newSecretKeySpec(key), params);
     	}
-        return new CryptoInputStream(transformation, props, bais, new SecretKeySpec(key, "AES"), params);
+        return new CryptoInputStream(transformation, props, bais, AES.newSecretKeySpec(key), params);
     }
 
     protected CryptoInputStream newCryptoInputStream(final String transformation,
@@ -563,11 +564,11 @@ public abstract class AbstractCipherStreamTest {
             final byte[] iv, final boolean withChannel) throws IOException {
         if (withChannel) {
             return new CryptoOutputStream(Channels.newChannel(baos), cipher,
-                    bufferSize, new SecretKeySpec(key, "AES"),
+                    bufferSize, AES.newSecretKeySpec(key),
                     new IvParameterSpec(iv));
         }
         return new CryptoOutputStream(baos, cipher, bufferSize,
-                new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
+                AES.newSecretKeySpec(key), new IvParameterSpec(iv));
     }
 
     protected CryptoOutputStream newCryptoOutputStream(final String transformation,
@@ -575,9 +576,9 @@ public abstract class AbstractCipherStreamTest {
             final AlgorithmParameterSpec param, final boolean withChannel) throws IOException {
         if (withChannel) {
             return new CryptoOutputStream(transformation, props, Channels.newChannel(baos),
-                    new SecretKeySpec(key, "AES"), param);
+                    AES.newSecretKeySpec(key), param);
         }
-        return new CryptoOutputStream(transformation, props, baos, new SecretKeySpec(key, "AES"),
+        return new CryptoOutputStream(transformation, props, baos, AES.newSecretKeySpec(key),
                 param);
     }
 

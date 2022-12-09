@@ -26,13 +26,13 @@ import java.util.Properties;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.input.ChannelInput;
 import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.stream.input.StreamInput;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -167,7 +167,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     public CtrCryptoInputStream(final Properties properties, final InputStream inputStream, final byte[] key,
             final byte[] iv, final long streamOffset) throws IOException {
         this(inputStream, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", properties),
+                AES.CTR_NO_PADDING, properties),
                 CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
@@ -186,7 +186,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     public CtrCryptoInputStream(final Properties properties, final ReadableByteChannel in,
             final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
         this(in, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", properties),
+                AES.CTR_NO_PADDING, properties),
                 CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
@@ -239,7 +239,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     protected CtrCryptoInputStream(final Input input, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
-        super(input, cipher, bufferSize, new SecretKeySpec(key, "AES"),
+        super(input, cipher, bufferSize, AES.newSecretKeySpec(key),
                 new IvParameterSpec(iv));
 
         this.initIV = iv.clone();
