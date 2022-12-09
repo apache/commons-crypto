@@ -34,7 +34,6 @@ import java.util.Properties;
 import java.util.Random;
 
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.AbstractCipherTest;

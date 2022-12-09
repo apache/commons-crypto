@@ -17,11 +17,11 @@
  */
 package org.apache.commons.crypto.stream.input;
 
+import static org.apache.commons.crypto.stream.CryptoInputStream.EOS;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-
-import static org.apache.commons.crypto.stream.CryptoInputStream.EOS;
 
  /**
  * The StreamInput class takes a {@code InputStream} object and wraps it as

@@ -20,8 +20,8 @@ package org.apache.commons.crypto.jna;
 
 import java.nio.ByteBuffer;
 
-import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.NativeLong;
+import com.sun.jna.ptr.PointerByReference;
 
 /**
  * This interface defines the API for the native code.

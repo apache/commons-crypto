@@ -18,10 +18,10 @@
 
 package org.apache.commons.crypto.jna;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OpenSslNativeJnaTest {
 
