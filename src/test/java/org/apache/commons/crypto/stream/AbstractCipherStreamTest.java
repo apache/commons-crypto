@@ -436,12 +436,12 @@ public abstract class AbstractCipherStreamTest {
         assertEquals(in.getParams().getClass(), IvParameterSpec.class);
         assertNotNull(in.getInput());
 
-        final CryptoOutputStream out = newCryptoOutputStream(baos, getCipher(cipherClass),
-                defaultBufferSize, iv, withChannel);
-
-        assertEquals(out.getOutBuffer().capacity(), defaultBufferSize + cipher.getBlockSize());
-        assertEquals(out.getInBuffer().capacity(), defaultBufferSize);
-        assertEquals(out.getBufferSize(), defaultBufferSize);
+        try (final CryptoOutputStream out = newCryptoOutputStream(baos, getCipher(cipherClass),
+                defaultBufferSize, iv, withChannel)) {
+            assertEquals(out.getOutBuffer().capacity(), defaultBufferSize + cipher.getBlockSize());
+            assertEquals(out.getInBuffer().capacity(), defaultBufferSize);
+            assertEquals(out.getBufferSize(), defaultBufferSize);
+        }
     }
 
     private void byteBufferReadCheck(final InputStream in, final ByteBuffer buf, final int bufPos)
