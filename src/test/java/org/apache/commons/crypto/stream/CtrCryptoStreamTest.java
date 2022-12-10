@@ -98,9 +98,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
     @Override
     protected void doFieldGetterTest(final String cipherClass, final ByteArrayOutputStream baos,
             final boolean withChannel) throws Exception {
-        if (AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME.equals(cipherClass) && !Crypto.isNativeCodeLoaded()) {
-            return; // Skip this test if no JNI
-        }
+        assumeJniPresence(cipherClass);
 
         final StreamInput streamInput = new StreamInput(new ByteArrayInputStream(encData), 0);
         Exception ex = assertThrows(UnsupportedOperationException.class, () -> streamInput.seek(0));
