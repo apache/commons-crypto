@@ -231,7 +231,7 @@ public class CryptoInputStream extends InputStream implements
         while ((n = read(oneByteBuf, 0, 1)) == 0) { //NOPMD
             /* no op */
         }
-        return (n == EOS) ? EOS : oneByteBuf[0] & 0xff;
+        return n == EOS ? EOS : oneByteBuf[0] & 0xff;
     }
 
     /**

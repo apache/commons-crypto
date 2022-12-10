@@ -37,7 +37,7 @@ public final class ReflectionUtils {
 
     static {
         final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : CryptoCipher.class.getClassLoader();
+        CLASSLOADER = threadClassLoader != null ? threadClassLoader : CryptoCipher.class.getClassLoader();
     }
 
     /**
