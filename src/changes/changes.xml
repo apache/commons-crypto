@@ -74,6 +74,7 @@
       <action issue="CRYPTO-155" type="fix" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
       <!-- ADD -->
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory, Dependabot">Add github/codeql-action 2 #159.</action>
+      <action                    type="fix" dev="ggregory" due-to="Gary Gregory, Dependabot">Add AES utility class.</action>
       <!-- UPDATE -->
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.7 to 3.0.9 #150, #184.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to 3.1.0 #149, #187.</action>
