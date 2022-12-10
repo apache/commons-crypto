@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
-import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.input.ChannelInput;
