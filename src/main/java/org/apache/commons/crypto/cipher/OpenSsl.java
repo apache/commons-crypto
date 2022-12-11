@@ -61,7 +61,7 @@ final class OpenSsl {
             try {
                 return AlgorithmMode.valueOf(algorithm + "_" + mode).ordinal();
             } catch (final Exception e) {
-                throw new NoSuchAlgorithmException("Doesn't support algorithm: " + algorithm + " and mode: " + mode);
+                throw new NoSuchAlgorithmException("Algorithm not supported: " + algorithm + " and mode: " + mode);
             }
         }
     }
@@ -80,7 +80,7 @@ final class OpenSsl {
             try {
                 return Padding.valueOf(padding).ordinal();
             } catch (final Exception e) {
-                throw new NoSuchPaddingException("Doesn't support padding: " + padding);
+                throw new NoSuchPaddingException("Algorithm not supported: " + padding);
             }
         }
     }
