@@ -41,7 +41,7 @@ public class StreamInput implements Input {
     public StreamInput(final InputStream inputStream, final int bufferSize) {
         this.in = inputStream;
         this.bufferSize = bufferSize;
-        buf = new byte[bufferSize];
+        this.buf = new byte[bufferSize];
     }
 
     /**
