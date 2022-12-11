@@ -144,9 +144,7 @@ public class CryptoCipherFactory {
      * @throws GeneralSecurityException if cipher initialize failed
      * @throws IllegalArgumentException if no classname(s) were provided
      */
-    public static CryptoCipher getCryptoCipher(final String transformation, final Properties properties)
-        throws GeneralSecurityException {
-
+    public static CryptoCipher getCryptoCipher(final String transformation, final Properties properties) throws GeneralSecurityException {
         final List<String> names = Utils.splitClassNames(getCipherClassString(properties), ",");
         if (names.isEmpty()) {
             throw new IllegalArgumentException("No classname(s) provided");
@@ -158,8 +156,7 @@ public class CryptoCipherFactory {
         for (final String klass : names) {
             try {
                 final Class<?> cls = ReflectionUtils.getClassByName(klass);
-                cipher = ReflectionUtils.newInstance(cls.asSubclass
-                        (CryptoCipher.class), properties, transformation);
+                cipher = ReflectionUtils.newInstance(cls.asSubclass(CryptoCipher.class), properties, transformation);
                 break;
             } catch (final Exception e) {
                 lastException = e;
@@ -170,8 +167,7 @@ public class CryptoCipherFactory {
         if (cipher != null) {
             return cipher;
         }
-        errorMessage.append(" is not available or transformation " +
-                transformation + " is not supported.");
+        errorMessage.append(" is not available or transformation " + transformation + " is not supported.");
         throw new GeneralSecurityException(errorMessage.toString(), lastException);
     }
 

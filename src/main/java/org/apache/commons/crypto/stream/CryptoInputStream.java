@@ -49,8 +49,8 @@ import org.apache.commons.crypto.utils.Utils;
  *
  */
 
-public class CryptoInputStream extends InputStream implements
-        ReadableByteChannel {
+public class CryptoInputStream extends InputStream implements ReadableByteChannel {
+
     private final byte[] oneByteBuf = new byte[1];
 
     /**
@@ -163,6 +163,7 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // Closing the instance closes the StreamInput
     protected CryptoInputStream(final InputStream inputStream, final CryptoCipher cipher,
             final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
@@ -179,6 +180,7 @@ public class CryptoInputStream extends InputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // Closing the instance closes the ChannelInput
     protected CryptoInputStream(final ReadableByteChannel channel, final CryptoCipher cipher,
             final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {

@@ -206,11 +206,11 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // Closing the instance closes the StreamOutput
     protected CtrCryptoOutputStream(final OutputStream outputStream, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
-        this(new StreamOutput(outputStream, bufferSize), cipher, bufferSize, key, iv,
-                streamOffset);
+        this(new StreamOutput(outputStream, bufferSize), cipher, bufferSize, key, iv, streamOffset);
     }
 
     /**
@@ -224,11 +224,11 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(final WritableByteChannel channel,
+   @SuppressWarnings("resource") // Closing the instance closes the ChannelOutput
+   protected CtrCryptoOutputStream(final WritableByteChannel channel,
             final CryptoCipher cipher, final int bufferSize, final byte[] key, final byte[] iv,
             final long streamOffset) throws IOException {
-        this(new ChannelOutput(channel), cipher, bufferSize, key, iv,
-                streamOffset);
+       this(new ChannelOutput(channel), cipher, bufferSize, key, iv, streamOffset);
     }
 
     /**

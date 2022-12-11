@@ -138,6 +138,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // Closing the instance closes the StreamOutput
     protected CryptoOutputStream(final OutputStream outputStream, final CryptoCipher cipher,
             final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {
@@ -154,6 +155,7 @@ public class CryptoOutputStream extends OutputStream implements
      * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // Closing the instance closes the ChannelOutput
     protected CryptoOutputStream(final WritableByteChannel channel, final CryptoCipher cipher,
             final int bufferSize, final Key key, final AlgorithmParameterSpec params)
             throws IOException {

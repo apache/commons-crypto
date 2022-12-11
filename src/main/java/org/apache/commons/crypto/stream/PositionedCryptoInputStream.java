@@ -232,6 +232,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param outByteBuffer the output buffer.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // getCryptoCipher does not allocate
     private void decryptBuffer(final CipherState state, final ByteBuffer inByteBuffer,
             final ByteBuffer outByteBuffer) throws IOException {
         final int inputSize = inByteBuffer.remaining();
@@ -285,6 +286,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param position the offset from the start of the stream.
      * @param iv the iv.
      */
+    @SuppressWarnings("resource") // getCryptoCipher does not allocate
     private void resetCipher(final CipherState state, final long position, final byte[] iv) {
         final long counter = getCounter(position);
         CtrCryptoInputStream.calculateIV(getInitIV(), counter, iv);
@@ -370,7 +372,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         super.close();
     }
 
-    /** Clean direct buffer pool */
+    /** Cleans direct buffer pool */
     private void cleanBufferPool() {
         ByteBuffer buf;
         while ((buf = bufferPool.poll()) != null) {
@@ -384,12 +386,12 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         private boolean reset;
 
         /**
-         * The constructor of {@link CipherState}.
+         * Constructs a new instance.
          *
-         * @param cipher the CryptoCipher instance.
+         * @param cryptoCipher the CryptoCipher instance.
          */
-        public CipherState(final CryptoCipher cipher) {
-            this.cryptoCipher = cipher;
+        public CipherState(final CryptoCipher cryptoCipher) {
+            this.cryptoCipher = cryptoCipher;
             this.reset = false;
         }
 

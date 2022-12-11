@@ -201,6 +201,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @param streamOffset the start offset in the stream.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // Closing the instance closes the StreamInput
     protected CtrCryptoInputStream(final InputStream inputStream, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
@@ -219,6 +220,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * @param streamOffset the start offset in the stream.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // Closing the instance closes the ChannelInput
     protected CtrCryptoInputStream(final ReadableByteChannel channel, final CryptoCipher cipher,
             final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
             throws IOException {
