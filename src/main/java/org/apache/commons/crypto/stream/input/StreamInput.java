@@ -28,6 +28,7 @@ import java.nio.ByteBuffer;
  * {@code Input} object acceptable by {@code CryptoInputStream}.
  */
 public class StreamInput implements Input {
+
     private final byte[] buf;
     private final int bufferSize;
     final InputStream in;
@@ -127,10 +128,8 @@ public class StreamInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(final long position, final byte[] buffer, final int offset, final int length)
-            throws IOException {
-        throw new UnsupportedOperationException(
-                "Positioned read is not supported by this implementation");
+    public int read(final long position, final byte[] buffer, final int offset, final int length) throws IOException {
+        throw new UnsupportedOperationException("Positioned read is not supported by this implementation");
     }
 
     /**
@@ -144,8 +143,7 @@ public class StreamInput implements Input {
      */
     @Override
     public void seek(final long position) throws IOException {
-        throw new UnsupportedOperationException(
-                "Seek is not supported by this implementation");
+        throw new UnsupportedOperationException("Seek is not supported by this implementation");
     }
 
     /**
