@@ -136,10 +136,22 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     }
 
     /** Cleans direct buffer pool */
-    private void cleanBufferPool() {
+    private void cleanByteBufferPool() {
         ByteBuffer buf;
         while ((buf = byteBufferPool.poll()) != null) {
             CryptoInputStream.freeDirectBuffer(buf);
+        }
+    }
+
+    /** Cleans direct buffer pool */
+    private void cleanCipherStatePool() {
+        CipherState cs;
+        while ((cs = cipherStatePool.poll()) != null) {
+            try {
+                cs.getCryptoCipher().close();
+            } catch (IOException ignored) {
+                // ignore
+            }
         }
     }
 
@@ -155,7 +167,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
             return;
         }
 
-        cleanBufferPool();
+        cleanByteBufferPool();
+        cleanCipherStatePool();
         super.close();
     }
 
@@ -277,6 +290,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @return the CipherState instance.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // Caller calls #returnToPool(CipherState)
     private CipherState getCipherState() throws IOException {
         CipherState state = cipherStatePool.poll();
         return state != null ? state : new CipherState(Utils.getCipherInstance(AES.CTR_NO_PADDING, properties));

@@ -61,7 +61,7 @@
    -->
 
   <body>
-    <release version="1.1.1" date="20YY-MM-DD" description="TBD">
+    <release version="1.2.0" date="202Y-MM-DD" description="Minor release">
       <action issue="CRYPTO-160" type="fix" dev="jochen">Enhance the quality of JavaCryptoRandom as a subclass of Random by overwriting Random.next(int).</action>
       <!-- FIX -->
       <action issue="CRYPTO-163" type="fix">Makefile does not recompile objects if local include files are changed</action>
@@ -72,6 +72,7 @@
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 11.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 17.</action>
       <action issue="CRYPTO-155" type="fix" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
+      <action                    type="fix" dev="ggregory" due-to="Gary Gregory">PositionedCryptoInputStream does not close its CryptoCipher instances.</action>
       <!-- ADD -->
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory, Dependabot">Add github/codeql-action 2 #159.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory, Dependabot">Add AES utility class.</action>
