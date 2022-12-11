@@ -46,6 +46,7 @@ import com.sun.jna.ptr.PointerByReference;
  */
 class OpenSslJnaCipher implements CryptoCipher {
 
+    private static final String TRANSFORMATION_DELIM = "/";
     private PointerByReference algo;
     private final PointerByReference context;
     private final AlgorithmMode algMode;
@@ -382,7 +383,7 @@ class OpenSslJnaCipher implements CryptoCipher {
          */
         final String[] parts = new String[3];
         int count = 0;
-        final StringTokenizer parser = new StringTokenizer(transformation, "/");
+        final StringTokenizer parser = new StringTokenizer(transformation, TRANSFORMATION_DELIM);
         while (parser.hasMoreTokens() && count < 3) {
             parts[count++] = parser.nextToken().trim();
         }

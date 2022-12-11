@@ -135,7 +135,7 @@ final class NativeCodeLoader {
      */
     private static File extractLibraryFile(final String libFolderForCurrentOS, final String libraryFileName,
             final String targetFolder) {
-        final String nativeLibraryFilePath = libFolderForCurrentOS + "/" + libraryFileName;
+        final String nativeLibraryFilePath = libFolderForCurrentOS + File.separator + libraryFileName;
 
         // Attach UUID to the native library file to ensure multiple class loaders
         // can read the libcommons-crypto multiple times.
@@ -214,10 +214,10 @@ final class NativeCodeLoader {
 
         // Load an OS-dependent native library inside a jar file
         nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolderPathForCurrentOS();
-        boolean hasNativeLib = hasResource(nativeLibraryPath + "/" + nativeLibraryName);
+        boolean hasNativeLib = hasResource(nativeLibraryPath + File.separator + nativeLibraryName);
         if (!hasNativeLib) {
             final String altName = "libcommons-crypto.jnilib";
-            if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + "/" + altName)) {
+            if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + File.separator + altName)) {
                 // Fix for openjdk7 for Mac
                 nativeLibraryName = altName;
                 hasNativeLib = true;

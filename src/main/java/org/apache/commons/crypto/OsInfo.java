@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -134,7 +135,7 @@ final class OsInfo {
      * @return the current OS's native lib folder.
      */
     static String getNativeLibFolderPathForCurrentOS() {
-        return getOSName() + "/" + getArchName();
+        return getOSName() + File.separator + getArchName();
     }
 
     /**
