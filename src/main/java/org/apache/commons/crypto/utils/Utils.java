@@ -120,9 +120,7 @@ public final class Utils {
      * @return the CryptoCipher instance.
      * @throws IOException if an I/O error occurs.
      */
-    public static CryptoCipher getCipherInstance(
-            final String transformation, final Properties properties)
-            throws IOException {
+    public static CryptoCipher getCipherInstance(final String transformation, final Properties properties) throws IOException {
         try {
             return CryptoCipherFactory.getCryptoCipher(transformation, properties);
         } catch (final GeneralSecurityException e) {
