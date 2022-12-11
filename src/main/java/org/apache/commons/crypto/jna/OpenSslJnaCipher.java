@@ -26,7 +26,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -46,7 +45,6 @@ import com.sun.jna.ptr.PointerByReference;
  */
 class OpenSslJnaCipher implements CryptoCipher {
 
-    private static final String TRANSFORMATION_DELIM = "/";
     private PointerByReference algo;
     private final PointerByReference context;
     private final AlgorithmMode algMode;
@@ -159,8 +157,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     @Override
     public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
         final int[] outlen = new int[1];
-        final int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
-                inBuffer.remaining());
+        final int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining());
         throwOnError(retVal);
         final int len = outlen[0];
         inBuffer.position(inBuffer.limit());
@@ -262,6 +259,7 @@ class OpenSslJnaCipher implements CryptoCipher {
      * such as AEAD (GCM). If this opensslEngine is operating in either GCM mode,
      * all AAD must be supplied before beginning operations on the ciphertext (via
      * the {@code update} and {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
@@ -291,6 +289,7 @@ class OpenSslJnaCipher implements CryptoCipher {
      * such as AEAD (GCM). If this opensslEngine is operating in either GCM mode,
      * all AAD must be supplied before beginning operations on the ciphertext (via
      * the {@code update} and {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
@@ -323,7 +322,7 @@ class OpenSslJnaCipher implements CryptoCipher {
             // Freeing the context multiple times causes a JVM crash
             // A work-round is to only free it at finalize time
             // TODO is that sufficient?
-//            OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
+            // OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
         }
     }
 
@@ -365,7 +364,7 @@ class OpenSslJnaCipher implements CryptoCipher {
     }
 
     /**
-     * Tokenize the transformation.
+     * Tokenizes a transformation.
      *
      * @param transformation current transformation
      * @return the Transform
@@ -376,18 +375,13 @@ class OpenSslJnaCipher implements CryptoCipher {
             throw new NoSuchAlgorithmException("No transformation given.");
         }
 
-        /*
-         * Array containing the components of a Cipher transformation: index 0:
-         * algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding (e.g.,
-         * NoPadding)
-         */
-        final String[] parts = new String[3];
-        int count = 0;
-        final StringTokenizer parser = new StringTokenizer(transformation, TRANSFORMATION_DELIM);
-        while (parser.hasMoreTokens() && count < 3) {
-            parts[count++] = parser.nextToken().trim();
-        }
-        if (count != 3 || parser.hasMoreTokens()) {
+        //
+        // Array containing the components of a Cipher transformation: index 0:
+        // algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding (e.g.,
+        // NoPadding)
+        //
+        final String[] parts = transformation.split("/", 4);
+        if (parts.length != 3) {
             throw new NoSuchAlgorithmException("Invalid transformation format: " + transformation);
         }
         return new Transform(parts[0], parts[1], parts[2]);
