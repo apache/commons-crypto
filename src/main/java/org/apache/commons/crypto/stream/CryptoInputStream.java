@@ -210,8 +210,7 @@ public class CryptoInputStream extends InputStream implements
         }
 
         inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-        outBuffer = ByteBuffer.allocateDirect(this.bufferSize
-                + cipher.getBlockSize());
+        outBuffer = ByteBuffer.allocateDirect(this.bufferSize + cipher.getBlockSize());
         outBuffer.limit(0);
 
         initCipher();
@@ -587,26 +586,29 @@ public class CryptoInputStream extends InputStream implements
      * @param buffer the bytebuffer to be freed.
      */
     static void freeDirectBuffer(final ByteBuffer buffer) {
-        try {
-            /* Using reflection to implement sun.nio.ch.DirectBuffer.cleaner()
-            .clean(); */
-            final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
-            final Class<?>[] interfaces = buffer.getClass().getInterfaces();
-            final Object[] EMPTY_OBJECT_ARRAY = {};
+        if (buffer != null) {
+            try {
+                /*
+                 * Using reflection to implement sun.nio.ch.DirectBuffer.cleaner() .clean();
+                 */
+                final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
+                final Class<?>[] interfaces = buffer.getClass().getInterfaces();
+                final Object[] EMPTY_OBJECT_ARRAY = {};
 
-            for (final Class<?> clazz : interfaces) {
-                if (clazz.getName().equals(SUN_CLASS)) {
-                    /* DirectBuffer#cleaner() */
-                    final Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
-                    final Object cleaner = getCleaner.invoke(buffer, EMPTY_OBJECT_ARRAY);
-                    /* Cleaner#clean() */
-                    final Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
-                    cleanMethod.invoke(cleaner, EMPTY_OBJECT_ARRAY);
-                    return;
+                for (final Class<?> clazz : interfaces) {
+                    if (clazz.getName().equals(SUN_CLASS)) {
+                        /* DirectBuffer#cleaner() */
+                        final Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
+                        final Object cleaner = getCleaner.invoke(buffer, EMPTY_OBJECT_ARRAY);
+                        /* Cleaner#clean() */
+                        final Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
+                        cleanMethod.invoke(cleaner, EMPTY_OBJECT_ARRAY);
+                        return;
+                    }
                 }
+            } catch (final ReflectiveOperationException e) { // NOPMD
+                // Ignore the Reflection exception.
             }
-        } catch (final ReflectiveOperationException e) { // NOPMD
-            // Ignore the Reflection exception.
         }
     }
 
