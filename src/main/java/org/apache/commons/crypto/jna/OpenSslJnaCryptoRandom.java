@@ -172,7 +172,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      */
     private void closeRdrandEngine() {
 
-        if(rdrandEngine != null) {
+        if (rdrandEngine != null) {
             OpenSslNativeJna.ENGINE_finish(rdrandEngine);
             OpenSslNativeJna.ENGINE_free(rdrandEngine);
         }
