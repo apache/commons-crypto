@@ -97,6 +97,7 @@
       <action                    type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump commons-parent from 52 to 54 #182</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump commons.surefire.version from 3.0.0-M5 to 3.0.0-M7.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump maven-resources-plugin from 3.2.0 to 3.3.0 #172.</action>
+      <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump jaxb-impl from 2.3.6 to 2.3.7.</action>
     </release>
     <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8 and OpenSSL 1.1.1)">
       <action issue="CRYPTO-59" type="add">Support Galois/Counter Mode (GCM).</action>
