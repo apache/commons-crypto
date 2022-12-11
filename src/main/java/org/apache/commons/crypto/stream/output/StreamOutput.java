@@ -32,11 +32,10 @@ public class StreamOutput implements Output {
     private final OutputStream out;
 
     /**
-     * Constructs a {@link org.apache.commons.crypto.stream.output.StreamOutput}
-     * .
+     * Constructs a new instance.
      *
      * @param out the OutputStream object.
-     * @param bufferSize the buffersize.
+     * @param bufferSize the buffer size.
      */
     public StreamOutput(final OutputStream out, final int bufferSize) {
         this.out = out;
