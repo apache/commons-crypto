@@ -81,13 +81,13 @@ public final class OpenSslJna {
     public static void main(final String[] args) throws Throwable {
         info("isEnabled(): %s", isEnabled());
         final Throwable initialisationError = initialisationError();
-        info("initialisationError(): %s", initialisationError);
         if (initialisationError != null) {
+            info("initialisationError(): %s", initialisationError);
             System.err.flush(); // helpful for stack traces to not mix in other output.
             throw initialisationError; // propagate to make error obvious
         }
-        for(int i = 0; i <= 5; i++) {
-          info("OpenSSLVersion(%d): %s", i, OpenSSLVersion(i));
+        for (int i = 0; i <= 5; i++) {
+            info("OpenSSLVersion(%d): %s", i, OpenSSLVersion(i));
         }
     }
 
