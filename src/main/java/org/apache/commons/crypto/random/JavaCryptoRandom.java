@@ -26,6 +26,10 @@ import org.apache.commons.crypto.utils.Utils;
 
 /**
  * A CryptoRandom of Java implementation.
+ * <p>
+ * N.B. this class is not public/protected so does not appear in the main Javadoc Please ensure that property use is documented in the enum
+ * CryptoRandomFactory.RandomProvider
+ * </p>
  */
 class JavaCryptoRandom extends Random implements CryptoRandom {
 
@@ -34,7 +38,7 @@ class JavaCryptoRandom extends Random implements CryptoRandom {
      */
     private static final long serialVersionUID = 5517475898166660050L;
 
-    private SecureRandom instance;
+    private final SecureRandom instance;
 
     /**
      * Constructs a {@link JavaCryptoRandom}.
@@ -44,18 +48,14 @@ class JavaCryptoRandom extends Random implements CryptoRandom {
      * to get the name of the algorithm, with a default of
      * {@link CryptoRandomFactory#JAVA_ALGORITHM_DEFAULT}
      */
-    // N.B. this class is not public/protected so does not appear in the main Javadoc
-    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public JavaCryptoRandom(final Properties properties) {
-      try {
-        instance = SecureRandom
-                .getInstance(properties
-                        .getProperty(
-                                CryptoRandomFactory.JAVA_ALGORITHM_KEY,
-                                CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT));
-      } catch (final NoSuchAlgorithmException e) {
-        instance = new SecureRandom();
-      }
+        SecureRandom tmp;
+        try {
+            tmp = SecureRandom.getInstance(properties.getProperty(CryptoRandomFactory.JAVA_ALGORITHM_KEY, CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT));
+        } catch (final NoSuchAlgorithmException e) {
+            tmp = new SecureRandom();
+        }
+        instance = tmp;
     }
 
     /**
