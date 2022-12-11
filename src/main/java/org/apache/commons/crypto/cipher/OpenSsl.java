@@ -37,6 +37,8 @@ import org.apache.commons.crypto.utils.Utils;
  */
 final class OpenSsl {
 
+    private static final String TRANSFORMATION_DELIM = "/";
+
     // Mode constant defined by OpenSsl JNI
     public static final int ENCRYPT_MODE = 1;
     public static final int DECRYPT_MODE = 0;
@@ -55,14 +57,11 @@ final class OpenSsl {
          * @return the Algorithm mode.
          * @throws NoSuchAlgorithmException if the algorithm is not available.
          */
-        static int get(final String algorithm, final String mode)
-                throws NoSuchAlgorithmException {
+        static int get(final String algorithm, final String mode) throws NoSuchAlgorithmException {
             try {
                 return AlgorithmMode.valueOf(algorithm + "_" + mode).ordinal();
             } catch (final Exception e) {
-                throw new NoSuchAlgorithmException(
-                        "Doesn't support algorithm: " + algorithm
-                                + " and mode: " + mode);
+                throw new NoSuchAlgorithmException("Doesn't support algorithm: " + algorithm + " and mode: " + mode);
             }
         }
     }
@@ -81,8 +80,7 @@ final class OpenSsl {
             try {
                 return Padding.valueOf(padding).ordinal();
             } catch (final Exception e) {
-                throw new NoSuchPaddingException("Doesn't support padding: "
-                        + padding);
+                throw new NoSuchPaddingException("Doesn't support padding: " + padding);
             }
         }
     }
@@ -129,7 +127,7 @@ final class OpenSsl {
     }
 
     /**
-     * Return an {@code OpenSslCipher} object that implements the specified
+     * Gets an {@code OpenSslCipher} that implements the specified
      * transformation.
      *
      * @param transformation the name of the transformation, e.g.,
@@ -148,8 +146,7 @@ final class OpenSsl {
             throw new IllegalStateException(loadingFailureReason);
         }
         final Transform transform = tokenizeTransformation(transformation);
-        final int algorithmMode = AlgorithmMode.get(transform.algorithm,
-                transform.mode);
+        final int algorithmMode = AlgorithmMode.get(transform.algorithm, transform.mode);
         final int padding = Padding.get(transform.padding);
         final long context = OpenSslNative.initContext(algorithmMode, padding);
         return new OpenSsl(context, algorithmMode, padding);
@@ -188,42 +185,38 @@ final class OpenSsl {
             throw new NoSuchAlgorithmException("No transformation given.");
         }
 
-        /*
-         * Array containing the components of a Cipher transformation: index 0:
-         * algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding
-         * (e.g., NoPadding)
-         */
+        //
+        // Array containing the components of a Cipher transformation: index 0:
+        // algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding
+        // (e.g., NoPadding)
+        //
         final String[] parts = new String[3];
         int count = 0;
-        final StringTokenizer parser = new StringTokenizer(transformation, "/");
+        final StringTokenizer parser = new StringTokenizer(transformation, TRANSFORMATION_DELIM);
         while (parser.hasMoreTokens() && count < 3) {
             parts[count++] = parser.nextToken().trim();
         }
         if (count != 3 || parser.hasMoreTokens()) {
-            throw new NoSuchAlgorithmException(
-                    "Invalid transformation format: " + transformation);
+            throw new NoSuchAlgorithmException("Invalid transformation format: " + transformation);
         }
         return new Transform(parts[0], parts[1], parts[2]);
     }
 
     /**
-     * Initialize this cipher with a key and IV.
+     * Initializes this cipher with a key and IV.
      *
      * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
      * @param key crypto key
      * @param params the algorithm parameters
      * @throws InvalidAlgorithmParameterException if IV length is wrong
      */
-    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params)
-            throws InvalidAlgorithmParameterException {
+    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
         opensslBlockCipher.init(mode, key, params);
     }
 
     /**
-     * <p>
-     * Continues a multiple-part encryption or decryption operation. The data is
+     * Updates a multiple-part encryption or decryption operation. The data is
      * encrypted or decrypted, depending on how this cipher was initialized.
-     * </p>
      *
      * <p>
      * All {@code input.remaining()} bytes starting at
@@ -247,15 +240,13 @@ final class OpenSsl {
      * @throws ShortBufferException if there is insufficient space in the output
      *         buffer
      */
-    public int update(final ByteBuffer input, final ByteBuffer output)
-            throws ShortBufferException {
-        Utils.checkArgument(input.isDirect() && output.isDirect(),
-                "Direct buffers are required.");
+    public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
+        Utils.checkArgument(input.isDirect() && output.isDirect(), "Direct buffers are required.");
         return opensslBlockCipher.update(input, output);
     }
 
     /**
-     * Continues a multiple-part encryption/decryption operation. The data is
+     * Updates a multiple-part encryption/decryption operation. The data is
      * encrypted or decrypted, depending on how this cipher was initialized.
      *
      * @param input the input byte array
@@ -273,7 +264,7 @@ final class OpenSsl {
     }
 
     /**
-     * Encrypts or decrypts data in a single-part operation, or finishes a
+     * Finalizes to encrypt or decrypt data in a single-part operation, or finishes a
      * multiple-part operation.
      *
      * @param input the input byte array
@@ -293,18 +284,14 @@ final class OpenSsl {
      *         multiple of block size; or if this encryption algorithm is unable
      *         to process the input data provided.
      */
-    public int doFinal(final byte[] input, final int inputOffset, final int inputLen,
-                       final byte[] output, final int outputOffset)
-            throws ShortBufferException, IllegalBlockSizeException,
-            BadPaddingException{
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
+            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         return opensslBlockCipher.doFinal(input, inputOffset, inputLen, output, outputOffset);
     }
 
     /**
-     * <p>
      * Finishes a multiple-part operation. The data is encrypted or decrypted,
      * depending on how this cipher was initialized.
-     * </p>
      *
      * <p>
      * The result is stored in the output buffer. Upon return, the output
@@ -340,13 +327,11 @@ final class OpenSsl {
      *         (un)padding has been requested, but the decrypted data is not
      *         bounded by the appropriate padding bytes
      */
-    public int doFinal(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException,
-            IllegalBlockSizeException, BadPaddingException {
+    public int doFinal(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         Utils.checkArgument(output.isDirect(), "Direct buffer is required.");
 
         return opensslBlockCipher.doFinal(input, output);
     }
-
 
     /**
      * Continues a multi-part update of the Additional Authentication
@@ -357,9 +342,9 @@ final class OpenSsl {
      * either GCM mode, all AAD must be supplied before beginning
      * operations on the ciphertext (via the {@code update} and
      * {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
-     *
      */
     public void updateAAD(final byte[] aad) {
         this.opensslBlockCipher.updateAAD(aad);
