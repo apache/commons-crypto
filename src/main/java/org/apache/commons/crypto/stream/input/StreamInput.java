@@ -36,8 +36,8 @@ public class StreamInput implements Input {
     /**
      * Constructs a {@link org.apache.commons.crypto.stream.input.StreamInput}.
      *
-     * @param inputStream the inputstream object.
-     * @param bufferSize the buffersize.
+     * @param inputStream the InputStream object.
+     * @param bufferSize the buffer size.
      */
     public StreamInput(final InputStream inputStream, final int bufferSize) {
         this.in = inputStream;
