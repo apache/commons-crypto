@@ -33,6 +33,10 @@ import javax.crypto.ShortBufferException;
 
 /**
  * Implements the {@link CryptoCipher} using JCE provider.
+ * <p>
+ * N.B. this class is not public/protected so does not appear in the main Javadoc. Please ensure that property use is documented in the enum
+ * CryptoRandomFactory.RandomProvider
+ * </p>
  */
 class JceCipher implements CryptoCipher {
     private final Cipher cipher;
@@ -44,16 +48,10 @@ class JceCipher implements CryptoCipher {
      * @param transformation  transformation for JCE cipher (algorithm/mode/padding)
      * @throws GeneralSecurityException if JCE cipher initialize failed
      */
-    // N.B. this class is not public/protected so does not appear in the main Javadoc
-    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public JceCipher(final Properties props, final String transformation)
             throws GeneralSecurityException {
-        final String provider = props.getProperty(CryptoCipherFactory.JCE_PROVIDER_KEY);
-        if (provider == null || provider.isEmpty()) {
-            cipher = Cipher.getInstance(transformation);
-        } else {
-            cipher = Cipher.getInstance(transformation, provider);
-        }
+        final String provider = props.getProperty(CryptoCipherFactory.JCE_PROVIDER_KEY, "");
+        cipher = provider.isEmpty() ? Cipher.getInstance(transformation) : Cipher.getInstance(transformation, provider);
     }
 
     /**

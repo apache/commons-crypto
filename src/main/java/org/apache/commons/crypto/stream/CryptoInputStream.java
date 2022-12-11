@@ -618,11 +618,8 @@ public class CryptoInputStream extends InputStream implements
      * @return the buffer size.
      * */
     static int getBufferSize(final Properties props) {
-        final String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY);
-        if (bufferSizeStr == null || bufferSizeStr.isEmpty()) {
-            return CryptoInputStream.STREAM_BUFFER_SIZE_DEFAULT;
-        }
-        return Integer.parseInt(bufferSizeStr);
+        final String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, "");
+        return bufferSizeStr.isEmpty() ? CryptoInputStream.STREAM_BUFFER_SIZE_DEFAULT : Integer.parseInt(bufferSizeStr);
     }
 
     /**
@@ -631,8 +628,7 @@ public class CryptoInputStream extends InputStream implements
      * @param cipher the {@link CryptoCipher} instance.
      * @throws IOException if an I/O error occurs.
      */
-    static void checkStreamCipher(final CryptoCipher cipher)
-            throws IOException {
+    static void checkStreamCipher(final CryptoCipher cipher) throws IOException {
         if (!cipher.getAlgorithm().equals(AES.CTR_NO_PADDING)) {
             throw new IOException(AES.CTR_NO_PADDING + " is required");
         }
@@ -648,7 +644,6 @@ public class CryptoInputStream extends InputStream implements
     static int checkBufferSize(final CryptoCipher cipher, final int bufferSize) {
         Utils.checkArgument(bufferSize >= CryptoInputStream.MIN_BUFFER_SIZE,
                 "Minimum value of buffer size is " + CryptoInputStream.MIN_BUFFER_SIZE + ".");
-        return bufferSize - bufferSize
-                % cipher.getBlockSize();
+        return bufferSize - bufferSize % cipher.getBlockSize();
     }
 }
