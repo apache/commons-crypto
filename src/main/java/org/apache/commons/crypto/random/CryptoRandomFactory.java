@@ -34,8 +34,7 @@ public class CryptoRandomFactory {
     /**
      * The configuration key of the file path for secure random device.
      */
-    public static final String DEVICE_FILE_PATH_KEY = Crypto.CONF_PREFIX
-            + "secure.random.device.file.path";
+    public static final String DEVICE_FILE_PATH_KEY = Crypto.CONF_PREFIX + "secure.random.device.file.path";
 
     /**
      * The default value ({@value}) of the file path for secure random device.
@@ -46,8 +45,7 @@ public class CryptoRandomFactory {
     /**
      * The configuration key of the algorithm of secure random.
      */
-    public static final String JAVA_ALGORITHM_KEY = Crypto.CONF_PREFIX
-            + "secure.random.java.algorithm";
+    public static final String JAVA_ALGORITHM_KEY = Crypto.CONF_PREFIX + "secure.random.java.algorithm";
 
     /**
      * The default value ({@value}) of the algorithm of secure random.
@@ -68,8 +66,8 @@ public class CryptoRandomFactory {
      * The value can also be a comma-separated list of class names in
      * order of descending priority.
      */
-    public static final String CLASSES_KEY = Crypto.CONF_PREFIX
-            + "secure.random.classes";
+    public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "secure.random.classes";
+
     /**
      * Defines the internal CryptoRandom implementations.
      * <p>
