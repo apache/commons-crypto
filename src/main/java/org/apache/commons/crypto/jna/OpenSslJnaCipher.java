@@ -30,12 +30,13 @@ import java.util.Properties;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
+import org.apache.commons.crypto.utils.Padding;
+import org.apache.commons.crypto.utils.Transformation;
 
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
@@ -47,7 +48,7 @@ class OpenSslJnaCipher implements CryptoCipher {
 
     private PointerByReference algo;
     private final PointerByReference context;
-    private final AlgorithmMode algMode;
+    private final AlgorithmMode algorithmMode;
     private final int padding;
     private final String transformation;
     private final int IV_LENGTH = 16;
@@ -65,14 +66,14 @@ class OpenSslJnaCipher implements CryptoCipher {
             throw new GeneralSecurityException("Could not enable JNA access", OpenSslJna.initialisationError());
         }
         this.transformation = transformation;
-        final Transform transform = tokenizeTransformation(transformation);
-        algMode = AlgorithmMode.get(transform.algorithm, transform.mode);
+        final Transformation transform = Transformation.parse(transformation);
+        algorithmMode = AlgorithmMode.get(transform.getAlgorithm(), transform.getMode());
 
-        if (algMode != AlgorithmMode.AES_CBC && algMode != AlgorithmMode.AES_CTR) {
-            throw new GeneralSecurityException("unknown algorithm " + transform.algorithm + "_" + transform.mode);
+        if (algorithmMode != AlgorithmMode.AES_CBC && algorithmMode != AlgorithmMode.AES_CTR) {
+            throw new GeneralSecurityException("unknown algorithm " + transform.getAlgorithm() + "_" + transform.getMode());
         }
 
-        padding = Padding.get(transform.padding);
+        padding = Padding.get(transform.getPadding());
         context = OpenSslNativeJna.EVP_CIPHER_CTX_new();
 
     }
@@ -103,12 +104,12 @@ class OpenSslJnaCipher implements CryptoCipher {
         }
         iv = ((IvParameterSpec) params).getIV();
 
-        if ((algMode == AlgorithmMode.AES_CBC || algMode == AlgorithmMode.AES_CTR) && iv.length != IV_LENGTH) {
+        if ((algorithmMode == AlgorithmMode.AES_CBC || algorithmMode == AlgorithmMode.AES_CTR) && iv.length != IV_LENGTH) {
             throw new InvalidAlgorithmParameterException("Wrong IV length: must be 16 bytes long");
         }
         final int keyEncodedLength = key.getEncoded().length;
 
-        if (algMode == AlgorithmMode.AES_CBC) {
+        if (algorithmMode == AlgorithmMode.AES_CBC) {
             switch (keyEncodedLength) {
             case 16:
                 algo = OpenSslNativeJna.EVP_aes_128_cbc();
@@ -342,51 +343,6 @@ class OpenSslJnaCipher implements CryptoCipher {
         }
     }
 
-    // TODO DUPLICATED CODE, needs cleanup
-    /** Nested class for algorithm, mode and padding. */
-    private static class Transform {
-        final String algorithm;
-        final String mode;
-        final String padding;
-
-        /**
-         * Constructor of Transform.
-         *
-         * @param algorithm the algorithm name
-         * @param mode      the mode name
-         * @param padding   the padding name
-         */
-        public Transform(final String algorithm, final String mode, final String padding) {
-            this.algorithm = algorithm;
-            this.mode = mode;
-            this.padding = padding;
-        }
-    }
-
-    /**
-     * Tokenizes a transformation.
-     *
-     * @param transformation current transformation
-     * @return the Transform
-     * @throws NoSuchAlgorithmException if the algorithm is not supported
-     */
-    private static Transform tokenizeTransformation(final String transformation) throws NoSuchAlgorithmException {
-        if (transformation == null) {
-            throw new NoSuchAlgorithmException("No transformation given.");
-        }
-
-        //
-        // Array containing the components of a Cipher transformation: index 0:
-        // algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding (e.g.,
-        // NoPadding)
-        //
-        final String[] parts = transformation.split("/", 4);
-        if (parts.length != 3) {
-            throw new NoSuchAlgorithmException("Invalid transformation format: " + transformation);
-        }
-        return new Transform(parts[0], parts[1], parts[2]);
-    }
-
     /**
      * AlgorithmMode of JNA. Currently only support AES/CTR/NoPadding.
      */
@@ -406,28 +362,6 @@ class OpenSslJnaCipher implements CryptoCipher {
                 return AlgorithmMode.valueOf(algorithm + "_" + mode);
             } catch (final Exception e) {
                 throw new NoSuchAlgorithmException("Algorithm not supported: " + algorithm + " and mode: " + mode);
-            }
-        }
-    }
-
-    /**
-     * Padding of JNA.
-     */
-    private enum Padding {
-        NoPadding, PKCS5Padding;
-
-        /**
-         * Gets the Padding instance.
-         *
-         * @param padding the padding name
-         * @return the AlgorithmMode instance
-         * @throws NoSuchPaddingException if the algorithm is not support
-         */
-        static int get(final String padding) throws NoSuchPaddingException {
-            try {
-                return Padding.valueOf(padding).ordinal();
-            } catch (final Exception e) {
-                throw new NoSuchPaddingException("Algorithm not supported: " + padding);
             }
         }
     }

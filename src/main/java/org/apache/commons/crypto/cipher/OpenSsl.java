@@ -21,7 +21,6 @@ import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
-import java.util.StringTokenizer;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -29,6 +28,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 
 import org.apache.commons.crypto.Crypto;
+import org.apache.commons.crypto.utils.Padding;
+import org.apache.commons.crypto.utils.Transformation;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -36,8 +37,6 @@ import org.apache.commons.crypto.utils.Utils;
  * It's flexible to add other crypto algorithms/modes.
  */
 final class OpenSsl {
-
-    private static final String TRANSFORMATION_DELIM = "/";
 
     // Mode constant defined by OpenSsl JNI
     public static final int ENCRYPT_MODE = 1;
@@ -62,25 +61,6 @@ final class OpenSsl {
                 return AlgorithmMode.valueOf(algorithm + "_" + mode).ordinal();
             } catch (final Exception e) {
                 throw new NoSuchAlgorithmException("Algorithm not supported: " + algorithm + " and mode: " + mode);
-            }
-        }
-    }
-
-    private enum Padding {
-        NoPadding, PKCS5Padding;
-
-        /**
-         * Gets the Padding instance.
-         *
-         * @param padding the padding.
-         * @return the value of Padding.
-         * @throws NoSuchPaddingException if the padding is not available.
-         */
-        static int get(final String padding) throws NoSuchPaddingException {
-            try {
-                return Padding.valueOf(padding).ordinal();
-            } catch (final Exception e) {
-                throw new NoSuchPaddingException("Algorithm not supported: " + padding);
             }
         }
     }
@@ -145,61 +125,11 @@ final class OpenSsl {
         if (loadingFailureReason != null) {
             throw new IllegalStateException(loadingFailureReason);
         }
-        final Transform transform = tokenizeTransformation(transformation);
-        final int algorithmMode = AlgorithmMode.get(transform.algorithm, transform.mode);
-        final int padding = Padding.get(transform.padding);
+        final Transformation transform = Transformation.parse(transformation);
+        final int algorithmMode = AlgorithmMode.get(transform.getAlgorithm(), transform.getMode());
+        final int padding = Padding.get(transform.getPadding());
         final long context = OpenSslNative.initContext(algorithmMode, padding);
         return new OpenSsl(context, algorithmMode, padding);
-    }
-
-    /** Nested class for algorithm, mode and padding. */
-    private static class Transform {
-        final String algorithm;
-        final String mode;
-        final String padding;
-
-        /**
-         * Constructs a {@link Transform} based on the algorithm, mode and padding.
-         *
-         * @param algorithm the algorithm
-         * @param mode the mode.
-         * @param padding the padding.
-         */
-        public Transform(final String algorithm, final String mode, final String padding) {
-            this.algorithm = algorithm;
-            this.mode = mode;
-            this.padding = padding;
-        }
-    }
-
-    /**
-     * Gets the tokens of transformation.
-     *
-     * @param transformation the transformation.
-     * @return the {@link Transform} instance.
-     * @throws NoSuchAlgorithmException if the transformation is null.
-     */
-    private static Transform tokenizeTransformation(final String transformation)
-            throws NoSuchAlgorithmException {
-        if (transformation == null) {
-            throw new NoSuchAlgorithmException("No transformation given.");
-        }
-
-        //
-        // Array containing the components of a Cipher transformation: index 0:
-        // algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding
-        // (e.g., NoPadding)
-        //
-        final String[] parts = new String[3];
-        int count = 0;
-        final StringTokenizer parser = new StringTokenizer(transformation, TRANSFORMATION_DELIM);
-        while (parser.hasMoreTokens() && count < 3) {
-            parts[count++] = parser.nextToken().trim();
-        }
-        if (count != 3 || parser.hasMoreTokens()) {
-            throw new NoSuchAlgorithmException("Invalid transformation format: " + transformation);
-        }
-        return new Transform(parts[0], parts[1], parts[2]);
     }
 
     /**
