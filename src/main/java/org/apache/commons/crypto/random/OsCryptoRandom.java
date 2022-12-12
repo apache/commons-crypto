@@ -65,9 +65,7 @@ class OsCryptoRandom implements CryptoRandom {
     // N.B. this class is not public/protected so does not appear in the main Javadoc
     // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OsCryptoRandom(final Properties props) {
-        final File randomDevFile = new File(
-                props.getProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY,
-                                  CryptoRandomFactory.DEVICE_FILE_PATH_DEFAULT));
+        final File randomDevFile = new File(props.getProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, CryptoRandomFactory.DEVICE_FILE_PATH_DEFAULT));
 
         try {
             close();
