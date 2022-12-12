@@ -17,8 +17,13 @@
 */
 package org.apache.commons.crypto.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory.CipherProvider;
+import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.apache.commons.crypto.random.CryptoRandomFactory.RandomProvider;
 import org.junit.jupiter.api.Test;
@@ -28,17 +33,31 @@ import org.junit.jupiter.api.Test;
  */
 public class EnumTest {
 
-    @Test
-    public void testRandom() throws Exception {
-        for (final RandomProvider value : CryptoRandomFactory.RandomProvider.values()) {
-            ReflectionUtils.getClassByName(value.getClassName());
-        }
+    private void checkImplClass(final CipherProvider value) {
+        final Class<? extends CryptoCipher> implClass = value.getImplClass();
+        assertTrue(CryptoCipher.class.isAssignableFrom(implClass), implClass.toString());
+        assertEquals(value.getClassName(), implClass.getName());
+    }
+
+    private void checkImplClass(final RandomProvider value) {
+        final Class<? extends CryptoRandom> implClass = value.getImplClass();
+        assertTrue(CryptoRandom.class.isAssignableFrom(implClass), implClass.toString());
+        assertEquals(value.getClassName(), implClass.getName());
     }
 
     @Test
     public void testCipher() throws Exception {
         for (final CipherProvider value : CryptoCipherFactory.CipherProvider.values()) {
             ReflectionUtils.getClassByName(value.getClassName());
+            checkImplClass(value);
+        }
+    }
+
+    @Test
+    public void testRandom() throws Exception {
+        for (final RandomProvider value : CryptoRandomFactory.RandomProvider.values()) {
+            ReflectionUtils.getClassByName(value.getClassName());
+            checkImplClass(value);
         }
     }
 
