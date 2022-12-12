@@ -133,7 +133,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
     private void closeRdrandEngine() {
 
         if (rdrandEngine != null) {
-            OpenSslNativeJna.ENGINE_finish(rdrandEngine);
+            throwOnError(OpenSslNativeJna.ENGINE_finish(rdrandEngine));
             OpenSslNativeJna.ENGINE_free(rdrandEngine);
         }
     }
