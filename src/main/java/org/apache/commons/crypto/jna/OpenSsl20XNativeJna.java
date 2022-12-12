@@ -101,7 +101,7 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
 
     // TODO: NOT USED?
     /**
-     * EVP_CIPHER_CTX_init() remains as an alias for EVP_CIPHER_CTX_reset
+     * EVP_CIPHER_CTX_init() remains as an alias for EVP_CIPHER_CTX_reset.
      *
      * @param p
      *            cipher context
@@ -109,43 +109,43 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     public static native void EVP_CIPHER_CTX_init(PointerByReference p);
 
     /**
-     * Enables or disables padding
+     * Enables or disables padding.
      *
      * @param c
-     *            cipher context
+     *            cipher context.
      * @param pad
-     *            If the pad parameter is zero then no padding is performed
+     *            If the pad parameter is zero then no padding is performed.
      * @return always returns 1
      */
     public static native int EVP_CIPHER_CTX_set_padding(PointerByReference c, int pad);
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CBC mode
+     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CBC mode.
      */
     public static native PointerByReference EVP_aes_128_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CTR mode
+     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CTR mode.
      */
     public static native PointerByReference EVP_aes_128_ctr();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CBC mode
+     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CBC mode.
      */
     public static native PointerByReference EVP_aes_192_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CTR mode
+     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CTR mode.
      */
     public static native PointerByReference EVP_aes_192_ctr();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CBC mode
+     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CBC mode.
      */
     public static native PointerByReference EVP_aes_256_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CTR mode
+     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CTR mode.
      */
     public static native PointerByReference EVP_aes_256_ctr();
 
@@ -221,26 +221,26 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
 
     // Random generator
     /**
-     * OpenSSL uses for random number generation
+     * OpenSSL uses for random number generation.
      *
-     * @return pointers to the respective methods
+     * @return pointers to the respective methods.
      */
     public static native PointerByReference RAND_get_rand_method();
 
     /**
      * OpenSSL uses for random number generation.
      *
-     * @return pointers to the respective methods
+     * @return pointers to the respective methods.
      */
     public static native PointerByReference RAND_SSLeay();
 
     /**
-     * Generates random data
+     * Generates random data.
      *
      * @param buf
      *            the bytes for generated random.
      * @param num
-     *            buffer length
+     *            buffer length.
      * @return 1 on success, 0 otherwise.
      */
     public static native int RAND_bytes(ByteBuffer buf, int num);
@@ -286,18 +286,18 @@ class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
      * Sets the engine as the default for random number generation.
      *
      * @param e
-     *            engine reference
+     *            engine reference.
      * @param flags
-     *            ENGINE_METHOD_RAND
+     *            ENGINE_METHOD_RAND.
      * @return zero if failed.
      */
     public static native int ENGINE_set_default(PointerByReference e, int flags);
 
     /**
-     * Gets engine by id
+     * Gets engine by id.
      *
      * @param id
-     *            engine id
+     *            engine id.
      * @return engine instance
      */
     public static native PointerByReference ENGINE_by_id(String id);
