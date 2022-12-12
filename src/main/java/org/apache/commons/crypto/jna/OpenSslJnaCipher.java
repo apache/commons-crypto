@@ -43,7 +43,7 @@ import com.sun.jna.ptr.PointerByReference;
 /**
  * Implements the CryptoCipher using JNA into OpenSSL.
  */
-class OpenSslJnaCipher implements CryptoCipher {
+final class OpenSslJnaCipher implements CryptoCipher {
 
     private PointerByReference algo;
     private final PointerByReference context;

@@ -44,7 +44,7 @@ import com.sun.jna.ptr.PointerByReference;
  * @see <a href="http://en.wikipedia.org/wiki/RdRand">
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
-class OpenSslJnaCryptoRandom implements CryptoRandom {
+final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
     private final boolean rdrandEnabled;
     private final transient PointerByReference rdrandEngine;

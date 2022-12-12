@@ -40,7 +40,7 @@ import org.apache.commons.crypto.Crypto;
  * @see <a href="https://wiki.openssl.org/index.php/Random_Numbers"> https://wiki.openssl.org/index.php/Random_Numbers</a>
  * @see <a href="http://en.wikipedia.org/wiki/RdRand"> http://en.wikipedia.org/wiki/RdRand</a>
  */
-class OpenSslCryptoRandom implements CryptoRandom {
+final class OpenSslCryptoRandom implements CryptoRandom {
 
     private static final boolean nativeEnabled;
 

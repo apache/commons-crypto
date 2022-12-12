@@ -30,7 +30,7 @@ import org.apache.commons.crypto.utils.Utils;
  * CryptoRandomFactory.RandomProvider
  * </p>
  */
-class JavaCryptoRandom implements CryptoRandom {
+final class JavaCryptoRandom implements CryptoRandom {
 
     private final SecureRandom instance;
 

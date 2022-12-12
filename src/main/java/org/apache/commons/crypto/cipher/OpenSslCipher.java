@@ -38,7 +38,7 @@ import javax.crypto.ShortBufferException;
  * CryptoRandomFactory.RandomProvider
  * </p>
  */
-class OpenSslCipher implements CryptoCipher {
+final class OpenSslCipher implements CryptoCipher {
 
     private final OpenSsl openSslEngine;
     private boolean initialized;
@@ -71,7 +71,7 @@ class OpenSslCipher implements CryptoCipher {
      * not a block openSslEngine
      */
     @Override
-    public final int getBlockSize() {
+    public int getBlockSize() {
         return CryptoCipherFactory.AES_BLOCK_SIZE;
     }
 

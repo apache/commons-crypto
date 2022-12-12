@@ -31,7 +31,7 @@ import org.apache.commons.crypto.utils.IoUtils;
  * CryptoRandomFactory.RandomProvider
  * </p>
  */
-class OsCryptoRandom implements CryptoRandom {
+final class OsCryptoRandom implements CryptoRandom {
 
     private static final int RESERVOIR_LENGTH = 8192;
 

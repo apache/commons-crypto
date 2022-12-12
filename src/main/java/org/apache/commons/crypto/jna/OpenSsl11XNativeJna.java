@@ -26,7 +26,7 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
 
-class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
+final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
 
     static final boolean INIT_OK;
 

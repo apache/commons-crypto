@@ -36,7 +36,7 @@ import javax.crypto.spec.GCMParameterSpec;
  *
  * @since 1.1
  */
-class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
+final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
 
     // buffer for AAD data; if consumed, set as null
     private ByteArrayOutputStream aadBuffer = new ByteArrayOutputStream();
