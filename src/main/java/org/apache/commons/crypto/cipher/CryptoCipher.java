@@ -164,6 +164,7 @@ public interface CryptoCipher extends Closeable {
      * GCM mode, all AAD must be supplied before beginning
      * operations on the ciphertext (via the {@code update} and
      * {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
@@ -192,6 +193,7 @@ public interface CryptoCipher extends Closeable {
      * GCM mode, all AAD must be supplied before beginning
      * operations on the ciphertext (via the {@code update} and
      * {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
