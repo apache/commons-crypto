@@ -73,11 +73,7 @@ class OpenSslNativeJna {
 
         INIT_OK = JnaImplementation._INIT_OK();
 
-        if (INIT_OK) {
-            INIT_ERROR = null;
-        } else {
-            INIT_ERROR = JnaImplementation._INIT_ERROR();
-        }
+        INIT_ERROR = INIT_OK ? null : JnaImplementation._INIT_ERROR();
     }
 
     private OpenSslNativeJna() {
@@ -143,9 +139,8 @@ class OpenSslNativeJna {
         return JnaImplementation._EVP_CIPHER_CTX_new();
     }
 
-    // TODO: native method returns int
-    public static void EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding) {
-        JnaImplementation._EVP_CIPHER_CTX_set_padding(context, padding);
+    public static int EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding) {
+        return JnaImplementation._EVP_CIPHER_CTX_set_padding(context, padding);
     }
 
     public static int EVP_CipherFinal_ex(final PointerByReference context, final ByteBuffer outBuffer,
@@ -184,9 +179,8 @@ class OpenSslNativeJna {
         JnaImplementation._ENGINE_load_rdrand();
     }
 
-    // TODO: native method returns int
-    public static void ENGINE_cleanup() {
-        JnaImplementation._ENGINE_cleanup();
+    public static int ENGINE_cleanup() {
+        return JnaImplementation._ENGINE_cleanup();
     }
 
     public static void EVP_CIPHER_CTX_cleanup(final PointerByReference context) {

@@ -28,7 +28,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 
 import org.apache.commons.crypto.Crypto;
-import org.apache.commons.crypto.utils.Padding;
 import org.apache.commons.crypto.utils.Transformation;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -127,7 +126,7 @@ final class OpenSsl {
         }
         final Transformation transform = Transformation.parse(transformation);
         final int algorithmMode = AlgorithmMode.get(transform.getAlgorithm(), transform.getMode());
-        final int padding = Padding.get(transform.getPadding());
+        final int padding = transform.getPadding().ordinal();
         final long context = OpenSslNative.initContext(algorithmMode, padding);
         return new OpenSsl(context, algorithmMode, padding);
     }

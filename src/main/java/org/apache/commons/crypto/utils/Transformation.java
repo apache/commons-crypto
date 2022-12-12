@@ -20,6 +20,8 @@ package org.apache.commons.crypto.utils;
 
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.NoSuchPaddingException;
+
 /**
  * Transformation algorithm, mode and padding, in the format "Algorithm/Mode/Padding", for example "AES/CBC/NoPadding".
  *
@@ -27,14 +29,18 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Transformation {
 
+    private static final int T_DELIM_PARTS = 3;
+    private static final String T_DELIM_REGEX = "/";
+
     /**
      * Parses a transformation.
      *
      * @param transformation current transformation
      * @return the Transformation
      * @throws NoSuchAlgorithmException if the algorithm is not supported
+     * @throws NoSuchPaddingException Thrown when the padding is unsupported.
      */
-    public static Transformation parse(final String transformation) throws NoSuchAlgorithmException {
+    public static Transformation parse(final String transformation) throws NoSuchAlgorithmException, NoSuchPaddingException {
         if (transformation == null) {
             throw new NoSuchAlgorithmException("No transformation given.");
         }
@@ -44,16 +50,16 @@ public class Transformation {
         // algorithm (e.g., AES) index 1: mode (e.g., CTR) index 2: padding (e.g.,
         // NoPadding)
         //
-        final String[] parts = transformation.split("/", 4);
-        if (parts.length != 3) {
+        final String[] parts = transformation.split(T_DELIM_REGEX, T_DELIM_PARTS + 1);
+        if (parts.length != T_DELIM_PARTS) {
             throw new NoSuchAlgorithmException("Invalid transformation format: " + transformation);
         }
         return new Transformation(parts[0], parts[1], parts[2]);
     }
 
-    final String algorithm;
-    final String mode;
-    final String padding;
+    private final String algorithm;
+    private final String mode;
+    private final Padding padding;
 
     /**
      * Constructs a new instance.
@@ -62,10 +68,22 @@ public class Transformation {
      * @param mode the mode name
      * @param padding the padding name
      */
-    private Transformation(final String algorithm, final String mode, final String padding) {
+    private Transformation(final String algorithm, final String mode, final Padding padding) {
         this.algorithm = algorithm;
         this.mode = mode;
         this.padding = padding;
+    }
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param algorithm the algorithm name
+     * @param mode the mode name
+     * @param padding the padding name
+     * @throws NoSuchPaddingException Thrown when the padding is unsupported.
+     */
+    private Transformation(final String algorithm, final String mode, final String padding) throws NoSuchPaddingException {
+        this(algorithm, mode, Padding.get(padding));
     }
 
     /**
@@ -91,7 +109,7 @@ public class Transformation {
      * 
      * @return the padding.
      */
-    public String getPadding() {
+    public Padding getPadding() {
         return padding;
     }
 }

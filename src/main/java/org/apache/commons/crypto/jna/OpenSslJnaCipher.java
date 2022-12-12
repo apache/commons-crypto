@@ -35,7 +35,6 @@ import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
-import org.apache.commons.crypto.utils.Padding;
 import org.apache.commons.crypto.utils.Transformation;
 
 import com.sun.jna.NativeLong;
@@ -70,10 +69,10 @@ class OpenSslJnaCipher implements CryptoCipher {
         algorithmMode = AlgorithmMode.get(transform.getAlgorithm(), transform.getMode());
 
         if (algorithmMode != AlgorithmMode.AES_CBC && algorithmMode != AlgorithmMode.AES_CTR) {
-            throw new GeneralSecurityException("unknown algorithm " + transform.getAlgorithm() + "_" + transform.getMode());
+            throw new GeneralSecurityException("Unknown algorithm " + transform.getAlgorithm() + "_" + transform.getMode());
         }
 
-        padding = Padding.get(transform.getPadding());
+        padding = transform.getPadding().ordinal();
         context = OpenSslNativeJna.EVP_CIPHER_CTX_new();
 
     }

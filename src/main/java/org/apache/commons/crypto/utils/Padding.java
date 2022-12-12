@@ -25,20 +25,25 @@ import javax.crypto.NoSuchPaddingException;
  */
 public enum Padding {
 
-    NoPadding, PKCS5Padding;
+    /** Don't change the order of this enum value. */
+    NoPadding,
+
+    /** Don't change the order of this enum value. */
+    PKCS5Padding;
 
     /**
      * Gets a Padding.
      *
      * @param padding the padding name.
      * @return a Padding instance.
-     * @throws NoSuchPaddingException if the algorithm is not support
+     * @throws NoSuchPaddingException if the algorithm is not supported.
      */
-    public static int get(final String padding) throws NoSuchPaddingException {
+    public static Padding get(final String padding) throws NoSuchPaddingException {
         try {
-            return Padding.valueOf(padding).ordinal();
+            return Padding.valueOf(padding);
         } catch (final Exception e) {
             throw new NoSuchPaddingException("Algorithm not supported: " + padding);
         }
     }
+
 }
