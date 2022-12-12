@@ -69,12 +69,12 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
             OpenSslNativeJna.ENGINE_load_rdrand();
             rdrandEngine = OpenSslNativeJna.ENGINE_by_id("rdrand");
             final int ENGINE_METHOD_RAND = 0x0008;
-            if(rdrandEngine != null) {
+            if (rdrandEngine != null) {
                 final int rc = OpenSslNativeJna.ENGINE_init(rdrandEngine);
 
-                if(rc != 0) {
+                if (rc != 0) {
                     final int rc2 = OpenSslNativeJna.ENGINE_set_default(rdrandEngine, ENGINE_METHOD_RAND);
-                    if(rc2 != 0) {
+                    if (rc2 != 0) {
                         rdrandLoaded = true;
                     }
                 }
@@ -86,7 +86,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
 
         rdrandEnabled = rdrandLoaded;
 
-        if(!rdrandLoaded) {
+        if (!rdrandLoaded) {
             closeRdrandEngine();
         }
     }
@@ -100,10 +100,10 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     public void nextBytes(final byte[] bytes) {
 
         synchronized (OpenSslJnaCryptoRandom.class) {
-            //this method is synchronized for now
-            //to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
+            // this method is synchronized for now
+            // to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
 
-            if(rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
+            if (rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
                 close();
                 throw new IllegalStateException("rdrand should be used but default is detected");
             }
@@ -113,7 +113,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
             final int retVal = OpenSslNativeJna.RAND_bytes(buf, byteLength);
             throwOnError(retVal);
             buf.rewind();
-            buf.get(bytes,0, byteLength);
+            buf.get(bytes, 0, byteLength);
         }
     }
 

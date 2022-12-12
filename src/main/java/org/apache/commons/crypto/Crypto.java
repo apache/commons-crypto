@@ -30,7 +30,7 @@ import org.apache.commons.crypto.utils.AES;
 
 /**
  * Provides diagnostic information about Commons Crypto and keys for native
- * class loading
+ * class loading.
  */
 public final class Crypto {
 
@@ -49,7 +49,6 @@ public final class Crypto {
             if (url != null) {
                 try (InputStream inputStream = url.openStream()) {
                     versionData.load(inputStream);
-                    return versionData;
                 } catch (final IOException e) { // NOPMD
                 }
             }
@@ -151,7 +150,7 @@ public final class Crypto {
      * @throws Exception if getCryptoRandom or getCryptoCipher get error.
      */
     public static void main(final String[] args) throws Exception {
-        quiet = args.length ==1 && args[0].equals("-q");
+        quiet = args.length == 1 && args[0].equals("-q");
         info("%s %s", getComponentName(), getComponentVersion());
         if (isNativeCodeLoaded()) {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
@@ -163,16 +162,14 @@ public final class Crypto {
             info("DLL path: %s", OpenSslInfoNative.DLLPath());
             { // CryptoRandom
                 final Properties props = new Properties();
-                props.setProperty(CryptoRandomFactory.CLASSES_KEY,
-                        CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
+                props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
                 try (CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props)) {
                     info("Random instance created OK: %s", cryptoRandom);
                 }
             }
             { // CryptoCipher
                 final Properties props = new Properties();
-                props.setProperty(CryptoCipherFactory.CLASSES_KEY,
-                        CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
+                props.setProperty(CryptoCipherFactory.CLASSES_KEY, CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
                 try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, props)) {
                     info("Cipher %s instance created OK: %s", AES.CTR_NO_PADDING, cryptoCipher);
                 }

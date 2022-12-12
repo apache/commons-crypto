@@ -65,12 +65,6 @@ final class OsInfo {
      */
     static final String PPC64 = "ppc64";
 
-    /**
-     * The private constructor of {@link OsInfo}.
-     */
-    private OsInfo() {
-    }
-
     static {
         // x86 mappings
         archMapping.put(X86, X86);
@@ -110,23 +104,33 @@ final class OsInfo {
     }
 
     /**
-     * The main method. This is used by the JNI make processing in Makefile.common
+     * Gets the architecture name.
      *
-     * @param args the argv.
+     * @return the architecture name.
      */
-    public static void main(final String[] args) {
-        if (args.length >= 1) {
-            if ("--os".equals(args[0])) {
-                System.out.print(getOSName());
-                return;
+    static String getArchName() {
+        // if running Linux on ARM, need to determine ABI of JVM
+        final String osArch = System.getProperty("os.arch");
+        if (osArch.startsWith("arm") && getOsNameProperty().contains("Linux")) {
+            final String javaHome = System.getProperty("java.home");
+            try {
+                // determine if first JVM found uses ARM hard-float ABI
+                final String[] cmdarray = { "/bin/sh", "-c",
+                        "find '" + javaHome + "' -name 'libjvm.so' | head -1 | xargs readelf -A | grep 'Tag_ABI_VFP_args: VFP registers'" };
+                final int exitCode = Runtime.getRuntime().exec(cmdarray).waitFor();
+                if (exitCode == 0) {
+                    return "armhf";
+                }
+            } catch (final IOException | InterruptedException e) { // NOPMD
+                // ignored: fall back to "arm" arch (soft-float ABI)
             }
-            if ("--arch".equals(args[0])) {
-                System.out.print(getArchName());
-                return;
+        } else {
+            final String string = archMapping.get(osArch.toLowerCase(Locale.US));
+            if (string != null) {
+                return string;
             }
         }
-
-        System.out.print(getNativeLibFolderPathForCurrentOS());
+        return translateArchNameToFolderName(osArch);
     }
 
     /**
@@ -144,38 +148,41 @@ final class OsInfo {
      * @return the OS name.
      */
     static String getOSName() {
-        return translateOSNameToFolderName(System.getProperty("os.name"));
+        return translateOSNameToFolderName(getOsNameProperty());
+    }
+
+    static String getOsNameProperty() {
+        return System.getProperty("os.name");
     }
 
     /**
-     * Gets the architecture name.
+     * The main method. This is used by the JNI make processing in Makefile.common
      *
-     * @return the architecture name.
+     * @param args the argv.
      */
-    static String getArchName() {
-        // if running Linux on ARM, need to determine ABI of JVM
-        final String osArch = System.getProperty("os.arch");
-        if (osArch.startsWith("arm") && System.getProperty("os.name").contains("Linux")) {
-            final String javaHome = System.getProperty("java.home");
-            try {
-                // determine if first JVM found uses ARM hard-float ABI
-                final String[] cmdarray = { "/bin/sh", "-c",
-                        "find '" + javaHome + "' -name 'libjvm.so' | head -1 | xargs readelf -A | "
-                                + "grep 'Tag_ABI_VFP_args: VFP registers'" };
-                final int exitCode = Runtime.getRuntime().exec(cmdarray).waitFor();
-                if (exitCode == 0) {
-                    return "armhf";
-                }
-            } catch (final IOException | InterruptedException e) { // NOPMD
-                // ignored: fall back to "arm" arch (soft-float ABI)
+    public static void main(final String[] args) {
+        if (args.length >= 1) {
+            if ("--os".equals(args[0])) {
+                System.out.print(getOSName());
+                return;
             }
-        } else {
-            final String string = archMapping.get(osArch.toLowerCase(Locale.US));
-            if (string != null) {
-                return string;
+            if ("--arch".equals(args[0])) {
+                System.out.print(getArchName());
+                return;
             }
         }
-        return translateArchNameToFolderName(osArch);
+
+        System.out.println(getNativeLibFolderPathForCurrentOS());
+    }
+
+    /**
+     * Translates the architecture name to folder name.
+     *
+     * @param archName the architecture name.
+     * @return the folder name.
+     */
+    private static String translateArchNameToFolderName(final String archName) {
+        return archName.replaceAll("\\W", "");
     }
 
     /**
@@ -201,12 +208,8 @@ final class OsInfo {
     }
 
     /**
-     * Translates the architecture name to folder name.
-     *
-     * @param archName the architecture name.
-     * @return the folder name.
+     * The private constructor of {@link OsInfo}.
      */
-    private static String translateArchNameToFolderName(final String archName) {
-        return archName.replaceAll("\\W", "");
+    private OsInfo() {
     }
 }
