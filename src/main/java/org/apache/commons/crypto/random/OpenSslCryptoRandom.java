@@ -29,16 +29,16 @@ import org.apache.commons.crypto.Crypto;
  * </p>
  *
  * <p>
- * If using an Intel chipset with RDRAND, the high-performance hardware random
- * number generator will be used and it's much faster than SecureRandom. If
- * RDRAND is unavailable, default OpenSSL secure random generator will be used.
- * It's still faster and can generate strong random bytes.
+ * If using an Intel chipset with RDRAND, the high-performance hardware random number generator will be used and it's much faster than SecureRandom. If RDRAND
+ * is unavailable, default OpenSSL secure random generator will be used. It's still faster and can generate strong random bytes.
+ * </p>
+ * <p>
+ * This class is not public/protected so does not appear in the main Javadoc Please ensure that property use is documented in the enum
+ * CryptoRandomFactory.RandomProvider
  * </p>
  *
- * @see <a href="https://wiki.openssl.org/index.php/Random_Numbers">
- *      https://wiki.openssl.org/index.php/Random_Numbers</a>
- * @see <a href="http://en.wikipedia.org/wiki/RdRand">
- *      http://en.wikipedia.org/wiki/RdRand</a>
+ * @see <a href="https://wiki.openssl.org/index.php/Random_Numbers"> https://wiki.openssl.org/index.php/Random_Numbers</a>
+ * @see <a href="http://en.wikipedia.org/wiki/RdRand"> http://en.wikipedia.org/wiki/RdRand</a>
  */
 class OpenSslCryptoRandom implements CryptoRandom {
 
@@ -95,8 +95,6 @@ class OpenSslCryptoRandom implements CryptoRandom {
      * @param props the configuration properties - not used
      * @throws GeneralSecurityException if the native library could not be initialized successfully
      */
-    // N.B. this class is not public/protected so does not appear in the main Javadoc
-    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OpenSslCryptoRandom(final Properties props) throws GeneralSecurityException { // NOPMD
         checkNative();
     }

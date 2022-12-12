@@ -34,7 +34,7 @@ import javax.crypto.ShortBufferException;
 /**
  * Implements the {@link CryptoCipher} using JCE provider.
  * <p>
- * N.B. this class is not public/protected so does not appear in the main Javadoc. Please ensure that property use is documented in the enum
+ * This class is not public/protected so does not appear in the main Javadoc. Please ensure that property use is documented in the enum
  * CryptoRandomFactory.RandomProvider
  * </p>
  */

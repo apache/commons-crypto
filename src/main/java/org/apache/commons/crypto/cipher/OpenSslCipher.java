@@ -33,6 +33,10 @@ import javax.crypto.ShortBufferException;
 
 /**
  * Implements the CryptoCipher using JNI into OpenSSL.
+ * <p>
+ * this class is not public/protected so does not appear in the main Javadoc Please ensure that property use is documented in the enum
+ * CryptoRandomFactory.RandomProvider
+ * </p>
  */
 class OpenSslCipher implements CryptoCipher {
 
@@ -48,8 +52,6 @@ class OpenSslCipher implements CryptoCipher {
      * @param transformation  transformation for OpenSSL openSslEngine (algorithm/mode/padding)
      * @throws GeneralSecurityException if OpenSSL openSslEngine initialize failed
      */
-    // N.B. this class is not public/protected so does not appear in the main Javadoc
-    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OpenSslCipher(final Properties props, final String transformation) // NOPMD
             throws GeneralSecurityException {
         this.transformation = transformation;

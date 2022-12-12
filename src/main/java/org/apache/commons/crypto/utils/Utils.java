@@ -230,7 +230,7 @@ public final class Utils {
      * The code is intended for use with macOS where SIP makes it hard to override
      * the environment variables needed to override the DLL search path. It also
      * works for Linux, but is not (currently) used or needed for Windows.
-     * N.B. Do not change the method name or its signature!
+     * Do not change the method name or its signature!
      */
     static String libraryPath(final String name) {
         final String override = System.getProperty("jni.library.path");

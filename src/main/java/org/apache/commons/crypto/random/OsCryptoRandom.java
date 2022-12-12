@@ -25,8 +25,11 @@ import java.util.Properties;
 import org.apache.commons.crypto.utils.IoUtils;
 
 /**
- * A Random implementation that uses random bytes sourced from the operating
- * system.
+ * A Random implementation that uses random bytes sourced from the operating system.
+ * <p>
+ * This class is not public/protected so does not appear in the main Javadoc Please ensure that property use is documented in the enum
+ * CryptoRandomFactory.RandomProvider
+ * </p>
  */
 class OsCryptoRandom implements CryptoRandom {
 
@@ -62,8 +65,6 @@ class OsCryptoRandom implements CryptoRandom {
      * path to the random device, default is
      * {@link CryptoRandomFactory#DEVICE_FILE_PATH_DEFAULT}
      */
-    // N.B. this class is not public/protected so does not appear in the main Javadoc
-    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OsCryptoRandom(final Properties props) {
         final File randomDevFile = new File(props.getProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, CryptoRandomFactory.DEVICE_FILE_PATH_DEFAULT));
 
