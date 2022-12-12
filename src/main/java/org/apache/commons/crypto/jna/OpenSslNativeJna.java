@@ -87,14 +87,12 @@ class OpenSslNativeJna {
         return JnaImplementation._ENGINE_by_id(string);
     }
 
-    // TODO: native method returns int
-    public static void ENGINE_finish(final PointerByReference rdrandEngine) {
-        JnaImplementation._ENGINE_finish(rdrandEngine);
+    public static int ENGINE_finish(final PointerByReference rdrandEngine) {
+        return JnaImplementation._ENGINE_finish(rdrandEngine);
     }
 
-    // TODO: native method returns int
-    public static void ENGINE_free(final PointerByReference rdrandEngine) {
-        JnaImplementation._ENGINE_free(rdrandEngine);
+    public static int ENGINE_free(final PointerByReference rdrandEngine) {
+        return JnaImplementation._ENGINE_free(rdrandEngine);
     }
 
     public static int ENGINE_init(final PointerByReference rdrandEngine) {
@@ -105,8 +103,7 @@ class OpenSslNativeJna {
         return JnaImplementation._ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
     }
 
-    // TODO: native method expects char[] buffer
-    public static String ERR_error_string(final NativeLong err, final Object object) {
+    public static String ERR_error_string(final NativeLong err, final char[] object) {
         return JnaImplementation._ERR_error_string(err, null);
     }
 
