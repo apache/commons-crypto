@@ -121,8 +121,9 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      * Overrides {@link OpenSslJnaCryptoRandom}. For {@link OpenSslJnaCryptoRandom},
      * we don't need to set seed.
      *
-     * @param seed the initial seed.
+     * @param seed the initial seed, ignored.
      */
+    @SuppressWarnings("sync-override") // Empty implementation.
     @Override
     public void setSeed(final long seed) {
         // Self-seeding.
