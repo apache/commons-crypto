@@ -21,10 +21,12 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
+import org.apache.commons.crypto.stream.CryptoInputStream;
+
 /**
- * The ChannelInput class takes a {@code ReadableByteChannel} object and
- * wraps it as {@code Input} object acceptable by
- * {@code CryptoInputStream}.
+ * The ChannelInput class takes a {@link ReadableByteChannel} object and
+ * wraps it as {@link Input} object acceptable by
+ * {@link CryptoInputStream}.
  */
 public class ChannelInput implements Input {
     private static final int SKIP_BUFFER_SIZE = 2048;

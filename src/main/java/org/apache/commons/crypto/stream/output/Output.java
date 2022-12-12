@@ -19,14 +19,18 @@ package org.apache.commons.crypto.stream.output;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.WritableByteChannel;
+
+import org.apache.commons.crypto.stream.CryptoOutputStream;
 
 /**
  * The Output interface abstract the output target of
- * {@code CryptoOutputStream} so that different implementation of output
+ * {@link CryptoOutputStream} so that different implementation of output
  * can be used. The implementation Output interface will usually wraps an output
- * mechanism such as {@code OutputStream} or
- * {@code WritableByteChannel}.
+ * mechanism such as {@link OutputStream} or
+ * {@link WritableByteChannel}.
  */
 public interface Output extends Closeable {
 

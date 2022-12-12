@@ -19,14 +19,18 @@ package org.apache.commons.crypto.stream.input;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+
+import org.apache.commons.crypto.stream.CryptoInputStream;
 
 /**
  * The Input interface abstract the input source of
- * {@code CryptoInputStream} so that different implementation of input can
+ * {@link CryptoInputStream} so that different implementation of input can
  * be used. The implementation Input interface will usually wraps an input
- * mechanism such as {@code InputStream} or
- * {@code ReadableByteChannel}.
+ * mechanism such as {@link InputStream} or
+ * {@link ReadableByteChannel}.
  */
 public interface Input extends Closeable {
     /**

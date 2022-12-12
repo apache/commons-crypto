@@ -23,9 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+import org.apache.commons.crypto.stream.CryptoInputStream;
+
  /**
- * The StreamInput class takes a {@code InputStream} object and wraps it as
- * {@code Input} object acceptable by {@code CryptoInputStream}.
+ * The StreamInput class takes a {@link InputStream} object and wraps it as
+ * {@link Input} object acceptable by {@link CryptoInputStream}.
  */
 public class StreamInput implements Input {
 

@@ -21,9 +21,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+import org.apache.commons.crypto.stream.CryptoOutputStream;
+
 /**
- * The StreamOutput class takes a {@code OutputStream} object and wraps it
- * as {@code Output} object acceptable by {@code CryptoOutputStream}
+ * The StreamOutput class takes a {@link OutputStream} object and wraps it
+ * as {@link Output} object acceptable by {@link CryptoOutputStream}
  * as the output target.
  */
 public class StreamOutput implements Output {
