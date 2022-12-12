@@ -20,7 +20,7 @@ package org.apache.commons.crypto.random;
 import java.util.Properties;
 
 /**
- * For testing class creation. An abstract class cannot be instantiated.
+ * Only provides a constructor.
  */
 abstract class AbstractRandom implements CryptoRandom {
 
