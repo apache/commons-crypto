@@ -26,7 +26,7 @@ import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * This is the factory class used for creating {@link CryptoRandom} instances
+ * Creates {@link CryptoRandom} instances
  */
 public class CryptoRandomFactory {
 

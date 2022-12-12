@@ -26,7 +26,7 @@ import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * This is the factory class used for creating {@link CryptoCipher} instances.
+ * Creates {@link CryptoCipher} instances.
  */
 public class CryptoCipherFactory {
 
@@ -34,6 +34,7 @@ public class CryptoCipherFactory {
      * The configuration key of the provider class for JCE cipher.
      */
     public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX + "cipher.jce.provider";
+
     /**
      * The configuration key of the CryptoCipher implementation class.
      * <p>
@@ -49,7 +50,6 @@ public class CryptoCipherFactory {
      * order of descending priority.
      * </p>
      */
-
     public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "cipher.classes";
 
     /**
@@ -62,7 +62,6 @@ public class CryptoCipherFactory {
      * props.setProperty(...); // if required by the implementation
      * cipher = CryptoCipherFactory.getInstance(transformation, props);
      * </pre></blockquote>
-     * </p>
      */
     public enum CipherProvider {
 
