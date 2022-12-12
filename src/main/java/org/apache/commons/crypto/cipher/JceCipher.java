@@ -68,9 +68,11 @@ class JceCipher implements CryptoCipher {
     /**
      * Returns the algorithm name of this {@code CryptoCipher} object.
      *
-     * <p>This is the same name that was specified in one of the
+     * <p>
+     * This is the same name that was specified in one of the
      * {@code CryptoCipherFactory#getInstance} calls that created this
      * {@code CryptoCipher} object..
+     * </p>
      *
      * @return the algorithm name of this {@code CryptoCipher} object.
      */
@@ -203,6 +205,7 @@ class JceCipher implements CryptoCipher {
      * either GCM or CCM mode, all AAD must be supplied before beginning
      * operations on the ciphertext (via the {@code update} and
      * {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
@@ -230,6 +233,7 @@ class JceCipher implements CryptoCipher {
      * either GCM or CCM mode, all AAD must be supplied before beginning
      * operations on the ciphertext (via the {@code update} and
      * {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
      *

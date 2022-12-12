@@ -32,10 +32,8 @@ import javax.crypto.ShortBufferException;
  * The interface of cryptographic cipher for encryption and decryption.
  *
  * <p>
- * Note that implementations must provide a constructor that has 2 parameters:
- * <br>
- * a Properties instance and a String (transformation)
- *
+ * Note that implementations must provide a constructor that has 2 parameters: a Properties instance and a String (transformation)
+ * </p>
  */
 public interface CryptoCipher extends Closeable {
 
@@ -50,9 +48,11 @@ public interface CryptoCipher extends Closeable {
     /**
      * Returns the algorithm name of this {@code CryptoCipher} object.
      *
-     * <p>This is the same name that was specified in one of the
+     * <p>
+     * This is the same name that was specified in one of the
      * {@code CryptoCipherFactory#getInstance} calls that created this
      * {@code CryptoCipher} object..
+     * </p>
      *
      * @return the algorithm name of this {@code CryptoCipher} object.
      */
