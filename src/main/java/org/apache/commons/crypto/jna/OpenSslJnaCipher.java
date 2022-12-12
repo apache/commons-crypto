@@ -139,8 +139,7 @@ final class OpenSslJnaCipher implements CryptoCipher {
             }
         }
 
-        final int retVal = OpenSslNativeJna.EVP_CipherInit_ex(context, algo, null, key.getEncoded(), iv, cipherMode);
-        throwOnError(retVal);
+        throwOnError(OpenSslNativeJna.EVP_CipherInit_ex(context, algo, null, key.getEncoded(), iv, cipherMode));
         OpenSslNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
     }
 
