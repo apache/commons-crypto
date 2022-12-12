@@ -30,7 +30,7 @@ import org.apache.commons.crypto.utils.Utils;
 /**
  * This class represents a block cipher in one of its modes.
  */
-abstract class OpenSslFeedbackCipher {
+abstract class AbstractOpenSslFeedbackCipher {
 
     protected long context;
     protected final int algorithmMode;
@@ -38,7 +38,7 @@ abstract class OpenSslFeedbackCipher {
 
     protected int cipherMode = OpenSsl.DECRYPT_MODE;
 
-    OpenSslFeedbackCipher(final long context, final int algorithmMode, final int padding) {
+    AbstractOpenSslFeedbackCipher(final long context, final int algorithmMode, final int padding) {
         this.context = context;
         this.algorithmMode = algorithmMode;
         this.padding = padding;

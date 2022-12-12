@@ -43,7 +43,7 @@ final class OpenSsl {
     public static final int ENCRYPT_MODE = 1;
     public static final int DECRYPT_MODE = 0;
 
-    private final OpenSslFeedbackCipher opensslBlockCipher;
+    private final AbstractOpenSslFeedbackCipher opensslBlockCipher;
 
     /** Currently only support AES/CTR/NoPadding. */
     private enum AlgorithmMode {

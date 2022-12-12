@@ -31,7 +31,7 @@ import javax.crypto.spec.IvParameterSpec;
  * <p>
  * It will call the OpenSSL API to implement encryption/decryption
  */
-class OpenSslCommonMode extends OpenSslFeedbackCipher {
+class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
 
     OpenSslCommonMode(final long context, final int algorithmMode, final int padding) {
         super(context, algorithmMode, padding);
