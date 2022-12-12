@@ -1,20 +1,20 @@
- /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/*
+* Licensed to the Apache Software Foundation (ASF) under one
+* or more contributor license agreements.  See the NOTICE file
+* distributed with this work for additional information
+* regarding copyright ownership.  The ASF licenses this file
+* to you under the Apache License, Version 2.0 (the
+* "License"); you may not use this file except in compliance
+* with the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package org.apache.commons.crypto.cipher;
 
 import java.nio.ByteBuffer;
@@ -30,6 +30,7 @@ import javax.crypto.spec.IvParameterSpec;
  * This class do the real work(Encryption/Decryption) for non-authenticated modes, such as CTR, CBC.
  * <p>
  * It will call the OpenSSL API to implement encryption/decryption
+ * </p>
  */
 class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
 
@@ -38,8 +39,7 @@ class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
     }
 
     @Override
-    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params)
-            throws InvalidAlgorithmParameterException {
+    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
         this.cipherMode = mode;
         final byte[] iv;
         if (!(params instanceof IvParameterSpec)) {
@@ -54,9 +54,7 @@ class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
     public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
         checkState();
 
-        final int len = OpenSslNative.update(context, input, input.position(),
-                input.remaining(), output, output.position(),
-                output.remaining());
+        final int len = OpenSslNative.update(context, input, input.position(), input.remaining(), output, output.position(), output.remaining());
         input.position(input.limit());
         output.position(output.position() + len);
 
@@ -64,12 +62,10 @@ class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
     }
 
     @Override
-    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
-            throws ShortBufferException {
+    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset) throws ShortBufferException {
         checkState();
 
-        return OpenSslNative.updateByteArray(context, input, inputOffset,
-                inputLen, output, outputOffset, output.length - outputOffset);
+        return OpenSslNative.updateByteArray(context, input, inputOffset, inputLen, output, outputOffset, output.length - outputOffset);
     }
 
     @Override
@@ -78,30 +74,25 @@ class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
         checkState();
         final int outputLength = output.length;
 
-        int len = OpenSslNative.updateByteArray(context, input, inputOffset,
-                inputLen, output, outputOffset, outputLength - outputOffset);
+        int len = OpenSslNative.updateByteArray(context, input, inputOffset, inputLen, output, outputOffset, outputLength - outputOffset);
 
-        len += OpenSslNative.doFinalByteArray(context, output, outputOffset + len,
-                outputLength - outputOffset - len);
+        len += OpenSslNative.doFinalByteArray(context, output, outputOffset + len, outputLength - outputOffset - len);
 
         return len;
     }
 
     @Override
-    public int doFinal(final ByteBuffer input, final ByteBuffer output)
-            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    public int doFinal(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         checkState();
 
         int totalLen = 0;
-        int len = OpenSslNative.update(context, input, input.position(),
-                input.remaining(), output, output.position(), output.remaining());
+        int len = OpenSslNative.update(context, input, input.position(), input.remaining(), output, output.position(), output.remaining());
         totalLen += len;
 
         input.position(input.limit());
         output.position(output.position() + len);
 
-        len = OpenSslNative.doFinal(context, output, output.position(),
-                output.remaining());
+        len = OpenSslNative.doFinal(context, output, output.position(), output.remaining());
         totalLen += len;
 
         output.position(output.position() + len);
@@ -111,8 +102,6 @@ class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
 
     @Override
     public void updateAAD(final byte[] aad) {
-        throw new UnsupportedOperationException(
-                "The underlying Cipher implementation "
-                        + "does not support this method");
+        throw new UnsupportedOperationException("The underlying Cipher implementation does not support this method");
     }
 }
