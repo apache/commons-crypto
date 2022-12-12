@@ -18,10 +18,10 @@
 package org.apache.commons.crypto.random;
 
 
-class DummyRandom implements CryptoRandom {
+class NoopRandom implements CryptoRandom {
 
     /** Should fail with NoSuchMethodException. */
-    DummyRandom() {
+    NoopRandom() {
         // empty
     }
 
