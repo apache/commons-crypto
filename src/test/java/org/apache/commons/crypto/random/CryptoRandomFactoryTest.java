@@ -32,15 +32,12 @@ import org.junit.jupiter.api.Test;
 public class CryptoRandomFactoryTest {
 
     @Test
-    public void testNull() {
-        assertThrows(NullPointerException.class, () -> CryptoRandomFactory.getCryptoRandom(null));
-    }
-
-    @Test
-    public void testEmpty() throws Exception {
+    public void testAbstractRandom() {
         final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, "");
-        CryptoRandomFactory.getCryptoRandom(props).close();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final String message = ex.getMessage();
+        assertTrue(message.contains("InstantiationException"), message);
     }
 
     @Test
@@ -57,14 +54,40 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testGetOSRandom() throws GeneralSecurityException, IOException {
-        // Windows does not have a /dev/random device
-        assumeTrue(!System.getProperty("os.name").contains("Windows"));
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OS.getClassName());
-        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props)) {
-            assertEquals(OsCryptoRandom.class.getName(), random.getClass().getName());
+    public void testDefaultRandomClass() throws GeneralSecurityException, IOException {
+        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom()) {
+            assertEquals(OpenSslCryptoRandom.class.getName(), random.getClass().getName());
         }
+    }
+
+    @Test
+    public void testDummmyRandom() {
+        final Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, DummyRandom.class.getName());
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final String message = ex.getMessage();
+        assertTrue(message.contains("NoSuchMethodException"), message);
+    }
+
+    @Test
+    public void testEmpty() throws Exception {
+        final Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, "");
+        CryptoRandomFactory.getCryptoRandom(props).close();
+    }
+
+    @Test
+    public void testFailingRandom() {
+        final Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+
+        Throwable cause = ex.getCause();
+        assertEquals(IllegalArgumentException.class, cause.getClass());
+        cause = cause.getCause();
+        assertEquals(InvocationTargetException.class, cause.getClass());
+        cause = cause.getCause();
+        assertEquals(UnsatisfiedLinkError.class, cause.getClass());
     }
 
     @Test
@@ -73,6 +96,17 @@ public class CryptoRandomFactoryTest {
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, JavaCryptoRandom.class.getName());
         try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props)) {
             assertEquals(JavaCryptoRandom.class.getName(), random.getClass().getName());
+        }
+    }
+
+    @Test
+    public void testGetOSRandom() throws GeneralSecurityException, IOException {
+        // Windows does not have a /dev/random device
+        assumeTrue(!System.getProperty("os.name").contains("Windows"));
+        final Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OS.getClassName());
+        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props)) {
+            assertEquals(OsCryptoRandom.class.getName(), random.getClass().getName());
         }
     }
 
@@ -94,31 +128,6 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testDefaultRandomClass() throws GeneralSecurityException, IOException {
-        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom()) {
-            assertEquals(OpenSslCryptoRandom.class.getName(), random.getClass().getName());
-        }
-    }
-
-    @Test
-    public void testAbstractRandom() {
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());
-        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
-        final String message = ex.getMessage();
-        assertTrue(message.contains("InstantiationException"), message);
-    }
-
-    @Test
-    public void testDummmyRandom() {
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, DummyRandom.class.getName());
-        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
-        final String message = ex.getMessage();
-        assertTrue(message.contains("NoSuchMethodException"), message);
-    }
-
-    @Test
     public void testNoClasses() {
         final Properties props = new Properties();
         // An empty string currently means use the default
@@ -128,17 +137,8 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testFailingRandom() {
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());
-        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
-
-        Throwable cause = ex.getCause();
-        assertEquals(IllegalArgumentException.class, cause.getClass());
-        cause = cause.getCause();
-        assertEquals(InvocationTargetException.class, cause.getClass());
-        cause = cause.getCause();
-        assertEquals(UnsatisfiedLinkError.class, cause.getClass());
+    public void testNull() {
+        assertThrows(NullPointerException.class, () -> CryptoRandomFactory.getCryptoRandom(null));
     }
 
 }
