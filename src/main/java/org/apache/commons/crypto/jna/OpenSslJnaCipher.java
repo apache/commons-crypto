@@ -156,8 +156,7 @@ final class OpenSslJnaCipher implements CryptoCipher {
     @Override
     public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
         final int[] outlen = new int[1];
-        final int retVal = OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining());
-        throwOnError(retVal);
+        throwOnError(OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining()));
         final int len = outlen[0];
         inBuffer.position(inBuffer.limit());
         outBuffer.position(outBuffer.position() + len);
@@ -212,8 +211,7 @@ final class OpenSslJnaCipher implements CryptoCipher {
             throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         final int uptLen = update(inBuffer, outBuffer);
         final int[] outlen = new int[1];
-        final int retVal = OpenSslNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
-        throwOnError(retVal);
+        throwOnError(OpenSslNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen));
         final int len = uptLen + outlen[0];
         outBuffer.position(outBuffer.position() + outlen[0]);
         return len;

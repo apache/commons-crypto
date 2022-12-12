@@ -107,8 +107,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
             final int byteLength = bytes.length;
             final ByteBuffer buf = ByteBuffer.allocateDirect(byteLength);
-            final int retVal = OpenSslNativeJna.RAND_bytes(buf, byteLength);
-            throwOnError(retVal);
+            throwOnError(OpenSslNativeJna.RAND_bytes(buf, byteLength));
             buf.rewind();
             buf.get(bytes, 0, byteLength);
         }
