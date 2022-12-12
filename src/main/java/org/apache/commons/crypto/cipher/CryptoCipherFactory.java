@@ -33,8 +33,7 @@ public class CryptoCipherFactory {
     /**
      * The configuration key of the provider class for JCE cipher.
      */
-    public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX
-            + "cipher.jce.provider";
+    public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX + "cipher.jce.provider";
     /**
      * The configuration key of the CryptoCipher implementation class.
      * <p>
@@ -49,8 +48,7 @@ public class CryptoCipherFactory {
      * order of descending priority.
      */
 
-    public static final String CLASSES_KEY = Crypto.CONF_PREFIX
-            + "cipher.classes";
+    public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "cipher.classes";
 
     /**
      * Defines the internal CryptoCipher implementations.
