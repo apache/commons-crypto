@@ -43,9 +43,11 @@ public class CryptoCipherFactory {
      * The internal classes are listed in the enum
      * {@link CipherProvider CipherProvider}
      * which can be used to obtain the full class name.
+     * </p>
      * <p>
      * The value can also be a comma-separated list of class names in
      * order of descending priority.
+     * </p>
      */
 
     public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "cipher.classes";
@@ -54,11 +56,13 @@ public class CryptoCipherFactory {
      * Defines the internal CryptoCipher implementations.
      * <p>
      * Usage:
+     * </p>
      * <blockquote><pre>
      * props.setProperty(CryptoCipherFactory.CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
      * props.setProperty(...); // if required by the implementation
      * cipher = CryptoCipherFactory.getInstance(transformation, props);
      * </pre></blockquote>
+     * </p>
      */
     public enum CipherProvider {
 
@@ -66,6 +70,7 @@ public class CryptoCipherFactory {
          * The OpenSSL cipher implementation (using JNI)
          * <p>
          * This implementation does not use any properties
+         * </p>
          */
         // Please ensure the property description agrees with the implementation
         OPENSSL(OpenSslCipher.class),
@@ -75,6 +80,7 @@ public class CryptoCipherFactory {
          * <p>
          * uses the property {@link #JCE_PROVIDER_KEY}
          * to define the provider name, if present.
+         * </p>
          */
         // Please ensure the property description agrees with the implementation
         JCE(JceCipher.class);
