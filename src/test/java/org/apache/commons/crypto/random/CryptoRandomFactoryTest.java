@@ -33,17 +33,17 @@ public class CryptoRandomFactoryTest {
 
     @Test
     public void testAbstractRandom() {
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());
-        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final Properties properties = new Properties();
+        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(properties));
         final String message = ex.getMessage();
         assertTrue(message.contains("InstantiationException"), message);
     }
 
     @Test
     public void testDefaultRandom() throws GeneralSecurityException, IOException {
-        final Properties props = new Properties();
-        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props)) {
+        final Properties properties = new Properties();
+        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
             final String name = random.getClass().getName();
             if (OpenSslCryptoRandom.isNativeCodeEnabled()) {
                 assertEquals(OpenSslCryptoRandom.class.getName(), name);
@@ -62,25 +62,25 @@ public class CryptoRandomFactoryTest {
 
     @Test
     public void testDummmyRandom() {
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, DummyRandom.class.getName());
-        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final Properties properties = new Properties();
+        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, DummyRandom.class.getName());
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(properties));
         final String message = ex.getMessage();
         assertTrue(message.contains("NoSuchMethodException"), message);
     }
 
     @Test
     public void testEmpty() throws Exception {
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, "");
-        CryptoRandomFactory.getCryptoRandom(props).close();
+        final Properties properties = new Properties();
+        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, "");
+        CryptoRandomFactory.getCryptoRandom(properties).close();
     }
 
     @Test
     public void testFailingRandom() {
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());
-        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        final Properties properties = new Properties();
+        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());
+        final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(properties));
 
         Throwable cause = ex.getCause();
         assertEquals(IllegalArgumentException.class, cause.getClass());
@@ -103,9 +103,9 @@ public class CryptoRandomFactoryTest {
     public void testGetOSRandom() throws GeneralSecurityException, IOException {
         // Windows does not have a /dev/random device
         assumeTrue(!System.getProperty("os.name").contains("Windows"));
-        final Properties props = new Properties();
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OS.getClassName());
-        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props)) {
+        final Properties properties = new Properties();
+        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OS.getClassName());
+        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
             assertEquals(OsCryptoRandom.class.getName(), random.getClass().getName());
         }
     }
@@ -129,11 +129,11 @@ public class CryptoRandomFactoryTest {
 
     @Test
     public void testNoClasses() {
-        final Properties props = new Properties();
+        final Properties properties = new Properties();
         // An empty string currently means use the default
         // However the splitter drops empty fields
-        props.setProperty(CryptoRandomFactory.CLASSES_KEY, ",");
-        assertThrows(IllegalArgumentException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, ",");
+        assertThrows(IllegalArgumentException.class, () -> CryptoRandomFactory.getCryptoRandom(properties));
     }
 
     @Test
