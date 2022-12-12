@@ -21,10 +21,8 @@ import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
-import java.util.Random;
 
 import org.apache.commons.crypto.random.CryptoRandom;
-import org.apache.commons.crypto.utils.Utils;
 
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
@@ -46,9 +44,8 @@ import com.sun.jna.ptr.PointerByReference;
  * @see <a href="http://en.wikipedia.org/wiki/RdRand">
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
-class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
+class OpenSslJnaCryptoRandom implements CryptoRandom {
 
-    private static final long serialVersionUID = -7128193502768749585L;
     private final boolean rdrandEnabled;
     private final transient PointerByReference rdrandEngine;
 
@@ -115,43 +112,6 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
             buf.rewind();
             buf.get(bytes, 0, byteLength);
         }
-    }
-
-    /**
-     * Overrides {@link OpenSslJnaCryptoRandom}. For {@link OpenSslJnaCryptoRandom},
-     * we don't need to set seed.
-     *
-     * @param seed the initial seed, ignored.
-     */
-    @SuppressWarnings("sync-override") // Empty implementation.
-    @Override
-    public void setSeed(final long seed) {
-        // Self-seeding.
-    }
-
-    /**
-     * Overrides Random#next(). Generates an integer containing the
-     * user-specified number of random bits(right justified, with leading
-     * zeros).
-     *
-     * @param numBits number of random bits to be generated, where 0
-     *        {@literal <=} {@code numBits} {@literal <=} 32.
-     * @return int an {@code int} containing the user-specified number of
-     *         random bits (right justified, with leading zeros).
-     */
-    @Override
-    final protected int next(final int numBits) {
-        Utils.checkArgument(numBits >= 0 && numBits <= 32);
-        final int numBytes = (numBits + 7) / 8;
-        final byte[] b = new byte[numBytes];
-        int next = 0;
-
-        nextBytes(b);
-        for (int i = 0; i < numBytes; i++) {
-            next = (next << 8) + (b[i] & 0xFF);
-        }
-
-        return next >>> (numBytes * 8 - numBits);
     }
 
     /**

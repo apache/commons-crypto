@@ -22,7 +22,6 @@ import java.util.Properties;
 import java.util.Random;
 
 import org.apache.commons.crypto.Crypto;
-import org.apache.commons.crypto.utils.Utils;
 
 /**
  * <p>
@@ -41,8 +40,7 @@ import org.apache.commons.crypto.utils.Utils;
  * @see <a href="http://en.wikipedia.org/wiki/RdRand">
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
-class OpenSslCryptoRandom extends Random implements CryptoRandom {
-    private static final long serialVersionUID = -7828193502768789584L;
+class OpenSslCryptoRandom implements CryptoRandom {
 
     private static final boolean nativeEnabled;
 
@@ -113,31 +111,6 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
     }
 
     /**
-     * Overrides Random#next(). Generates an integer containing the
-     * user-specified number of random bits(right justified, with leading
-     * zeros).
-     *
-     * @param numBits number of random bits to be generated, where 0
-     *        {@literal <=} {@code numBits} {@literal <=} 32.
-     * @return int an {@code int} containing the user-specified number of
-     *         random bits (right justified, with leading zeros).
-     */
-    @Override
-    protected final int next(final int numBits) {
-        Utils.checkArgument(numBits >= 0 && numBits <= 32);
-        final int numBytes = (numBits + 7) / 8;
-        final byte[] b = new byte[numBytes];
-        int next = 0;
-
-        nextBytes(b);
-        for (int i = 0; i < numBytes; i++) {
-            next = (next << 8) + (b[i] & 0xFF);
-        }
-
-        return next >>> (numBytes * 8 - numBits);
-    }
-
-    /**
      * Generates a user-specified number of random bytes. It's thread-safe.
      * Overrides {@link Random}.
      *
@@ -152,14 +125,4 @@ class OpenSslCryptoRandom extends Random implements CryptoRandom {
         }
     }
 
-    /**
-     * Overrides {@link Random} (which is synchronized).
-     * We don't need to set seed for this class.
-     *
-     * @param seed the initial seed.
-     */
-    @Override
-    public synchronized void setSeed(final long seed) {
-        // Self-seeding.
-    }
 }

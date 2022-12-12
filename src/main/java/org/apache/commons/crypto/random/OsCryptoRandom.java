@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Random;
 
 import org.apache.commons.crypto.utils.IoUtils;
 
@@ -29,9 +28,7 @@ import org.apache.commons.crypto.utils.IoUtils;
  * A Random implementation that uses random bytes sourced from the operating
  * system.
  */
-class OsCryptoRandom extends Random implements CryptoRandom {
-
-    private static final long serialVersionUID = 6391500337172057900L;
+class OsCryptoRandom implements CryptoRandom {
 
     private static final int RESERVOIR_LENGTH = 8192;
 
@@ -105,24 +102,6 @@ class OsCryptoRandom extends Random implements CryptoRandom {
             off += n;
             pos += n;
         }
-    }
-
-    /**
-     * Overrides Random#next(). Generates the next pseudorandom number.
-     * Subclasses should override this, as this is used by all other methods.
-     *
-     * @param nbits random bits.
-     * @return the next pseudorandom value from this random number generator's
-     *         sequence.
-     */
-    @Override
-    synchronized protected int next(final int nbits) {
-        fillReservoir(4);
-        int n = 0;
-        for (int i = 0; i < 4; i++) {
-            n = (n << 8) | (reservoir[pos++] & 0xff);
-        }
-        return n & (0xffffffff >> (32 - nbits));
     }
 
     /**
