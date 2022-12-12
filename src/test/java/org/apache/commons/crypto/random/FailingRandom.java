@@ -21,17 +21,19 @@ import java.util.Properties;
 
 class FailingRandom implements CryptoRandom {
 
-    // Should fail with NoSuchMethodException
+    /** Should fail with NoSuchMethodException. */
     FailingRandom(final Properties props) {
         NoSuchMethod();
     }
 
     @Override
     public void close() {
+        // empty
     }
 
     @Override
     public void nextBytes(final byte[] bytes) {
+        // empty
     }
 
     public static native void NoSuchMethod();

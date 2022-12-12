@@ -20,17 +20,19 @@ package org.apache.commons.crypto.random;
 
 class DummyRandom implements CryptoRandom {
 
-    // Should fail with NoSuchMethodException
+    /** Should fail with NoSuchMethodException. */
     DummyRandom() {
-
+        // empty
     }
 
     @Override
     public void close() {
+        // empty
     }
 
     @Override
     public void nextBytes(final byte[] bytes) {
+        // empty
     }
 
 }

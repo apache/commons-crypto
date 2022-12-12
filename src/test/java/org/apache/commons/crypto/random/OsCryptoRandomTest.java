@@ -32,33 +32,33 @@ import org.junit.jupiter.api.Test;
 
 public class OsCryptoRandomTest extends AbstractRandomTest {
 
-	@Override
-	public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-		// Windows does not have a /dev/random device
-		assumeTrue(!System.getProperty("os.name").contains("Windows"));
-		final Properties props = new Properties();
-		props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
-		final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-		assertTrue(random instanceof OsCryptoRandom, "The CryptoRandom should be: " + OsCryptoRandom.class.getName());
-		return random;
-	}
+    @Override
+    public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
+        // Windows does not have a /dev/random device
+        assumeTrue(!System.getProperty("os.name").contains("Windows"));
+        final Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
+        final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
+        assertTrue(random instanceof OsCryptoRandom, "The CryptoRandom should be: " + OsCryptoRandom.class.getName());
+        return random;
+    }
 
-	@Test
-	public void testInvalidRandom() {
-		final Properties props = new Properties();
-		props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
-		// Invalid device
-		props.setProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, "");
-		final Exception e = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
-		Throwable cause;
-		cause = e.getCause();
-		assertEquals(IllegalArgumentException.class, cause.getClass());
-		cause = cause.getCause();
-		assertEquals(InvocationTargetException.class, cause.getClass());
-		cause = cause.getCause();
-		assertEquals(IllegalArgumentException.class, cause.getClass());
-		cause = cause.getCause();
-		assertEquals(FileNotFoundException.class, cause.getClass());
+    @Test
+    public void testInvalidRandom() {
+        final Properties props = new Properties();
+        props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
+        // Invalid device
+        props.setProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, "");
+        final Exception e = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(props));
+        Throwable cause;
+        cause = e.getCause();
+        assertEquals(IllegalArgumentException.class, cause.getClass());
+        cause = cause.getCause();
+        assertEquals(InvocationTargetException.class, cause.getClass());
+        cause = cause.getCause();
+        assertEquals(IllegalArgumentException.class, cause.getClass());
+        cause = cause.getCause();
+        assertEquals(FileNotFoundException.class, cause.getClass());
 
-	}
+    }
 }
