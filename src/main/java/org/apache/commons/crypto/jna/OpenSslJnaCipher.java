@@ -91,17 +91,13 @@ final class OpenSslJnaCipher implements CryptoCipher {
             throws InvalidKeyException, InvalidAlgorithmParameterException {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(params, "params");
-        int cipherMode = OpenSslNativeJna.OOSL_JNA_DECRYPT_MODE;
-        if (mode == Cipher.ENCRYPT_MODE) {
-            cipherMode = OpenSslNativeJna.OOSL_JNA_ENCRYPT_MODE;
-        }
-        final byte[] iv;
+        final int cipherMode = mode == Cipher.ENCRYPT_MODE ? OpenSslNativeJna.OOSL_JNA_ENCRYPT_MODE : OpenSslNativeJna.OOSL_JNA_DECRYPT_MODE;
         if (!(params instanceof IvParameterSpec)) {
             // other AlgorithmParameterSpec such as GCMParameterSpec is not
             // supported now.
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
-        iv = ((IvParameterSpec) params).getIV();
+        final byte[] iv = ((IvParameterSpec) params).getIV();
 
         if ((algorithmMode == AlgorithmMode.AES_CBC || algorithmMode == AlgorithmMode.AES_CTR) && iv.length != IV_LENGTH) {
             throw new InvalidAlgorithmParameterException("Wrong IV length: must be 16 bytes long");

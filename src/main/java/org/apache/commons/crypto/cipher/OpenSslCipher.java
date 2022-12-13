@@ -106,10 +106,7 @@ final class OpenSslCipher implements CryptoCipher {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(params, "params");
 
-        int cipherMode = OpenSsl.DECRYPT_MODE;
-        if (mode == Cipher.ENCRYPT_MODE) {
-            cipherMode = OpenSsl.ENCRYPT_MODE;
-        }
+        final int cipherMode = mode == Cipher.ENCRYPT_MODE ? OpenSsl.ENCRYPT_MODE: OpenSsl.DECRYPT_MODE;
         openSslEngine.init(cipherMode, key.getEncoded(), params);
         initialized = true;
     }
