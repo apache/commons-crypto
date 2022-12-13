@@ -84,6 +84,7 @@ interface OpenSslInterfaceNativeJna {
 
     void _ENGINE_load_rdrand();
 
+    /** TODO Appears to be deprecated as of OpenSSL 1.1.0. */
     int _ENGINE_cleanup();
 
     void _EVP_CIPHER_CTX_cleanup(final PointerByReference context);
