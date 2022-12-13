@@ -84,7 +84,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
         rdrandEnabled = rdrandLoaded;
 
         if (!rdrandLoaded) {
-            closeRdrandEngine();
+            closeRdrandEngine(false);
         }
     }
 
@@ -107,7 +107,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
             final int byteLength = bytes.length;
             final ByteBuffer buf = ByteBuffer.allocateDirect(byteLength);
-            throwOnError(OpenSslNativeJna.RAND_bytes(buf, byteLength));
+            throwOnError(OpenSslNativeJna.RAND_bytes(buf, byteLength), false);
             buf.rewind();
             buf.get(bytes, 0, byteLength);
         }
@@ -119,7 +119,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
      */
     @Override
     public void close() {
-        closeRdrandEngine();
+        closeRdrandEngine(true);
         OpenSslNativeJna.ENGINE_cleanup();
 
         //cleanup locks
@@ -129,12 +129,13 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
     /**
      * Closes the rdrand engine.
+     * @param closing true when called while closing.
      */
-    private void closeRdrandEngine() {
+    private void closeRdrandEngine(final boolean closing) {
 
         if (rdrandEngine != null) {
-            throwOnError(OpenSslNativeJna.ENGINE_finish(rdrandEngine));
-            throwOnError(OpenSslNativeJna.ENGINE_free(rdrandEngine));
+            throwOnError(OpenSslNativeJna.ENGINE_finish(rdrandEngine), closing);
+            throwOnError(OpenSslNativeJna.ENGINE_free(rdrandEngine), closing);
         }
     }
 
@@ -149,12 +150,15 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
     /**
      * @param retVal the result value of error.
+     * @param closing true when called while closing.
      */
-    private void throwOnError(final int retVal) {
+    private void throwOnError(final int retVal, final boolean closing) {
         if (retVal != 1) {
             final NativeLong err = OpenSslNativeJna.ERR_peek_error();
             final String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
-            close();
+            if (!closing) {
+                close();
+            }
             throw new IllegalStateException("return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
         }
     }
