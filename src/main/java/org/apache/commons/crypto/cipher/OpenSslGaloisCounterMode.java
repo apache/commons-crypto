@@ -270,16 +270,14 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
         // must be called after initialized.
         if (aadBuffer == null) {
             // update has already been called
-            throw new IllegalStateException
-                    ("Update has been called; no more AAD data");
+            throw new IllegalStateException("Update has been called; no more AAD data");
         }
         aadBuffer.write(aad, 0, aad.length);
     }
 
     private void processAAD() {
         if (aadBuffer != null && aadBuffer.size() > 0) {
-            OpenSslNative.updateByteArray(context, aadBuffer.toByteArray(),
-                    0, aadBuffer.size(), null, 0, 0);
+            OpenSslNative.updateByteArray(context, aadBuffer.toByteArray(), 0, aadBuffer.size(), null, 0, 0);
             aadBuffer = null;
         }
     }
