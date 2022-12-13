@@ -153,7 +153,6 @@ final class OpenSslNative {
                                                        int inputOffset, int inputLength,
                                                        ByteBuffer output, int outputOffset, int maxOutputLength);
 
-
     /**
      * The private constructor of {@link OpenSslNative}.
      */

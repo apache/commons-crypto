@@ -60,8 +60,8 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
      * @return A pointer to a constant string describing the version of the OpenSSL library or
      *         giving information about the library build.
      */
+    public static native String OpenSSL_version(int type);
 
-     public static native String OpenSSL_version(int type);
     /**
      * @return the earliest error code from the thread's error queue without modifying it.
      */
