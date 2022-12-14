@@ -27,6 +27,7 @@ import java.util.Locale;
  * information from the build environment.
  */
 final class OsInfo {
+
     private final static HashMap<String, String> archMapping = new HashMap<>();
 
     /**
@@ -163,11 +164,11 @@ final class OsInfo {
     public static void main(final String[] args) {
         if (args.length >= 1) {
             if ("--os".equals(args[0])) {
-                System.out.print(getOSName());
+                System.out.println(getOSName());
                 return;
             }
             if ("--arch".equals(args[0])) {
-                System.out.print(getArchName());
+                System.out.println(getArchName());
                 return;
             }
         }
