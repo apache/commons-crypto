@@ -33,7 +33,7 @@ final class OpenSslNative {
     public static native void clean(long context);
 
     /**
-     * allows various cipher specific parameters to be determined and set.
+     * Allows various cipher specific parameters to be determined and set.
      *
      * it will call OpenSSL's API
      * int EVP_CIPHER_CTX_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg, void *ptr)
