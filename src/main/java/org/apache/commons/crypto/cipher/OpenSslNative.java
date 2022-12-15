@@ -154,7 +154,7 @@ final class OpenSslNative {
                                                        ByteBuffer output, int outputOffset, int maxOutputLength);
 
     /**
-     * The private constructor of {@link OpenSslNative}.
+     * Hides private constructor from external access.
      */
     private OpenSslNative() {
     }
