@@ -29,10 +29,27 @@ public class AES {
     /** The AES algorithm name. */
     public static final String ALGORITHM = "AES";
 
+    /**
+     * Defines {@value}.
+     */
     public static final String CBC_NO_PADDING = "AES/CBC/NoPadding";
+
+    /**
+     * Defines {@value}.
+     */
     public static final String CBC_PKCS5_PADDING = "AES/CBC/PKCS5Padding";
+
+    /**
+     * Defines {@value}.
+     */
     public static final String CTR_NO_PADDING = "AES/CTR/NoPadding";
 
+    /**
+     * Creates a new SecretKeySpec for the given key and {@link #ALGORITHM}.
+     *
+     * @param key a key.
+     * @return a new SecretKeySpec.
+     */
     public static SecretKeySpec newSecretKeySpec(final byte[] key) {
         return new SecretKeySpec(key, ALGORITHM);
     }
