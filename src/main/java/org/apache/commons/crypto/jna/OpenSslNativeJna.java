@@ -38,38 +38,45 @@ final class OpenSslNativeJna {
 
     static final Throwable INIT_ERROR;
 
-    public static final long VERSION;
-    public static final long VERSION_1_0_X = 0x10000000;
-    public static final long VERSION_1_1_X = 0x10100000;
-    public static final long VERSION_2_0_X = 0x20000000;
+    /** Full version from JNA call. */
+    static final long VERSION;
+
+    /** Major Minor version from JNA call, without the maintenance level. */
+    static final long VERSION_X_Y;
+
+    static final long VERSION_1_0_X = 0x10000000;
+    static final long VERSION_1_1_X = 0x10100000;
+    static final long VERSION_2_0_X = 0x20000000;
+    static final long VERSION_3_0_X = 0x30000000;
 
     private static final OpenSslInterfaceNativeJna JnaImplementation;
 
     static {
         final String libraryName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
-        OpenSslJna.debug("NativeLibrary.getInstance('%s')%n", libraryName);
+        OpenSslJna.debug("NativeLibrary.getInstance('%s')", libraryName);
         final NativeLibrary crypto = NativeLibrary.getInstance(libraryName);
-        Function version = null;
+        Function versionFunction = null;
         try {
-            version = crypto.getFunction("SSLeay");
+            versionFunction = crypto.getFunction("SSLeay");
         } catch (final UnsatisfiedLinkError e) {
-            version = crypto.getFunction("OpenSSL_version_num");
+            versionFunction = crypto.getFunction("OpenSSL_version_num");
         }
         // Must find one of the above two functions; else give up
 
-        VERSION = version.invokeLong(new Object[]{}) & 0xffff0000; // keep only major.minor
-        if (VERSION == VERSION_1_0_X) {
+        VERSION = versionFunction.invokeLong(new Object[]{});
+        VERSION_X_Y = VERSION & 0xffff0000; // keep only major.minor
+        OpenSslJna.debug(String.format("Detected version 0x%x", VERSION));
+
+        if (VERSION_X_Y == VERSION_1_0_X) {
            JnaImplementation = new OpenSsl10XNativeJna();
-        } else if (VERSION == VERSION_1_1_X) {
+        } else if (VERSION_X_Y == VERSION_1_1_X) {
             JnaImplementation = new OpenSsl11XNativeJna();
-        } else if (VERSION == VERSION_2_0_X) {
+        } else if (VERSION_X_Y == VERSION_2_0_X) {
             JnaImplementation = new OpenSsl20XNativeJna();
         } else {
             // TODO: Throw error?
             JnaImplementation = new OpenSsl10XNativeJna();
         }
-
-        OpenSslJna.debug(String.format("Detected version 0x%x", VERSION));
 
         INIT_OK = JnaImplementation._INIT_OK();
 

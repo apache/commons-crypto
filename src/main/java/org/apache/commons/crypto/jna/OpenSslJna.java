@@ -22,9 +22,11 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.random.CryptoRandom;
 
 /**
- * Public class to give access to the package protected class objects
+ * Provides access to package protected class objects and a {@link #main(String[])} method that prints version information.
  */
 public final class OpenSslJna {
+
+    private static final String NAME = "Apache Commons Crypto";
 
     /**
      * Logs debug messages.
@@ -79,7 +81,7 @@ public final class OpenSslJna {
     }
 
     public static void main(final String[] args) throws Throwable {
-        info("isEnabled(): %s", isEnabled());
+        info(NAME + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
         final Throwable initialisationError = initialisationError();
         if (initialisationError != null) {
             info("initialisationError(): %s", initialisationError);
