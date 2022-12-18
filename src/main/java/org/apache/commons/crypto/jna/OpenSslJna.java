@@ -17,6 +17,8 @@
  */
 package org.apache.commons.crypto.jna;
 
+import java.util.Objects;
+
 import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.random.CryptoRandom;
@@ -26,16 +28,18 @@ import org.apache.commons.crypto.random.CryptoRandom;
  */
 public final class OpenSslJna {
 
+    private final static String KEY_DEBUG = Crypto.CONF_PREFIX + "debug";
+
     /**
      * Logs debug messages.
      *
      * @param format See {@link String#format(String, Object...)}.
      * @param args   See {@link String#format(String, Object...)}.
      */
-    static void debug(final String format, final Object... args) {
+    static void debug(final Object format, final Object... args) {
         // TODO Find a better way to do this later.
-        if (Boolean.getBoolean(Crypto.CONF_PREFIX + "debug")) {
-            System.out.println(String.format(format, args));
+        if (Boolean.getBoolean(KEY_DEBUG)) {
+            System.out.println(String.format(Objects.toString(format), args));
         }
     }
 
