@@ -40,6 +40,8 @@ final class NativeCodeLoader {
 
     private static final String NATIVE_LIBNAME = "commons-crypto";
 
+    private static final String NATIVE_LIBNAME_ALT = "lib" + NATIVE_LIBNAME + ".jnilib";
+
     /**
      * End of file pseudo-character.
      */
@@ -216,7 +218,7 @@ final class NativeCodeLoader {
         nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolderPathForCurrentOS();
         boolean hasNativeLib = hasResource(nativeLibraryPath + File.separator + nativeLibraryName);
         if (!hasNativeLib) {
-            final String altName = "libcommons-crypto.jnilib";
+            final String altName = NATIVE_LIBNAME_ALT;
             if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + File.separator + altName)) {
                 // Fix for openjdk7 for Mac
                 nativeLibraryName = altName;
