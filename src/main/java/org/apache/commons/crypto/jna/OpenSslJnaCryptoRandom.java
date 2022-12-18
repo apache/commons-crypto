@@ -46,6 +46,8 @@ import com.sun.jna.ptr.PointerByReference;
  */
 final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
+    private static final int ENGINE_METHOD_RAND = 0x0008;
+
     private final boolean rdrandEnabled;
     private final transient PointerByReference rdrandEngine;
 
@@ -65,7 +67,6 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
         try {
             OpenSslNativeJna.ENGINE_load_rdrand();
             rdrandEngine = OpenSslNativeJna.ENGINE_by_id("rdrand");
-            final int ENGINE_METHOD_RAND = 0x0008;
             if (rdrandEngine != null) {
                 final int rc = OpenSslNativeJna.ENGINE_init(rdrandEngine);
 
