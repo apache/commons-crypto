@@ -76,7 +76,6 @@ public final class Utils {
 
     /**
      * The file name of configuration file.
-     *
      */
     private static final String SYSTEM_PROPERTIES_FILE = Crypto.CONF_PREFIX + "properties";
 
