@@ -26,8 +26,6 @@ import org.apache.commons.crypto.random.CryptoRandom;
  */
 public final class OpenSslJna {
 
-    private static final String NAME = "Apache Commons Crypto";
-
     /**
      * Logs debug messages.
      *
@@ -81,7 +79,7 @@ public final class OpenSslJna {
     }
 
     public static void main(final String[] args) throws Throwable {
-        info(NAME + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
+        info(Crypto.getComponentName() + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
         final Throwable initialisationError = initialisationError();
         if (initialisationError != null) {
             info("initialisationError(): %s", initialisationError);
