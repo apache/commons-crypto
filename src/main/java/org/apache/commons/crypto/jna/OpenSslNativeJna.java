@@ -155,7 +155,6 @@ final class OpenSslNativeJna {
         return JnaImplementation._EVP_CipherFinal_ex(context, outBuffer, outlen);
     }
 
-    // TODO: native method expects PointerByReference implementation
     public static int EVP_CipherInit_ex(final PointerByReference context, final PointerByReference algo,
             final Object object, final byte[] encoded, final byte[] iv, final int cipherMode) {
         return JnaImplementation._EVP_CipherInit_ex(context, algo, null, encoded, iv, cipherMode);
