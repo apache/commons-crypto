@@ -36,9 +36,8 @@ final class OpenSsl10XNativeJna implements OpenSslInterfaceNativeJna {
         boolean ok = false;
         Throwable thrown = null;
         try {
-            final String libName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(),
-                    "crypto");
-            OpenSslJna.debug("Native.register('%s')%n", libName);
+            final String libName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
+            OpenSslJna.debug("Native.register('%s')", libName);
             Native.register(libName);
             ok = true;
         } catch (final Exception | UnsatisfiedLinkError e) {
