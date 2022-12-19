@@ -38,6 +38,8 @@ import org.apache.commons.crypto.utils.Utils;
  */
 final class NativeCodeLoader {
 
+    private static final String SIMPLE_NAME = NativeCodeLoader.class.getSimpleName();
+
     private static final String NATIVE_LIBNAME = "commons-crypto";
 
     private static final String NATIVE_LIBNAME_ALT = "lib" + NATIVE_LIBNAME + ".jnilib";
@@ -47,14 +49,16 @@ final class NativeCodeLoader {
      */
     private static final int EOF = -1;
 
-    private static final Throwable loadingError;
+    private static final Throwable libraryLoadingError;
 
-    private static final boolean nativeCodeLoaded;
+    private static final boolean libraryLoaded;
 
     static {
-        loadingError = loadLibrary(); // will be null if loaded OK
-
-        nativeCodeLoaded = loadingError == null;
+        debug("%s static init start", SIMPLE_NAME);
+        libraryLoadingError = loadLibrary(); // will be null if loaded OK
+        libraryLoaded = libraryLoadingError == null;
+        debug("%s libraryLoaded = %s, libraryLoadingError = %s", SIMPLE_NAME, libraryLoaded, libraryLoadingError);
+        debug("%s static init end", SIMPLE_NAME);
     }
 
     /**
@@ -207,16 +211,24 @@ final class NativeCodeLoader {
         String nativeLibraryPath = props.getProperty(Crypto.LIB_PATH_KEY);
         String nativeLibraryName = props.getProperty(Crypto.LIB_NAME_KEY, System.mapLibraryName(NATIVE_LIBNAME));
 
+        debug("%s nativeLibraryPath %s = %s", SIMPLE_NAME, Crypto.LIB_PATH_KEY, nativeLibraryPath);
+        debug("%s nativeLibraryName %s = %s", SIMPLE_NAME, Crypto.LIB_NAME_KEY, nativeLibraryName);
+
         if (nativeLibraryPath != null) {
             final File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
-            if (nativeLib.exists()) {
+            final boolean exists = nativeLib.exists();
+            debug("%s nativeLib %s exists = %s", SIMPLE_NAME, nativeLib, exists);
+            if (exists) {
                 return nativeLib;
             }
         }
 
         // Load an OS-dependent native library inside a jar file
         nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolderPathForCurrentOS();
-        boolean hasNativeLib = hasResource(nativeLibraryPath + File.separator + nativeLibraryName);
+        debug("%s nativeLibraryPath = %s", SIMPLE_NAME, nativeLibraryPath);
+        final String resource = nativeLibraryPath + File.separator + nativeLibraryName;
+        boolean hasNativeLib = hasResource(resource);
+        debug("%s resource %s exists = %s", SIMPLE_NAME, resource, hasNativeLib);
         if (!hasNativeLib) {
             final String altName = NATIVE_LIBNAME_ALT;
             if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + File.separator + altName)) {
@@ -227,15 +239,13 @@ final class NativeCodeLoader {
         }
 
         if (!hasNativeLib) {
-            final String errorMessage = String.format("No native library is found for os.name=%s and os.arch=%s",
-                    OsInfo.getOSName(), OsInfo.getArchName());
+            final String errorMessage = String.format("No native library is found for os.name=%s and os.arch=%s", OsInfo.getOSName(), OsInfo.getArchName());
             throw new IllegalStateException(errorMessage);
         }
 
         // Temporary folder for the native lib. Use the value of
         // Crypto.LIB_TEMPDIR_KEY or java.io.tmpdir
-        final String tempFolder = new File(
-                props.getProperty(Crypto.LIB_TEMPDIR_KEY, System.getProperty("java.io.tmpdir"))).getAbsolutePath();
+        final String tempFolder = new File(props.getProperty(Crypto.LIB_TEMPDIR_KEY, System.getProperty("java.io.tmpdir"))).getAbsolutePath();
 
         // Extract and load a native library inside the jar file
         return extractLibraryFile(nativeLibraryPath, nativeLibraryName, tempFolder);
@@ -247,7 +257,7 @@ final class NativeCodeLoader {
      * @return null, unless loading failed
      */
     static Throwable getLoadingError() {
-        return loadingError;
+        return libraryLoadingError;
     }
 
     /**
@@ -270,7 +280,7 @@ final class NativeCodeLoader {
      * @return {@code true} if native is loaded, else {@code false}.
      */
     static boolean isNativeCodeLoaded() {
-        return nativeCodeLoaded;
+        return libraryLoaded;
     }
 
     /**
