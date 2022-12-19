@@ -294,12 +294,12 @@ final class NativeCodeLoader {
             if (nativeLibFile != null) {
                 // Load extracted or specified native library.
                 final String absolutePath = nativeLibFile.getAbsolutePath();
-                debug("System.load('%s')", absolutePath);
+                debug("%s System.load('%s')", SIMPLE_NAME, absolutePath);
                 System.load(absolutePath);
             } else {
                 // Load preinstalled library (in the path -Djava.library.path)
                 final String libname = NATIVE_LIBNAME;
-                debug("System.loadLibrary('%s')", libname);
+                debug("%s System.loadLibrary('%s')", SIMPLE_NAME, libname);
                 System.loadLibrary(libname);
             }
             return null; // OK
