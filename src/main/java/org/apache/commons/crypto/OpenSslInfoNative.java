@@ -28,9 +28,6 @@ import org.apache.commons.crypto.random.CryptoRandom;
  */
 final class OpenSslInfoNative {
 
-    public static final long VERSION_1_0_2X = 0x10002000;
-    public static final long VERSION_1_1_0X = 0x10100000;
-
     /**
      * Makes the constructor private.
      */
