@@ -40,9 +40,11 @@ final class NativeCodeLoader {
 
     private static final String SIMPLE_NAME = NativeCodeLoader.class.getSimpleName();
 
-    private static final String NATIVE_LIBNAME = "commons-crypto-ossl3";
+    private static final String NATIVE_LIBNAME_OSSL1 = "commons-crypto";
+    private static final String NATIVE_LIBNAME_OSSL3 = "commons-crypto-ossl3";
 
-    private static final String NATIVE_LIBNAME_ALT = "lib" + NATIVE_LIBNAME + ".jnilib";
+    private static final String NATIVE_LIBNAME_ALT_MAC_OSSL1 = "lib" + NATIVE_LIBNAME_OSSL1 + ".jnilib";
+    private static final String NATIVE_LIBNAME_ALT_MAC_OSSL3 = "lib" + NATIVE_LIBNAME_OSSL3 + ".jnilib";
 
     /**
      * End of file pseudo-character.
@@ -204,12 +206,26 @@ final class NativeCodeLoader {
      * @return the jar file.
      */
     private static File findNativeLibrary() {
+        File file = findNativeLibrary(NATIVE_LIBNAME_OSSL1, NATIVE_LIBNAME_ALT_MAC_OSSL1, false);
+        if (file != null) {
+            return file;
+        }
+        return findNativeLibrary(NATIVE_LIBNAME_OSSL3, NATIVE_LIBNAME_ALT_MAC_OSSL3, true);
+     }
+
+    /**
+     * Finds the native library.
+     *
+     * @return the jar file.
+     */
+    private static File findNativeLibrary(final String nativeLibName, final String nativeLibAltMacName, boolean failFast) {
+        debug("%s findNativeLibrary nativeLibName = %s, nativeLibAltName = %s", SIMPLE_NAME, nativeLibName, nativeLibAltMacName);
         // Get the properties once
-        final Properties props = Utils.getDefaultProperties();
+        final Properties properties = Utils.getDefaultProperties();
 
         // Try to load the library in commons-crypto.lib.path */
-        String nativeLibraryPath = props.getProperty(Crypto.LIB_PATH_KEY);
-        String nativeLibraryName = props.getProperty(Crypto.LIB_NAME_KEY, System.mapLibraryName(NATIVE_LIBNAME));
+        String nativeLibraryPath = properties.getProperty(Crypto.LIB_PATH_KEY);
+        String nativeLibraryName = properties.getProperty(Crypto.LIB_NAME_KEY, System.mapLibraryName(nativeLibName));
 
         debug("%s nativeLibraryPath %s = %s", SIMPLE_NAME, Crypto.LIB_PATH_KEY, nativeLibraryPath);
         debug("%s nativeLibraryName %s = %s", SIMPLE_NAME, Crypto.LIB_NAME_KEY, nativeLibraryName);
@@ -217,35 +233,38 @@ final class NativeCodeLoader {
         if (nativeLibraryPath != null) {
             final File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
             final boolean exists = nativeLib.exists();
-            debug("%s nativeLib %s exists = %s", SIMPLE_NAME, nativeLib, exists);
+            debug("%s nativeLib %s file exists = %s", SIMPLE_NAME, nativeLib, exists);
             if (exists) {
                 return nativeLib;
             }
         }
 
         // Load an OS-dependent native library inside a jar file
-        nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolderPathForCurrentOS();
+        nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolder();
         debug("%s nativeLibraryPath = %s", SIMPLE_NAME, nativeLibraryPath);
         final String resource = nativeLibraryPath + File.separator + nativeLibraryName;
         boolean hasNativeLib = hasResource(resource);
         debug("%s resource %s exists = %s", SIMPLE_NAME, resource, hasNativeLib);
         if (!hasNativeLib) {
-            final String altName = NATIVE_LIBNAME_ALT;
-            if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + File.separator + altName)) {
-                // Fix for openjdk7 for Mac
+            final String altName = nativeLibAltMacName;
+            String macResource = nativeLibraryPath + File.separator + altName;
+            if (OsInfo.getOsName().equals("Mac") && hasResource(macResource)) {
+                // Fix for openjdk7 for Mac, still applies on Java 8?
                 nativeLibraryName = altName;
                 hasNativeLib = true;
-            }
+                debug("%s mac resource %s exists = %s", SIMPLE_NAME, macResource, hasNativeLib);            }
         }
 
         if (!hasNativeLib) {
-            final String errorMessage = String.format("No native library is found for os.name=%s and os.arch=%s", OsInfo.getOSName(), OsInfo.getArchName());
-            throw new IllegalStateException(errorMessage);
+            if (failFast) {
+                throw new IllegalStateException(String.format("No native library is found for os.name=%s and os.arch=%s", OsInfo.getOsName(), OsInfo.getArchName()));
+            }
+            return null;
         }
 
         // Temporary folder for the native lib. Use the value of
         // Crypto.LIB_TEMPDIR_KEY or java.io.tmpdir
-        final String tempFolder = new File(props.getProperty(Crypto.LIB_TEMPDIR_KEY, System.getProperty("java.io.tmpdir"))).getAbsolutePath();
+        final String tempFolder = new File(properties.getProperty(Crypto.LIB_TEMPDIR_KEY, System.getProperty("java.io.tmpdir"))).getAbsolutePath();
 
         // Extract and load a native library inside the jar file
         return extractLibraryFile(nativeLibraryPath, nativeLibraryName, tempFolder);
@@ -297,8 +316,8 @@ final class NativeCodeLoader {
                 debug("%s System.load('%s')", SIMPLE_NAME, absolutePath);
                 System.load(absolutePath);
             } else {
-                // Load preinstalled library (in the path -Djava.library.path)
-                final String libname = NATIVE_LIBNAME;
+                // Load preinstalled library in the path for system property "java.library.path".
+                final String libname = NATIVE_LIBNAME_OSSL1;
                 debug("%s System.loadLibrary('%s')", SIMPLE_NAME, libname);
                 System.loadLibrary(libname);
             }

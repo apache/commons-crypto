@@ -131,7 +131,7 @@ final class OsInfo {
                 return string;
             }
         }
-        return translateArchNameToFolderName(osArch);
+        return archNameToFolderName(osArch);
     }
 
     /**
@@ -139,8 +139,8 @@ final class OsInfo {
      *
      * @return the current OS's native lib folder.
      */
-    static String getNativeLibFolderPathForCurrentOS() {
-        return getOSName() + File.separator + getArchName();
+    static String getNativeLibFolder() {
+        return getOsName() + File.separator + getArchName();
     }
 
     /**
@@ -148,8 +148,8 @@ final class OsInfo {
      *
      * @return the OS name.
      */
-    static String getOSName() {
-        return translateOSNameToFolderName(getOsNameProperty());
+    static String getOsName() {
+        return osNameToFolderName(getOsNameProperty());
     }
 
     static String getOsNameProperty() {
@@ -164,7 +164,7 @@ final class OsInfo {
     public static void main(final String[] args) {
         if (args.length >= 1) {
             if ("--os".equals(args[0])) {
-                System.out.println(getOSName());
+                System.out.println(getOsName());
                 return;
             }
             if ("--arch".equals(args[0])) {
@@ -173,7 +173,7 @@ final class OsInfo {
             }
         }
 
-        System.out.println(getNativeLibFolderPathForCurrentOS());
+        System.out.println(getNativeLibFolder());
     }
 
     /**
@@ -182,7 +182,7 @@ final class OsInfo {
      * @param archName the architecture name.
      * @return the folder name.
      */
-    private static String translateArchNameToFolderName(final String archName) {
+    private static String archNameToFolderName(final String archName) {
         return archName.replaceAll("\\W", "");
     }
 
@@ -192,7 +192,7 @@ final class OsInfo {
      * @param osName the OS name.
      * @return the folder name.
      */
-    private static String translateOSNameToFolderName(final String osName) {
+    private static String osNameToFolderName(final String osName) {
         if (osName.contains("Windows")) {
             return "Windows";
         }
