@@ -32,324 +32,356 @@ import java.util.UUID;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * A helper to load the native code i.e. libcommons-crypto.so. This handles the
- * fallback to either the bundled libcommons-crypto-Linux-i386-32.so or the
- * default java implementations where appropriate.
+ * A helper to load the native code i.e. libcommons-crypto.so. This handles the fallback to either the bundled libcommons-crypto-Linux-i386-32.so or the default
+ * java implementations where appropriate.
  */
 final class NativeCodeLoader {
 
-	private static final String SIMPLE_NAME = NativeCodeLoader.class.getSimpleName();
+    private static final String SIMPLE_NAME = NativeCodeLoader.class.getSimpleName();
 
-	private static final String NATIVE_LIBNAME_OSSL1 = "commons-crypto";
-	private static final String NATIVE_LIBNAME_OSSL3 = "commons-crypto-ossl3";
+    private static final String NATIVE_LIBNAME_OSSL1 = "commons-crypto";
+    private static final String NATIVE_LIBNAME_OSSL3 = "commons-crypto-ossl3";
 
-	private static final String NATIVE_LIBNAME_ALT_MAC_OSSL1 = "lib" + NATIVE_LIBNAME_OSSL1 + ".jnilib";
-	private static final String NATIVE_LIBNAME_ALT_MAC_OSSL3 = "lib" + NATIVE_LIBNAME_OSSL3 + ".jnilib";
+    private static final String NATIVE_LIBNAME_ALT_MAC_OSSL1 = "lib" + NATIVE_LIBNAME_OSSL1 + ".jnilib";
+    private static final String NATIVE_LIBNAME_ALT_MAC_OSSL3 = "lib" + NATIVE_LIBNAME_OSSL3 + ".jnilib";
 
-	/**
-	 * End of file pseudo-character.
-	 */
-	private static final int EOF = -1;
+    /**
+     * End of file pseudo-character.
+     */
+    private static final int EOF = -1;
 
-	private static final Throwable libraryLoadingError;
+    private static Throwable libraryLoadingError;
 
-	private static final boolean libraryLoaded;
+    private static boolean libraryLoaded;
 
-	static {
-		debug("%s static init start", SIMPLE_NAME);
-		libraryLoadingError = loadLibrary(); // will be null if loaded OK
-		libraryLoaded = libraryLoadingError == null;
-		debug("%s libraryLoaded = %s, libraryLoadingError = %s", SIMPLE_NAME, libraryLoaded, libraryLoadingError);
-		debug("%s static init end", SIMPLE_NAME);
-	}
+    private static boolean init;
 
-	/**
-	 * Returns the given InputStream if it is already a {@link BufferedInputStream},
-	 * otherwise creates a BufferedInputStream from the given InputStream.
-	 * <p>
-	 * Copied from Apache Commons IO 2.5.
-	 * </p>
-	 *
-	 * @param inputStream the InputStream to wrap or return (not null)
-	 * @return the given InputStream or a new {@link BufferedInputStream} for the
-	 *         given InputStream
-	 * @throws NullPointerException if the input parameter is null
-	 */
-	@SuppressWarnings("resource")
-	private static BufferedInputStream buffer(final InputStream inputStream) {
-		// reject null early on rather than waiting for IO operation to fail
-		// not checked by BufferedInputStream
-		Objects.requireNonNull(inputStream, "inputStream");
-		return inputStream instanceof BufferedInputStream ? (BufferedInputStream) inputStream
-				: new BufferedInputStream(inputStream);
-	}
+    private static synchronized void init() {
+        if (init) {
+            return;
+        }
+        init = true;
+        debug("%s init start", SIMPLE_NAME);
+        setLoaded(loadLibrary());
+        debug("%s libraryLoaded = %s, libraryLoadingError = %s", SIMPLE_NAME, libraryLoaded, libraryLoadingError);
+        debug("%s init end", SIMPLE_NAME);
+    }
 
-	/**
-	 * Checks whether in1 and in2 is equal.
-	 * <p>
-	 * Copied from Apache Commons IO 2.5.
-	 * </p>
-	 *
-	 * @param input1 the input1.
-	 * @param input2 the input2.
-	 * @return true if in1 and in2 is equal, else false.
-	 * @throws IOException if an I/O error occurs.
-	 */
-	@SuppressWarnings("resource")
-	private static boolean contentsEquals(final InputStream input1, final InputStream input2) throws IOException {
-		if (input1 == input2) {
-			return true;
-		}
-		if (input1 == null ^ input2 == null) {
-			return false;
-		}
-		final BufferedInputStream bufferedInput1 = buffer(input1);
-		final BufferedInputStream bufferedInput2 = buffer(input2);
-		int ch = bufferedInput1.read();
-		while (EOF != ch) {
-			final int ch2 = bufferedInput2.read();
-			if (ch != ch2) {
-				return false;
-			}
-			ch = bufferedInput1.read();
-		}
-		return bufferedInput2.read() == EOF;
-	}
+    private static void setLoaded(Throwable tmp) {
+        libraryLoadingError = tmp; // will be null if loaded OK
+        libraryLoaded = libraryLoadingError == null;
+    }
 
-	/**
-	 * Logs debug messages.
-	 *
-	 * @param format See {@link String#format(String, Object...)}.
-	 * @param args   See {@link String#format(String, Object...)}.
-	 */
-	private static void debug(final String format, final Object... args) {
-		// TODO Find a better way to do this later.
-		if (isDebug()) {
-			System.out.println(String.format(format, args));
-			if (args != null && args.length > 0 && args[0] instanceof Throwable) {
-				((Throwable) args[0]).printStackTrace(System.out);
-			}
-		}
-	}
+    /**
+     * Returns the given InputStream if it is already a {@link BufferedInputStream}, otherwise creates a BufferedInputStream from the given InputStream.
+     * <p>
+     * Copied from Apache Commons IO 2.5.
+     * </p>
+     *
+     * @param inputStream the InputStream to wrap or return (not null)
+     * @return the given InputStream or a new {@link BufferedInputStream} for the given InputStream
+     * @throws NullPointerException if the input parameter is null
+     */
+    @SuppressWarnings("resource")
+    private static BufferedInputStream buffer(final InputStream inputStream) {
+        // reject null early on rather than waiting for IO operation to fail
+        // not checked by BufferedInputStream
+        Objects.requireNonNull(inputStream, "inputStream");
+        return inputStream instanceof BufferedInputStream ? (BufferedInputStream) inputStream : new BufferedInputStream(inputStream);
+    }
 
-	/**
-	 * Extracts the specified library file to the target folder.
-	 *
-	 * @param libFolderForCurrentOS the library in commons-crypto.lib.path.
-	 * @param libraryFileName       the library name.
-	 * @param targetFolder          Target folder for the native lib. Use the value
-	 *                              of commons-crypto.tempdir or java.io.tmpdir.
-	 * @return the library file.
-	 */
-	private static File extractLibraryFile(final String libFolderForCurrentOS, final String libraryFileName,
-			final String targetFolder) {
-		final String nativeLibraryFilePath = libFolderForCurrentOS + File.separator + libraryFileName;
+    /**
+     * Checks whether in1 and in2 is equal.
+     * <p>
+     * Copied from Apache Commons IO 2.5.
+     * </p>
+     *
+     * @param input1 the input1.
+     * @param input2 the input2.
+     * @return true if in1 and in2 is equal, else false.
+     * @throws IOException if an I/O error occurs.
+     */
+    @SuppressWarnings("resource")
+    private static boolean contentsEquals(final InputStream input1, final InputStream input2) throws IOException {
+        if (input1 == input2) {
+            return true;
+        }
+        if (input1 == null ^ input2 == null) {
+            return false;
+        }
+        final BufferedInputStream bufferedInput1 = buffer(input1);
+        final BufferedInputStream bufferedInput2 = buffer(input2);
+        int ch = bufferedInput1.read();
+        while (EOF != ch) {
+            final int ch2 = bufferedInput2.read();
+            if (ch != ch2) {
+                return false;
+            }
+            ch = bufferedInput1.read();
+        }
+        return bufferedInput2.read() == EOF;
+    }
 
-		// Attach UUID to the native library file to ensure multiple class loaders
-		// can read the libcommons-crypto multiple times.
-		final UUID uuid = UUID.randomUUID();
-		final String extractedLibFileName = String.format("commons-crypto-%s-%s", uuid, libraryFileName);
-		final File extractedLibFile = new File(targetFolder, extractedLibFileName);
-		debug("Extracting '%s' to '%s'...", nativeLibraryFilePath, extractedLibFile);
-		try (InputStream inputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
-			if (inputStream == null) {
-				debug("Resource not found: %s", nativeLibraryFilePath);
-				return null;
-			}
-			// Extract a native library file into the target directory
-			final Path path;
-			try {
-				path = extractedLibFile.toPath();
-				final long byteCount = Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
-				if (isDebug()) {
-					debug("Extracted '%s' to '%s': %,d bytes [%s]", nativeLibraryFilePath, extractedLibFile, byteCount,
-							Files.isExecutable(path) ? "X+" : "X-");
-					final PosixFileAttributes attributes = Files.readAttributes(path, PosixFileAttributes.class);
-					if (attributes != null) {
-						debug("Attributes '%s': %s %s %s", extractedLibFile, attributes.permissions(),
-								attributes.owner(), attributes.group());
-					}
-				}
-			} finally {
-				// Delete the extracted lib file on JVM exit.
-				debug("Delete on exit: %s", extractedLibFile);
-				extractedLibFile.deleteOnExit();
-			}
+    /**
+     * Logs debug messages.
+     *
+     * @param format See {@link String#format(String, Object...)}.
+     * @param args See {@link String#format(String, Object...)}.
+     */
+    private static void debug(final String format, final Object... args) {
+        // TODO Find a better way to do this later.
+        if (isDebug()) {
+            System.out.println(String.format(format, args));
+            if (args != null && args.length > 0 && args[0] instanceof Throwable) {
+                ((Throwable) args[0]).printStackTrace(System.out);
+            }
+        }
+    }
 
-			// Set executable (x) flag to enable Java to load the native library
-			if (!extractedLibFile.setReadable(true) || !extractedLibFile.setExecutable(true)
-					|| !extractedLibFile.setWritable(true, true)) {
-				throw new IllegalStateException("Invalid path for library path " + extractedLibFile);
-			}
+    /**
+     * Extracts the specified library file to the target folder.
+     *
+     * @param libFolderForCurrentOS the library in commons-crypto.lib.path.
+     * @param libraryFileName the library name.
+     * @param targetFolder Target folder for the native lib. Use the value of commons-crypto.tempdir or java.io.tmpdir.
+     * @return the library file.
+     */
+    private static File extractLibraryFile(final String libFolderForCurrentOS, final String libraryFileName, final String targetFolder) {
+        final String nativeLibraryFilePath = libFolderForCurrentOS + File.separator + libraryFileName;
 
-			// Check whether the contents are properly copied from the resource
-			// folder
-			try (InputStream nativeInputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
-				try (InputStream extractedLibIn = Files.newInputStream(path)) {
-					debug("Validating '%s'...", extractedLibFile);
-					if (!contentsEquals(nativeInputStream, extractedLibIn)) {
-						throw new IllegalStateException(String.format("Failed to write a native library file %s to %s",
-								nativeLibraryFilePath, extractedLibFile));
-					}
-				}
-			}
-			return extractedLibFile;
-		} catch (final IOException e) {
-			debug("Ignoring %s", e);
-			return null;
-		}
-	}
+        // Attach UUID to the native library file to ensure multiple class loaders
+        // can read the libcommons-crypto multiple times.
+        final UUID uuid = UUID.randomUUID();
+        final String extractedLibFileName = String.format("commons-crypto-%s-%s", uuid, libraryFileName);
+        final File extractedLibFile = new File(targetFolder, extractedLibFileName);
+        debug("%s extracting '%s' to '%s'...", SIMPLE_NAME, nativeLibraryFilePath, extractedLibFile);
+        try (InputStream inputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
+            if (inputStream == null) {
+                debug("%s resource not found: %s", SIMPLE_NAME, nativeLibraryFilePath);
+                return null;
+            }
+            // Extract a native library file into the target directory
+            final Path path;
+            try {
+                path = extractedLibFile.toPath();
+                final long byteCount = Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
+                if (isDebug()) {
+                    debug("%s extracted '%s' to '%s': %,d bytes [%s]", SIMPLE_NAME, nativeLibraryFilePath, extractedLibFile, byteCount,
+                            Files.isExecutable(path) ? "X+" : "X-");
+                    final PosixFileAttributes attributes = Files.readAttributes(path, PosixFileAttributes.class);
+                    if (attributes != null) {
+                        debug("%s attributes '%s': %s %s %s", SIMPLE_NAME, extractedLibFile, attributes.permissions(), attributes.owner(), attributes.group());
+                    }
+                }
+            } finally {
+                // Delete the extracted lib file on JVM exit.
+                debug("%s delete on exit: '%s'", SIMPLE_NAME, extractedLibFile);
+                extractedLibFile.deleteOnExit();
+            }
 
-	/**
-	 * Finds the native library.
-	 *
-	 * @return the jar file.
-	 */
-	private static File loadNativeLibrary() {
-		debug("%s findNativeLibrary", SIMPLE_NAME);
-		File file = findNativeLibrary(NATIVE_LIBNAME_OSSL3, NATIVE_LIBNAME_ALT_MAC_OSSL3, false);
-		if (file != null) {
-			try {
-				return systemLoad(file);
-			} catch (UnsatisfiedLinkError e) {
-				file = null;
-				debug("%s findNativeLibrary %s", SIMPLE_NAME, e);
-			}
-		}
-		file = findNativeLibrary(NATIVE_LIBNAME_OSSL1, NATIVE_LIBNAME_ALT_MAC_OSSL1, false);
-		return systemLoad(file);
-	}
+            // Set executable (x) flag to enable Java to load the native library
+            if (!extractedLibFile.setReadable(true) || !extractedLibFile.setExecutable(true) || !extractedLibFile.setWritable(true, true)) {
+                throw new IllegalStateException("Invalid path for library path " + extractedLibFile);
+            }
 
-	/**
-	 * Finds the native library.
-	 *
-	 * @return the jar file.
-	 */
-	private static File findNativeLibrary(final String nativeLibName, final String nativeLibAltMacName,
-			boolean failFast) {
-		debug("%s findNativeLibrary nativeLibName = %s, nativeLibAltName = %s", SIMPLE_NAME, nativeLibName,
-				nativeLibAltMacName);
-		// Get the properties once
-		final Properties properties = Utils.getDefaultProperties();
+            // Check whether the contents are properly copied from the resource
+            // folder
+            try (InputStream nativeInputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
+                try (InputStream extractedLibIn = Files.newInputStream(path)) {
+                    debug("%s validating '%s'", SIMPLE_NAME, extractedLibFile);
+                    if (!contentsEquals(nativeInputStream, extractedLibIn)) {
+                        throw new IllegalStateException(
+                                String.format("%s Failed to write a native library file %s to %s", SIMPLE_NAME, nativeLibraryFilePath, extractedLibFile));
+                    }
+                    debug("%s validated '%s'", SIMPLE_NAME, extractedLibFile);
+                }
+            }
+            return extractedLibFile;
+        } catch (final IOException e) {
+            debug("%s Ignoring %s", SIMPLE_NAME, e);
+            return null;
+        }
+    }
 
-		// Try to load the library in commons-crypto.lib.path */
-		String nativeLibraryPath = properties.getProperty(Crypto.LIB_PATH_KEY);
-		String nativeLibraryName = properties.getProperty(Crypto.LIB_NAME_KEY, System.mapLibraryName(nativeLibName));
+    /**
+     * Finds the native library.
+     *
+     * @return the jar file.
+     */
+    private static File loadNativeLibrary() {
+        debug("%s findNativeLibrary", SIMPLE_NAME);
+        File file = findNativeLibrary(NATIVE_LIBNAME_OSSL3, NATIVE_LIBNAME_ALT_MAC_OSSL3, false);
+        if (file != null) {
+            try {
+                return systemLoad(file);
+            } catch (UnsatisfiedLinkError e) {
+                file = null;
+                debug("%s findNativeLibrary %s", SIMPLE_NAME, e);
+            }
+        }
+        file = findNativeLibrary(NATIVE_LIBNAME_OSSL1, NATIVE_LIBNAME_ALT_MAC_OSSL1, false);
+        if (file != null) {
+            return systemLoad(file);
+        }
+        return null;
+    }
 
-		debug("%s nativeLibraryPath %s = %s", SIMPLE_NAME, Crypto.LIB_PATH_KEY, nativeLibraryPath);
-		debug("%s nativeLibraryName %s = %s", SIMPLE_NAME, Crypto.LIB_NAME_KEY, nativeLibraryName);
+    /**
+     * Finds the native library.
+     *
+     * @return the jar file.
+     */
+    static File loadNativeLibrary1() {
+        File file = systemLoad(findNativeLibrary(NATIVE_LIBNAME_OSSL1, NATIVE_LIBNAME_ALT_MAC_OSSL1, true));
+        setLoaded(null);
+        init = true;
+        return file;
+    }
 
-		if (nativeLibraryPath != null) {
-			final File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
-			final boolean exists = nativeLib.exists();
-			debug("%s nativeLib %s file exists = %s", SIMPLE_NAME, nativeLib, exists);
-			if (exists) {
-				return nativeLib;
-			}
-		}
+    /**
+     * Finds the native library.
+     *
+     * @return the jar file.
+     */
+    static File loadNativeLibrary3() {
+        File file = systemLoad(findNativeLibrary(NATIVE_LIBNAME_OSSL3, NATIVE_LIBNAME_ALT_MAC_OSSL3, true));
+        setLoaded(null);
+        init = true;
+        return file;
+    }
 
-		// Load an OS-dependent native library inside a jar file
-		nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolder();
-		debug("%s nativeLibraryPath = %s", SIMPLE_NAME, nativeLibraryPath);
-		final String resource = nativeLibraryPath + File.separator + nativeLibraryName;
-		boolean hasNativeLib = hasResource(resource);
-		debug("%s resource %s exists = %s", SIMPLE_NAME, resource, hasNativeLib);
-		if (!hasNativeLib) {
-			final String altName = nativeLibAltMacName;
-			String macResource = nativeLibraryPath + File.separator + altName;
-			if (OsInfo.getOsName().equals("Mac") && hasResource(macResource)) {
-				// Fix for openjdk7 for Mac, still applies on Java 8?
-				nativeLibraryName = altName;
-				hasNativeLib = true;
-				debug("%s mac resource %s exists = %s", SIMPLE_NAME, macResource, hasNativeLib);
-			}
-		}
+    /**
+     * Finds the native library.
+     *
+     * @return the jar file.
+     */
+    private static File findNativeLibrary(final String nativeLibName, final String nativeLibAltMacName, boolean failFast) {
+        debug("%s findNativeLibrary nativeLibName = '%s', nativeLibAltName = '%s'", SIMPLE_NAME, nativeLibName, nativeLibAltMacName);
+        // Get the properties once
+        final Properties properties = Utils.getDefaultProperties();
 
-		if (!hasNativeLib) {
-			if (failFast) {
-				throw new IllegalStateException(
-						String.format("No native library is found for os.name=%s and os.arch=%s", OsInfo.getOsName(),
-								OsInfo.getArchName()));
-			}
-			return null;
-		}
+        // Try to load the library in commons-crypto.lib.path */
+        String nativeLibraryPath = properties.getProperty(Crypto.LIB_PATH_KEY);
+        String nativeLibraryName = properties.getProperty(Crypto.LIB_NAME_KEY, System.mapLibraryName(nativeLibName));
 
-		// Temporary folder for the native lib. Use the value of
-		// Crypto.LIB_TEMPDIR_KEY or java.io.tmpdir
-		final String tempFolder = new File(
-				properties.getProperty(Crypto.LIB_TEMPDIR_KEY, System.getProperty("java.io.tmpdir"))).getAbsolutePath();
+        debug("%s nativeLibraryPath %s = '%s'", SIMPLE_NAME, Crypto.LIB_PATH_KEY, nativeLibraryPath);
+        debug("%s nativeLibraryName %s = '%s'", SIMPLE_NAME, Crypto.LIB_NAME_KEY, nativeLibraryName);
 
-		// Extract and load a native library inside the jar file
-		return extractLibraryFile(nativeLibraryPath, nativeLibraryName, tempFolder);
-	}
+        if (nativeLibraryPath != null) {
+            final File nativeLib = new File(nativeLibraryPath, nativeLibraryName);
+            final boolean exists = nativeLib.exists();
+            debug("%s nativeLib %s file exists = %s", SIMPLE_NAME, nativeLib, exists);
+            if (exists) {
+                return nativeLib;
+            }
+        }
 
-	/**
-	 * Gets the error cause if loading failed.
-	 *
-	 * @return null, unless loading failed
-	 */
-	static Throwable getLoadingError() {
-		return libraryLoadingError;
-	}
+        // Load an OS-dependent native library inside a jar file
+        nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolder();
+        debug("%s nativeLibraryPath = '%s'", SIMPLE_NAME, nativeLibraryPath);
+        final String resource = nativeLibraryPath + File.separator + nativeLibraryName;
+        boolean hasNativeLib = hasResource(resource);
+        debug("%s resource '%s' exists = %s", SIMPLE_NAME, resource, hasNativeLib);
+        if (!hasNativeLib) {
+            final String altName = nativeLibAltMacName;
+            String macResource = nativeLibraryPath + File.separator + altName;
+            if (OsInfo.getOsName().equals("Mac") && hasResource(macResource)) {
+                // Fix for openjdk7 for Mac, still applies on Java 8?
+                nativeLibraryName = altName;
+                hasNativeLib = true;
+            }
+            debug("%s mac resource '%s' exists = %s", SIMPLE_NAME, macResource, hasNativeLib);
+        }
 
-	/**
-	 * Checks whether the given path has resource.
-	 *
-	 * @param path the path.
-	 * @return the boolean.
-	 */
-	private static boolean hasResource(final String path) {
-		return NativeCodeLoader.class.getResource(path) != null;
-	}
+        if (!hasNativeLib) {
+            if (failFast) {
+                throw new IllegalStateException(
+                        String.format("No native library is found for os.name=%s and os.arch=%s", OsInfo.getOsName(), OsInfo.getArchName()));
+            }
+            return null;
+        }
 
-	private static boolean isDebug() {
-		return Boolean.getBoolean(Crypto.CONF_PREFIX + "debug");
-	}
+        // Temporary folder for the native lib. Use the value of
+        // Crypto.LIB_TEMPDIR_KEY or java.io.tmpdir
+        final String tempFolder = new File(properties.getProperty(Crypto.LIB_TEMPDIR_KEY, System.getProperty("java.io.tmpdir"))).getAbsolutePath();
 
-	/**
-	 * Checks whether native code is loaded for this platform.
-	 *
-	 * @return {@code true} if native is loaded, else {@code false}.
-	 */
-	static boolean isNativeCodeLoaded() {
-		return libraryLoaded;
-	}
+        // Extract and load a native library inside the jar file
+        return extractLibraryFile(nativeLibraryPath, nativeLibraryName, tempFolder);
+    }
 
-	/**
-	 * Loads the library if possible.
-	 *
-	 * @return null if successful, otherwise the Throwable that was caught
-	 */
-	static Throwable loadLibrary() {
-		try {
-			debug("%s loadLibrary", SIMPLE_NAME);
-			final File nativeLibFile = loadNativeLibrary();
-			if (nativeLibFile != null) {
-				// Load extracted or specified native library.
-				systemLoad(nativeLibFile);
-			} else {
-				// Load preinstalled library in the path for system property
-				// "java.library.path".
-				final String libName = NATIVE_LIBNAME_OSSL1;
-				debug("%s System.loadLibrary('%s')", SIMPLE_NAME, libName);
-				System.loadLibrary(libName);
-			}
-			return null; // OK
-		} catch (final Exception | UnsatisfiedLinkError t) {
-			return t;
-		}
-	}
+    /**
+     * Gets the error cause if loading failed.
+     *
+     * @return null, unless loading failed
+     */
+    static Throwable getLoadingError() {
+        init();
+        return libraryLoadingError;
+    }
 
-	private static File systemLoad(final File nativeLibFile) {
-		final String absolutePath = nativeLibFile.getAbsolutePath();
-		debug("%s System.load('%s')", SIMPLE_NAME, absolutePath);
-		System.load(absolutePath);
-		return nativeLibFile;
-	}
+    /**
+     * Checks whether the given path has resource.
+     *
+     * @param path the path.
+     * @return the boolean.
+     */
+    private static boolean hasResource(final String path) {
+        return NativeCodeLoader.class.getResource(path) != null;
+    }
 
-	/**
-	 * The private constructor of {@link NativeCodeLoader}.
-	 */
-	private NativeCodeLoader() {
-	}
+    private static boolean isDebug() {
+        return Boolean.getBoolean(Crypto.CONF_PREFIX + "debug");
+    }
+
+    /**
+     * Checks whether native code is loaded for this platform.
+     *
+     * @return {@code true} if native is loaded, else {@code false}.
+     */
+    static boolean isNativeCodeLoaded() {
+        init();
+        return libraryLoaded;
+    }
+
+    /**
+     * Loads the library if possible.
+     *
+     * @return null if successful, otherwise the Throwable that was caught
+     */
+    static Throwable loadLibrary() {
+        init();
+        try {
+            debug("%s loadLibrary", SIMPLE_NAME);
+            final File nativeLibFile = loadNativeLibrary();
+            if (nativeLibFile != null) {
+                // Load extracted or specified native library.
+                systemLoad(nativeLibFile);
+            } else {
+                // Load preinstalled library in the path for system property
+                // "java.library.path".
+                final String libName = NATIVE_LIBNAME_OSSL1;
+                debug("%s System.loadLibrary('%s')", SIMPLE_NAME, libName);
+                System.loadLibrary(libName);
+            }
+            return null; // OK
+        } catch (final Exception | UnsatisfiedLinkError t) {
+            t.printStackTrace();
+            return t;
+        }
+    }
+
+    private static File systemLoad(final File nativeLibFile) {
+        final String absolutePath = Objects.requireNonNull(nativeLibFile, "nativeLibFile").getAbsolutePath();
+        debug("%s System.load('%s')", SIMPLE_NAME, absolutePath);
+        System.load(absolutePath); // UnsatisfiedLinkError
+        debug("%s System loaded '%s'", SIMPLE_NAME, absolutePath);
+        // debug("%s OpenSSL %s", SIMPLE_NAME, OpenSslInfo.getOpenSslNativeVersion());
+        return nativeLibFile;
+    }
+
+    /**
+     * The private constructor of {@link NativeCodeLoader}.
+     */
+    private NativeCodeLoader() {
+    }
 }

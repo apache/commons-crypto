@@ -20,7 +20,9 @@ package org.apache.commons.crypto;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
@@ -79,6 +81,12 @@ public final class Crypto {
      */
     public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX + "lib.tempdir";
 
+    private static boolean quiet = false;
+
+    private static boolean contains(String[] args, String test) {
+        return Stream.of(args).anyMatch(s -> Objects.equals(s, test));
+    }
+
     /**
      * Gets the component version of Apache Commons Crypto.
      * <p>
@@ -120,8 +128,6 @@ public final class Crypto {
         return NativeCodeLoader.getLoadingError();
     }
 
-    private static boolean quiet = false;
-
     /**
      * Logs info-level messages.
      *
@@ -150,13 +156,19 @@ public final class Crypto {
      * @throws Exception if getCryptoRandom or getCryptoCipher get error.
      */
     public static void main(final String[] args) throws Exception {
-        quiet = args.length == 1 && args[0].equals("-q");
+        quiet = contains(args, "-q");
+        if (contains(args, "--openssl1")) {
+            NativeCodeLoader.loadNativeLibrary1();
+        }
+        if (contains(args, "--openssl3")) {
+            NativeCodeLoader.loadNativeLibrary3();
+        }
         info("%s %s", getComponentName(), getComponentVersion());
         if (isNativeCodeLoaded()) {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
             info("Native name: %s", OpenSslInfoNative.NativeName());
             info("Native built: %s", OpenSslInfoNative.NativeTimeStamp());
-            info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslInfo.getOpenSslNativeVersion()));
+            info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslInfoNative.OpenSSL()));
             info("OpenSSL library info: %s", OpenSslInfoNative.OpenSSLVersion(0));
             info("DLL name: %s", OpenSslInfoNative.DLLName());
             info("DLL path: %s", OpenSslInfoNative.DLLPath());
