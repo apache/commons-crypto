@@ -79,9 +79,9 @@ final class OpenSslNativeJna {
         } else if (VERSION_X_Y == VERSION_2_0_X) {
             OpenSslJna.debug("Creating OpenSsl20XNativeJna");
             JnaImplementation = new OpenSsl20XNativeJna();
-//        } else if (VERSION_X_Y == VERSION_3_0_X) {
-//            OpenSslJna.debug("Creating OpenSsl30XNativeJna");
-//            JnaImplementation = new OpenSsl30XNativeJna();
+        } else if (VERSION_X_Y == VERSION_3_0_X) {
+            OpenSslJna.debug("Creating OpenSsl30XNativeJna");
+            JnaImplementation = new OpenSsl30XNativeJna();
         } else {
             // TODO: Throw error?
             OpenSslJna.debug("Creating OpenSsl10XNativeJna");

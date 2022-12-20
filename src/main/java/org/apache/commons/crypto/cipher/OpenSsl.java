@@ -70,7 +70,7 @@ final class OpenSsl {
         Throwable loadingFailure = null;
         try {
             if (Crypto.isNativeCodeLoaded()) {
-                OpenSslNative.initIDs();
+                OpenSslNativeJni._initIDs();
             } else {
                 loadingFailure = Crypto.getLoadingError();
             }
@@ -127,7 +127,7 @@ final class OpenSsl {
         final Transformation transform = Transformation.parse(transformation);
         final int algorithmMode = AlgorithmMode.get(transform.getAlgorithm(), transform.getMode());
         final int padding = transform.getPadding().ordinal();
-        final long context = OpenSslNative.initContext(algorithmMode, padding);
+        final long context = OpenSslNativeJni._initContext(algorithmMode, padding);
         return new OpenSsl(context, algorithmMode, padding);
     }
 

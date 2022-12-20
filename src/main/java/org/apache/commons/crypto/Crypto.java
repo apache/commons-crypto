@@ -156,7 +156,7 @@ public final class Crypto {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
             info("Native name: %s", OpenSslInfoNative.NativeName());
             info("Native built: %s", OpenSslInfoNative.NativeTimeStamp());
-            info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslInfoNative.OpenSSL()));
+            info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslInfo.getOpenSslNativeVersion()));
             info("OpenSSL library info: %s", OpenSslInfoNative.OpenSSLVersion(0));
             info("DLL name: %s", OpenSslInfoNative.DLLName());
             info("DLL path: %s", OpenSslInfoNative.DLLPath());

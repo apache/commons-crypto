@@ -75,7 +75,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
             inBuffer = new ByteArrayOutputStream();
         }
 
-        context = OpenSslNative.init(context, mode, algorithmMode, padding, key, iv);
+        context = OpenSslNativeJni._init(context, mode, algorithmMode, padding, key, iv);
     }
 
     @Override
@@ -95,7 +95,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
             inBuffer.write(inputBuf, 0, inputLen);
             return 0;
         }
-        len = OpenSslNative.update(context, input, input.position(),
+        len = OpenSslNativeJni._update(context, input, input.position(),
                 input.remaining(), output, output.position(),
                 output.remaining());
         input.position(input.limit());
@@ -118,7 +118,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
             inBuffer.write(input, inputOffset, inputLen);
             return 0;
         }
-        return OpenSslNative.updateByteArray(context, input, inputOffset,
+        return OpenSslNativeJni._updateByteArray(context, input, inputOffset,
                 inputLen, output, outputOffset, output.length - outputOffset);
     }
 
@@ -152,7 +152,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
             }
 
             final int inputDataLen = inputLenFinal - getTagLen();
-            len = OpenSslNative.updateByteArray(context, inputFinal, inputOffsetFinal,
+            len = OpenSslNativeJni._updateByteArray(context, inputFinal, inputOffsetFinal,
                     inputDataLen, output, outputOffset, outputLength - outputOffset);
 
             // set tag to EVP_Cipher for integrity verification in doFinal
@@ -161,11 +161,11 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
             tag.flip();
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_SET_TAG.getValue(), getTagLen(), tag);
         } else {
-            len = OpenSslNative.updateByteArray(context, input, inputOffset,
+            len = OpenSslNativeJni._updateByteArray(context, input, inputOffset,
                     inputLen, output, outputOffset, outputLength - outputOffset);
         }
 
-        len += OpenSslNative.doFinalByteArray(context, output, outputOffset + len,
+        len += OpenSslNativeJni._doFinalByteArray(context, output, outputOffset + len,
                 outputLength - outputOffset - len);
 
         // Keep the similar behavior as JCE, append the tag to end of output
@@ -205,7 +205,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
                     throw new AEADBadTagException("Input too short - need tag");
                 }
 
-                len = OpenSslNative.updateByteArrayByteBuffer(context, inputFinal, 0,
+                len = OpenSslNativeJni._updateByteArrayByteBuffer(context, inputFinal, 0,
                         inputFinal.length - getTagLen(),
                         output, output.position(), output.remaining());
 
@@ -218,7 +218,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
                     throw new AEADBadTagException("Input too short - need tag");
                 }
 
-                len = OpenSslNative.update(context, input, input.position(),
+                len = OpenSslNativeJni._update(context, input, input.position(),
                         input.remaining() - getTagLen(), output, output.position(),
                         output.remaining());
 
@@ -233,7 +233,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
             evpCipherCtxCtrl(context, OpenSslEvpCtrlValues.AEAD_SET_TAG.getValue(),
                     getTagLen(), tag);
         } else {
-            len = OpenSslNative.update(context, input, input.position(),
+            len = OpenSslNativeJni._update(context, input, input.position(),
                     input.remaining(), output, output.position(),
                     output.remaining());
             input.position(input.limit());
@@ -242,7 +242,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
         totalLen += len;
         output.position(output.position() + len);
 
-        len = OpenSslNative.doFinal(context, output, output.position(),
+        len = OpenSslNativeJni._doFinal(context, output, output.position(),
                 output.remaining());
         output.position(output.position() + len);
         totalLen += len;
@@ -277,7 +277,7 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
 
     private void processAAD() {
         if (aadBuffer != null && aadBuffer.size() > 0) {
-            OpenSslNative.updateByteArray(context, aadBuffer.toByteArray(), 0, aadBuffer.size(), null, 0, 0);
+            OpenSslNativeJni._updateByteArray(context, aadBuffer.toByteArray(), 0, aadBuffer.size(), null, 0, 0);
             aadBuffer = null;
         }
     }
@@ -303,9 +303,9 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
         try {
             if (data != null) {
                 data.order(ByteOrder.nativeOrder());
-                return OpenSslNative.ctrl(context, type, arg, data.array());
+                return OpenSslNativeJni._ctrl(context, type, arg, data.array());
             }
-            return OpenSslNative.ctrl(context, type, arg, null);
+            return OpenSslNativeJni._ctrl(context, type, arg, null);
         } catch (final Exception e) {
             System.out.println(e.getMessage());
             return 0;

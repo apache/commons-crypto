@@ -47,14 +47,14 @@ final class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
             throw new InvalidAlgorithmParameterException("Illegal parameters");
         }
         iv = ((IvParameterSpec) params).getIV();
-        context = OpenSslNative.init(context, mode, algorithmMode, padding, key, iv);
+        context = OpenSslNativeJni._init(context, mode, algorithmMode, padding, key, iv);
     }
 
     @Override
     public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
         checkState();
 
-        final int len = OpenSslNative.update(context, input, input.position(), input.remaining(), output, output.position(), output.remaining());
+        final int len = OpenSslNativeJni._update(context, input, input.position(), input.remaining(), output, output.position(), output.remaining());
         input.position(input.limit());
         output.position(output.position() + len);
 
@@ -65,7 +65,7 @@ final class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
     public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset) throws ShortBufferException {
         checkState();
 
-        return OpenSslNative.updateByteArray(context, input, inputOffset, inputLen, output, outputOffset, output.length - outputOffset);
+        return OpenSslNativeJni._updateByteArray(context, input, inputOffset, inputLen, output, outputOffset, output.length - outputOffset);
     }
 
     @Override
@@ -74,9 +74,9 @@ final class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
         checkState();
         final int outputLength = output.length;
 
-        int len = OpenSslNative.updateByteArray(context, input, inputOffset, inputLen, output, outputOffset, outputLength - outputOffset);
+        int len = OpenSslNativeJni._updateByteArray(context, input, inputOffset, inputLen, output, outputOffset, outputLength - outputOffset);
 
-        len += OpenSslNative.doFinalByteArray(context, output, outputOffset + len, outputLength - outputOffset - len);
+        len += OpenSslNativeJni._doFinalByteArray(context, output, outputOffset + len, outputLength - outputOffset - len);
 
         return len;
     }
@@ -86,13 +86,13 @@ final class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
         checkState();
 
         int totalLen = 0;
-        int len = OpenSslNative.update(context, input, input.position(), input.remaining(), output, output.position(), output.remaining());
+        int len = OpenSslNativeJni._update(context, input, input.position(), input.remaining(), output, output.position(), output.remaining());
         totalLen += len;
 
         input.position(input.limit());
         output.position(output.position() + len);
 
-        len = OpenSslNative.doFinal(context, output, output.position(), output.remaining());
+        len = OpenSslNativeJni._doFinal(context, output, output.position(), output.remaining());
         totalLen += len;
 
         output.position(output.position() + len);

@@ -59,7 +59,7 @@ abstract class AbstractOpenSslFeedbackCipher {
 
     public void clean() {
         if (context != 0) {
-            OpenSslNative.clean(context);
+            OpenSslNativeJni._clean(context);
             context = 0;
         }
     }

@@ -40,7 +40,7 @@ final class NativeCodeLoader {
 
     private static final String SIMPLE_NAME = NativeCodeLoader.class.getSimpleName();
 
-    private static final String NATIVE_LIBNAME = "commons-crypto";
+    private static final String NATIVE_LIBNAME = "commons-crypto-ossl3";
 
     private static final String NATIVE_LIBNAME_ALT = "lib" + NATIVE_LIBNAME + ".jnilib";
 
