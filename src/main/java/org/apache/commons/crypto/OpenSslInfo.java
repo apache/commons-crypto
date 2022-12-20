@@ -24,6 +24,8 @@ package org.apache.commons.crypto;
  */
 public final class OpenSslInfo {
 
+    private static final long VERSION_3_0_X = 0x30000000;
+
     /**
      * Gets the OpenSSL version.
      *
@@ -32,4 +34,13 @@ public final class OpenSslInfo {
     public static long getOpenSslNativeVersion() {
         return OpenSslInfoNative.OpenSSL();
     }
+
+	/**
+     * Tests if the OpenSSL version is 3 or above.
+     *
+     * @return true if the OpenSSL version is 3 or above.
+     */
+	public static boolean isOpenSslNativeVersion3() {
+		return getOpenSslNativeVersion() >= OpenSslInfo.VERSION_3_0_X;
+	}
 }

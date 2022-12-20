@@ -24,16 +24,14 @@ import org.apache.commons.crypto.OpenSslInfo;
 /**
  * Delegates calls to a native library for a specific version of OpenSSL.
  */
-class OpenSslNativeJni {
+public class OpenSslNativeJni {
 
     private static final OpenSslNativeImpl nativeImpl;
-    private static final long VERSION_3_0_X = 0x30000000;
-
     static {
-        nativeImpl = OpenSslInfo.getOpenSslNativeVersion() >= VERSION_3_0_X ? new OpenSsl3Native() : new OpenSslNative();
+        nativeImpl = OpenSslInfo.isOpenSslNativeVersion3() ? new OpenSsl3Native() : new OpenSslNative();
     }
 
-    static void _clean(long context) {
+	static void _clean(long context) {
         nativeImpl._clean(context);
     }
 
