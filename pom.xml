@@ -145,7 +145,6 @@ The following provides more details on the included cryptographic software:
 
     <commons.pmd.version>3.19.0</commons.pmd.version>
     <commons.pmd-impl.version>6.52.0</commons.pmd-impl.version>
-    <commons.javadoc.version>3.4.1</commons.javadoc.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.japicmp.version>0.17.1</commons.japicmp.version>
     <commons.spotbugs.version>4.7.3.0</commons.spotbugs.version>
