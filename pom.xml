@@ -157,7 +157,6 @@ The following provides more details on the included cryptographic software:
     <commons.releaseManagerKey>86fdc7e2a11262cb</commons.releaseManagerKey>
   
     <jna.version>5.12.1</jna.version>
-    <commons.jacoco.version>0.8.8</commons.jacoco.version>
 
     <!-- The property "target.name" is used to specify the ant target, The All target will use
     OsInfo.java to detect the OS info and arch to generate the native binary for detected platform.
