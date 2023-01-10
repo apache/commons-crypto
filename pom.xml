@@ -163,7 +163,6 @@ The following provides more details on the included cryptographic software:
     User is able to specify the platform by maven profiles.-->
     <target.name>all</target.name>
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
-    <commons.surefire.version>3.0.0-M7</commons.surefire.version>
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>yyyy-MM-dd HH:mm:ssZ</maven.buildNumber.timestampFormat>
