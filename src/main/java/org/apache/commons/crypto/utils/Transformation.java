@@ -88,7 +88,7 @@ public class Transformation {
 
     /**
      * Gets the algorithm.
-     * 
+     *
      * @return the algorithm.
      */
     public String getAlgorithm() {
@@ -97,7 +97,7 @@ public class Transformation {
 
     /**
      * Gets the mode.
-     * 
+     *
      * @return the mode.
      */
     public String getMode() {
@@ -106,7 +106,7 @@ public class Transformation {
 
     /**
      * Gets the padding.
-     * 
+     *
      * @return the padding.
      */
     public Padding getPadding() {

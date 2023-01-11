@@ -53,31 +53,31 @@ public class DefaultCryptoCipher implements CryptoCipher {
     }
 
     @Override
-    public void init(int mode, Key key, AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    public void init(final int mode, final Key key, final AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
         // Simplest
 
     }
 
     @Override
-    public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws ShortBufferException {
-        // Simplest
-        return 0;
-    }
-
-    @Override
-    public int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset) throws ShortBufferException {
+    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
         // Simplest
         return 0;
     }
 
     @Override
-    public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset) throws ShortBufferException {
         // Simplest
         return 0;
     }
 
     @Override
-    public int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+    public int doFinal(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+        // Simplest
+        return 0;
+    }
+
+    @Override
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
             throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         // Simplest
         return 0;
