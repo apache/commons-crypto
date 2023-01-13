@@ -532,7 +532,6 @@ The following provides more details on the included cryptographic software:
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>${commons.pmd.version}</version>
         <configuration>
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>
