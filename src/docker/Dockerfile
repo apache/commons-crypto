@@ -44,8 +44,8 @@ RUN dpkg --add-architecture i386 && apt-get update \
       && apt-get --assume-yes install g++-arm-linux-gnueabihf
 
 # Do this separately to make upgrades easier
-RUN wget https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
-&& tar xf apache-maven-*.tar.gz -C /opt && ln -s /opt/apache-maven-3.6.3 /opt/maven
+RUN wget https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.tar.gz \
+&& tar xf apache-maven-*.tar.gz -C /opt && ln -s /opt/apache-maven-3.8.7 /opt/maven
 
 # Ensure we are in the correct directory (this will be overlaid by the virtual mount)
 WORKDIR /home/crypto
