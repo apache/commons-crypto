@@ -144,7 +144,7 @@ Please note that the JNA interface to OpenSSL is a preliminary release.
       <action issue="CRYPTO-26" type="update" dev="Dapeng Sun" due-to="Dapeng Sun">Utility classes should not have public constructors .</action>
       <action issue="CRYPTO-28" type="update" dev="Ferdinand Xu" due-to="Ferdinand Xu, Ke Jia">Update the README.md of Apache Commons Crypto .</action>
       <action issue="CRYPTO-29" type="fix" dev="Dian Fu" due-to="Dian Fu, Sebb">Make sure Cipher.ENCRYPT_MODE is consistent with JDK .</action>
-      <action issue="CRYPTO-3" type="update" dev="Ferdinand Xu" due-to="ferdinand xu">Change default cipher as OpensslCipher .</action>
+      <action issue="CRYPTO-3" type="update" dev="Ferdinand Xu" due-to="ferdinand xu">Change default cipher as OpenSslCipher .</action>
       <action issue="CRYPTO-30" type="fix" dev="Ferdinand Xu" due-to="Ferdinand Xu, Sebb">Mutable fields should be private .</action>
       <action issue="CRYPTO-31" type="update" dev="Ferdinand Xu" due-to="Ferdinand Xu, Sebb">Make fields final wherever possible .</action>
       <action issue="CRYPTO-33" type="update" dev="Xianda Ke" due-to="Xianda Ke, Sebb">SecureRandom shadows JVM class .</action>
@@ -158,7 +158,7 @@ Please note that the JNA interface to OpenSSL is a preliminary release.
       <action issue="CRYPTO-49" type="fix" dev="Dapeng Sun" due-to="Dapeng Sun">CRYPTO-1 Fix build of X86 .</action>
       <action issue="CRYPTO-7" type="update" dev="Ferdinand Xu" due-to="ferdinand xu">Rename source code in Chimera to Apache name space .</action>
       <action issue="CRYPTO-57" type="fix" dev="Benedikt Ritter" due-to="Benedikt Ritter">Fix build on Mac OS</action>
-      <action issue="CRYPTO-61" type="fix" dev="Hendrik Saly" due-to="Hendrik Saly">Fix possible NPE in OpensslCryptoRandom</action>
+      <action issue="CRYPTO-61" type="fix" dev="Hendrik Saly" due-to="Hendrik Saly">Fix possible NPE in OpenSslCryptoRandom</action>
       <action issue="CRYPTO-54" type="fix" dev="Dapeng Sun" due-to="Stian Soiland-Reyes, Jerry Chen, Benedikt Ritter, Gary Gregory">US Export classification and ECCN registration for encryption</action>
       <action issue="CRYPTO-62" type="update" dev="Hendrik Saly" due-to="Hendrik Saly">Add multithreaded related tests</action>
     </release>

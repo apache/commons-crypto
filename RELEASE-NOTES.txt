@@ -1,13 +1,125 @@
-              Apache Commons Crypto 1.1.0
-              RELEASE NOTES
+              Apache Commons Crypto 1.2.0
+                  RELEASE NOTES
 
-The Apache Commons Crypto team is pleased to announce the release of Apache Commons Crypto 1.1.0
+The Apache Commons Crypto team is pleased to announce the release of Apache Commons Crypto 1.2.0.
 
 Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
 Standard New Instructions). It provides Java API for both cipher level and Java stream level.
 Developers can use it to implement high performance AES encryption/decryption with the minimum
 code and effort. Please note that Crypto doesn't implement the cryptographic algorithm such as
-AES directly. It wraps to Openssl or JCE which implement the algorithms.
+AES directly. It wraps to OpenSSL or JCE which implement the algorithms.
+
+Features
+--------
+
+1. Cipher API for low level cryptographic operations.
+2. Java stream API (CryptoInputStream/CryptoOutputStream) for high level stream encryption/decryption.
+3. Both optimized with high performance AES encryption/decryption. (1400 MB/s - 1700 MB/s throughput in modern Xeon processors).
+4. JNI-based implementation to achieve comparable performance to the native C/C++ version based on OpenSsl.
+5. Portable across various operating systems (currently only Linux/MacOSX/Windows);
+Apache Commons Crypto loads the library according to your machine environment (it checks system properties, `os.name` and `os.arch`).
+6. Simple usage. Add the commons-crypto-(version).jar file to your classpath.
+
+
+Export restrictions
+-------------------
+
+This distribution includes cryptographic software.
+The country in which you currently reside may have restrictions
+on the import, possession, use, and/or re-export to another country,
+of encryption software. BEFORE using any encryption software,
+please check your country's laws, regulations and policies
+concerning the import, possession, or use, and re-export of
+encryption software, to see if this is permitted.
+See <http://www.wassenaar.org/> for more information.
+
+The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS),
+has classified this software as Export Commodity Control Number (ECCN) 5D002.C.1,
+which includes information security software using or performing
+cryptographic functions with asymmetric algorithms.
+The form and manner of this Apache Software Foundation distribution makes
+it eligible for export under the License Exception
+ENC Technology Software Unrestricted (TSU) exception
+(see the BIS Export Administration Regulations, Section 740.13)
+for both object code and source code.
+
+The following provides more details on the included cryptographic software:
+
+* Commons Crypto use [Java Cryptography Extension](http://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html) provided by Java
+* Commons Crypto link to and use [OpenSSL](https://www.openssl.org/) ciphers
+
+Minor release
+(Java 8, OpenSSL 1.1.1)
+
+Changes in this version include:
+
+Fixed Bugs:
+o CRYPTO-160:  Enhance the quality of JavaCryptoRandom.
+o CRYPTO-160:  Package-private implementations of CryptoRandom extends java.util.Random but should not. Thanks to Gary Gregory.
+o CRYPTO-163:  Makefile does not recompile objects if local include files are changed
+o CRYPTO-154:  License header should be a plain comment #113.
+o              Fix PMD warning and don't init to defaults #128. Thanks to Arturo Bernal.
+o              Minor changes #135. Thanks to Arturo Bernal.
+o              Port from pre-Java 8 javah tool to Java 8 and up javac with the -h option. Thanks to Gary Gregory.
+o              Fix build on Java 11. Thanks to Gary Gregory.
+o              Fix build on Java 17. Thanks to Gary Gregory.
+o CRYPTO-155:  Minor improvement #115, #125. Thanks to Arturo Bernal.
+o              PositionedCryptoInputStream does not close its CryptoCipher instances. Thanks to Gary Gregory.
+o              Validate return value from OpenSslNativeJna.EVP_CIPHER_CTX_set_padding(). Thanks to Gary Gregory.
+o              Validate return value from OpenSslNativeJna.ENGINE_finish(). Thanks to Gary Gregory.
+o              Validate return value from OpenSslNativeJna.ENGINE_free(). Thanks to Gary Gregory.
+o              Add github/codeql-action 2 #159. Thanks to Gary Gregory, Dependabot.
+o              Add AES utility class. Thanks to Gary Gregory, Dependabot.
+
+Changes:
+o              Bump actions/cache from 2.1.7 to 3.0.9 #150, #184. Thanks to Dependabot, Gary Gregory.
+o              Bump actions/checkout from 2 to 3.1.0 #149, #187. Thanks to Dependabot, Gary Gregory.
+o              Bump actions/setup-java from 2 to 3.6.0 #190. Thanks to Gary Gregory, Dependabot.
+o              Bump actions/upload-artifact from 3.1.0 to 3.1.1 #192. Thanks to Dependabot.
+o CRYPTO-151:  Migrate to Junit 5.9.1 #114, #171, #183. Thanks to Arturo Bernal, Dependabot.
+o              Bump jna from 5.5.0 to 5.13.0 #123, #139, #153, #167, #209. Thanks to Dependabot.
+o              Bump commons.japicmp.version from 0.14.3 to 0.17.1. Thanks to Gary Gregory.
+o              Bump maven-checkstyle-plugin from 3.1.1 to 3.2.0 #130, #176. Thanks to Dependabot.
+o              Bump jmh.version from 1.12 to 1.36 #119, #157, #194. Thanks to Dependabot.
+o              Bump exec-maven-plugin from 1.6.0 to 3.1.0 #121, #170. Thanks to Dependabot.
+o              Bump maven-antrun-plugin from 1.8 to 3.1.0 #120, #158. Thanks to Dependabot.
+o              Bump commons.japicmp.version from 0.15.2 to 0.15.7 #138. Thanks to Gary Gregory.
+o              Bump jacoco-maven-plugin from 0.6.6 to 0.8.8 #138, #154. Thanks to Gary Gregory.
+o              Bump maven-javadoc-plugin from 3.2.0 to 3.4.1 #138. Thanks to Gary Gregory.
+o              Bump maven-pmd-plugin from 3.14.0 to 3.19.0 #140, #177, #178. Thanks to Gary Gregory.
+o              Bump pmd from 6.44.0 to 6.52.0. Thanks to Gary Gregory.
+o              Bump taglist-maven-plugin from 2.4 to 3.0.0 #147. Thanks to Dependabot.
+o              Bump spotbugs-maven-plugin from 4.5.3.0 to 4.7.3.0 #152, #160, #168, #174, #179, #189, #193. Thanks to Dependabot.
+o              Bump commons-parent from 52 to 56 #182, #196, #204. Thanks to Gary Gregory, Dependabot.
+o              Bump commons.surefire.version from 3.0.0-M5 to 3.0.0-M7. Thanks to Gary Gregory.
+o              Bump maven-resources-plugin from 3.2.0 to 3.3.0 #172. Thanks to Dependabot.
+o              Bump jaxb-impl from 2.3.6 to 2.3.7. Thanks to Gary Gregory.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-crypto/changes-report.html
+
+For complete information on Apache Commons Crypto, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Crypto website:
+
+https://commons.apache.org/proper/commons-crypto/
+
+Download page: https://commons.apache.org/proper/commons-crypto/download_crypto.cgi
+
+Have fun!
+-Apache Commons Team
+
+-----------------------------------------------------------------------------
+
+              Apache Commons Crypto 1.1.0
+              RELEASE NOTES
+
+The Apache Commons Crypto team is pleased to announce the release of Apache Commons Crypto 1.1.0.
+
+Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
+Standard New Instructions). It provides Java API for both cipher level and Java stream level.
+Developers can use it to implement high performance AES encryption/decryption with the minimum
+code and effort. Please note that Crypto doesn't implement the cryptographic algorithm such as
+AES directly. It wraps to OpenSSL or JCE which implement the algorithms.
 
 Features
 --------
@@ -107,7 +219,7 @@ Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced
 Standard New Instructions). It provides Java API for both cipher level and Java stream level.
 Developers can use it to implement high performance AES encryption/decryption with the minimum
 code and effort. Please note that Crypto doesn't implement the cryptographic algorithm such as
-AES directly. It wraps to Openssl or JCE which implement the algorithms.
+AES directly. It wraps to OpenSSL or JCE which implement the algorithms.
 
 Features
 --------
@@ -175,13 +287,13 @@ o CRYPTO-34:   JavaSecureRandom should throw Exception if it cannot create the i
 o CRYPTO-47:   Fix build of MAC_OS . Thanks to Dapeng Sun.
 o CRYPTO-49:   CRYPTO-1 Fix build of X86 . Thanks to Dapeng Sun.
 o CRYPTO-57:   Fix build on Mac OS Thanks to Benedikt Ritter.
-o CRYPTO-61:   Fix possible NPE in OpensslCryptoRandom Thanks to Hendrik Saly.
+o CRYPTO-61:   Fix possible NPE in OpenSslCryptoRandom Thanks to Hendrik Saly.
 o CRYPTO-54:   US Export classification and ECCN registration for encryption Thanks to Stian Soiland-Reyes, Jerry Chen, Benedikt Ritter, Gary Gregory.
 
 Changes:
 o CRYPTO-26:   Utility classes should not have public constructors . Thanks to Dapeng Sun.
 o CRYPTO-28:   Update the README.md of Apache Commons Crypto . Thanks to Ferdinand Xu, Ke Jia.
-o CRYPTO-3:    Change default cipher as OpensslCipher . Thanks to ferdinand xu.
+o CRYPTO-3:    Change default cipher as OpenSslCipher . Thanks to ferdinand xu.
 o CRYPTO-31:   Make fields final wherever possible . Thanks to Ferdinand Xu, Sebb.
 o CRYPTO-33:   SecureRandom shadows JVM class . Thanks to Xianda Ke, Sebb.
 o CRYPTO-38:   Always use blocks . Thanks to Dapeng Sun, Gary Gregory.
