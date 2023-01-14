@@ -45,53 +45,24 @@ import org.junit.jupiter.api.Timeout;
 
 public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
-    @Override
-    public void setUp() {
-        transformation = AES.CTR_NO_PADDING;
-    }
+    protected void doDecryptTest(final String cipherClass, final boolean withChannel)
+            throws IOException {
 
-    @Override
-    protected CtrCryptoInputStream newCryptoInputStream(
-            final ByteArrayInputStream bais, final CryptoCipher cipher, final int bufferSize,
-            final byte[] iv, final boolean withChannel) throws IOException {
-        if (withChannel) {
-            return new CtrCryptoInputStream(Channels.newChannel(bais), cipher,
-                    bufferSize, key, iv);
-        }
-        return new CtrCryptoInputStream(bais, cipher, bufferSize, key, iv);
-    }
+        final CtrCryptoInputStream in = newCryptoInputStream(new ByteArrayInputStream(encData),
+                getCipher(cipherClass), defaultBufferSize, iv, withChannel);
 
-    @Override
-    protected CryptoInputStream newCryptoInputStream(final String transformation, final Properties props,
-            final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
-            final boolean withChannel) throws IOException {
-        if (withChannel) {
-            return new CtrCryptoInputStream(props, Channels.newChannel(bais), key,
-                    ((IvParameterSpec)params).getIV());
-        }
-        return new CtrCryptoInputStream(props, bais, key, ((IvParameterSpec)params).getIV());
-    }
+        final ByteBuffer buf = ByteBuffer.allocateDirect(dataLen);
+        buf.put(encData);
+        buf.rewind();
+        in.decrypt(buf, 0, dataLen);
+        final byte[] readData = new byte[dataLen];
+        final byte[] expectedData = new byte[dataLen];
+        buf.get(readData);
+        System.arraycopy(data, 0, expectedData, 0, dataLen);
+        assertArrayEquals(readData, expectedData);
+        final Exception ex = assertThrows(IOException.class, () -> in.decryptBuffer(buf));
+        assertEquals(ex.getCause().getClass(), ShortBufferException.class);
 
-    @Override
-    protected CtrCryptoOutputStream newCryptoOutputStream(
-            final ByteArrayOutputStream baos, final CryptoCipher cipher, final int bufferSize,
-            final byte[] iv, final boolean withChannel) throws IOException {
-        if (withChannel) {
-            return new CtrCryptoOutputStream(Channels.newChannel(baos), cipher,
-                    bufferSize, key, iv);
-        }
-        return new CtrCryptoOutputStream(baos, cipher, bufferSize, key, iv);
-    }
-
-    @Override
-    protected CtrCryptoOutputStream newCryptoOutputStream(final String transformation,
-            final Properties props, final ByteArrayOutputStream baos, final byte[] key,
-            final AlgorithmParameterSpec params, final boolean withChannel) throws IOException {
-        if (withChannel) {
-            return new CtrCryptoOutputStream(props, Channels.newChannel(baos), key,
-                    ((IvParameterSpec)params).getIV());
-        }
-        return new CtrCryptoOutputStream(props, baos, key, ((IvParameterSpec)params).getIV());
     }
 
     @Override
@@ -143,6 +114,55 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
         out.close();
     }
 
+    @Override
+    protected CtrCryptoInputStream newCryptoInputStream(
+            final ByteArrayInputStream bais, final CryptoCipher cipher, final int bufferSize,
+            final byte[] iv, final boolean withChannel) throws IOException {
+        if (withChannel) {
+            return new CtrCryptoInputStream(Channels.newChannel(bais), cipher,
+                    bufferSize, key, iv);
+        }
+        return new CtrCryptoInputStream(bais, cipher, bufferSize, key, iv);
+    }
+
+    @Override
+    protected CryptoInputStream newCryptoInputStream(final String transformation, final Properties props,
+            final ByteArrayInputStream bais, final byte[] key, final AlgorithmParameterSpec params,
+            final boolean withChannel) throws IOException {
+        if (withChannel) {
+            return new CtrCryptoInputStream(props, Channels.newChannel(bais), key,
+                    ((IvParameterSpec)params).getIV());
+        }
+        return new CtrCryptoInputStream(props, bais, key, ((IvParameterSpec)params).getIV());
+    }
+
+    @Override
+    protected CtrCryptoOutputStream newCryptoOutputStream(
+            final ByteArrayOutputStream baos, final CryptoCipher cipher, final int bufferSize,
+            final byte[] iv, final boolean withChannel) throws IOException {
+        if (withChannel) {
+            return new CtrCryptoOutputStream(Channels.newChannel(baos), cipher,
+                    bufferSize, key, iv);
+        }
+        return new CtrCryptoOutputStream(baos, cipher, bufferSize, key, iv);
+    }
+
+    @Override
+    protected CtrCryptoOutputStream newCryptoOutputStream(final String transformation,
+            final Properties props, final ByteArrayOutputStream baos, final byte[] key,
+            final AlgorithmParameterSpec params, final boolean withChannel) throws IOException {
+        if (withChannel) {
+            return new CtrCryptoOutputStream(props, Channels.newChannel(baos), key,
+                    ((IvParameterSpec)params).getIV());
+        }
+        return new CtrCryptoOutputStream(props, baos, key, ((IvParameterSpec)params).getIV());
+    }
+
+    @Override
+    public void setUp() {
+        transformation = AES.CTR_NO_PADDING;
+    }
+
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testDecrypt() throws Exception {
@@ -151,25 +171,5 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
         doDecryptTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, true);
         doDecryptTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, true);
-    }
-
-    protected void doDecryptTest(final String cipherClass, final boolean withChannel)
-            throws IOException {
-
-        final CtrCryptoInputStream in = newCryptoInputStream(new ByteArrayInputStream(encData),
-                getCipher(cipherClass), defaultBufferSize, iv, withChannel);
-
-        final ByteBuffer buf = ByteBuffer.allocateDirect(dataLen);
-        buf.put(encData);
-        buf.rewind();
-        in.decrypt(buf, 0, dataLen);
-        final byte[] readData = new byte[dataLen];
-        final byte[] expectedData = new byte[dataLen];
-        buf.get(readData);
-        System.arraycopy(data, 0, expectedData, 0, dataLen);
-        assertArrayEquals(readData, expectedData);
-        final Exception ex = assertThrows(IOException.class, () -> in.decryptBuffer(buf));
-        assertEquals(ex.getCause().getClass(), ShortBufferException.class);
-
     }
 }

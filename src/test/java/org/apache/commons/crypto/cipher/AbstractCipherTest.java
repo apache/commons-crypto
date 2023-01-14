@@ -51,218 +51,17 @@ public abstract class AbstractCipherTest {
 	// data
 	public static final int BYTEBUFFER_SIZE = 1000;
 
-	public String[] cipherTests;
-	private Properties props;
-	protected String cipherClass;
-	protected String[] transformations;
-
 	// cipher
 	static final byte[] KEY = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14,
 			0x15, 0x16, 0x17, 0x18, 0x19, 0x20, 0x21, 0x22, 0x23, 0x24 };
 	static final byte[] IV = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 			0x08 };
+	public String[] cipherTests;
+	private Properties props;
+
+	protected String cipherClass;
+	protected String[] transformations;
 	private CryptoCipher enc, dec;
-
-	@BeforeEach
-	public void setup() {
-		init();
-		assertNotNull(cipherClass, "cipherClass");
-		assertNotNull(transformations, "transformations");
-		props = new Properties();
-		props.setProperty(CryptoCipherFactory.CLASSES_KEY, cipherClass);
-	}
-
-	protected abstract void init();
-
-	@Test
-	public void closeTestNoInit() throws Exception {
-		// This test deliberately does not use try with resources in order to control
-		// the sequence of operations exactly
-		try (final CryptoCipher enc = getCipher(transformations[0])) {
-		    // empty
-		}
-	}
-
-	@Test
-	public void closeTestAfterInit() throws Exception {
-		// This test deliberately does not use try with resources in order to control
-		// the sequence of operations exactly
-        try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-        }
-	}
-
-    SecretKeySpec newSecretKeySpec() {
-        return AES.newSecretKeySpec(KEY);
-    }
-
-	@Test
-	public void reInitTest() throws Exception {
-		// This test deliberately does not use try with resources in order to control
-		// the sequence of operations exactly
-        try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-        }
-	}
-
-	@Test
-    public void reInitAfterClose() throws Exception {
-        // This test deliberately does not use try with resources in order to control
-        // the sequence of operations exactly
-        try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-            enc.close();
-            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-        }
-    }
-
-	@Test
-	public void closeTestRepeat() throws Exception {
-		// This test deliberately does not use try with resources in order to control
-		// the sequence of operations exactly
-        try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.close();
-            enc.close(); // repeat the close
-        }
-	}
-
-	@Test
-	public void cryptoTest() throws Exception {
-		for (final String tran : transformations) {
-			/** uses the small data set in {@link TestData} */
-			cipherTests = TestData.getTestData(tran);
-			assertNotNull(cipherTests, tran);
-			for (int i = 0; i != cipherTests.length; i += 5) {
-				final byte[] key = DatatypeConverter.parseHexBinary(cipherTests[i + 1]);
-				final byte[] iv = DatatypeConverter.parseHexBinary(cipherTests[i + 2]);
-
-				final byte[] inputBytes = DatatypeConverter.parseHexBinary(cipherTests[i + 3]);
-				final byte[] outputBytes = DatatypeConverter.parseHexBinary(cipherTests[i + 4]);
-
-				final ByteBuffer inputBuffer = ByteBuffer.allocateDirect(inputBytes.length);
-				final ByteBuffer outputBuffer = ByteBuffer.allocateDirect(outputBytes.length);
-				inputBuffer.put(inputBytes);
-				inputBuffer.flip();
-				outputBuffer.put(outputBytes);
-				outputBuffer.flip();
-
-				byteBufferTest(tran, key, iv, inputBuffer, outputBuffer);
-				byteArrayTest(tran, key, iv, inputBytes, outputBytes);
-			}
-
-			/** uses randomly generated big data set */
-			byteArrayTest(tran, KEY, IV);
-		}
-	}
-
-	@Test
-	public void testNullTransform() {
-		assertThrows(IllegalArgumentException.class,
-				() -> getCipher(null).close());
-	}
-
-	@Test
-	public void testInvalidTransform() {
-		assertThrows(IllegalArgumentException.class,
-				() -> getCipher("AES/CBR/NoPadding/garbage/garbage").close());
-	}
-
-	@Test
-	public void testInvalidKey() throws Exception {
-		for (final String transform : transformations) {
-			try (final CryptoCipher cipher = getCipher(transform)) {
-				assertNotNull(cipher);
-
-				final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
-						0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
-				assertThrows(InvalidKeyException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, AES.newSecretKeySpec(invalidKey), new IvParameterSpec(IV)));
-			}
-		}
-	}
-
-	@Test
-	public void testInvalidIV() throws Exception {
-		for (final String transform : transformations) {
-			try (final CryptoCipher cipher = getCipher(transform)) {
-				assertNotNull(cipher);
-				final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
-						0x0d, 0x0e, 0x0f, 0x11 };
-				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(invalidIV)));
-			}
-		}
-	}
-
-	@Test
-	public void testInvalidIVClass() throws Exception {
-		for (final String transform : transformations) {
-			try (final CryptoCipher cipher = getCipher(transform)) {
-				assertNotNull(cipher);
-				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, newSecretKeySpec(), new GCMParameterSpec(IV.length, IV)));
-			}
-		}
-	}
-
-	private void byteBufferTest(final String transformation, final byte[] key, final byte[] iv, final ByteBuffer input,
-			final ByteBuffer output) throws Exception {
-		final ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
-		final ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
-
-		try (final CryptoCipher enc = getCipher(transformation); final CryptoCipher dec = getCipher(transformation)) {
-
-			enc.init(Cipher.ENCRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
-			dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
-
-			//
-			// encryption pass
-			//
-			enc.doFinal(input, encResult);
-			input.flip();
-			encResult.flip();
-			if (!output.equals(encResult)) {
-				final byte[] b = new byte[output.remaining()];
-				output.get(b);
-				final byte[] c = new byte[encResult.remaining()];
-				encResult.get(c);
-				fail("AES failed encryption - expected " + DatatypeConverter.printHexBinary(b)
-						+ " got " + DatatypeConverter.printHexBinary(c));
-			}
-
-			//
-			// decryption pass
-			//
-			dec.doFinal(encResult, decResult);
-			decResult.flip();
-
-			if (!input.equals(decResult)) {
-				final byte[] inArray = new byte[input.remaining()];
-				final byte[] decResultArray = new byte[decResult.remaining()];
-				input.get(inArray);
-				decResult.get(decResultArray);
-				fail();
-			}
-		}
-	}
-
-	/** test byte array whose data is planned in {@link TestData} */
-	private void byteArrayTest(final String transformation, final byte[] key, final byte[] iv, final byte[] input,
-			final byte[] output) throws Exception {
-		resetCipher(transformation, key, iv);
-		final int blockSize = enc.getBlockSize();
-
-		byte[] temp = new byte[input.length + blockSize];
-		final int n = enc.doFinal(input, 0, input.length, temp, 0);
-		final byte[] cipherText = new byte[n];
-		System.arraycopy(temp, 0, cipherText, 0, n);
-		assertArrayEquals(output, cipherText, "byte array encryption error.");
-
-		temp = new byte[cipherText.length + blockSize];
-		final int m = dec.doFinal(cipherText, 0, cipherText.length, temp, 0);
-		final byte[] plainText = new byte[m];
-		System.arraycopy(temp, 0, plainText, 0, m);
-		assertArrayEquals(input, plainText, "byte array decryption error.");
-	}
 
 	/** test byte array whose data is randomly generated */
 	private void byteArrayTest(final String transformation, final byte[] key, final byte[] iv) throws Exception {
@@ -313,6 +112,156 @@ public abstract class AbstractCipherTest {
 		}
 	}
 
+	/** test byte array whose data is planned in {@link TestData} */
+	private void byteArrayTest(final String transformation, final byte[] key, final byte[] iv, final byte[] input,
+			final byte[] output) throws Exception {
+		resetCipher(transformation, key, iv);
+		final int blockSize = enc.getBlockSize();
+
+		byte[] temp = new byte[input.length + blockSize];
+		final int n = enc.doFinal(input, 0, input.length, temp, 0);
+		final byte[] cipherText = new byte[n];
+		System.arraycopy(temp, 0, cipherText, 0, n);
+		assertArrayEquals(output, cipherText, "byte array encryption error.");
+
+		temp = new byte[cipherText.length + blockSize];
+		final int m = dec.doFinal(cipherText, 0, cipherText.length, temp, 0);
+		final byte[] plainText = new byte[m];
+		System.arraycopy(temp, 0, plainText, 0, m);
+		assertArrayEquals(input, plainText, "byte array decryption error.");
+	}
+
+	private void byteBufferTest(final String transformation, final byte[] key, final byte[] iv, final ByteBuffer input,
+			final ByteBuffer output) throws Exception {
+		final ByteBuffer decResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
+		final ByteBuffer encResult = ByteBuffer.allocateDirect(BYTEBUFFER_SIZE);
+
+		try (final CryptoCipher enc = getCipher(transformation); final CryptoCipher dec = getCipher(transformation)) {
+
+			enc.init(Cipher.ENCRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
+			dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
+
+			//
+			// encryption pass
+			//
+			enc.doFinal(input, encResult);
+			input.flip();
+			encResult.flip();
+			if (!output.equals(encResult)) {
+				final byte[] b = new byte[output.remaining()];
+				output.get(b);
+				final byte[] c = new byte[encResult.remaining()];
+				encResult.get(c);
+				fail("AES failed encryption - expected " + DatatypeConverter.printHexBinary(b)
+						+ " got " + DatatypeConverter.printHexBinary(c));
+			}
+
+			//
+			// decryption pass
+			//
+			dec.doFinal(encResult, decResult);
+			decResult.flip();
+
+			if (!input.equals(decResult)) {
+				final byte[] inArray = new byte[input.remaining()];
+				final byte[] decResultArray = new byte[decResult.remaining()];
+				input.get(inArray);
+				decResult.get(decResultArray);
+				fail();
+			}
+		}
+	}
+
+	@Test
+	public void closeTestAfterInit() throws Exception {
+		// This test deliberately does not use try with resources in order to control
+		// the sequence of operations exactly
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+        }
+	}
+
+    @Test
+	public void closeTestNoInit() throws Exception {
+		// This test deliberately does not use try with resources in order to control
+		// the sequence of operations exactly
+		try (final CryptoCipher enc = getCipher(transformations[0])) {
+		    // empty
+		}
+	}
+
+	@Test
+	public void closeTestRepeat() throws Exception {
+		// This test deliberately does not use try with resources in order to control
+		// the sequence of operations exactly
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.close();
+            enc.close(); // repeat the close
+        }
+	}
+
+	@Test
+	public void cryptoTest() throws Exception {
+		for (final String tran : transformations) {
+			/** uses the small data set in {@link TestData} */
+			cipherTests = TestData.getTestData(tran);
+			assertNotNull(cipherTests, tran);
+			for (int i = 0; i != cipherTests.length; i += 5) {
+				final byte[] key = DatatypeConverter.parseHexBinary(cipherTests[i + 1]);
+				final byte[] iv = DatatypeConverter.parseHexBinary(cipherTests[i + 2]);
+
+				final byte[] inputBytes = DatatypeConverter.parseHexBinary(cipherTests[i + 3]);
+				final byte[] outputBytes = DatatypeConverter.parseHexBinary(cipherTests[i + 4]);
+
+				final ByteBuffer inputBuffer = ByteBuffer.allocateDirect(inputBytes.length);
+				final ByteBuffer outputBuffer = ByteBuffer.allocateDirect(outputBytes.length);
+				inputBuffer.put(inputBytes);
+				inputBuffer.flip();
+				outputBuffer.put(outputBytes);
+				outputBuffer.flip();
+
+				byteBufferTest(tran, key, iv, inputBuffer, outputBuffer);
+				byteArrayTest(tran, key, iv, inputBytes, outputBytes);
+			}
+
+			/** uses randomly generated big data set */
+			byteArrayTest(tran, KEY, IV);
+		}
+	}
+
+	private CryptoCipher getCipher(final String transformation) throws ClassNotFoundException {
+		return (CryptoCipher) ReflectionUtils.newInstance(ReflectionUtils.getClassByName(cipherClass), props,
+				transformation);
+	}
+
+	protected abstract void init();
+
+	SecretKeySpec newSecretKeySpec() {
+        return AES.newSecretKeySpec(KEY);
+    }
+
+	@Test
+    public void reInitAfterClose() throws Exception {
+        // This test deliberately does not use try with resources in order to control
+        // the sequence of operations exactly
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+            enc.close();
+            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+        }
+    }
+
+	@Test
+	public void reInitTest() throws Exception {
+		// This test deliberately does not use try with resources in order to control
+		// the sequence of operations exactly
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+        }
+	}
+
 	private void resetCipher(final String transformation, final byte[] key, final byte[] iv)
 			throws ClassNotFoundException, InvalidKeyException, InvalidAlgorithmParameterException {
 		enc = getCipher(transformation);
@@ -323,8 +272,59 @@ public abstract class AbstractCipherTest {
 		dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
 	}
 
-	private CryptoCipher getCipher(final String transformation) throws ClassNotFoundException {
-		return (CryptoCipher) ReflectionUtils.newInstance(ReflectionUtils.getClassByName(cipherClass), props,
-				transformation);
+	@BeforeEach
+	public void setup() {
+		init();
+		assertNotNull(cipherClass, "cipherClass");
+		assertNotNull(transformations, "transformations");
+		props = new Properties();
+		props.setProperty(CryptoCipherFactory.CLASSES_KEY, cipherClass);
+	}
+
+	@Test
+	public void testInvalidIV() throws Exception {
+		for (final String transform : transformations) {
+			try (final CryptoCipher cipher = getCipher(transform)) {
+				assertNotNull(cipher);
+				final byte[] invalidIV = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
+						0x0d, 0x0e, 0x0f, 0x11 };
+				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(invalidIV)));
+			}
+		}
+	}
+
+	@Test
+	public void testInvalidIVClass() throws Exception {
+		for (final String transform : transformations) {
+			try (final CryptoCipher cipher = getCipher(transform)) {
+				assertNotNull(cipher);
+				assertThrows(InvalidAlgorithmParameterException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, newSecretKeySpec(), new GCMParameterSpec(IV.length, IV)));
+			}
+		}
+	}
+
+	@Test
+	public void testInvalidKey() throws Exception {
+		for (final String transform : transformations) {
+			try (final CryptoCipher cipher = getCipher(transform)) {
+				assertNotNull(cipher);
+
+				final byte[] invalidKey = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
+						0x0c, 0x0d, 0x0e, 0x0f, 0x11 };
+				assertThrows(InvalidKeyException.class, () -> cipher.init(OpenSsl.ENCRYPT_MODE, AES.newSecretKeySpec(invalidKey), new IvParameterSpec(IV)));
+			}
+		}
+	}
+
+	@Test
+	public void testInvalidTransform() {
+		assertThrows(IllegalArgumentException.class,
+				() -> getCipher("AES/CBR/NoPadding/garbage/garbage").close());
+	}
+
+	@Test
+	public void testNullTransform() {
+		assertThrows(IllegalArgumentException.class,
+				() -> getCipher(null).close());
 	}
 }

@@ -28,14 +28,14 @@ import org.junit.jupiter.api.Test;
  */
 public class PositionedCryptoInputStreamJnaTest extends PositionedCryptoInputStreamTest {
 
-    @BeforeEach
-    public void init() {
-        assumeTrue(OpenSslJna.isEnabled());
-    }
-
     @Test
     public void doTest() throws Exception {
         testCipher(OpenSslJnaCipher.class.getName());
+    }
+
+    @BeforeEach
+    public void init() {
+        assumeTrue(OpenSslJna.isEnabled());
     }
 
 }

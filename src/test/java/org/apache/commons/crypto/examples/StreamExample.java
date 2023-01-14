@@ -37,6 +37,16 @@ import org.apache.commons.crypto.utils.AES;
  */
 public class StreamExample {
 
+    /**
+     * Converts String to UTF8 bytes
+     *
+     * @param input the input string
+     * @return UTF8 bytes
+     */
+    private static byte[] getUTF8Bytes(final String input) {
+        return input.getBytes(StandardCharsets.UTF_8);
+    }
+
     public static void main(final String []args) throws IOException {
         final SecretKeySpec key = AES.newSecretKeySpec(getUTF8Bytes("1234567890123456"));
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
@@ -68,16 +78,6 @@ public class StreamExample {
             }
             System.out.println("Decrypted: "+new String(decryptedData, 0, decryptedLen, StandardCharsets.UTF_8));
         }
-    }
-
-    /**
-     * Converts String to UTF8 bytes
-     *
-     * @param input the input string
-     * @return UTF8 bytes
-     */
-    private static byte[] getUTF8Bytes(final String input) {
-        return input.getBytes(StandardCharsets.UTF_8);
     }
 
 }

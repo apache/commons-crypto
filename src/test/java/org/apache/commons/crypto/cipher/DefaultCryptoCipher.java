@@ -41,31 +41,8 @@ public class DefaultCryptoCipher implements CryptoCipher {
     }
 
     @Override
-    public int getBlockSize() {
-        // Simplest
-        return 0;
-    }
-
-    @Override
-    public String getAlgorithm() {
-        // Simplest
-        return null;
-    }
-
-    @Override
-    public void init(final int mode, final Key key, final AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
-        // Simplest
-
-    }
-
-    @Override
-    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
-        // Simplest
-        return 0;
-    }
-
-    @Override
-    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset) throws ShortBufferException {
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
+            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         // Simplest
         return 0;
     }
@@ -77,8 +54,31 @@ public class DefaultCryptoCipher implements CryptoCipher {
     }
 
     @Override
-    public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
-            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    public String getAlgorithm() {
+        // Simplest
+        return null;
+    }
+
+    @Override
+    public int getBlockSize() {
+        // Simplest
+        return 0;
+    }
+
+    @Override
+    public void init(final int mode, final Key key, final AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
+        // Simplest
+
+    }
+
+    @Override
+    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset) throws ShortBufferException {
+        // Simplest
+        return 0;
+    }
+
+    @Override
+    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
         // Simplest
         return 0;
     }

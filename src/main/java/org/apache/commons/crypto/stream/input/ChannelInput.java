@@ -45,55 +45,6 @@ public class ChannelInput implements Input {
     }
 
     /**
-     * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#read(ByteBuffer)}.
-     * Reads a sequence of bytes from input into the given buffer.
-     *
-     * @param dst The buffer into which bytes are to be transferred.
-     * @return the total number of bytes read into the buffer, or
-     *         {@code -1} if there is no more data because the end of the
-     *         stream has been reached.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public int read(final ByteBuffer dst) throws IOException {
-        return channel.read(dst);
-    }
-
-    /**
-     * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
-     * over and discards {@code n} bytes of data from this input stream.
-     *
-     * @param n the number of bytes to be skipped.
-     * @return the actual number of bytes skipped.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public long skip(final long n) throws IOException {
-        long remaining = n;
-        int nr;
-
-        if (n <= 0) {
-            return 0;
-        }
-
-        final int size = (int) Math.min(SKIP_BUFFER_SIZE, remaining);
-        final ByteBuffer skipBuffer = getSkipBuf();
-        while (remaining > 0) {
-            skipBuffer.clear();
-            skipBuffer.limit((int) Math.min(size, remaining));
-            nr = read(skipBuffer);
-            if (nr < 0) {
-                break;
-            }
-            remaining -= nr;
-        }
-
-        return n - remaining;
-    }
-
-    /**
      * Overrides the {@link Input#available()}. Returns an estimate of the
      * number of bytes that can be read (or skipped over) from this input stream
      * without blocking by the next invocation of a method for this input
@@ -109,6 +60,47 @@ public class ChannelInput implements Input {
     @Override
     public int available() throws IOException {
         return 0;
+    }
+
+    /**
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.input.Input#seek(long)}. Closes
+     * this input and releases any system resources associated with the under
+     * layer input.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void close() throws IOException {
+        channel.close();
+    }
+
+    /**
+     * Gets the skip buffer.
+     *
+     * @return the buffer.
+     */
+    private ByteBuffer getSkipBuf() {
+        if (buf == null) {
+            buf = ByteBuffer.allocate(SKIP_BUFFER_SIZE);
+        }
+        return buf;
+    }
+
+    /**
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.input.Input#read(ByteBuffer)}.
+     * Reads a sequence of bytes from input into the given buffer.
+     *
+     * @param dst The buffer into which bytes are to be transferred.
+     * @return the total number of bytes read into the buffer, or
+     *         {@code -1} if there is no more data because the end of the
+     *         stream has been reached.
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public int read(final ByteBuffer dst) throws IOException {
+        return channel.read(dst);
     }
 
     /**
@@ -152,26 +144,34 @@ public class ChannelInput implements Input {
 
     /**
      * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#seek(long)}. Closes
-     * this input and releases any system resources associated with the under
-     * layer input.
+     * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
+     * over and discards {@code n} bytes of data from this input stream.
      *
+     * @param n the number of bytes to be skipped.
+     * @return the actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void close() throws IOException {
-        channel.close();
-    }
+    public long skip(final long n) throws IOException {
+        long remaining = n;
+        int nr;
 
-    /**
-     * Gets the skip buffer.
-     *
-     * @return the buffer.
-     */
-    private ByteBuffer getSkipBuf() {
-        if (buf == null) {
-            buf = ByteBuffer.allocate(SKIP_BUFFER_SIZE);
+        if (n <= 0) {
+            return 0;
         }
-        return buf;
+
+        final int size = (int) Math.min(SKIP_BUFFER_SIZE, remaining);
+        final ByteBuffer skipBuffer = getSkipBuf();
+        while (remaining > 0) {
+            skipBuffer.clear();
+            skipBuffer.limit((int) Math.min(size, remaining));
+            nr = read(skipBuffer);
+            if (nr < 0) {
+                break;
+            }
+            remaining -= nr;
+        }
+
+        return n - remaining;
     }
 }

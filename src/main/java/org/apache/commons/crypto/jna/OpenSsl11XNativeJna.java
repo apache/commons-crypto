@@ -51,172 +51,13 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     // Try to keep methods aligned across versions
 
     /**
-     * Retrieves version/build information about OpenSSL library.
+     * Gets engine by id
      *
-     * @see <a href="https://www.openssl.org/docs/man1.1.1/man3/OpenSSL_version.html">OpenSSL_version</a>
-     * @param type
-     *            type can be OPENSSL_VERSION, OPENSSL_CFLAGS, OPENSSL_BUILT_ON...
-     * @return A pointer to a constant string describing the version of the OpenSSL library or
-     *         giving information about the library build.
+     * @param id
+     *            engine id
+     * @return engine instance
      */
-    public static native String OpenSSL_version(int type);
-
-    /**
-     * @return the earliest error code from the thread's error queue without modifying it.
-     */
-    public static native NativeLong ERR_peek_error();
-
-    /**
-     * Generates a human-readable string representing the error code e.
-     *
-     * @see <a href="https://www.openssl.org/docs/man1.1.0/man3/ERR_error_string.html">ERR_error_string</a>
-     *
-     * @param err
-     *            the error code
-     * @param null_
-     *            buf is NULL, the error string is placed in a static buffer
-     * @return the human-readable error messages.
-     */
-    public static native String ERR_error_string(NativeLong err, char[] null_);
-
-    /**
-     * Creates a cipher context.
-     *
-     * @return a pointer to a newly created EVP_CIPHER_CTX for success and NULL for failure.
-     */
-    public static native PointerByReference EVP_CIPHER_CTX_new();
-
-    /**
-     * Enables or disables padding
-     *
-     * @param c
-     *            cipher context
-     * @param pad
-     *            If the pad parameter is zero then no padding is performed
-     * @return always returns 1
-     */
-    public static native int EVP_CIPHER_CTX_set_padding(PointerByReference c, int pad);
-
-    /**
-     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CBC mode
-     */
-    public static native PointerByReference EVP_aes_128_cbc();
-
-    /**
-     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CTR mode
-     */
-    public static native PointerByReference EVP_aes_128_ctr();
-
-    /**
-     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CBC mode
-     */
-    public static native PointerByReference EVP_aes_192_cbc();
-
-    /**
-     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CTR mode
-     */
-    public static native PointerByReference EVP_aes_192_ctr();
-
-    /**
-     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CBC mode
-     */
-    public static native PointerByReference EVP_aes_256_cbc();
-
-    /**
-     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CTR mode
-     */
-    public static native PointerByReference EVP_aes_256_ctr();
-
-    /**
-     * Init a cipher.
-     *
-     * @param ctx
-     *            cipher context
-     * @param cipher
-     *            evp cipher instance
-     * @param impl
-     *            engine
-     * @param key
-     *            key
-     * @param iv
-     *            iv
-     * @param enc
-     *            1 for encryption, 0 for decryption
-     * @return 1 for success and 0 for failure.
-     */
-    public static native int EVP_CipherInit_ex(PointerByReference ctx, PointerByReference cipher,
-            PointerByReference impl, byte[] key, byte[] iv, int enc);
-
-    /**
-     * Continues a multiple-part encryption/decryption operation.
-     *
-     * @param ctx
-     *            cipher context
-     * @param bout
-     *            output byte buffer
-     * @param outl
-     *            output length
-     * @param in
-     *            input byte buffer
-     * @param inl
-     *            input length
-     * @return 1 for success and 0 for failure.
-     */
-    public static native int EVP_CipherUpdate(PointerByReference ctx, ByteBuffer bout, int[] outl,
-            ByteBuffer in, int inl);
-
-    /**
-     * Finishes a multiple-part operation.
-     *
-     * @param ctx
-     *            cipher context
-     * @param bout
-     *            output byte buffer
-     * @param outl
-     *            output length
-     * @return 1 for success and 0 for failure.
-     */
-    public static native int EVP_CipherFinal_ex(PointerByReference ctx, ByteBuffer bout,
-            int[] outl);
-
-    /**
-     * Clears all information from a cipher context and free up any allocated memory associate with
-     * it, including ctx itself.
-     *
-     * @param c
-     *            openssl evp cipher
-     */
-    public static native void EVP_CIPHER_CTX_free(PointerByReference c);
-
-    /**
-     * Clears all information from a cipher context and free up any allocated * memory associate
-     * with it.
-     *
-     * @param c
-     *            openssl evp cipher
-     */
-
-    // Random generator
-    /**
-     * OpenSSL uses for random number generation
-     *
-     * @return pointers to the respective methods
-     */
-    public static native PointerByReference RAND_get_rand_method();
-
-    /**
-     * Generates random data
-     *
-     * @param buf
-     *            the bytes for generated random.
-     * @param num
-     *            buffer length
-     * @return 1 on success, 0 otherwise.
-     */
-    public static native int RAND_bytes(ByteBuffer buf, int num);
-
-    // ENGINE API: https://www.openssl.org/docs/man1.1.1/man3/ENGINE_add.html
-    // (The above page includes all the ENGINE functions used below)
+    public static native PointerByReference ENGINE_by_id(String id);
 
     /**
      * Releases all functional references.
@@ -258,29 +99,183 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     public static native int ENGINE_set_default(PointerByReference e, int flags);
 
     /**
-     * Gets engine by id
+     * Generates a human-readable string representing the error code e.
      *
-     * @param id
-     *            engine id
-     * @return engine instance
+     * @see <a href="https://www.openssl.org/docs/man1.1.0/man3/ERR_error_string.html">ERR_error_string</a>
+     *
+     * @param err
+     *            the error code
+     * @param null_
+     *            buf is NULL, the error string is placed in a static buffer
+     * @return the human-readable error messages.
      */
-    public static native PointerByReference ENGINE_by_id(String id);
+    public static native String ERR_error_string(NativeLong err, char[] null_);
+
+    /**
+     * @return the earliest error code from the thread's error queue without modifying it.
+     */
+    public static native NativeLong ERR_peek_error();
+
+    /**
+     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CBC mode
+     */
+    public static native PointerByReference EVP_aes_128_cbc();
+
+    /**
+     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CTR mode
+     */
+    public static native PointerByReference EVP_aes_128_ctr();
+
+    /**
+     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CBC mode
+     */
+    public static native PointerByReference EVP_aes_192_cbc();
+
+    /**
+     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CTR mode
+     */
+    public static native PointerByReference EVP_aes_192_ctr();
+
+    /**
+     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CBC mode
+     */
+    public static native PointerByReference EVP_aes_256_cbc();
+
+    /**
+     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CTR mode
+     */
+    public static native PointerByReference EVP_aes_256_ctr();
+
+    /**
+     * Clears all information from a cipher context and free up any allocated memory associate with
+     * it, including ctx itself.
+     *
+     * @param c
+     *            openssl evp cipher
+     */
+    public static native void EVP_CIPHER_CTX_free(PointerByReference c);
+
+    /**
+     * Creates a cipher context.
+     *
+     * @return a pointer to a newly created EVP_CIPHER_CTX for success and NULL for failure.
+     */
+    public static native PointerByReference EVP_CIPHER_CTX_new();
+
+    /**
+     * Clears all information from a cipher context and free up any allocated * memory associate
+     * with it.
+     *
+     * @param c
+     *            openssl evp cipher
+     */
+
+    /**
+     * Enables or disables padding
+     *
+     * @param c
+     *            cipher context
+     * @param pad
+     *            If the pad parameter is zero then no padding is performed
+     * @return always returns 1
+     */
+    public static native int EVP_CIPHER_CTX_set_padding(PointerByReference c, int pad);
+
+    /**
+     * Finishes a multiple-part operation.
+     *
+     * @param ctx
+     *            cipher context
+     * @param bout
+     *            output byte buffer
+     * @param outl
+     *            output length
+     * @return 1 for success and 0 for failure.
+     */
+    public static native int EVP_CipherFinal_ex(PointerByReference ctx, ByteBuffer bout,
+            int[] outl);
+
+    // ENGINE API: https://www.openssl.org/docs/man1.1.1/man3/ENGINE_add.html
+    // (The above page includes all the ENGINE functions used below)
+
+    /**
+     * Init a cipher.
+     *
+     * @param ctx
+     *            cipher context
+     * @param cipher
+     *            evp cipher instance
+     * @param impl
+     *            engine
+     * @param key
+     *            key
+     * @param iv
+     *            iv
+     * @param enc
+     *            1 for encryption, 0 for decryption
+     * @return 1 for success and 0 for failure.
+     */
+    public static native int EVP_CipherInit_ex(PointerByReference ctx, PointerByReference cipher,
+            PointerByReference impl, byte[] key, byte[] iv, int enc);
+
+    /**
+     * Continues a multiple-part encryption/decryption operation.
+     *
+     * @param ctx
+     *            cipher context
+     * @param bout
+     *            output byte buffer
+     * @param outl
+     *            output length
+     * @param in
+     *            input byte buffer
+     * @param inl
+     *            input length
+     * @return 1 for success and 0 for failure.
+     */
+    public static native int EVP_CipherUpdate(PointerByReference ctx, ByteBuffer bout, int[] outl,
+            ByteBuffer in, int inl);
+
+    /**
+     * Retrieves version/build information about OpenSSL library.
+     *
+     * @see <a href="https://www.openssl.org/docs/man1.1.1/man3/OpenSSL_version.html">OpenSSL_version</a>
+     * @param type
+     *            type can be OPENSSL_VERSION, OPENSSL_CFLAGS, OPENSSL_BUILT_ON...
+     * @return A pointer to a constant string describing the version of the OpenSSL library or
+     *         giving information about the library build.
+     */
+    public static native String OpenSSL_version(int type);
+
+    /**
+     * Generates random data
+     *
+     * @param buf
+     *            the bytes for generated random.
+     * @param num
+     *            buffer length
+     * @return 1 on success, 0 otherwise.
+     */
+    public static native int RAND_bytes(ByteBuffer buf, int num);
+
+    // Random generator
+    /**
+     * OpenSSL uses for random number generation
+     *
+     * @return pointers to the respective methods
+     */
+    public static native PointerByReference RAND_get_rand_method();
 
     // ================== instance interface methods ==================
 
     @Override
-    public boolean _INIT_OK() {
-        return INIT_OK;
-    }
-
-    @Override
-    public Throwable _INIT_ERROR() {
-        return INIT_ERROR;
-    }
-
-    @Override
     public PointerByReference _ENGINE_by_id(final String string) {
         return ENGINE_by_id(string);
+    }
+
+    @Override
+    public int _ENGINE_cleanup() {
+        return 0; // Not available
     }
 
     @Override
@@ -296,6 +291,11 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     @Override
     public int _ENGINE_init(final PointerByReference rdrandEngine) {
         return ENGINE_init(rdrandEngine);
+    }
+
+    @Override
+    public void _ENGINE_load_rdrand() {
+        // Not available
     }
 
     @Override
@@ -344,6 +344,11 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     }
 
     @Override
+    public void _EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
+        // Not available
+    }
+
+    @Override
     public void _EVP_CIPHER_CTX_free(final PointerByReference context) {
         EVP_CIPHER_CTX_free(context);
     }
@@ -376,6 +381,21 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     }
 
     @Override
+    public Throwable _INIT_ERROR() {
+        return INIT_ERROR;
+    }
+
+    @Override
+    public boolean _INIT_OK() {
+        return INIT_OK;
+    }
+
+    @Override
+    public String _OpenSSL_version(final int i) {
+        return OpenSSL_version(i);
+    }
+
+    @Override
     public int _RAND_bytes(final ByteBuffer buf, final int length) {
         return RAND_bytes(buf, length) ;
     }
@@ -388,26 +408,6 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     @Override
     public PointerByReference _RAND_SSLeay() {
         return null; // Not available
-    }
-
-    @Override
-    public String _OpenSSL_version(final int i) {
-        return OpenSSL_version(i);
-    }
-
-    @Override
-    public void _ENGINE_load_rdrand() {
-        // Not available
-    }
-
-    @Override
-    public int _ENGINE_cleanup() {
-        return 0; // Not available
-    }
-
-    @Override
-    public void _EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
-        // Not available
     }
 
 }

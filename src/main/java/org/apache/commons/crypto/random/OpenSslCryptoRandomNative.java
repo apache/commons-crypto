@@ -27,12 +27,6 @@ package org.apache.commons.crypto.random;
 final class OpenSslCryptoRandomNative {
 
     /**
-     * The private constructor of {@link OpenSslCryptoRandomNative}.
-     */
-    private OpenSslCryptoRandomNative() {
-    }
-
-    /**
      * Declares a native method to initialize SR.
      */
     public static native void initSR();
@@ -46,4 +40,10 @@ final class OpenSslCryptoRandomNative {
      *         user-specified number of random bits.
      */
     public static native boolean nextRandBytes(byte[] bytes);
+
+    /**
+     * The private constructor of {@link OpenSslCryptoRandomNative}.
+     */
+    private OpenSslCryptoRandomNative() {
+    }
 }

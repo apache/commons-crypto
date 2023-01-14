@@ -29,15 +29,18 @@ import org.apache.commons.crypto.random.CryptoRandom;
 final class OpenSslInfoNative {
 
     /**
-     * Makes the constructor private.
+     * Return the name used to load the dynamic linked library.
+     *
+     * @return the name used to load the library (e.g. crypto.dll)
      */
-    private OpenSslInfoNative() {
-    }
+    public static native String DLLName();
 
     /**
-     * @return version of native
+     * Return the path to the loaded dynamic linked library.
+     * [Currently not implemented on Windows]
+     * @return the path to the library that was loaded; may be null.
      */
-    public static native String NativeVersion();
+    public static native String DLLPath();
 
     /**
      * @return name of native
@@ -49,6 +52,11 @@ final class OpenSslInfoNative {
      */
     public static native String NativeTimeStamp();
 
+
+    /**
+     * @return version of native
+     */
+    public static native String NativeVersion();
 
     /**
      * @return the value of OPENSSL_VERSION_NUMBER.
@@ -64,16 +72,8 @@ final class OpenSslInfoNative {
     public static native String OpenSSLVersion(int type);
 
     /**
-     * Return the name used to load the dynamic linked library.
-     *
-     * @return the name used to load the library (e.g. crypto.dll)
+     * Makes the constructor private.
      */
-    public static native String DLLName();
-
-    /**
-     * Return the path to the loaded dynamic linked library.
-     * [Currently not implemented on Windows]
-     * @return the path to the library that was loaded; may be null.
-     */
-    public static native String DLLPath();
+    private OpenSslInfoNative() {
+    }
 }

@@ -38,11 +38,11 @@ import javax.crypto.spec.GCMParameterSpec;
  */
 final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
 
+    static final int DEFAULT_TAG_LEN = 16;
     // buffer for AAD data; if consumed, set as null
     private ByteArrayOutputStream aadBuffer = new ByteArrayOutputStream();
-    private int tagBitLen = -1;
 
-    static final int DEFAULT_TAG_LEN = 16;
+    private int tagBitLen = -1;
 
     // buffer for storing input in decryption, not used for encryption
     private ByteArrayOutputStream inBuffer;
@@ -52,74 +52,9 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
     }
 
     @Override
-    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params)
-            throws InvalidAlgorithmParameterException {
-
-        if (aadBuffer == null) {
-            aadBuffer = new ByteArrayOutputStream();
-        } else {
-            aadBuffer.reset();
-        }
-
-        this.cipherMode = mode;
-        final byte[] iv;
-        if (!(params instanceof GCMParameterSpec)) {
-            // other AlgorithmParameterSpec is not supported now.
-            throw new InvalidAlgorithmParameterException("Illegal parameters");
-        }
-        final GCMParameterSpec gcmParam = (GCMParameterSpec) params;
-        iv = gcmParam.getIV();
-        this.tagBitLen = gcmParam.getTLen();
-
-        if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
-            inBuffer = new ByteArrayOutputStream();
-        }
-
-        context = OpenSslNative.init(context, mode, algorithmMode, padding, key, iv);
-    }
-
-    @Override
-    public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
-        checkState();
-
-        processAAD();
-
-        final int len;
-        if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
-            // store internally until doFinal(decrypt) is called because
-            // spec mentioned that only return recovered data after tag
-            // is successfully verified
-            final int inputLen = input.remaining();
-            final byte[] inputBuf = new byte[inputLen];
-            input.get(inputBuf, 0, inputLen);
-            inBuffer.write(inputBuf, 0, inputLen);
-            return 0;
-        }
-        len = OpenSslNative.update(context, input, input.position(),
-                input.remaining(), output, output.position(),
-                output.remaining());
-        input.position(input.limit());
-        output.position(output.position() + len);
-
-        return len;
-    }
-
-    @Override
-    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
-            throws ShortBufferException {
-        checkState();
-
-        processAAD();
-
-        if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
-            // store internally until doFinal(decrypt) is called because
-            // spec mentioned that only return recovered data after tag
-            // is successfully verified
-            inBuffer.write(input, inputOffset, inputLen);
-            return 0;
-        }
-        return OpenSslNative.updateByteArray(context, input, inputOffset,
-                inputLen, output, outputOffset, output.length - outputOffset);
+    public void clean() {
+        super.clean();
+        aadBuffer = null;
     }
 
     @Override
@@ -259,33 +194,6 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
         return totalLen;
     }
 
-    @Override
-    public void clean() {
-        super.clean();
-        aadBuffer = null;
-    }
-
-    @Override
-    public void updateAAD(final byte[] aad) {
-        // must be called after initialized.
-        if (aadBuffer == null) {
-            // update has already been called
-            throw new IllegalStateException("Update has been called; no more AAD data");
-        }
-        aadBuffer.write(aad, 0, aad.length);
-    }
-
-    private void processAAD() {
-        if (aadBuffer != null && aadBuffer.size() > 0) {
-            OpenSslNative.updateByteArray(context, aadBuffer.toByteArray(), 0, aadBuffer.size(), null, 0, 0);
-            aadBuffer = null;
-        }
-    }
-
-    private int getTagLen() {
-        return tagBitLen < 0 ? DEFAULT_TAG_LEN : tagBitLen >> 3;
-    }
-
     /**
      * Wraps of OpenSslNative.ctrl(long context, int type, int arg, byte[] data)
      * Since native interface EVP_CIPHER_CTX *ctx, int type, int arg, void *ptr) is generic,
@@ -310,5 +218,97 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
             System.out.println(e.getMessage());
             return 0;
         }
+    }
+
+    private int getTagLen() {
+        return tagBitLen < 0 ? DEFAULT_TAG_LEN : tagBitLen >> 3;
+    }
+
+    @Override
+    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params)
+            throws InvalidAlgorithmParameterException {
+
+        if (aadBuffer == null) {
+            aadBuffer = new ByteArrayOutputStream();
+        } else {
+            aadBuffer.reset();
+        }
+
+        this.cipherMode = mode;
+        final byte[] iv;
+        if (!(params instanceof GCMParameterSpec)) {
+            // other AlgorithmParameterSpec is not supported now.
+            throw new InvalidAlgorithmParameterException("Illegal parameters");
+        }
+        final GCMParameterSpec gcmParam = (GCMParameterSpec) params;
+        iv = gcmParam.getIV();
+        this.tagBitLen = gcmParam.getTLen();
+
+        if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
+            inBuffer = new ByteArrayOutputStream();
+        }
+
+        context = OpenSslNative.init(context, mode, algorithmMode, padding, key, iv);
+    }
+
+    private void processAAD() {
+        if (aadBuffer != null && aadBuffer.size() > 0) {
+            OpenSslNative.updateByteArray(context, aadBuffer.toByteArray(), 0, aadBuffer.size(), null, 0, 0);
+            aadBuffer = null;
+        }
+    }
+
+    @Override
+    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
+            throws ShortBufferException {
+        checkState();
+
+        processAAD();
+
+        if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
+            // store internally until doFinal(decrypt) is called because
+            // spec mentioned that only return recovered data after tag
+            // is successfully verified
+            inBuffer.write(input, inputOffset, inputLen);
+            return 0;
+        }
+        return OpenSslNative.updateByteArray(context, input, inputOffset,
+                inputLen, output, outputOffset, output.length - outputOffset);
+    }
+
+    @Override
+    public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
+        checkState();
+
+        processAAD();
+
+        final int len;
+        if (this.cipherMode == OpenSsl.DECRYPT_MODE) {
+            // store internally until doFinal(decrypt) is called because
+            // spec mentioned that only return recovered data after tag
+            // is successfully verified
+            final int inputLen = input.remaining();
+            final byte[] inputBuf = new byte[inputLen];
+            input.get(inputBuf, 0, inputLen);
+            inBuffer.write(inputBuf, 0, inputLen);
+            return 0;
+        }
+        len = OpenSslNative.update(context, input, input.position(),
+                input.remaining(), output, output.position(),
+                output.remaining());
+        input.position(input.limit());
+        output.position(output.position() + len);
+
+        return len;
+    }
+
+    @Override
+    public void updateAAD(final byte[] aad) {
+        // must be called after initialized.
+        if (aadBuffer == null) {
+            // update has already been called
+            throw new IllegalStateException("Update has been called; no more AAD data");
+        }
+        aadBuffer.write(aad, 0, aad.length);
     }
 }

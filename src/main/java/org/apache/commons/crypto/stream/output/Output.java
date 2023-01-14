@@ -35,6 +35,27 @@ import org.apache.commons.crypto.stream.CryptoOutputStream;
 public interface Output extends Closeable {
 
     /**
+     * Closes this output and releases any system resources associated with the
+     * under layer output.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    void close() throws IOException;
+
+    /**
+     * Flushes this output and forces any buffered output bytes to be written
+     * out if the under layer output method support. The general contract of
+     * {@code flush} is that calling it is an indication that, if any bytes
+     * previously written have been buffered by the implementation of the output
+     * stream, such bytes should immediately be written to their intended
+     * destination.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    void flush() throws IOException;
+
+    /**
      * Writes a sequence of bytes to this output from the given buffer.
      *
      * <p>
@@ -59,25 +80,4 @@ public interface Output extends Closeable {
      * @throws IOException If some other I/O error occurs.
      */
     int write(ByteBuffer src) throws IOException;
-
-    /**
-     * Flushes this output and forces any buffered output bytes to be written
-     * out if the under layer output method support. The general contract of
-     * {@code flush} is that calling it is an indication that, if any bytes
-     * previously written have been buffered by the implementation of the output
-     * stream, such bytes should immediately be written to their intended
-     * destination.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    void flush() throws IOException;
-
-    /**
-     * Closes this output and releases any system resources associated with the
-     * under layer output.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    void close() throws IOException;
 }

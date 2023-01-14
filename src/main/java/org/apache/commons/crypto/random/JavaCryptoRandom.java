@@ -59,17 +59,6 @@ final class JavaCryptoRandom implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link CryptoRandom#nextBytes(byte[])}. Generates random bytes and places them into a user-supplied byte array. The number of random bytes
-     * produced is equal to the length of the byte array.
-     *
-     * @param bytes the array to be filled in with random bytes.
-     */
-    @Override
-    public void nextBytes(final byte[] bytes) {
-        instance.nextBytes(bytes);
-    }
-
-    /**
      * Overrides Random#next(). Generates an integer containing the user-specified number of random bits(right justified, with leading zeros).
      *
      * @param numBits number of random bits to be generated, where 0 {@literal <=} {@code numBits} {@literal <=} 32.
@@ -80,5 +69,16 @@ final class JavaCryptoRandom implements CryptoRandom {
         // Can't simply invoke instance.next(bits) here, because that is package protected.
         // But, this should do.
         return instance.nextInt() >>> (Integer.SIZE - numBits);
+    }
+
+    /**
+     * Overrides {@link CryptoRandom#nextBytes(byte[])}. Generates random bytes and places them into a user-supplied byte array. The number of random bytes
+     * produced is equal to the length of the byte array.
+     *
+     * @param bytes the array to be filled in with random bytes.
+     */
+    @Override
+    public void nextBytes(final byte[] bytes) {
+        instance.nextBytes(bytes);
     }
 }

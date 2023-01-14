@@ -37,18 +37,6 @@ public class NativeCodeLoaderTest {
     }
 
     @Test
-    public void testNativePresent() {
-        assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
-        assertNull(NativeCodeLoader.getLoadingError());
-    }
-
-    @Test
-    public void testNativeNotPresent() {
-        assumeTrue(!NativeCodeLoader.isNativeCodeLoaded());
-        assertNotNull(NativeCodeLoader.getLoadingError());
-    }
-
-    @Test
     @Disabled("Causes crash on Ubuntu when compiled with Java 17")
     // The following error is reported:
     // "Corrupted channel by directly writing to native stream in forked JVM 1"
@@ -59,6 +47,18 @@ public class NativeCodeLoaderTest {
         assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
         // This will try to reload the library, so should work
         assertNull(NativeCodeLoader.loadLibrary());
+    }
+
+    @Test
+    public void testNativeNotPresent() {
+        assumeTrue(!NativeCodeLoader.isNativeCodeLoaded());
+        assertNotNull(NativeCodeLoader.getLoadingError());
+    }
+
+    @Test
+    public void testNativePresent() {
+        assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
+        assertNull(NativeCodeLoader.getLoadingError());
     }
 
     @Test

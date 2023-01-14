@@ -32,15 +32,6 @@ public class JceCipherTest extends AbstractCipherTest {
 
     private static final int MAX_KEY_LEN_LOWER_BOUND = 256;
 
-    @Override
-    public void init() {
-        transformations = new String[] {
-                AES.CBC_NO_PADDING,
-                AES.CBC_PKCS5_PADDING,
-                AES.CTR_NO_PADDING};
-        cipherClass = JCE_CIPHER_CLASSNAME;
-    }
-
     @BeforeAll
     public static void checkJceUnlimitedStrength() throws NoSuchAlgorithmException {
         final int maxKeyLen = Cipher.getMaxAllowedKeyLength(AES.ALGORITHM);
@@ -51,5 +42,14 @@ public class JceCipherTest extends AbstractCipherTest {
                         "that the test environment is missing the JCE Unlimited " +
                         "Strength Jurisdiction Policy Files.",
                         MAX_KEY_LEN_LOWER_BOUND, maxKeyLen));
+    }
+
+    @Override
+    public void init() {
+        transformations = new String[] {
+                AES.CBC_NO_PADDING,
+                AES.CBC_PKCS5_PADDING,
+                AES.CTR_NO_PADDING};
+        cipherClass = JCE_CIPHER_CLASSNAME;
     }
 }

@@ -37,16 +37,6 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
         assumeTrue(OpenSslJna.isEnabled());
     }
 
-    /** Test skip. */
-    @Override
-    @Test
-    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testSkip() throws Exception {
-        doSkipTest(CIPHER_OPENSSL_JNA, false);
-
-        doSkipTest(CIPHER_OPENSSL_JNA, true);
-    }
-
     /** Test byte buffer read with different buffer size. */
     @Override
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
@@ -80,5 +70,15 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
         doReadWriteTest(count, CIPHER_OPENSSL_JNA, CIPHER_OPENSSL_JNA, iv);
         doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, CIPHER_OPENSSL_JNA, iv);
         doReadWriteTest(count, CIPHER_OPENSSL_JNA, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
+    }
+
+    /** Test skip. */
+    @Override
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
+    public void testSkip() throws Exception {
+        doSkipTest(CIPHER_OPENSSL_JNA, false);
+
+        doSkipTest(CIPHER_OPENSSL_JNA, true);
     }
 }

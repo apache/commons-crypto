@@ -29,17 +29,18 @@ import com.sun.jna.ptr.PointerByReference;
  */
 interface OpenSslInterfaceNativeJna {
 
-    boolean _INIT_OK();
-
-    Throwable _INIT_ERROR();
-
     PointerByReference _ENGINE_by_id(final String string);
+
+    /** TODO Appears to be deprecated as of OpenSSL 1.1.0. */
+    int _ENGINE_cleanup();
 
     int _ENGINE_finish(final PointerByReference rdrandEngine);
 
     int _ENGINE_free(final PointerByReference rdrandEngine);
 
     int _ENGINE_init(final PointerByReference rdrandEngine);
+
+    void _ENGINE_load_rdrand();
 
     int _ENGINE_set_default(final PointerByReference rdrandEngine, final int flags);
 
@@ -59,6 +60,8 @@ interface OpenSslInterfaceNativeJna {
 
     PointerByReference _EVP_aes_256_ctr();
 
+    void _EVP_CIPHER_CTX_cleanup(final PointerByReference context);
+
     void _EVP_CIPHER_CTX_free(final PointerByReference context);
 
     PointerByReference _EVP_CIPHER_CTX_new();
@@ -74,18 +77,15 @@ interface OpenSslInterfaceNativeJna {
     int _EVP_CipherUpdate(final PointerByReference context, final ByteBuffer outBuffer,
             final int[] outlen, final ByteBuffer inBuffer, final int remaining);
 
+    Throwable _INIT_ERROR();
+
+    boolean _INIT_OK();
+
+    String _OpenSSL_version(final int i);
+
     int _RAND_bytes(final ByteBuffer buf, final int length);
 
     PointerByReference _RAND_get_rand_method();
 
     PointerByReference _RAND_SSLeay();
-
-    String _OpenSSL_version(final int i);
-
-    void _ENGINE_load_rdrand();
-
-    /** TODO Appears to be deprecated as of OpenSSL 1.1.0. */
-    int _ENGINE_cleanup();
-
-    void _EVP_CIPHER_CTX_cleanup(final PointerByReference context);
 }

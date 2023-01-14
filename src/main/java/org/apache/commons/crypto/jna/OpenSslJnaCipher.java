@@ -45,11 +45,34 @@ import com.sun.jna.ptr.PointerByReference;
  */
 final class OpenSslJnaCipher implements CryptoCipher {
 
+    /**
+     * AlgorithmMode of JNA. Currently only support AES/CTR/NoPadding.
+     */
+    private enum AlgorithmMode {
+        AES_CTR, AES_CBC;
+
+        /**
+         * Gets the AlgorithmMode instance.
+         *
+         * @param algorithm the algorithm name
+         * @param mode      the mode name
+         * @return the AlgorithmMode instance
+         * @throws NoSuchAlgorithmException if the algorithm is not support
+         */
+        static AlgorithmMode get(final String algorithm, final String mode) throws NoSuchAlgorithmException {
+            try {
+                return AlgorithmMode.valueOf(algorithm + "_" + mode);
+            } catch (final Exception e) {
+                throw new NoSuchAlgorithmException("Algorithm not supported: " + algorithm + " and mode: " + mode);
+            }
+        }
+    }
     private PointerByReference algo;
     private final PointerByReference context;
     private final AlgorithmMode algorithmMode;
     private final int padding;
     private final String transformation;
+
     private final int IV_LENGTH = 16;
 
     /**
@@ -75,6 +98,101 @@ final class OpenSslJnaCipher implements CryptoCipher {
         padding = transform.getPadding().ordinal();
         context = OpenSslNativeJna.EVP_CIPHER_CTX_new();
 
+    }
+
+    /**
+     * Closes the OpenSSL cipher. Clean the OpenSsl native context.
+     */
+    @Override
+    public void close() {
+        if (context != null) {
+            OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
+            // Freeing the context multiple times causes a JVM crash
+            // A work-round is to only free it at finalize time
+            // TODO is that sufficient?
+            // OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
+        }
+    }
+
+    /**
+     * Encrypts or decrypts data in a single-part operation, or finishes a
+     * multiple-part operation.
+     *
+     * @param input        the input byte array
+     * @param inputOffset  the offset in input where the input starts
+     * @param inputLen     the input length
+     * @param output       the byte array for the result
+     * @param outputOffset the offset in output where the result is stored
+     * @return the number of bytes stored in output
+     * @throws ShortBufferException      if the given output byte array is too small
+     *                                   to hold the result
+     * @throws BadPaddingException       if this cipher is in decryption mode, and
+     *                                   (un)padding has been requested, but the
+     *                                   decrypted data is not bounded by the
+     *                                   appropriate padding bytes
+     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
+     *                                   padding has been requested (only in
+     *                                   encryption mode), and the total input
+     *                                   length of the data processed by this cipher
+     *                                   is not a multiple of block size; or if this
+     *                                   encryption algorithm is unable to process
+     *                                   the input data provided.
+     */
+    @Override
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output,
+            final int outputOffset) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+        final ByteBuffer outputBuf = ByteBuffer.wrap(output, outputOffset, output.length - outputOffset);
+        final ByteBuffer inputBuf = ByteBuffer.wrap(input, inputOffset, inputLen);
+        return doFinal(inputBuf, outputBuf);
+    }
+
+    /**
+     * Encrypts or decrypts data in a single-part operation, or finishes a
+     * multiple-part operation. The data is encrypted or decrypted, depending on how
+     * this cipher was initialized.
+     *
+     * @param inBuffer  the input ByteBuffer
+     * @param outBuffer the output ByteBuffer
+     * @return int number of bytes stored in {@code output}
+     * @throws BadPaddingException       if this cipher is in decryption mode, and
+     *                                   (un)padding has been requested, but the
+     *                                   decrypted data is not bounded by the
+     *                                   appropriate padding bytes
+     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
+     *                                   padding has been requested (only in
+     *                                   encryption mode), and the total input
+     *                                   length of the data processed by this cipher
+     *                                   is not a multiple of block size; or if this
+     *                                   encryption algorithm is unable to process
+     *                                   the input data provided.
+     * @throws ShortBufferException      if the given output buffer is too small to
+     *                                   hold the result
+     */
+    @Override
+    public int doFinal(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
+            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+        final int uptLen = update(inBuffer, outBuffer);
+        final int[] outlen = new int[1];
+        throwOnError(OpenSslNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen));
+        final int len = uptLen + outlen[0];
+        outBuffer.position(outBuffer.position() + outlen[0]);
+        return len;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
+        super.finalize();
+    }
+
+    @Override
+    public String getAlgorithm() {
+        return transformation;
+    }
+
+    @Override
+    public int getBlockSize() {
+        return CryptoCipherFactory.AES_BLOCK_SIZE;
     }
 
     /**
@@ -140,23 +258,19 @@ final class OpenSslJnaCipher implements CryptoCipher {
     }
 
     /**
-     * Continues a multiple-part encryption/decryption operation. The data is
-     * encrypted or decrypted, depending on how this cipher was initialized.
-     *
-     * @param inBuffer  the input ByteBuffer
-     * @param outBuffer the output ByteBuffer
-     * @return int number of bytes stored in {@code output}
-     * @throws ShortBufferException if there is insufficient space in the output
-     *                              buffer
+     * @param retVal the result value of error.
      */
-    @Override
-    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
-        final int[] outlen = new int[1];
-        throwOnError(OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining()));
-        final int len = outlen[0];
-        inBuffer.position(inBuffer.limit());
-        outBuffer.position(outBuffer.position() + len);
-        return len;
+    private void throwOnError(final int retVal) {
+        if (retVal != 1) {
+            final NativeLong err = OpenSslNativeJna.ERR_peek_error();
+            final String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
+
+            if (context != null) {
+                OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
+            }
+            throw new IllegalStateException(
+                    "return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
+        }
     }
 
     /**
@@ -181,68 +295,23 @@ final class OpenSslJnaCipher implements CryptoCipher {
     }
 
     /**
-     * Encrypts or decrypts data in a single-part operation, or finishes a
-     * multiple-part operation. The data is encrypted or decrypted, depending on how
-     * this cipher was initialized.
+     * Continues a multiple-part encryption/decryption operation. The data is
+     * encrypted or decrypted, depending on how this cipher was initialized.
      *
      * @param inBuffer  the input ByteBuffer
      * @param outBuffer the output ByteBuffer
      * @return int number of bytes stored in {@code output}
-     * @throws BadPaddingException       if this cipher is in decryption mode, and
-     *                                   (un)padding has been requested, but the
-     *                                   decrypted data is not bounded by the
-     *                                   appropriate padding bytes
-     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
-     *                                   padding has been requested (only in
-     *                                   encryption mode), and the total input
-     *                                   length of the data processed by this cipher
-     *                                   is not a multiple of block size; or if this
-     *                                   encryption algorithm is unable to process
-     *                                   the input data provided.
-     * @throws ShortBufferException      if the given output buffer is too small to
-     *                                   hold the result
+     * @throws ShortBufferException if there is insufficient space in the output
+     *                              buffer
      */
     @Override
-    public int doFinal(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
-            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
-        final int uptLen = update(inBuffer, outBuffer);
+    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer) throws ShortBufferException {
         final int[] outlen = new int[1];
-        throwOnError(OpenSslNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen));
-        final int len = uptLen + outlen[0];
-        outBuffer.position(outBuffer.position() + outlen[0]);
+        throwOnError(OpenSslNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, inBuffer.remaining()));
+        final int len = outlen[0];
+        inBuffer.position(inBuffer.limit());
+        outBuffer.position(outBuffer.position() + len);
         return len;
-    }
-
-    /**
-     * Encrypts or decrypts data in a single-part operation, or finishes a
-     * multiple-part operation.
-     *
-     * @param input        the input byte array
-     * @param inputOffset  the offset in input where the input starts
-     * @param inputLen     the input length
-     * @param output       the byte array for the result
-     * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
-     * @throws ShortBufferException      if the given output byte array is too small
-     *                                   to hold the result
-     * @throws BadPaddingException       if this cipher is in decryption mode, and
-     *                                   (un)padding has been requested, but the
-     *                                   decrypted data is not bounded by the
-     *                                   appropriate padding bytes
-     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
-     *                                   padding has been requested (only in
-     *                                   encryption mode), and the total input
-     *                                   length of the data processed by this cipher
-     *                                   is not a multiple of block size; or if this
-     *                                   encryption algorithm is unable to process
-     *                                   the input data provided.
-     */
-    @Override
-    public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output,
-            final int outputOffset) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
-        final ByteBuffer outputBuf = ByteBuffer.wrap(output, outputOffset, output.length - outputOffset);
-        final ByteBuffer inputBuf = ByteBuffer.wrap(input, inputOffset, inputLen);
-        return doFinal(inputBuf, outputBuf);
     }
 
     /**
@@ -303,74 +372,5 @@ final class OpenSslJnaCipher implements CryptoCipher {
             throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
         // TODO: implement GCM mode using Jna
         throw new UnsupportedOperationException("This is unsupported in Jna Cipher");
-    }
-
-    /**
-     * Closes the OpenSSL cipher. Clean the OpenSsl native context.
-     */
-    @Override
-    public void close() {
-        if (context != null) {
-            OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
-            // Freeing the context multiple times causes a JVM crash
-            // A work-round is to only free it at finalize time
-            // TODO is that sufficient?
-            // OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
-        }
-    }
-
-    /**
-     * @param retVal the result value of error.
-     */
-    private void throwOnError(final int retVal) {
-        if (retVal != 1) {
-            final NativeLong err = OpenSslNativeJna.ERR_peek_error();
-            final String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
-
-            if (context != null) {
-                OpenSslNativeJna.EVP_CIPHER_CTX_cleanup(context);
-            }
-            throw new IllegalStateException(
-                    "return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
-        }
-    }
-
-    /**
-     * AlgorithmMode of JNA. Currently only support AES/CTR/NoPadding.
-     */
-    private enum AlgorithmMode {
-        AES_CTR, AES_CBC;
-
-        /**
-         * Gets the AlgorithmMode instance.
-         *
-         * @param algorithm the algorithm name
-         * @param mode      the mode name
-         * @return the AlgorithmMode instance
-         * @throws NoSuchAlgorithmException if the algorithm is not support
-         */
-        static AlgorithmMode get(final String algorithm, final String mode) throws NoSuchAlgorithmException {
-            try {
-                return AlgorithmMode.valueOf(algorithm + "_" + mode);
-            } catch (final Exception e) {
-                throw new NoSuchAlgorithmException("Algorithm not supported: " + algorithm + " and mode: " + mode);
-            }
-        }
-    }
-
-    @Override
-    public int getBlockSize() {
-        return CryptoCipherFactory.AES_BLOCK_SIZE;
-    }
-
-    @Override
-    public String getAlgorithm() {
-        return transformation;
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        OpenSslNativeJna.EVP_CIPHER_CTX_free(context);
-        super.finalize();
     }
 }

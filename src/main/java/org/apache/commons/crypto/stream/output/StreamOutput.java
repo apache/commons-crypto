@@ -46,6 +46,38 @@ public class StreamOutput implements Output {
     }
 
     /**
+     * Overrides the {@link Output#close()}. Closes this output and releases any
+     * system resources associated with the under layer output.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void close() throws IOException {
+        out.close();
+    }
+
+    /**
+     * Overrides the {@link Output#flush()}. Flushes this output and forces any
+     * buffered output bytes to be written out if the under layer output method
+     * support.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void flush() throws IOException {
+        out.flush();
+    }
+
+    /**
+     * Gets the output stream.
+     *
+     * @return the output stream.
+     */
+    protected OutputStream getOut() {
+        return out;
+    }
+
+    /**
      * Overrides the
      * {@link org.apache.commons.crypto.stream.output.Output#write(ByteBuffer)}.
      * Writes a sequence of bytes to this output from the given buffer.
@@ -68,37 +100,5 @@ public class StreamOutput implements Output {
         }
 
         return len;
-    }
-
-    /**
-     * Overrides the {@link Output#flush()}. Flushes this output and forces any
-     * buffered output bytes to be written out if the under layer output method
-     * support.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void flush() throws IOException {
-        out.flush();
-    }
-
-    /**
-     * Overrides the {@link Output#close()}. Closes this output and releases any
-     * system resources associated with the under layer output.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void close() throws IOException {
-        out.close();
-    }
-
-    /**
-     * Gets the output stream.
-     *
-     * @return the output stream.
-     */
-    protected OutputStream getOut() {
-        return out;
     }
 }

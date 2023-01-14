@@ -42,22 +42,6 @@ final class OsCryptoRandom implements CryptoRandom {
     private int pos = reservoir.length;
 
     /**
-     * Fills the reservoir.
-     *
-     * @param min the length.
-     */
-    private void fillReservoir(final int min) {
-        if (pos >= reservoir.length - min) {
-            try {
-                IoUtils.readFully(stream, reservoir, 0, reservoir.length);
-            } catch (final IOException e) {
-                throw new IllegalStateException("failed to fill reservoir", e);
-            }
-            pos = 0;
-        }
-    }
-
-    /**
      * Constructs a {@link OsCryptoRandom}.
      *
      * @param props the configuration properties.
@@ -84,6 +68,33 @@ final class OsCryptoRandom implements CryptoRandom {
     }
 
     /**
+     * Overrides {@link java.lang.AutoCloseable#close()}. Closes the OS stream.
+     */
+    @Override
+    synchronized public void close() {
+        if (stream != null) {
+            IoUtils.closeQuietly(stream);
+            stream = null;
+        }
+    }
+
+    /**
+     * Fills the reservoir.
+     *
+     * @param min the length.
+     */
+    private void fillReservoir(final int min) {
+        if (pos >= reservoir.length - min) {
+            try {
+                IoUtils.readFully(stream, reservoir, 0, reservoir.length);
+            } catch (final IOException e) {
+                throw new IllegalStateException("failed to fill reservoir", e);
+            }
+            pos = 0;
+        }
+    }
+
+    /**
      * Overrides {@link CryptoRandom#nextBytes(byte[])}. Generates random bytes
      * and places them into a user-supplied byte array. The number of random
      * bytes produced is equal to the length of the byte array.
@@ -100,17 +111,6 @@ final class OsCryptoRandom implements CryptoRandom {
             System.arraycopy(reservoir, pos, bytes, off, n);
             off += n;
             pos += n;
-        }
-    }
-
-    /**
-     * Overrides {@link java.lang.AutoCloseable#close()}. Closes the OS stream.
-     */
-    @Override
-    synchronized public void close() {
-        if (stream != null) {
-            IoUtils.closeQuietly(stream);
-            stream = null;
         }
     }
 

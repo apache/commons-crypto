@@ -30,11 +30,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
 
-    @BeforeEach
-    public void init() {
-        Assumptions.assumeTrue(OpenSslJna.isEnabled());
-    }
-
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
         final Properties props = new Properties();
@@ -42,6 +37,11 @@ public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
         assertTrue(random instanceof OpenSslJnaCryptoRandom, "The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName());
         return random;
+    }
+
+    @BeforeEach
+    public void init() {
+        Assumptions.assumeTrue(OpenSslJna.isEnabled());
     }
 
 }

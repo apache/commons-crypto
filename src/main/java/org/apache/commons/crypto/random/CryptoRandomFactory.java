@@ -30,44 +30,6 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class CryptoRandomFactory {
 
-    // security random related configuration keys
-    /**
-     * The configuration key of the file path for secure random device.
-     */
-    public static final String DEVICE_FILE_PATH_KEY = Crypto.CONF_PREFIX + "secure.random.device.file.path";
-
-    /**
-     * The default value ({@value}) of the file path for secure random device.
-     */
-    // Note: this is public mainly for use by the Javadoc
-    public static final String DEVICE_FILE_PATH_DEFAULT = "/dev/urandom";
-
-    /**
-     * The configuration key of the algorithm of secure random.
-     */
-    public static final String JAVA_ALGORITHM_KEY = Crypto.CONF_PREFIX + "secure.random.java.algorithm";
-
-    /**
-     * The default value ({@value}) of the algorithm of secure random.
-     */
-    // Note: this is public mainly for use by the Javadoc
-    public static final String JAVA_ALGORITHM_DEFAULT = "SHA1PRNG";
-
-    /**
-     * The configuration key of the CryptoRandom implementation class.
-     * <p>
-     * The value of the CLASSES_KEY needs to be the full name of a
-     * class that implements the
-     * {@link org.apache.commons.crypto.random.CryptoRandom CryptoRandom} interface
-     * The internal classes are listed in the enum
-     * {@link RandomProvider RandomProvider}
-     * which can be used to obtain the full class name.
-     * <p>
-     * The value can also be a comma-separated list of class names in
-     * order of descending priority.
-     */
-    public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "secure.random.classes";
-
     /**
      * Defines the internal CryptoRandom implementations.
      * <p>
@@ -142,6 +104,44 @@ public class CryptoRandomFactory {
         }
     }
 
+    // security random related configuration keys
+    /**
+     * The configuration key of the file path for secure random device.
+     */
+    public static final String DEVICE_FILE_PATH_KEY = Crypto.CONF_PREFIX + "secure.random.device.file.path";
+
+    /**
+     * The default value ({@value}) of the file path for secure random device.
+     */
+    // Note: this is public mainly for use by the Javadoc
+    public static final String DEVICE_FILE_PATH_DEFAULT = "/dev/urandom";
+
+    /**
+     * The configuration key of the algorithm of secure random.
+     */
+    public static final String JAVA_ALGORITHM_KEY = Crypto.CONF_PREFIX + "secure.random.java.algorithm";
+
+    /**
+     * The default value ({@value}) of the algorithm of secure random.
+     */
+    // Note: this is public mainly for use by the Javadoc
+    public static final String JAVA_ALGORITHM_DEFAULT = "SHA1PRNG";
+
+    /**
+     * The configuration key of the CryptoRandom implementation class.
+     * <p>
+     * The value of the CLASSES_KEY needs to be the full name of a
+     * class that implements the
+     * {@link org.apache.commons.crypto.random.CryptoRandom CryptoRandom} interface
+     * The internal classes are listed in the enum
+     * {@link RandomProvider RandomProvider}
+     * which can be used to obtain the full class name.
+     * <p>
+     * The value can also be a comma-separated list of class names in
+     * order of descending priority.
+     */
+    public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "secure.random.classes";
+
     /**
      * The default value (OPENSSL,JAVA) used when creating a {@link org.apache.commons.crypto.cipher.CryptoCipher}.
      */
@@ -149,12 +149,6 @@ public class CryptoRandomFactory {
         RandomProvider.OPENSSL.getClassName()
         .concat(",")
         .concat(RandomProvider.JAVA.getClassName());
-
-    /**
-     * The private constructor of {@link CryptoRandomFactory}.
-     */
-    private CryptoRandomFactory() {
-    }
 
     /**
      * Gets a CryptoRandom instance using the default implementation
@@ -226,5 +220,11 @@ public class CryptoRandomFactory {
             randomClassString = CLASSES_DEFAULT;
         }
         return randomClassString;
+    }
+
+    /**
+     * The private constructor of {@link CryptoRandomFactory}.
+     */
+    private CryptoRandomFactory() {
     }
 }

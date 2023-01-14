@@ -29,6 +29,20 @@ import org.junit.jupiter.api.Timeout;
 
 public abstract class AbstractRandomTest {
 
+    /**
+     * Test will timeout if secure random implementation always returns a constant value.
+     */
+    private void checkRandomBytes(final CryptoRandom random, final int len) {
+        final byte[] bytes = new byte[len];
+        final byte[] bytes1 = new byte[len];
+        random.nextBytes(bytes);
+        random.nextBytes(bytes1);
+
+        while (Arrays.equals(bytes1, new byte[len]) || Arrays.equals(bytes, bytes1)) {
+            random.nextBytes(bytes1);
+        }
+    }
+
     public abstract CryptoRandom getCryptoRandom() throws GeneralSecurityException;
 
     @Test
@@ -69,20 +83,6 @@ public abstract class AbstractRandomTest {
                 }
             }
 
-        }
-    }
-
-    /**
-     * Test will timeout if secure random implementation always returns a constant value.
-     */
-    private void checkRandomBytes(final CryptoRandom random, final int len) {
-        final byte[] bytes = new byte[len];
-        final byte[] bytes1 = new byte[len];
-        random.nextBytes(bytes);
-        random.nextBytes(bytes1);
-
-        while (Arrays.equals(bytes1, new byte[len]) || Arrays.equals(bytes, bytes1)) {
-            random.nextBytes(bytes1);
         }
     }
 }

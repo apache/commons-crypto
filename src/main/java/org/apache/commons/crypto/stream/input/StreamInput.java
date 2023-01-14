@@ -48,6 +48,37 @@ public class StreamInput implements Input {
     }
 
     /**
+     * Overrides the {@link Input#available()}. Returns an estimate of the
+     * number of bytes that can be read (or skipped over) from this input stream
+     * without blocking by the next invocation of a method for this input
+     * stream. The next invocation might be the same thread or another thread. A
+     * single read or skip of this many bytes will not block, but may read or
+     * skip fewer bytes.
+     *
+     * @return an estimate of the number of bytes that can be read (or skipped
+     *         over) from this input stream without blocking or {@code 0} when
+     *         it reaches the end of the input stream.
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public int available() throws IOException {
+        return in.available();
+    }
+
+    /**
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.input.Input#seek(long)}. Closes
+     * this input and releases any system resources associated with the under
+     * layer input.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void close() throws IOException {
+        in.close();
+    }
+
+    /**
      * Overrides the
      * {@link org.apache.commons.crypto.stream.input.Input#read(ByteBuffer)}.
      * Reads a sequence of bytes from input into the given buffer.
@@ -78,38 +109,6 @@ public class StreamInput implements Input {
             }
         }
         return read;
-    }
-
-    /**
-     * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
-     * over and discards {@code n} bytes of data from this input stream.
-     *
-     * @param n the number of bytes to be skipped.
-     * @return the actual number of bytes skipped.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public long skip(final long n) throws IOException {
-        return in.skip(n);
-    }
-
-    /**
-     * Overrides the {@link Input#available()}. Returns an estimate of the
-     * number of bytes that can be read (or skipped over) from this input stream
-     * without blocking by the next invocation of a method for this input
-     * stream. The next invocation might be the same thread or another thread. A
-     * single read or skip of this many bytes will not block, but may read or
-     * skip fewer bytes.
-     *
-     * @return an estimate of the number of bytes that can be read (or skipped
-     *         over) from this input stream without blocking or {@code 0} when
-     *         it reaches the end of the input stream.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public int available() throws IOException {
-        return in.available();
     }
 
     /**
@@ -150,14 +149,15 @@ public class StreamInput implements Input {
 
     /**
      * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#seek(long)}. Closes
-     * this input and releases any system resources associated with the under
-     * layer input.
+     * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
+     * over and discards {@code n} bytes of data from this input stream.
      *
+     * @param n the number of bytes to be skipped.
+     * @return the actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void close() throws IOException {
-        in.close();
+    public long skip(final long n) throws IOException {
+        return in.skip(n);
     }
 }

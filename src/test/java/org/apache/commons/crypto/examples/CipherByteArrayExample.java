@@ -36,6 +36,16 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class CipherByteArrayExample {
 
+    /**
+     * Converts String to UTF8 bytes
+     *
+     * @param input the input string
+     * @return UTF8 bytes
+     */
+    private static byte[] getUTF8Bytes(final String input) {
+        return input.getBytes(StandardCharsets.UTF_8);
+    }
+
     public static void main(final String[] args) throws Exception {
 
         final SecretKeySpec key = AES.newSecretKeySpec(getUTF8Bytes("1234567890123456"));
@@ -83,16 +93,6 @@ public class CipherByteArrayExample {
 
             System.out.println("output: " + new String(decoded, StandardCharsets.UTF_8));
         }
-    }
-
-    /**
-     * Converts String to UTF8 bytes
-     *
-     * @param input the input string
-     * @return UTF8 bytes
-     */
-    private static byte[] getUTF8Bytes(final String input) {
-        return input.getBytes(StandardCharsets.UTF_8);
     }
 
 }

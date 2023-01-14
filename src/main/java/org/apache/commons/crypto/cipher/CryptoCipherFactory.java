@@ -31,28 +31,6 @@ import org.apache.commons.crypto.utils.Utils;
 public class CryptoCipherFactory {
 
     /**
-     * The configuration key of the provider class for JCE cipher.
-     */
-    public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX + "cipher.jce.provider";
-
-    /**
-     * The configuration key of the CryptoCipher implementation class.
-     * <p>
-     * The value of CLASSES_KEY needs to be the full name of a
-     * class that implements the
-     * {@link org.apache.commons.crypto.cipher.CryptoCipher CryptoCipher} interface
-     * The internal classes are listed in the enum
-     * {@link CipherProvider CipherProvider}
-     * which can be used to obtain the full class name.
-     * </p>
-     * <p>
-     * The value can also be a comma-separated list of class names in
-     * order of descending priority.
-     * </p>
-     */
-    public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "cipher.classes";
-
-    /**
      * Defines the internal CryptoCipher implementations.
      * <p>
      * Usage:
@@ -117,6 +95,28 @@ public class CryptoCipherFactory {
     }
 
     /**
+     * The configuration key of the provider class for JCE cipher.
+     */
+    public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX + "cipher.jce.provider";
+
+    /**
+     * The configuration key of the CryptoCipher implementation class.
+     * <p>
+     * The value of CLASSES_KEY needs to be the full name of a
+     * class that implements the
+     * {@link org.apache.commons.crypto.cipher.CryptoCipher CryptoCipher} interface
+     * The internal classes are listed in the enum
+     * {@link CipherProvider CipherProvider}
+     * which can be used to obtain the full class name.
+     * </p>
+     * <p>
+     * The value can also be a comma-separated list of class names in
+     * order of descending priority.
+     * </p>
+     */
+    public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "cipher.classes";
+
+    /**
      * For AES, the algorithm block is fixed size of 128 bits.
      *
      * @see <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
@@ -133,9 +133,34 @@ public class CryptoCipherFactory {
             .concat(CipherProvider.JCE.getClassName());
 
     /**
-     * The private Constructor of {@link CryptoCipherFactory}.
+     * Gets the cipher class.
+     *
+     * @param props The {@code Properties} class represents a set of
+     *        properties.
+     * @return the cipher class based on the props.
      */
-    private CryptoCipherFactory() {
+    private static String getCipherClassString(final Properties props) {
+        String cipherClassString = props.getProperty(CryptoCipherFactory.CLASSES_KEY, CLASSES_DEFAULT);
+        if (cipherClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
+            cipherClassString = CLASSES_DEFAULT;
+        }
+        return cipherClassString;
+    }
+
+    /**
+     * Gets a cipher for algorithm/mode/padding in config value
+     * commons.crypto.cipher.transformation
+     *
+     * @param transformation the name of the transformation, e.g.,
+     * <i>AES/CBC/PKCS5Padding</i>.
+     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
+     * for information about standard transformation names.
+     * @return CryptoCipher the cipher object (defaults to OpenSslCipher if available, else JceCipher)
+     * @throws GeneralSecurityException if JCE cipher initialize failed
+     */
+    public static CryptoCipher getCryptoCipher(final String transformation)
+            throws GeneralSecurityException {
+        return getCryptoCipher(transformation, new Properties());
     }
 
     /**
@@ -175,34 +200,9 @@ public class CryptoCipherFactory {
     }
 
     /**
-     * Gets a cipher for algorithm/mode/padding in config value
-     * commons.crypto.cipher.transformation
-     *
-     * @param transformation the name of the transformation, e.g.,
-     * <i>AES/CBC/PKCS5Padding</i>.
-     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
-     * for information about standard transformation names.
-     * @return CryptoCipher the cipher object (defaults to OpenSslCipher if available, else JceCipher)
-     * @throws GeneralSecurityException if JCE cipher initialize failed
+     * The private Constructor of {@link CryptoCipherFactory}.
      */
-    public static CryptoCipher getCryptoCipher(final String transformation)
-            throws GeneralSecurityException {
-        return getCryptoCipher(transformation, new Properties());
-    }
-
-    /**
-     * Gets the cipher class.
-     *
-     * @param props The {@code Properties} class represents a set of
-     *        properties.
-     * @return the cipher class based on the props.
-     */
-    private static String getCipherClassString(final Properties props) {
-        String cipherClassString = props.getProperty(CryptoCipherFactory.CLASSES_KEY, CLASSES_DEFAULT);
-        if (cipherClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
-            cipherClassString = CLASSES_DEFAULT;
-        }
-        return cipherClassString;
+    private CryptoCipherFactory() {
     }
 
 }

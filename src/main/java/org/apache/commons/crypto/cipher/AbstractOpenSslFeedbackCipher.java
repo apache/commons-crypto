@@ -44,18 +44,9 @@ abstract class AbstractOpenSslFeedbackCipher {
         this.padding = padding;
     }
 
-    abstract void init(int mode, byte[] key, AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException;
-
-    abstract int update(ByteBuffer input, ByteBuffer output) throws ShortBufferException;
-
-    abstract int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset) throws ShortBufferException;
-
-    abstract int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
-            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException;
-
-    abstract int doFinal(ByteBuffer input, ByteBuffer output) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException;
-
-    abstract void updateAAD(byte[] aad);
+    public void checkState() {
+        Utils.checkState(context != 0, "Cipher context is invalid.");
+    }
 
     public void clean() {
         if (context != 0) {
@@ -64,7 +55,16 @@ abstract class AbstractOpenSslFeedbackCipher {
         }
     }
 
-    public void checkState() {
-        Utils.checkState(context != 0, "Cipher context is invalid.");
-    }
+    abstract int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset)
+            throws ShortBufferException, IllegalBlockSizeException, BadPaddingException;
+
+    abstract int doFinal(ByteBuffer input, ByteBuffer output) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException;
+
+    abstract void init(int mode, byte[] key, AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException;
+
+    abstract int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset) throws ShortBufferException;
+
+    abstract int update(ByteBuffer input, ByteBuffer output) throws ShortBufferException;
+
+    abstract void updateAAD(byte[] aad);
 }

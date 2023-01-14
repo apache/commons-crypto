@@ -95,11 +95,12 @@ final class OpenSslNativeJna {
         OpenSslJna.debug("OpenSslNativeJna static init end");
     }
 
-    private OpenSslNativeJna() {
-    }
-
     public static PointerByReference ENGINE_by_id(final String string) {
         return JnaImplementation._ENGINE_by_id(string);
+    }
+
+    public static int ENGINE_cleanup() {
+        return JnaImplementation._ENGINE_cleanup();
     }
 
     public static int ENGINE_finish(final PointerByReference rdrandEngine) {
@@ -112,6 +113,10 @@ final class OpenSslNativeJna {
 
     public static int ENGINE_init(final PointerByReference rdrandEngine) {
         return JnaImplementation._ENGINE_init(rdrandEngine);
+    }
+
+    public static void ENGINE_load_rdrand() {
+        JnaImplementation._ENGINE_load_rdrand();
     }
 
     public static int ENGINE_set_default(final PointerByReference rdrandEngine, final int eNGINE_METHOD_RAND) {
@@ -150,6 +155,10 @@ final class OpenSslNativeJna {
         return JnaImplementation._EVP_aes_256_ctr();
     }
 
+    public static void EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
+        JnaImplementation._EVP_CIPHER_CTX_cleanup(context);
+    }
+
     public static void EVP_CIPHER_CTX_free(final PointerByReference context) {
         JnaImplementation._EVP_CIPHER_CTX_free(context);
     }
@@ -177,6 +186,10 @@ final class OpenSslNativeJna {
         return JnaImplementation._EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, remaining);
     }
 
+    public static String OpenSSLVersion(final int i) {
+        return JnaImplementation._OpenSSL_version(i);
+    }
+
     public static int RAND_bytes(final ByteBuffer buf, final int length) {
         return JnaImplementation._RAND_bytes(buf, length);
     }
@@ -189,19 +202,6 @@ final class OpenSslNativeJna {
         return JnaImplementation._RAND_SSLeay();
     }
 
-    public static String OpenSSLVersion(final int i) {
-        return JnaImplementation._OpenSSL_version(i);
-    }
-
-    public static void ENGINE_load_rdrand() {
-        JnaImplementation._ENGINE_load_rdrand();
-    }
-
-    public static int ENGINE_cleanup() {
-        return JnaImplementation._ENGINE_cleanup();
-    }
-
-    public static void EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
-        JnaImplementation._EVP_CIPHER_CTX_cleanup(context);
+    private OpenSslNativeJna() {
     }
 }

@@ -79,6 +79,8 @@ public final class Crypto {
      */
     public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX + "lib.tempdir";
 
+    private static boolean quiet = false;
+
     /**
      * Gets the component version of Apache Commons Crypto.
      * <p>
@@ -119,8 +121,6 @@ public final class Crypto {
     public static Throwable getLoadingError() {
         return NativeCodeLoader.getLoadingError();
     }
-
-    private static boolean quiet = false;
 
     /**
      * Logs info-level messages.

@@ -35,6 +35,29 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class CipherByteBufferExample {
 
+    /**
+     * Converts ByteBuffer to String
+     *
+     * @param buffer input byte buffer
+     * @return the converted string
+     */
+    private static String asString(final ByteBuffer buffer) {
+        final ByteBuffer copy = buffer.duplicate();
+        final byte[] bytes = new byte[copy.remaining()];
+        copy.get(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Converts String to UTF8 bytes
+     *
+     * @param input the input string
+     * @return UTF8 bytes
+     */
+    private static byte[] getUTF8Bytes(final String input) {
+        return input.getBytes(StandardCharsets.UTF_8);
+    }
+
     public static void main(final String[] args) throws Exception {
         final SecretKeySpec key = AES.newSecretKeySpec(getUTF8Bytes("1234567890123456"));
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
@@ -80,29 +103,6 @@ public class CipherByteBufferExample {
             decoded.flip(); // ready for use
             System.out.println("decoded="+asString(decoded));
         }
-    }
-
-    /**
-     * Converts String to UTF8 bytes
-     *
-     * @param input the input string
-     * @return UTF8 bytes
-     */
-    private static byte[] getUTF8Bytes(final String input) {
-        return input.getBytes(StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Converts ByteBuffer to String
-     *
-     * @param buffer input byte buffer
-     * @return the converted string
-     */
-    private static String asString(final ByteBuffer buffer) {
-        final ByteBuffer copy = buffer.duplicate();
-        final byte[] bytes = new byte[copy.remaining()];
-        copy.get(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
     }
 
 }

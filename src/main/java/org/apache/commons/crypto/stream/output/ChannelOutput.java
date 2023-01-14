@@ -43,18 +43,14 @@ public class ChannelOutput implements Output {
     }
 
     /**
-     * Overrides the
-     * {@link org.apache.commons.crypto.stream.output.Output#write(ByteBuffer)}.
-     * Writes a sequence of bytes to this output from the given buffer.
+     * Overrides the {@link Output#close()}. Closes this output and releases any
+     * system resources associated with the under layer output.
      *
-     * @param src The buffer from which bytes are to be retrieved.
-     *
-     * @return The number of bytes written, possibly zero.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int write(final ByteBuffer src) throws IOException {
-        return channel.write(src);
+    public void close() throws IOException {
+        channel.close();
     }
 
     /**
@@ -70,13 +66,17 @@ public class ChannelOutput implements Output {
     }
 
     /**
-     * Overrides the {@link Output#close()}. Closes this output and releases any
-     * system resources associated with the under layer output.
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.output.Output#write(ByteBuffer)}.
+     * Writes a sequence of bytes to this output from the given buffer.
      *
+     * @param src The buffer from which bytes are to be retrieved.
+     *
+     * @return The number of bytes written, possibly zero.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void close() throws IOException {
-        channel.close();
+    public int write(final ByteBuffer src) throws IOException {
+        return channel.write(src);
     }
 }

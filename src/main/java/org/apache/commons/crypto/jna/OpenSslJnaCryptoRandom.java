@@ -90,31 +90,6 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
     }
 
     /**
-     * Generates a user-specified number of random bytes. It's thread-safe.
-     *
-     * @param bytes the array to be filled in with random bytes.
-     */
-    @Override
-    public void nextBytes(final byte[] bytes) {
-
-        synchronized (OpenSslJnaCryptoRandom.class) {
-            // this method is synchronized for now
-            // to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
-
-            if (rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
-                close();
-                throw new IllegalStateException("rdrand should be used but default is detected");
-            }
-
-            final int byteLength = bytes.length;
-            final ByteBuffer buf = ByteBuffer.allocateDirect(byteLength);
-            throwOnError(OpenSslNativeJna.RAND_bytes(buf, byteLength), false);
-            buf.rewind();
-            buf.get(bytes, 0, byteLength);
-        }
-    }
-
-    /**
      * Overrides {@link java.lang.AutoCloseable#close()}. Closes OpenSSL context
      * if native enabled.
      */
@@ -147,6 +122,31 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
      */
     public boolean isRdrandEnabled() {
         return rdrandEnabled;
+    }
+
+    /**
+     * Generates a user-specified number of random bytes. It's thread-safe.
+     *
+     * @param bytes the array to be filled in with random bytes.
+     */
+    @Override
+    public void nextBytes(final byte[] bytes) {
+
+        synchronized (OpenSslJnaCryptoRandom.class) {
+            // this method is synchronized for now
+            // to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
+
+            if (rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
+                close();
+                throw new IllegalStateException("rdrand should be used but default is detected");
+            }
+
+            final int byteLength = bytes.length;
+            final ByteBuffer buf = ByteBuffer.allocateDirect(byteLength);
+            throwOnError(OpenSslNativeJna.RAND_bytes(buf, byteLength), false);
+            buf.rewind();
+            buf.get(bytes, 0, byteLength);
+        }
     }
 
     /**

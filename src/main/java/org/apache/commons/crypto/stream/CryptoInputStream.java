@@ -51,13 +51,97 @@ import org.apache.commons.crypto.utils.Utils;
 
 public class CryptoInputStream extends InputStream implements ReadableByteChannel {
 
-    private final byte[] oneByteBuf = new byte[1];
-
     /**
      * The configuration key of the buffer size for stream.
      */
     public static final String STREAM_BUFFER_SIZE_KEY = Crypto.CONF_PREFIX
             + "stream.buffer.size";
+
+    // stream related configuration keys
+    /**
+     * The default value of the buffer size for stream.
+     */
+    private static final int STREAM_BUFFER_SIZE_DEFAULT = 8192;
+
+    private static final int MIN_BUFFER_SIZE = 512;
+
+    /**
+     * The index value when the end of the stream has been reached {@code -1}.
+     *
+     * @since 1.1
+     */
+    public static final int EOS = -1;
+
+    /**
+     * Checks and floors buffer size.
+     *
+     * @param cipher the {@link CryptoCipher} instance.
+     * @param bufferSize the buffer size.
+     * @return the remaining buffer size.
+     */
+    static int checkBufferSize(final CryptoCipher cipher, final int bufferSize) {
+        Utils.checkArgument(bufferSize >= CryptoInputStream.MIN_BUFFER_SIZE,
+                "Minimum value of buffer size is " + CryptoInputStream.MIN_BUFFER_SIZE + ".");
+        return bufferSize - bufferSize % cipher.getBlockSize();
+    }
+
+    /**
+     * Checks whether the cipher is supported streaming.
+     *
+     * @param cipher the {@link CryptoCipher} instance.
+     * @throws IOException if an I/O error occurs.
+     */
+    static void checkStreamCipher(final CryptoCipher cipher) throws IOException {
+        if (!cipher.getAlgorithm().equals(AES.CTR_NO_PADDING)) {
+            throw new IOException(AES.CTR_NO_PADDING + " is required");
+        }
+    }
+
+    /**
+     * Forcibly free the direct buffer.
+     *
+     * @param buffer the bytebuffer to be freed.
+     */
+    static void freeDirectBuffer(final ByteBuffer buffer) {
+        if (buffer != null) {
+            try {
+                /*
+                 * Using reflection to implement sun.nio.ch.DirectBuffer.cleaner() .clean();
+                 */
+                final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
+                final Class<?>[] interfaces = buffer.getClass().getInterfaces();
+                final Object[] EMPTY_OBJECT_ARRAY = {};
+
+                for (final Class<?> clazz : interfaces) {
+                    if (clazz.getName().equals(SUN_CLASS)) {
+                        /* DirectBuffer#cleaner() */
+                        final Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
+                        final Object cleaner = getCleaner.invoke(buffer, EMPTY_OBJECT_ARRAY);
+                        /* Cleaner#clean() */
+                        final Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
+                        cleanMethod.invoke(cleaner, EMPTY_OBJECT_ARRAY);
+                        return;
+                    }
+                }
+            } catch (final ReflectiveOperationException e) { // NOPMD
+                // Ignore the Reflection exception.
+            }
+        }
+    }
+
+    /**
+     * Reads crypto buffer size.
+     *
+     * @param props The {@code Properties} class represents a set of
+     *        properties.
+     * @return the buffer size.
+     * */
+    static int getBufferSize(final Properties props) {
+        final String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, "");
+        return bufferSizeStr.isEmpty() ? CryptoInputStream.STREAM_BUFFER_SIZE_DEFAULT : Integer.parseInt(bufferSizeStr);
+    }
+
+    private final byte[] oneByteBuf = new byte[1];
 
     /** The CryptoCipher instance. */
     final CryptoCipher cipher; // package protected for access by crypto classes; do not expose further
@@ -94,20 +178,70 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      */
     ByteBuffer outBuffer; // package protected for access by crypto classes; do not expose further
 
-    // stream related configuration keys
     /**
-     * The default value of the buffer size for stream.
-     */
-    private static final int STREAM_BUFFER_SIZE_DEFAULT = 8192;
-
-    private static final int MIN_BUFFER_SIZE = 512;
-
-    /**
-     * The index value when the end of the stream has been reached {@code -1}.
+     * Constructs a {@link CryptoInputStream}.
      *
-     * @since 1.1
+     * @param input the input data.
+     * @param cipher the cipher instance.
+     * @param bufferSize the bufferSize.
+     * @param key crypto key for the cipher.
+     * @param params the algorithm parameters.
+     * @throws IOException if an I/O error occurs.
      */
-    public static final int EOS = -1;
+    protected CryptoInputStream(final Input input, final CryptoCipher cipher, final int bufferSize,
+            final Key key, final AlgorithmParameterSpec params) throws IOException {
+        this.input = input;
+        this.cipher = cipher;
+        this.bufferSize = CryptoInputStream.checkBufferSize(cipher, bufferSize);
+
+        this.key = key;
+        this.params = params;
+        if (!(params instanceof IvParameterSpec)) {
+            // other AlgorithmParameterSpec such as GCMParameterSpec is not
+            // supported now.
+            throw new IOException("Illegal parameters");
+        }
+
+        inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
+        outBuffer = ByteBuffer.allocateDirect(this.bufferSize + cipher.getBlockSize());
+        outBuffer.limit(0);
+
+        initCipher();
+    }
+
+    /**
+     * Constructs a {@link CryptoInputStream}.
+     *
+     * @param cipher the cipher instance.
+     * @param inputStream the input stream.
+     * @param bufferSize the bufferSize.
+     * @param key crypto key for the cipher.
+     * @param params the algorithm parameters.
+     * @throws IOException if an I/O error occurs.
+     */
+    @SuppressWarnings("resource") // Closing the instance closes the StreamInput
+    protected CryptoInputStream(final InputStream inputStream, final CryptoCipher cipher,
+            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
+            throws IOException {
+        this(new StreamInput(inputStream, bufferSize), cipher, bufferSize, key, params);
+    }
+
+    /**
+     * Constructs a {@link CryptoInputStream}.
+     *
+     * @param channel the ReadableByteChannel instance.
+     * @param cipher the cipher instance.
+     * @param bufferSize the bufferSize.
+     * @param key crypto key for the cipher.
+     * @param params the algorithm parameters.
+     * @throws IOException if an I/O error occurs.
+     */
+    @SuppressWarnings("resource") // Closing the instance closes the ChannelInput
+    protected CryptoInputStream(final ReadableByteChannel channel, final CryptoCipher cipher,
+            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
+            throws IOException {
+        this(new ChannelInput(channel), cipher, bufferSize, key, params);
+    }
 
     /**
      * Constructs a {@link CryptoInputStream}.
@@ -154,68 +288,218 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     }
 
     /**
-     * Constructs a {@link CryptoInputStream}.
+     * Overrides the {@link InputStream#available()}. Returns an estimate of the
+     * number of bytes that can be read (or skipped over) from this input stream
+     * without blocking by the next invocation of a method for this input
+     * stream.
      *
-     * @param cipher the cipher instance.
-     * @param inputStream the input stream.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @return an estimate of the number of bytes that can be read (or skipped
+     *         over) from this input stream without blocking or {@code 0} when
+     *         it reaches the end of the input stream.
      * @throws IOException if an I/O error occurs.
      */
-    @SuppressWarnings("resource") // Closing the instance closes the StreamInput
-    protected CryptoInputStream(final InputStream inputStream, final CryptoCipher cipher,
-            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
-            throws IOException {
-        this(new StreamInput(inputStream, bufferSize), cipher, bufferSize, key, params);
+    @Override
+    public int available() throws IOException {
+        checkStream();
+
+        return input.available() + outBuffer.remaining();
     }
 
     /**
-     * Constructs a {@link CryptoInputStream}.
+     * Checks whether the stream is closed.
      *
-     * @param channel the ReadableByteChannel instance.
-     * @param cipher the cipher instance.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    @SuppressWarnings("resource") // Closing the instance closes the ChannelInput
-    protected CryptoInputStream(final ReadableByteChannel channel, final CryptoCipher cipher,
-            final int bufferSize, final Key key, final AlgorithmParameterSpec params)
-            throws IOException {
-        this(new ChannelInput(channel), cipher, bufferSize, key, params);
+    protected void checkStream() throws IOException {
+        if (closed) {
+            throw new IOException("Stream closed");
+        }
     }
 
     /**
-     * Constructs a {@link CryptoInputStream}.
+     * Overrides the {@link InputStream#close()}. Closes this input stream and
+     * releases any system resources associated with the stream.
      *
-     * @param input the input data.
-     * @param cipher the cipher instance.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
-    protected CryptoInputStream(final Input input, final CryptoCipher cipher, final int bufferSize,
-            final Key key, final AlgorithmParameterSpec params) throws IOException {
-        this.input = input;
-        this.cipher = cipher;
-        this.bufferSize = CryptoInputStream.checkBufferSize(cipher, bufferSize);
-
-        this.key = key;
-        this.params = params;
-        if (!(params instanceof IvParameterSpec)) {
-            // other AlgorithmParameterSpec such as GCMParameterSpec is not
-            // supported now.
-            throw new IOException("Illegal parameters");
+    @Override
+    public void close() throws IOException {
+        if (closed) {
+            return;
         }
 
-        inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-        outBuffer = ByteBuffer.allocateDirect(this.bufferSize + cipher.getBlockSize());
-        outBuffer.limit(0);
+        input.close();
+        freeBuffers();
+        cipher.close();
+        super.close();
+        closed = true;
+    }
 
-        initCipher();
+    /**
+     * Does the decryption using inBuffer as input and outBuffer as output. Upon
+     * return, inBuffer is cleared; the decrypted data starts at
+     * outBuffer.position() and ends at outBuffer.limit().
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    protected void decrypt() throws IOException {
+        // Prepare the input buffer and clear the out buffer
+        inBuffer.flip();
+        outBuffer.clear();
+
+        try {
+            cipher.update(inBuffer, outBuffer);
+        } catch (final ShortBufferException e) {
+            throw new IOException(e);
+        }
+
+        // Clear the input buffer and prepare out buffer
+        inBuffer.clear();
+        outBuffer.flip();
+    }
+
+    /**
+     * Does final of the cipher to end the decrypting stream.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    protected void decryptFinal() throws IOException {
+        // Prepare the input buffer and clear the out buffer
+        inBuffer.flip();
+        outBuffer.clear();
+
+        try {
+            cipher.doFinal(inBuffer, outBuffer);
+            finalDone = true;
+        } catch (final ShortBufferException | IllegalBlockSizeException | BadPaddingException e) {
+            throw new IOException(e);
+        }
+
+        // Clear the input buffer and prepare out buffer
+        inBuffer.clear();
+        outBuffer.flip();
+    }
+
+    /**
+     * Decrypts more data by reading the under layer stream. The decrypted data
+     * will be put in the output buffer. If the end of the under stream reached,
+     * we will do final of the cipher to finish all the decrypting of data.
+     *
+     * @return The number of decrypted data.
+     *           return -1 (if end of the decrypted stream)
+     *           return 0 (no data now, but could have more later)
+     * @throws IOException if an I/O error occurs.
+     */
+    protected int decryptMore() throws IOException {
+        if (finalDone) {
+            return EOS;
+        }
+
+        final int n = input.read(inBuffer);
+        if (n < 0) {
+            // The stream is end, finalize the cipher stream
+            decryptFinal();
+
+            // Satisfy the read with the remaining
+            final int remaining = outBuffer.remaining();
+            if (remaining > 0) {
+                return remaining;
+            }
+
+            // End of the stream
+            return EOS;
+        }
+        if (n == 0) {
+            // No data is read, but the stream is not end yet
+            return 0;
+        }
+        decrypt();
+        return outBuffer.remaining();
+    }
+
+    /** Forcibly free the direct buffers. */
+    protected void freeBuffers() {
+        CryptoInputStream.freeDirectBuffer(inBuffer);
+        CryptoInputStream.freeDirectBuffer(outBuffer);
+    }
+
+    /**
+     * Gets the buffer size.
+     *
+     * @return the bufferSize.
+     */
+    protected int getBufferSize() {
+        return bufferSize;
+    }
+
+    /**
+     * Gets the internal CryptoCipher.
+     *
+     * @return the cipher instance.
+     */
+    protected CryptoCipher getCipher() {
+        return cipher;
+    }
+
+    /**
+     * Gets the input.
+     *
+     * @return the input.
+     */
+    protected Input getInput() {
+        return input;
+    }
+
+    /**
+     * Gets the key.
+     *
+     * @return the key.
+     */
+    protected Key getKey() {
+        return key;
+    }
+
+    /**
+     * Gets the specification of cryptographic parameters.
+     *
+     * @return the params.
+     */
+    protected AlgorithmParameterSpec getParams() {
+        return params;
+    }
+
+    /**
+     * Initializes the cipher.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    protected void initCipher() throws IOException {
+        try {
+            cipher.init(Cipher.DECRYPT_MODE, key, params);
+        } catch (final GeneralSecurityException e) {
+            throw new IOException(e);
+        }
+    }
+
+    /**
+     * Overrides the {@link java.nio.channels.Channel#isOpen()}.
+     *
+     * @return {@code true} if, and only if, this channel is open.
+     */
+    @Override
+    public boolean isOpen() {
+        return !closed;
+    }
+
+    /**
+     * Overrides the {@link InputStream#markSupported()}.
+     *
+     * @return false,the {@link CtrCryptoInputStream} don't support the mark
+     *         method.
+     */
+    @Override
+    public boolean markSupported() {
+        return false;
     }
 
     /**
@@ -282,6 +566,47 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     }
 
     /**
+     * Overrides the
+     * {@link java.nio.channels.ReadableByteChannel#read(ByteBuffer)}. Reads a
+     * sequence of bytes from this channel into the given buffer.
+     *
+     * @param dst The buffer into which bytes are to be transferred.
+     * @return The number of bytes read, possibly zero, or {@code EOS (-1)} if the
+     *         channel has reached end-of-stream.
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public int read(final ByteBuffer dst) throws IOException {
+        checkStream();
+        int remaining = outBuffer.remaining();
+        if (remaining <= 0) {
+            // Decrypt more data
+            // we loop for new data
+            int nd = 0;
+            while (nd == 0) {
+                nd = decryptMore();
+            }
+
+            if (nd < 0) {
+                return EOS;
+            }
+        }
+
+        // Copy decrypted data from outBuffer to dst
+        remaining = outBuffer.remaining();
+        final int toRead = dst.remaining();
+        if (toRead <= remaining) {
+            final int limit = outBuffer.limit();
+            outBuffer.limit(outBuffer.position() + toRead);
+            dst.put(outBuffer);
+            outBuffer.limit(limit);
+            return toRead;
+        }
+        dst.put(outBuffer);
+        return remaining;
+    }
+
+    /**
      * Overrides the {@link java.io.InputStream#skip(long)}. Skips over and
      * discards {@code n} bytes of data from this input stream.
      *
@@ -324,330 +649,5 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
         }
 
         return n - remaining;
-    }
-
-    /**
-     * Overrides the {@link InputStream#available()}. Returns an estimate of the
-     * number of bytes that can be read (or skipped over) from this input stream
-     * without blocking by the next invocation of a method for this input
-     * stream.
-     *
-     * @return an estimate of the number of bytes that can be read (or skipped
-     *         over) from this input stream without blocking or {@code 0} when
-     *         it reaches the end of the input stream.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public int available() throws IOException {
-        checkStream();
-
-        return input.available() + outBuffer.remaining();
-    }
-
-    /**
-     * Overrides the {@link InputStream#close()}. Closes this input stream and
-     * releases any system resources associated with the stream.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void close() throws IOException {
-        if (closed) {
-            return;
-        }
-
-        input.close();
-        freeBuffers();
-        cipher.close();
-        super.close();
-        closed = true;
-    }
-
-    /**
-     * Overrides the {@link InputStream#markSupported()}.
-     *
-     * @return false,the {@link CtrCryptoInputStream} don't support the mark
-     *         method.
-     */
-    @Override
-    public boolean markSupported() {
-        return false;
-    }
-
-    /**
-     * Overrides the {@link java.nio.channels.Channel#isOpen()}.
-     *
-     * @return {@code true} if, and only if, this channel is open.
-     */
-    @Override
-    public boolean isOpen() {
-        return !closed;
-    }
-
-    /**
-     * Overrides the
-     * {@link java.nio.channels.ReadableByteChannel#read(ByteBuffer)}. Reads a
-     * sequence of bytes from this channel into the given buffer.
-     *
-     * @param dst The buffer into which bytes are to be transferred.
-     * @return The number of bytes read, possibly zero, or {@code EOS (-1)} if the
-     *         channel has reached end-of-stream.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public int read(final ByteBuffer dst) throws IOException {
-        checkStream();
-        int remaining = outBuffer.remaining();
-        if (remaining <= 0) {
-            // Decrypt more data
-            // we loop for new data
-            int nd = 0;
-            while (nd == 0) {
-                nd = decryptMore();
-            }
-
-            if (nd < 0) {
-                return EOS;
-            }
-        }
-
-        // Copy decrypted data from outBuffer to dst
-        remaining = outBuffer.remaining();
-        final int toRead = dst.remaining();
-        if (toRead <= remaining) {
-            final int limit = outBuffer.limit();
-            outBuffer.limit(outBuffer.position() + toRead);
-            dst.put(outBuffer);
-            outBuffer.limit(limit);
-            return toRead;
-        }
-        dst.put(outBuffer);
-        return remaining;
-    }
-
-    /**
-     * Gets the buffer size.
-     *
-     * @return the bufferSize.
-     */
-    protected int getBufferSize() {
-        return bufferSize;
-    }
-
-    /**
-     * Gets the key.
-     *
-     * @return the key.
-     */
-    protected Key getKey() {
-        return key;
-    }
-
-    /**
-     * Gets the internal CryptoCipher.
-     *
-     * @return the cipher instance.
-     */
-    protected CryptoCipher getCipher() {
-        return cipher;
-    }
-
-    /**
-     * Gets the specification of cryptographic parameters.
-     *
-     * @return the params.
-     */
-    protected AlgorithmParameterSpec getParams() {
-        return params;
-    }
-
-    /**
-     * Gets the input.
-     *
-     * @return the input.
-     */
-    protected Input getInput() {
-        return input;
-    }
-
-    /**
-     * Initializes the cipher.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    protected void initCipher() throws IOException {
-        try {
-            cipher.init(Cipher.DECRYPT_MODE, key, params);
-        } catch (final GeneralSecurityException e) {
-            throw new IOException(e);
-        }
-    }
-
-    /**
-     * Decrypts more data by reading the under layer stream. The decrypted data
-     * will be put in the output buffer. If the end of the under stream reached,
-     * we will do final of the cipher to finish all the decrypting of data.
-     *
-     * @return The number of decrypted data.
-     *           return -1 (if end of the decrypted stream)
-     *           return 0 (no data now, but could have more later)
-     * @throws IOException if an I/O error occurs.
-     */
-    protected int decryptMore() throws IOException {
-        if (finalDone) {
-            return EOS;
-        }
-
-        final int n = input.read(inBuffer);
-        if (n < 0) {
-            // The stream is end, finalize the cipher stream
-            decryptFinal();
-
-            // Satisfy the read with the remaining
-            final int remaining = outBuffer.remaining();
-            if (remaining > 0) {
-                return remaining;
-            }
-
-            // End of the stream
-            return EOS;
-        }
-        if (n == 0) {
-            // No data is read, but the stream is not end yet
-            return 0;
-        }
-        decrypt();
-        return outBuffer.remaining();
-    }
-
-    /**
-     * Does the decryption using inBuffer as input and outBuffer as output. Upon
-     * return, inBuffer is cleared; the decrypted data starts at
-     * outBuffer.position() and ends at outBuffer.limit().
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    protected void decrypt() throws IOException {
-        // Prepare the input buffer and clear the out buffer
-        inBuffer.flip();
-        outBuffer.clear();
-
-        try {
-            cipher.update(inBuffer, outBuffer);
-        } catch (final ShortBufferException e) {
-            throw new IOException(e);
-        }
-
-        // Clear the input buffer and prepare out buffer
-        inBuffer.clear();
-        outBuffer.flip();
-    }
-
-    /**
-     * Does final of the cipher to end the decrypting stream.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    protected void decryptFinal() throws IOException {
-        // Prepare the input buffer and clear the out buffer
-        inBuffer.flip();
-        outBuffer.clear();
-
-        try {
-            cipher.doFinal(inBuffer, outBuffer);
-            finalDone = true;
-        } catch (final ShortBufferException | IllegalBlockSizeException | BadPaddingException e) {
-            throw new IOException(e);
-        }
-
-        // Clear the input buffer and prepare out buffer
-        inBuffer.clear();
-        outBuffer.flip();
-    }
-
-    /**
-     * Checks whether the stream is closed.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    protected void checkStream() throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
-        }
-    }
-
-    /** Forcibly free the direct buffers. */
-    protected void freeBuffers() {
-        CryptoInputStream.freeDirectBuffer(inBuffer);
-        CryptoInputStream.freeDirectBuffer(outBuffer);
-    }
-
-    /**
-     * Forcibly free the direct buffer.
-     *
-     * @param buffer the bytebuffer to be freed.
-     */
-    static void freeDirectBuffer(final ByteBuffer buffer) {
-        if (buffer != null) {
-            try {
-                /*
-                 * Using reflection to implement sun.nio.ch.DirectBuffer.cleaner() .clean();
-                 */
-                final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
-                final Class<?>[] interfaces = buffer.getClass().getInterfaces();
-                final Object[] EMPTY_OBJECT_ARRAY = {};
-
-                for (final Class<?> clazz : interfaces) {
-                    if (clazz.getName().equals(SUN_CLASS)) {
-                        /* DirectBuffer#cleaner() */
-                        final Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
-                        final Object cleaner = getCleaner.invoke(buffer, EMPTY_OBJECT_ARRAY);
-                        /* Cleaner#clean() */
-                        final Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
-                        cleanMethod.invoke(cleaner, EMPTY_OBJECT_ARRAY);
-                        return;
-                    }
-                }
-            } catch (final ReflectiveOperationException e) { // NOPMD
-                // Ignore the Reflection exception.
-            }
-        }
-    }
-
-    /**
-     * Reads crypto buffer size.
-     *
-     * @param props The {@code Properties} class represents a set of
-     *        properties.
-     * @return the buffer size.
-     * */
-    static int getBufferSize(final Properties props) {
-        final String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, "");
-        return bufferSizeStr.isEmpty() ? CryptoInputStream.STREAM_BUFFER_SIZE_DEFAULT : Integer.parseInt(bufferSizeStr);
-    }
-
-    /**
-     * Checks whether the cipher is supported streaming.
-     *
-     * @param cipher the {@link CryptoCipher} instance.
-     * @throws IOException if an I/O error occurs.
-     */
-    static void checkStreamCipher(final CryptoCipher cipher) throws IOException {
-        if (!cipher.getAlgorithm().equals(AES.CTR_NO_PADDING)) {
-            throw new IOException(AES.CTR_NO_PADDING + " is required");
-        }
-    }
-
-    /**
-     * Checks and floors buffer size.
-     *
-     * @param cipher the {@link CryptoCipher} instance.
-     * @param bufferSize the buffer size.
-     * @return the remaining buffer size.
-     */
-    static int checkBufferSize(final CryptoCipher cipher, final int bufferSize) {
-        Utils.checkArgument(bufferSize >= CryptoInputStream.MIN_BUFFER_SIZE,
-                "Minimum value of buffer size is " + CryptoInputStream.MIN_BUFFER_SIZE + ".");
-        return bufferSize - bufferSize % cipher.getBlockSize();
     }
 }

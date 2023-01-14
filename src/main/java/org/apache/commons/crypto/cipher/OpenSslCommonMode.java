@@ -39,36 +39,6 @@ final class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
     }
 
     @Override
-    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
-        this.cipherMode = mode;
-        final byte[] iv;
-        if (!(params instanceof IvParameterSpec)) {
-            // other AlgorithmParameterSpec is not supported now.
-            throw new InvalidAlgorithmParameterException("Illegal parameters");
-        }
-        iv = ((IvParameterSpec) params).getIV();
-        context = OpenSslNative.init(context, mode, algorithmMode, padding, key, iv);
-    }
-
-    @Override
-    public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
-        checkState();
-
-        final int len = OpenSslNative.update(context, input, input.position(), input.remaining(), output, output.position(), output.remaining());
-        input.position(input.limit());
-        output.position(output.position() + len);
-
-        return len;
-    }
-
-    @Override
-    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset) throws ShortBufferException {
-        checkState();
-
-        return OpenSslNative.updateByteArray(context, input, inputOffset, inputLen, output, outputOffset, output.length - outputOffset);
-    }
-
-    @Override
     public int doFinal(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset)
             throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
         checkState();
@@ -98,6 +68,36 @@ final class OpenSslCommonMode extends AbstractOpenSslFeedbackCipher {
         output.position(output.position() + len);
 
         return totalLen;
+    }
+
+    @Override
+    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
+        this.cipherMode = mode;
+        final byte[] iv;
+        if (!(params instanceof IvParameterSpec)) {
+            // other AlgorithmParameterSpec is not supported now.
+            throw new InvalidAlgorithmParameterException("Illegal parameters");
+        }
+        iv = ((IvParameterSpec) params).getIV();
+        context = OpenSslNative.init(context, mode, algorithmMode, padding, key, iv);
+    }
+
+    @Override
+    public int update(final byte[] input, final int inputOffset, final int inputLen, final byte[] output, final int outputOffset) throws ShortBufferException {
+        checkState();
+
+        return OpenSslNative.updateByteArray(context, input, inputOffset, inputLen, output, outputOffset, output.length - outputOffset);
+    }
+
+    @Override
+    public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
+        checkState();
+
+        final int len = OpenSslNative.update(context, input, input.position(), input.remaining(), output, output.position(), output.remaining());
+        input.position(input.limit());
+        output.position(output.position() + len);
+
+        return len;
     }
 
     @Override

@@ -37,12 +37,6 @@ import org.apache.commons.crypto.utils.Utils;
  */
 final class OpenSsl {
 
-    // Mode constant defined by OpenSsl JNI
-    public static final int ENCRYPT_MODE = 1;
-    public static final int DECRYPT_MODE = 0;
-
-    private final AbstractOpenSslFeedbackCipher opensslBlockCipher;
-
     /** Currently only support AES/CTR/NoPadding. */
     private enum AlgorithmMode {
         AES_CTR, AES_CBC, AES_GCM;
@@ -63,6 +57,10 @@ final class OpenSsl {
             }
         }
     }
+    // Mode constant defined by OpenSsl JNI
+    public static final int ENCRYPT_MODE = 1;
+
+    public static final int DECRYPT_MODE = 0;
 
     private static final Throwable loadingFailureReason;
 
@@ -78,30 +76,6 @@ final class OpenSsl {
             loadingFailure = t;
         } finally {
             loadingFailureReason = loadingFailure;
-        }
-    }
-
-    /**
-     * Gets the failure reason when loading OpenSsl native.
-     *
-     * @return the failure reason; null if it was loaded and initialized successfully
-     */
-    public static Throwable getLoadingFailureReason() {
-        return loadingFailureReason;
-    }
-
-    /**
-     * Constructs a {@link OpenSsl} instance based on context, algorithm and padding.
-     *
-     * @param context the context.
-     * @param algorithm the algorithm.
-     * @param padding the padding.
-     */
-    private OpenSsl(final long context, final int algorithm, final int padding) {
-        if (algorithm == AlgorithmMode.AES_GCM.ordinal()) {
-            opensslBlockCipher = new OpenSslGaloisCounterMode(context, algorithm, padding);
-        } else {
-            opensslBlockCipher = new OpenSslCommonMode(context, algorithm, padding);
         }
     }
 
@@ -132,64 +106,36 @@ final class OpenSsl {
     }
 
     /**
-     * Initializes this cipher with a key and IV.
+     * Gets the failure reason when loading OpenSsl native.
      *
-     * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
-     * @param key crypto key
-     * @param params the algorithm parameters
-     * @throws InvalidAlgorithmParameterException if IV length is wrong
+     * @return the failure reason; null if it was loaded and initialized successfully
      */
-    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
-        opensslBlockCipher.init(mode, key, params);
+    public static Throwable getLoadingFailureReason() {
+        return loadingFailureReason;
     }
 
-    /**
-     * Updates a multiple-part encryption or decryption operation. The data is
-     * encrypted or decrypted, depending on how this cipher was initialized.
-     *
-     * <p>
-     * All {@code input.remaining()} bytes starting at
-     * {@code input.position()} are processed. The result is stored in the
-     * output buffer.
-     * </p>
-     *
-     * <p>
-     * Upon return, the input buffer's position will be equal to its limit; its
-     * limit will not have changed. The output buffer's position will have
-     * advanced by n, when n is the value returned by this method; the output
-     * buffer's limit will not have changed.
-     * </p>
-     *
-     * If {@code output.remaining()} bytes are insufficient to hold the
-     * result, a {@code ShortBufferException} is thrown.
-     *
-     * @param input the input ByteBuffer
-     * @param output the output ByteBuffer
-     * @return int number of bytes stored in {@code output}
-     * @throws ShortBufferException if there is insufficient space in the output
-     *         buffer
-     */
-    public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
-        Utils.checkArgument(input.isDirect() && output.isDirect(), "Direct buffers are required.");
-        return opensslBlockCipher.update(input, output);
-    }
+    private final AbstractOpenSslFeedbackCipher opensslBlockCipher;
 
     /**
-     * Updates a multiple-part encryption/decryption operation. The data is
-     * encrypted or decrypted, depending on how this cipher was initialized.
+     * Constructs a {@link OpenSsl} instance based on context, algorithm and padding.
      *
-     * @param input the input byte array
-     * @param inputOffset the offset in input where the input starts
-     * @param inputLen the input length
-     * @param output the byte array for the result
-     * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
-     * @throws ShortBufferException if there is insufficient space in the output
-     *         byte array
+     * @param context the context.
+     * @param algorithm the algorithm.
+     * @param padding the padding.
      */
-    public int update(final byte[] input, final int inputOffset, final int inputLen,
-            final byte[] output, final int outputOffset) throws ShortBufferException {
-        return opensslBlockCipher.update(input, inputOffset, inputLen, output, outputOffset);
+    private OpenSsl(final long context, final int algorithm, final int padding) {
+        if (algorithm == AlgorithmMode.AES_GCM.ordinal()) {
+            opensslBlockCipher = new OpenSslGaloisCounterMode(context, algorithm, padding);
+        } else {
+            opensslBlockCipher = new OpenSslCommonMode(context, algorithm, padding);
+        }
+    }
+
+    /** Forcibly clean the context. */
+    public void clean() {
+        if (opensslBlockCipher != null) {
+            opensslBlockCipher.clean();
+        }
     }
 
     /**
@@ -262,6 +208,73 @@ final class OpenSsl {
         return opensslBlockCipher.doFinal(input, output);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        clean();
+    }
+
+    /**
+     * Initializes this cipher with a key and IV.
+     *
+     * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
+     * @param key crypto key
+     * @param params the algorithm parameters
+     * @throws InvalidAlgorithmParameterException if IV length is wrong
+     */
+    public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
+        opensslBlockCipher.init(mode, key, params);
+    }
+
+    /**
+     * Updates a multiple-part encryption/decryption operation. The data is
+     * encrypted or decrypted, depending on how this cipher was initialized.
+     *
+     * @param input the input byte array
+     * @param inputOffset the offset in input where the input starts
+     * @param inputLen the input length
+     * @param output the byte array for the result
+     * @param outputOffset the offset in output where the result is stored
+     * @return the number of bytes stored in output
+     * @throws ShortBufferException if there is insufficient space in the output
+     *         byte array
+     */
+    public int update(final byte[] input, final int inputOffset, final int inputLen,
+            final byte[] output, final int outputOffset) throws ShortBufferException {
+        return opensslBlockCipher.update(input, inputOffset, inputLen, output, outputOffset);
+    }
+
+
+    /**
+     * Updates a multiple-part encryption or decryption operation. The data is
+     * encrypted or decrypted, depending on how this cipher was initialized.
+     *
+     * <p>
+     * All {@code input.remaining()} bytes starting at
+     * {@code input.position()} are processed. The result is stored in the
+     * output buffer.
+     * </p>
+     *
+     * <p>
+     * Upon return, the input buffer's position will be equal to its limit; its
+     * limit will not have changed. The output buffer's position will have
+     * advanced by n, when n is the value returned by this method; the output
+     * buffer's limit will not have changed.
+     * </p>
+     *
+     * If {@code output.remaining()} bytes are insufficient to hold the
+     * result, a {@code ShortBufferException} is thrown.
+     *
+     * @param input the input ByteBuffer
+     * @param output the output ByteBuffer
+     * @return int number of bytes stored in {@code output}
+     * @throws ShortBufferException if there is insufficient space in the output
+     *         buffer
+     */
+    public int update(final ByteBuffer input, final ByteBuffer output) throws ShortBufferException {
+        Utils.checkArgument(input.isDirect() && output.isDirect(), "Direct buffers are required.");
+        return opensslBlockCipher.update(input, output);
+    }
+
     /**
      * Continues a multi-part update of the Additional Authentication
      * Data (AAD).
@@ -277,19 +290,6 @@ final class OpenSsl {
      */
     public void updateAAD(final byte[] aad) {
         this.opensslBlockCipher.updateAAD(aad);
-    }
-
-
-    /** Forcibly clean the context. */
-    public void clean() {
-        if (opensslBlockCipher != null) {
-            opensslBlockCipher.clean();
-        }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        clean();
     }
 
 }

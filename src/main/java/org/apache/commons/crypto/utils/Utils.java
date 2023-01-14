@@ -80,54 +80,6 @@ public final class Utils {
     private static final String SYSTEM_PROPERTIES_FILE = Crypto.CONF_PREFIX + "properties";
 
     /**
-     * The private constructor of {@link Utils}.
-     */
-    private Utils() {
-    }
-
-    /**
-     * Gets a properties instance that defaults to the System Properties
-     * plus any other properties found in the file
-     * {@link #SYSTEM_PROPERTIES_FILE}
-     * @return a Properties instance with defaults
-     */
-    public static Properties getDefaultProperties() {
-        return new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
-    }
-
-    /**
-     * Gets the properties merged with default properties.
-     * @param newProp  User-defined properties
-     * @return User-defined properties with the default properties
-     */
-    public static Properties getProperties(final Properties newProp) {
-        final Properties properties = new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
-        properties.putAll(newProp);
-        return properties;
-     }
-
-    /**
-     * Helper method to create a CryptoCipher instance and throws only
-     * IOException.
-     *
-     * @param properties The {@code Properties} class represents a set of
-     *        properties.
-     * @param transformation the name of the transformation, e.g.,
-     * <i>AES/CBC/PKCS5Padding</i>.
-     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
-     * for information about standard transformation names.
-     * @return the CryptoCipher instance.
-     * @throws IOException if an I/O error occurs.
-     */
-    public static CryptoCipher getCipherInstance(final String transformation, final Properties properties) throws IOException {
-        try {
-            return CryptoCipherFactory.getCryptoCipher(transformation, properties);
-        } catch (final GeneralSecurityException e) {
-            throw new IOException(e);
-        }
-    }
-
-    /**
      * Ensures the truth of an expression involving one or more parameters to
      * the calling method.
      *
@@ -196,6 +148,68 @@ public final class Utils {
     }
 
     /**
+     * Helper method to create a CryptoCipher instance and throws only
+     * IOException.
+     *
+     * @param properties The {@code Properties} class represents a set of
+     *        properties.
+     * @param transformation the name of the transformation, e.g.,
+     * <i>AES/CBC/PKCS5Padding</i>.
+     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
+     * for information about standard transformation names.
+     * @return the CryptoCipher instance.
+     * @throws IOException if an I/O error occurs.
+     */
+    public static CryptoCipher getCipherInstance(final String transformation, final Properties properties) throws IOException {
+        try {
+            return CryptoCipherFactory.getCryptoCipher(transformation, properties);
+        } catch (final GeneralSecurityException e) {
+            throw new IOException(e);
+        }
+    }
+
+    /**
+     * Gets a properties instance that defaults to the System Properties
+     * plus any other properties found in the file
+     * {@link #SYSTEM_PROPERTIES_FILE}
+     * @return a Properties instance with defaults
+     */
+    public static Properties getDefaultProperties() {
+        return new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
+    }
+
+    /**
+     * Gets the properties merged with default properties.
+     * @param newProp  User-defined properties
+     * @return User-defined properties with the default properties
+     */
+    public static Properties getProperties(final Properties newProp) {
+        final Properties properties = new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
+        properties.putAll(newProp);
+        return properties;
+     }
+
+    /*
+     * Override the default DLL name if jni.library.path is a valid directory
+     * @param name - the default name, passed from native code
+     * @return the updated library path
+     * This method is designed for use from the DynamicLoader native code.
+     * Although it could all be implemented in native code, this hook method
+     * makes maintenance easier.
+     * The code is intended for use with macOS where SIP makes it hard to override
+     * the environment variables needed to override the DLL search path. It also
+     * works for Linux, but is not (currently) used or needed for Windows.
+     * Do not change the method name or its signature!
+     */
+    static String libraryPath(final String name) {
+        final String override = System.getProperty("jni.library.path");
+        if (override != null && new File(override).isDirectory()) {
+            return new File(override, name).getPath();
+        }
+        return name;
+    }
+
+    /**
      * Splits class names sequence into substrings, Trim each substring into an
      * entry,and returns an list of the entries.
      *
@@ -219,24 +233,10 @@ public final class Utils {
         return res;
     }
 
-    /*
-     * Override the default DLL name if jni.library.path is a valid directory
-     * @param name - the default name, passed from native code
-     * @return the updated library path
-     * This method is designed for use from the DynamicLoader native code.
-     * Although it could all be implemented in native code, this hook method
-     * makes maintenance easier.
-     * The code is intended for use with macOS where SIP makes it hard to override
-     * the environment variables needed to override the DLL search path. It also
-     * works for Linux, but is not (currently) used or needed for Windows.
-     * Do not change the method name or its signature!
+    /**
+     * The private constructor of {@link Utils}.
      */
-    static String libraryPath(final String name) {
-        final String override = System.getProperty("jni.library.path");
-        if (override != null && new File(override).isDirectory()) {
-            return new File(override, name).getPath();
-        }
-        return name;
+    private Utils() {
     }
 
 }

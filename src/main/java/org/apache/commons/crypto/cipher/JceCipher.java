@@ -55,115 +55,11 @@ class JceCipher implements CryptoCipher {
     }
 
     /**
-     * Returns the block size (in bytes).
-     *
-     * @return the block size (in bytes), or 0 if the underlying algorithm is
-     * not a block cipher
+     * Closes Jce cipher.
      */
     @Override
-    public final int getBlockSize() {
-        return cipher.getBlockSize();
-    }
-
-    /**
-     * Returns the algorithm name of this {@code CryptoCipher} object.
-     *
-     * <p>
-     * This is the same name that was specified in one of the
-     * {@code CryptoCipherFactory#getInstance} calls that created this
-     * {@code CryptoCipher} object..
-     * </p>
-     *
-     * @return the algorithm name of this {@code CryptoCipher} object.
-     */
-    @Override
-    public String getAlgorithm() {
-        return cipher.getAlgorithm();
-    }
-
-    /**
-     * Initializes the cipher with mode, key and iv.
-     *
-     * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
-     * @param key crypto key for the cipher
-     * @param params the algorithm parameters
-     * @throws InvalidAlgorithmParameterException if the given algorithm
-     *         parameters are inappropriate for this cipher, or this cipher
-     *         requires algorithm parameters and {@code params} is null, or
-     *         the given algorithm parameters imply a cryptographic strength
-     *         that would exceed the legal limits (as determined from the
-     *         configured jurisdiction policy files).
-     */
-    @Override
-    public void init(final int mode, final Key key, final AlgorithmParameterSpec params)
-            throws InvalidKeyException, InvalidAlgorithmParameterException {
-        Objects.requireNonNull(key, "key");
-        Objects.requireNonNull(params, "params");
-
-        // Jce uses the javax.crypto.Cipher modes; no need to convert the input
-        cipher.init(mode, key, params);
-    }
-
-    /**
-     * Continues a multiple-part encryption/decryption operation. The data is
-     * encrypted or decrypted, depending on how this cipher was initialized.
-     *
-     * @param inBuffer the input ByteBuffer
-     * @param outBuffer the output ByteBuffer
-     * @return int number of bytes stored in {@code output}
-     * @throws ShortBufferException if there is insufficient space in the output
-     *         buffer
-     */
-    @Override
-    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
-            throws ShortBufferException {
-        return cipher.update(inBuffer, outBuffer);
-    }
-
-    /**
-     * Continues a multiple-part encryption/decryption operation. The data is
-     * encrypted or decrypted, depending on how this cipher was initialized.
-     *
-     * @param input the input byte array
-     * @param inputOffset the offset in input where the input starts
-     * @param inputLen the input length
-     * @param output the byte array for the result
-     * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
-     * @throws ShortBufferException if there is insufficient space in the output
-     *         byte array
-     */
-    @Override
-    public int update(final byte[] input, final int inputOffset, final int inputLen,
-            final byte[] output, final int outputOffset) throws ShortBufferException {
-        return cipher
-                .update(input, inputOffset, inputLen, output, outputOffset);
-    }
-
-    /**
-     * Encrypts or decrypts data in a single-part operation, or finishes a
-     * multiple-part operation. The data is encrypted or decrypted, depending on
-     * how this cipher was initialized.
-     *
-     * @param inBuffer the input ByteBuffer
-     * @param outBuffer the output ByteBuffer
-     * @return int number of bytes stored in {@code output}
-     * @throws BadPaddingException if this cipher is in decryption mode, and
-     *         (un)padding has been requested, but the decrypted data is not
-     *         bounded by the appropriate padding bytes
-     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
-     *         padding has been requested (only in encryption mode), and the
-     *         total input length of the data processed by this cipher is not a
-     *         multiple of block size; or if this encryption algorithm is unable
-     *         to process the input data provided.
-     * @throws ShortBufferException if the given output buffer is too small to
-     *         hold the result
-     */
-    @Override
-    public int doFinal(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
-            throws ShortBufferException, IllegalBlockSizeException,
-            BadPaddingException {
-        return cipher.doFinal(inBuffer, outBuffer);
+    public void close() {
+        // Do nothing
     }
 
     /**
@@ -195,6 +91,118 @@ class JceCipher implements CryptoCipher {
                 outputOffset);
     }
 
+    /**
+     * Encrypts or decrypts data in a single-part operation, or finishes a
+     * multiple-part operation. The data is encrypted or decrypted, depending on
+     * how this cipher was initialized.
+     *
+     * @param inBuffer the input ByteBuffer
+     * @param outBuffer the output ByteBuffer
+     * @return int number of bytes stored in {@code output}
+     * @throws BadPaddingException if this cipher is in decryption mode, and
+     *         (un)padding has been requested, but the decrypted data is not
+     *         bounded by the appropriate padding bytes
+     * @throws IllegalBlockSizeException if this cipher is a block cipher, no
+     *         padding has been requested (only in encryption mode), and the
+     *         total input length of the data processed by this cipher is not a
+     *         multiple of block size; or if this encryption algorithm is unable
+     *         to process the input data provided.
+     * @throws ShortBufferException if the given output buffer is too small to
+     *         hold the result
+     */
+    @Override
+    public int doFinal(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
+            throws ShortBufferException, IllegalBlockSizeException,
+            BadPaddingException {
+        return cipher.doFinal(inBuffer, outBuffer);
+    }
+
+    /**
+     * Returns the algorithm name of this {@code CryptoCipher} object.
+     *
+     * <p>
+     * This is the same name that was specified in one of the
+     * {@code CryptoCipherFactory#getInstance} calls that created this
+     * {@code CryptoCipher} object..
+     * </p>
+     *
+     * @return the algorithm name of this {@code CryptoCipher} object.
+     */
+    @Override
+    public String getAlgorithm() {
+        return cipher.getAlgorithm();
+    }
+
+    /**
+     * Returns the block size (in bytes).
+     *
+     * @return the block size (in bytes), or 0 if the underlying algorithm is
+     * not a block cipher
+     */
+    @Override
+    public final int getBlockSize() {
+        return cipher.getBlockSize();
+    }
+
+    /**
+     * Initializes the cipher with mode, key and iv.
+     *
+     * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
+     * @param key crypto key for the cipher
+     * @param params the algorithm parameters
+     * @throws InvalidAlgorithmParameterException if the given algorithm
+     *         parameters are inappropriate for this cipher, or this cipher
+     *         requires algorithm parameters and {@code params} is null, or
+     *         the given algorithm parameters imply a cryptographic strength
+     *         that would exceed the legal limits (as determined from the
+     *         configured jurisdiction policy files).
+     */
+    @Override
+    public void init(final int mode, final Key key, final AlgorithmParameterSpec params)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(params, "params");
+
+        // Jce uses the javax.crypto.Cipher modes; no need to convert the input
+        cipher.init(mode, key, params);
+    }
+
+    /**
+     * Continues a multiple-part encryption/decryption operation. The data is
+     * encrypted or decrypted, depending on how this cipher was initialized.
+     *
+     * @param input the input byte array
+     * @param inputOffset the offset in input where the input starts
+     * @param inputLen the input length
+     * @param output the byte array for the result
+     * @param outputOffset the offset in output where the result is stored
+     * @return the number of bytes stored in output
+     * @throws ShortBufferException if there is insufficient space in the output
+     *         byte array
+     */
+    @Override
+    public int update(final byte[] input, final int inputOffset, final int inputLen,
+            final byte[] output, final int outputOffset) throws ShortBufferException {
+        return cipher
+                .update(input, inputOffset, inputLen, output, outputOffset);
+    }
+
+
+    /**
+     * Continues a multiple-part encryption/decryption operation. The data is
+     * encrypted or decrypted, depending on how this cipher was initialized.
+     *
+     * @param inBuffer the input ByteBuffer
+     * @param outBuffer the output ByteBuffer
+     * @return int number of bytes stored in {@code output}
+     * @throws ShortBufferException if there is insufficient space in the output
+     *         buffer
+     */
+    @Override
+    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
+            throws ShortBufferException {
+        return cipher.update(inBuffer, outBuffer);
+    }
 
     /**
      * Continues a multi-part update of the Additional Authentication
@@ -224,6 +232,7 @@ class JceCipher implements CryptoCipher {
         cipher.updateAAD(aad);
     }
 
+
     /**
      * Continues a multi-part update of the Additional Authentication
      * Data (AAD).
@@ -250,14 +259,5 @@ class JceCipher implements CryptoCipher {
     @Override
     public void updateAAD(final ByteBuffer aad) {
         cipher.updateAAD(aad);
-    }
-
-
-    /**
-     * Closes Jce cipher.
-     */
-    @Override
-    public void close() {
-        // Do nothing
     }
 }

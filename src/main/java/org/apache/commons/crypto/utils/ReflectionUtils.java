@@ -31,6 +31,14 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
  */
 public final class ReflectionUtils {
 
+    /**
+     * A unique class which is used as a sentinel value in the caching for
+     * getClassByName. {@link #getClassByNameOrNull(String)}.
+     */
+    private static abstract class NegativeCacheSentinel {
+        // noop
+    }
+
     private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
 
     private static final ClassLoader CLASSLOADER;
@@ -44,51 +52,6 @@ public final class ReflectionUtils {
      * Sentinel value to store negative cache results in {@link #CACHE_CLASSES}.
      */
     private static final Class<?> NEGATIVE_CACHE_SENTINEL = NegativeCacheSentinel.class;
-
-    /**
-     * The private constructor of {@link ReflectionUtils}.
-     */
-    private ReflectionUtils() {
-    }
-
-    /**
-     * A unique class which is used as a sentinel value in the caching for
-     * getClassByName. {@link #getClassByNameOrNull(String)}.
-     */
-    private static abstract class NegativeCacheSentinel {
-        // noop
-    }
-
-    /**
-     * Uses the constructor represented by this {@code Constructor} object to create
-     * and initialize a new instance of the constructor's declaring class, with the
-     * specified initialization parameters.
-     *
-     * @param <T>   type for the new instance
-     * @param klass the Class object.
-     * @param args  array of objects to be passed as arguments to the constructor
-     *              call.
-     * @return a new object created by calling the constructor this object
-     *         represents.
-     */
-    public static <T> T newInstance(final Class<T> klass, final Object... args) {
-        try {
-            final Constructor<T> ctor;
-            final int argsLength = args.length;
-
-            if (argsLength == 0) {
-                ctor = klass.getDeclaredConstructor();
-            } else {
-                final Class<?>[] argClses = new Class[argsLength];
-                Arrays.setAll(argClses, i -> args[i].getClass());
-                ctor = klass.getDeclaredConstructor(argClses);
-            }
-            ctor.setAccessible(true);
-            return ctor.newInstance(args);
-        } catch (final Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
 
     /**
      * Loads a class by name.
@@ -142,5 +105,42 @@ public final class ReflectionUtils {
         }
         // cache hit
         return clazz;
+    }
+
+    /**
+     * Uses the constructor represented by this {@code Constructor} object to create
+     * and initialize a new instance of the constructor's declaring class, with the
+     * specified initialization parameters.
+     *
+     * @param <T>   type for the new instance
+     * @param klass the Class object.
+     * @param args  array of objects to be passed as arguments to the constructor
+     *              call.
+     * @return a new object created by calling the constructor this object
+     *         represents.
+     */
+    public static <T> T newInstance(final Class<T> klass, final Object... args) {
+        try {
+            final Constructor<T> ctor;
+            final int argsLength = args.length;
+
+            if (argsLength == 0) {
+                ctor = klass.getDeclaredConstructor();
+            } else {
+                final Class<?>[] argClses = new Class[argsLength];
+                Arrays.setAll(argClses, i -> args[i].getClass());
+                ctor = klass.getDeclaredConstructor(argClses);
+            }
+            ctor.setAccessible(true);
+            return ctor.newInstance(args);
+        } catch (final Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * The private constructor of {@link ReflectionUtils}.
+     */
+    private ReflectionUtils() {
     }
 }
