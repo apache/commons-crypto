@@ -61,7 +61,7 @@
    -->
 
   <body>
-    <release version="1.2.0" date="202Y-MM-DD" description="Minor release">
+    <release version="1.2.0" date="2023-01-14" description="Minor release  (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
       <action issue="CRYPTO-160" type="fix" dev="jochen">Enhance the quality of JavaCryptoRandom.</action>
       <action issue="CRYPTO-160" type="fix" dev="ggregory" due-to="Gary Gregory">Package-private implementations of CryptoRandom extends java.util.Random but should not.</action>
@@ -104,7 +104,7 @@
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump maven-resources-plugin from 3.2.0 to 3.3.0 #172.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump jaxb-impl from 2.3.6 to 2.3.7.</action>
     </release>
-    <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8 and OpenSSL 1.1.1)">
+    <release version="1.1.0" date="2020-08-28" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <action issue="CRYPTO-59" type="add">Support Galois/Counter Mode (GCM).</action>
       <action issue="CRYPTO-125" type="fix">CryptoOutputStream does not call write in a loop when underlying channel works in non-block mode.</action>
       <action issue="CRYPTO-131" type="add" dev="britter">Provide FAQ page.</action>
