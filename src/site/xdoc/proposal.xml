@@ -40,7 +40,7 @@ limitations under the License.
 <subsection name="(1) Scope of the Package">
   <p>
       This proposal is to create a package of cryptographic IO classes with the integration
-      of Openssl library.
+      of OpenSSL library.
       It focuses on AES-NI optimizations mainly and it can be extended to other algorithms
       based on demand from the users later.
   </p>

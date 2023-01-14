@@ -24,7 +24,7 @@
       </p>
       <p>
         Please note that Apache Commons Crypto doesn't implement the cryptographic
-        algorithm such as AES directly. It wraps Openssl or JCE which implement the algorithms.
+        algorithm such as AES directly. It wraps OpenSSL or JCE which implement the algorithms.
         OpenSSL 1.1.1 is required for building and running.
       </p>
       <subsection name="Interfaces Overview">
@@ -95,8 +95,8 @@
         <h4>Usage of Cipher API</h4>
         <p>
           Cipher provides an cryptographic interface for encryption and decryption.
-          We provide two kind of implementations: JCE Cipher and Openssl Cipher. The
-          JCE implementation uses JCE provider and the Openssl implementation uses
+          We provide two kind of implementations: JCE Cipher and OpenSSL Cipher. The
+          JCE implementation uses JCE provider and the OpenSSL implementation uses
           Intel&reg; AES New Instructions (Intel&reg; AES NI).
         </p>
         <h5>Usage of Byte Array Encryption/Decryption</h5>
