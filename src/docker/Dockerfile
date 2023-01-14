@@ -32,6 +32,7 @@ RUN apt-get update && apt-get --assume-yes install software-properties-common \
       && apt-get --assume-yes install g++-aarch64-linux-gnu \
       && apt-get --assume-yes install mingw-w64 \
       && apt-get --assume-yes install wget \
+      && apt-get --assume-yes install dos2unix \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
