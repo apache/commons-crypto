@@ -64,6 +64,7 @@
     <release version="1.2.0" date="202Y-MM-DD" description="Minor release">
       <!-- FIX -->
       <action issue="CRYPTO-160" type="fix" dev="jochen">Enhance the quality of JavaCryptoRandom.</action>
+      <action issue="CRYPTO-160" type="fix" dev="ggregory" due-to="Gary Gregory">Package-private implementations of CryptoRandom extends java.util.Random but should not.</action>
       <action issue="CRYPTO-163" type="fix">Makefile does not recompile objects if local include files are changed</action>
       <action issue="CRYPTO-154" type="fix">License header should be a plain comment #113.</action>
       <action                    type="fix" dev="ggregory" due-to="Arturo Bernal">Fix PMD warning and don't init to defaults #128.</action>
@@ -73,7 +74,6 @@
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Fix build on Java 17.</action>
       <action issue="CRYPTO-155" type="fix" due-to="Arturo Bernal">Minor improvement #115, #125.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">PositionedCryptoInputStream does not close its CryptoCipher instances.</action>
-      <action issue="CRYPTO-160" type="fix" dev="ggregory" due-to="Gary Gregory">Package-private class JavaCryptoRandom extends Random but should not.</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Validate return value from OpenSslNativeJna.EVP_CIPHER_CTX_set_padding().</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Validate return value from OpenSslNativeJna.ENGINE_finish().</action>
       <action                    type="fix" dev="ggregory" due-to="Gary Gregory">Validate return value from OpenSslNativeJna.ENGINE_free().</action>
