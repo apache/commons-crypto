@@ -213,7 +213,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
   if (jthr) {
     (*env)->DeleteLocalRef(env, jthr);
     THROW(env, "java/lang/UnsatisfiedLinkError",  \
-    "Cannot find AES-CTR support, is your version of Openssl new enough?");
+    "Cannot find AES-CTR support, is your version of OpenSSL new enough?");
     return;
   }
 }
