@@ -280,7 +280,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @see #returnToPool(ByteBuffer)
      */
     private ByteBuffer getBuffer() {
-        ByteBuffer buffer = byteBufferPool.poll();
+        final ByteBuffer buffer = byteBufferPool.poll();
         return buffer != null ? buffer : ByteBuffer.allocateDirect(getBufferSize());
     }
 
@@ -292,7 +292,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      */
     @SuppressWarnings("resource") // Caller calls #returnToPool(CipherState)
     private CipherState getCipherState() throws IOException {
-        CipherState state = cipherStatePool.poll();
+        final CipherState state = cipherStatePool.poll();
         return state != null ? state : new CipherState(Utils.getCipherInstance(AES.CTR_NO_PADDING, properties));
     }
 
