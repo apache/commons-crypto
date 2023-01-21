@@ -79,7 +79,7 @@ final class OsInfo {
         archMapping.put(X86_64, X86_64);
         archMapping.put("amd64", X86_64);
         archMapping.put("em64t", X86_64);
-        archMapping.put("universal", X86_64); // Needed for openjdk7 in Mac
+        archMapping.put("universal", X86_64); // Needed for openjdk7 on Mac
 
         // Itanium 64-bit mappings
         archMapping.put(IA64, IA64);
