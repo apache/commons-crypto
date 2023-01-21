@@ -99,7 +99,7 @@ o              Bump jaxb-impl from 2.3.6 to 2.3.7. Thanks to Gary Gregory.
 Historical list of changes: https://commons.apache.org/proper/commons-crypto/changes-report.html
 
 For complete information on Apache Commons Crypto, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons Crypto website:
+patches, or suggestions for improvement, see the Apache Commons Crypto website:
 
 https://commons.apache.org/proper/commons-crypto/
 
@@ -202,7 +202,7 @@ Testing:
 Historical list of changes: https://commons.apache.org/proper/commons-crypto/changes-report.html
 
 For complete information on Apache Commons Crypto, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons Crypto website:
+patches, or suggestions for improvement, see the Apache Commons Crypto website:
 
 https://commons.apache.org/proper/commons-crypto/
 
@@ -304,6 +304,6 @@ o CRYPTO-62:   Add multithreaded related tests Thanks to Hendrik Saly.
 Historical list of changes: https://commons.apache.org/proper/commons-crypto/changes-report.html
 
 For complete information on Apache Commons Crypto, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons Crypto website:
+patches, or suggestions for improvement, see the Apache Commons Crypto website:
 
 https://commons.apache.org/proper/commons-crypto/
