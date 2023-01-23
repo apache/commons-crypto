@@ -3,11 +3,11 @@
 
 The Apache Commons Crypto team is pleased to announce the release of Apache Commons Crypto 1.2.0.
 
-Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
-Standard New Instructions). It provides Java API for both cipher level and Java stream level.
-Developers can use it to implement high performance AES encryption/decryption with the minimum
-code and effort. Please note that Crypto doesn't implement the cryptographic algorithm such as
-AES directly. It wraps to OpenSSL or JCE which implement the algorithms.
+Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption Standard New Instructions). 
+It provides Java API for both the cipher level and Java stream level.
+Developers can use it to implement high-performance AES encryption/decryption with minimum code and effort. 
+Please note that Crypto doesn't implement the cryptographic algorithm such as AES directly. 
+It wraps OpenSSL and JCE which implements the algorithms.
 
 Features
 --------
