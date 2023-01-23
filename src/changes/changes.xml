@@ -61,7 +61,9 @@
    -->
 
   <body>
-    <release version="1.2.0" date="2023-01-14" description="Minor release  (Java 8, OpenSSL 1.1.1)">
+    <release version="1.2.1" date="202X-MM-DD" description="Minor release (Java 8, OpenSSL 1.1.1)">
+    </release>
+    <release version="1.2.0" date="2023-01-14" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
       <action issue="CRYPTO-160" type="fix" dev="jochen">Enhance the quality of JavaCryptoRandom.</action>
       <action issue="CRYPTO-160" type="fix" dev="ggregory" due-to="Gary Gregory">Package-private implementations of CryptoRandom extends java.util.Random but should not.</action>
