@@ -23,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -70,15 +71,15 @@ public class NativeCodeLoaderTest {
         final String nameKey = System.getProperty(Crypto.LIB_NAME_KEY);
         final String pathKey = System.getProperty(Crypto.LIB_PATH_KEY);
         // An empty file should cause UnsatisfiedLinkError
-        final File empty = File.createTempFile("NativeCodeLoaderTest", "tmp");
+        final Path empty = Files.createTempFile("NativeCodeLoaderTest", "tmp");
         try {
-            System.setProperty(Crypto.LIB_PATH_KEY, empty.getParent());
-            System.setProperty(Crypto.LIB_NAME_KEY, empty.getName());
+            System.setProperty(Crypto.LIB_PATH_KEY, empty.getParent().toString());
+            System.setProperty(Crypto.LIB_NAME_KEY, empty.getFileName().toString());
             final Throwable result = NativeCodeLoader.loadLibrary();
             assertNotNull(result);
             assertTrue(result instanceof UnsatisfiedLinkError);
         } finally {
-            empty.delete();
+            Files.delete(empty);
             if (nameKey != null) {
                 System.setProperty(Crypto.LIB_NAME_KEY, nameKey);
             }
