@@ -67,7 +67,7 @@ jobs:
     # Also complains: "Corrupted channel by directly writing to native stream in forked JVM 1"
     - name: Set up JDK ${{ matrix.java }}
       if: ${{ matrix.language == 'java' }}
-      uses: actions/setup-java@v3.9.0
+      uses: actions/setup-java@v3.10.0
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
