@@ -499,11 +499,6 @@ The following provides more details on the included cryptographic software:
             </dependency>
           </dependencies>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.0</version>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
