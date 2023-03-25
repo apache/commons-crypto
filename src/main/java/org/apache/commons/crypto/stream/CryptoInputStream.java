@@ -46,7 +46,6 @@ import org.apache.commons.crypto.utils.Utils;
  * CryptoInputStream reads input data and decrypts data in stream manner. It
  * supports any mode of operations such as AES CBC/CTR/GCM mode in concept.It is
  * not thread-safe.
- *
  */
 
 public class CryptoInputStream extends InputStream implements ReadableByteChannel {
