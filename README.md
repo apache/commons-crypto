@@ -47,7 +47,7 @@ Apache Commons Crypto
 [![Coverage Status](https://codecov.io/gh/apache/commons-crypto/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-crypto)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/?gav=true)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-crypto/1.2.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-crypto/1.2.0)
-[![CodeQL](https://github.com/apache/commons-crypto/workflows/CodeQL/badge.svg)](hhttps://github.com/apache/commons-crypto/actions/workflows/codeql-analysis.yml?query=workflow%3ACodeQL)
+[![CodeQL](https://github.com/apache/commons-crypto/workflows/CodeQL/badge.svg)](https://github.com/apache/commons-crypto/actions/workflows/codeql-analysis.yml?query=workflow%3ACodeQL)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/commons-text/badge)](https://api.securityscorecards.dev/projects/github.com/apache/commons-text)
 
 Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
