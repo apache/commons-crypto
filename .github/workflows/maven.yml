@@ -36,12 +36,12 @@ jobs:
     strategy:
       matrix:
         # ubuntu-latest uses OpenSSL 3 which breaks tests
-        os: [macos-latest, ubuntu-18.04, windows-latest]
+        os: [macos-latest, ubuntu-20.04, windows-latest]
         java: [ 8, 11, 17 ]
         experimental: [false]
 #        include:
 #          - java: 18-ea
-#            os: ubuntu-18.04
+#            os: ubuntu-20.04
 #            experimental: true        
 #          - java: 18-ea
 #            os: windows-latest
@@ -90,7 +90,7 @@ jobs:
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/miniconda/lib"
     - name: Run OpenSslJna (JNA - Ubuntu)
-      if: ${{ matrix.os == 'ubuntu-18.04' }}
+      if: ${{ matrix.os == 'ubuntu-20.04' }}
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
     - name: Run OpenSslJna (JNA - Windows)
