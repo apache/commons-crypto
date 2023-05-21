@@ -68,7 +68,7 @@ public final class Utils {
                   }
               }
           } catch (final Exception ex) {
-              System.err.println("Could not load '" + SYSTEM_PROPERTIES_FILE + "' from classpath: " + ex.toString());
+              System.err.println("Could not load '" + SYSTEM_PROPERTIES_FILE + "' from classpath: " + ex);
           }
           return defaultedProps;
       }
