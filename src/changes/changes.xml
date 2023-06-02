@@ -64,7 +64,10 @@
 
   <body>
     <release version="1.2.1" date="202X-MM-DD" description="Minor release (Java 8, OpenSSL 1.1.1)">
+      <!-- FIX -->
       <action                    type="fix" dev="ggregory" due-to="Martin Wittlinger">Refactor: Unnecessary toString() call #224.</action>
+      <!-- UPDATE -->
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump commons-parent from 56 to 58 #225.</action>
     </release>
     <release version="1.2.0" date="2023-01-14" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
