@@ -211,7 +211,7 @@ public final class Utils {
 
     /**
      * Splits class names sequence into substrings, Trim each substring into an
-     * entry,and returns an list of the entries.
+     * entry, and returns an list of the entries.
      *
      * @param clazzNames a string consist of a list of the entries joined by a
      *        delimiter, may be null or empty in which case an empty list is returned.

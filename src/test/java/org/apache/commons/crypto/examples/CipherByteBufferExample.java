@@ -78,7 +78,7 @@ public class CipherByteBufferExample {
             // Show the data is there
             System.out.println("inBuffer=" + asString(inBuffer));
 
-            // Initializes the cipher with ENCRYPT_MODE,key and iv.
+            // Initializes the cipher with ENCRYPT_MODE, key and iv.
             encipher.init(Cipher.ENCRYPT_MODE, key, iv);
             // Continues a multiple-part encryption/decryption operation for byte buffer.
             updateBytes = encipher.update(inBuffer, outBuffer);

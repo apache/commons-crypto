@@ -493,7 +493,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Overrides the {@link InputStream#markSupported()}.
      *
-     * @return false,the {@link CtrCryptoInputStream} don't support the mark
+     * @return false, the {@link CtrCryptoInputStream} don't support the mark
      *         method.
      */
     @Override

@@ -329,7 +329,7 @@ public abstract class AbstractCipherStreamTest {
         assertEquals(ex.getMessage(),"Illegal parameters");
 
         // Test Invalid Key
-        assertThrows(IOException.class, () -> newCryptoInputStream(transformation,props, new ByteArrayInputStream(encData),
+        assertThrows(IOException.class, () -> newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData),
                 AES.newSecretKeySpec(new byte[10]), new IvParameterSpec(iv), withChannel));
         // Test Invalid Key
         assertThrows(IOException.class, () -> newCryptoOutputStream(transformation, props, baos, new byte[10],

@@ -97,7 +97,7 @@ final class OpenSslCipher implements CryptoCipher {
     public int doFinal(final byte[] input, final int inputOffset, final int inputLen,
             final byte[] output, final int outputOffset) throws ShortBufferException,
             IllegalBlockSizeException, BadPaddingException {
-        return openSslEngine.doFinal(input, inputOffset, inputLen, output,outputOffset);
+        return openSslEngine.doFinal(input, inputOffset, inputLen, output, outputOffset);
     }
 
     /**
