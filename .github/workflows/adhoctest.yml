@@ -25,6 +25,9 @@ on:
     paths:
       - '**/workflows/adhoctest.yml'
 
+permissions:
+  contents: read
+
 jobs:
   build:
 

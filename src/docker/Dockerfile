@@ -17,7 +17,7 @@
 # for Linux 64-bit and 32-bit, and Windows 64-bit and 32-bit.
 # See the README for further details.
 
-FROM ubuntu:18.04
+FROM ubuntu:18.04@sha256:152dc042452c496007f07ca9127571cb9c29697f42acbfad72324b2bb2e43c98
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV MAVEN_HOME=/opt/maven
