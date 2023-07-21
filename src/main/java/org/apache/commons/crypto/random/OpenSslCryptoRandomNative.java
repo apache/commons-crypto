@@ -32,11 +32,11 @@ final class OpenSslCryptoRandomNative {
     public static native void initSR();
 
     /**
-     * Judges whether use {@link OpenSslCryptoRandomNative} to generate the
+     * Judges whether to use {@link OpenSslCryptoRandomNative} to generate the
      * user-specified number of random bits.
      *
      * @param bytes the array to be filled in with random bytes.
-     * @return true if use {@link OpenSslCryptoRandomNative} to generate the
+     * @return {@code true} if use {@link OpenSslCryptoRandomNative} to generate the
      *         user-specified number of random bits.
      */
     public static native boolean nextRandBytes(byte[] bytes);

@@ -157,7 +157,7 @@ final class OsInfo {
     }
 
     /**
-     * The main method. This is used by the JNI make processing in Makefile.common
+     * The main method. This is used by the JNI make processing in {@code Makefile.common}
      *
      * @param args the argv.
      */

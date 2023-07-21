@@ -54,7 +54,7 @@
               </a>
             </td>
             <td>
-              The interface wraps the underlying stream and it automatically encrypts
+              The interface wraps the underlying stream, and it automatically encrypts
               the stream when data is written and decrypts the stream when data is
               read.
             </td>
@@ -94,7 +94,7 @@
 
         <h4>Usage of Cipher API</h4>
         <p>
-          Cipher provides an cryptographic interface for encryption and decryption.
+          Cipher provides a cryptographic interface for encryption and decryption.
           We provide two kind of implementations: JCE Cipher and OpenSSL Cipher. The
           JCE implementation uses JCE provider and the OpenSSL implementation uses
           Intel&reg; AES New Instructions (Intel&reg; AES NI).

@@ -65,7 +65,7 @@ public class NativeCodeLoaderTest {
     @Test
     @Disabled("Seems to cause issues with other tests on Linux; disable for now")
     // It causes problems because the system properties are temporarily changed.
-    // However properties are only fetched once, thus the test either corrupts the settings
+    // However, properties are only fetched once, thus the test either corrupts the settings
     // or does not work, depending on the order of tests.
     public void testUnSuccessfulLoad() throws Exception {
         final String nameKey = System.getProperty(Crypto.LIB_NAME_KEY);

@@ -37,7 +37,7 @@ limitations under the License.
       <li>Cipher API for low level cryptographic operations.</li>
       <li>Secure true random number generator.</li>
       <li>Java stream API for high level stream
-        encyrption/decryption.
+        encryption/decryption.
       </li>
       <li>High performance AES encryption/decryption optimized with Intel AES-NI.
       </li>

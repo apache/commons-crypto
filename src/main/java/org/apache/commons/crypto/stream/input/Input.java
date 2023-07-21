@@ -28,7 +28,7 @@ import org.apache.commons.crypto.stream.CryptoInputStream;
 /**
  * The Input interface abstract the input source of
  * {@link CryptoInputStream} so that different implementation of input can
- * be used. The implementation Input interface will usually wraps an input
+ * be used. The implementation Input interface will usually wrap an input
  * mechanism such as {@link InputStream} or
  * {@link ReadableByteChannel}.
  */

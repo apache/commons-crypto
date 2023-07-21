@@ -69,11 +69,11 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Loads a class by name, returning null rather than throwing an exception if it
+     * Loads a class by name, returning {@code null} rather than throwing an exception if it
      * couldn't be loaded. This is to avoid the overhead of creating an exception.
      *
      * @param name the class name.
-     * @return the class object, or null if it could not be found.
+     * @return the class object, or {@code null} if it could not be found.
      */
     private static Class<?> getClassByNameOrNull(final String name) {
         final Map<String, WeakReference<Class<?>>> map;

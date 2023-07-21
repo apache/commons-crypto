@@ -43,14 +43,14 @@ public final class OpenSslJna {
     }
 
     /**
-     * @return The cipher class of JNA implementation
+     * @return The cipher class of JNA implementation.
      */
     public static Class<? extends CryptoCipher> getCipherClass() {
         return OpenSslJnaCipher.class;
     }
 
     /**
-     * @return The random class of JNA implementation
+     * @return The random class of JNA implementation.
      */
     public static Class<? extends CryptoRandom> getRandomClass() {
         return OpenSslJnaCryptoRandom.class;
@@ -68,14 +68,14 @@ public final class OpenSslJna {
     }
 
     /**
-     * @return the error of JNA
+     * @return the error of JNA.
      */
     public static Throwable initialisationError() {
         return OpenSslNativeJna.INIT_ERROR;
     }
 
     /**
-     * @return true if JNA native loads successfully
+     * @return {@code true} if JNA native loads successfully.
      */
     public static boolean isEnabled() {
         return OpenSslNativeJna.INIT_OK;

@@ -33,7 +33,7 @@ limitations under the License.
       <dl>
         <dt>OPENSSL</dt><dd>OpenSSL based JNI implementation shipped with Commons Crypto.</dd>
         <dt>JAVA</dt><dd>The SecureRandom implementation from the JVM.</dd>
-        <dt>OS</dt><dd>The OS random device implementation. May not be available on some operation systems.</dd>
+        <dt>OS</dt><dd>The OS random device implementation. May not be available on some operating systems.</dd>
       </dl>
 
       When calling <code>CryptoRandomFactory.getCryptoRandom()</code>, Commons Crypto tries to use the OpenSSL
