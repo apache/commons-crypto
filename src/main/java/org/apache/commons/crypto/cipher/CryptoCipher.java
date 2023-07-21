@@ -118,7 +118,7 @@ public interface CryptoCipher extends Closeable {
      *         policy files).
      * @throws InvalidAlgorithmParameterException if the given algorithm
      *         parameters are inappropriate for this cipher, or this cipher
-     *         requires algorithm parameters and {@code params} is null, or
+     *         requires algorithm parameters and {@code params} is {@code null}, or
      *         the given algorithm parameters imply a cryptographic strength
      *         that would exceed the legal limits (as determined from the
      *         configured jurisdiction policy files).

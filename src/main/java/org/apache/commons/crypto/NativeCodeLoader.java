@@ -68,10 +68,10 @@ final class NativeCodeLoader {
      * Copied from Apache Commons IO 2.5.
      * </p>
      *
-     * @param inputStream the InputStream to wrap or return (not null)
+     * @param inputStream the InputStream to wrap or return (not {@code null})
      * @return the given InputStream or a new {@link BufferedInputStream} for the
      *         given InputStream
-     * @throws NullPointerException if the input parameter is null
+     * @throws NullPointerException if the input parameter is {@code null}
      */
     @SuppressWarnings("resource")
     private static BufferedInputStream buffer(final InputStream inputStream) {
@@ -90,7 +90,7 @@ final class NativeCodeLoader {
      *
      * @param input1 the input1.
      * @param input2 the input2.
-     * @return true if in1 and in2 is equal, else false.
+     * @return {@code true} if in1 and in2 is equal, else {@code false}.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource")

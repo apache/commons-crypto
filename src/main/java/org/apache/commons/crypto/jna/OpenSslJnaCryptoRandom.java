@@ -55,7 +55,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
      * Constructs a {@link OpenSslJnaCryptoRandom}.
      *
      * @param props the configuration properties (not used)
-     * @throws GeneralSecurityException  if could not enable JNA access
+     * @throws GeneralSecurityException  if JNA access could not be enabled
      */
     public OpenSslJnaCryptoRandom(final Properties props) //NOPMD
             throws GeneralSecurityException {
@@ -105,7 +105,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
     /**
      * Closes the rdrand engine.
-     * @param closing true when called while closing.
+     * @param closing {@code true} when called while closing.
      */
     private void closeRdrandEngine(final boolean closing) {
 
@@ -118,7 +118,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
     /**
      * Checks if rdrand engine is used to retrieve random bytes
      *
-     * @return true if rdrand is used, false if default engine is used
+     * @return {@code true} if rdrand is used, {@code false} if default engine is used
      */
     public boolean isRdrandEnabled() {
         return rdrandEnabled;
@@ -151,7 +151,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
     /**
      * @param retVal the result value of error.
-     * @param closing true when called while closing.
+     * @param closing {@code true} when called while closing.
      */
     private void throwOnError(final int retVal, final boolean closing) {
         if (retVal != 1) {

@@ -83,7 +83,7 @@ final class OpenSslCryptoRandom implements CryptoRandom {
     /**
      * Judges whether native library was successfully loaded and initialized.
      *
-     * @return true if library was loaded and initialized
+     * @return {@code true} if library was loaded and initialized
      */
     public static boolean isNativeCodeEnabled() {
         return nativeEnabled;

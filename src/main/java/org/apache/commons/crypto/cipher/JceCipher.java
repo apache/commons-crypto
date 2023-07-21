@@ -152,7 +152,7 @@ class JceCipher implements CryptoCipher {
      * @param params the algorithm parameters
      * @throws InvalidAlgorithmParameterException if the given algorithm
      *         parameters are inappropriate for this cipher, or this cipher
-     *         requires algorithm parameters and {@code params} is null, or
+     *         requires algorithm parameters and {@code params} is {@code null}, or
      *         the given algorithm parameters imply a cryptographic strength
      *         that would exceed the legal limits (as determined from the
      *         configured jurisdiction policy files).
@@ -218,7 +218,7 @@ class JceCipher implements CryptoCipher {
      * @param aad the buffer containing the Additional Authentication Data
      *
      * @throws IllegalArgumentException if the {@code aad}
-     * byte array is null
+     * byte array is {@code null}
      * @throws IllegalStateException if this cipher is in a wrong state
      * (e.g., has not been initialized), does not accept AAD, or if
      * operating in either GCM or CCM mode and one of the {@code update}
@@ -247,7 +247,7 @@ class JceCipher implements CryptoCipher {
      * @param aad the buffer containing the Additional Authentication Data
      *
      * @throws IllegalArgumentException if the {@code aad}
-     * byte array is null
+     * byte array is {@code null}
      * @throws IllegalStateException if this cipher is in a wrong state
      * (e.g., has not been initialized), does not accept AAD, or if
      * operating in either GCM or CCM mode and one of the {@code update}

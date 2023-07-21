@@ -84,7 +84,7 @@ public final class Utils {
      * the calling method.
      *
      * @param expression a boolean expression.
-     * @throws IllegalArgumentException if expression is false.
+     * @throws IllegalArgumentException if expression is {@code false}.
      */
     public static void checkArgument(final boolean expression) {
         if (!expression) {
@@ -97,9 +97,8 @@ public final class Utils {
      *
      * @param expression a boolean expression.
      * @param errorMessage the exception message to use if the check fails; will
-     *        be converted to a string using <code>String
-     *                     .valueOf(Object)</code>.
-     * @throws IllegalArgumentException if expression is false.
+     *        be converted to a string using <code>String.valueOf(Object)</code>.
+     * @throws IllegalArgumentException if expression is {@code false}.
      */
     public static void checkArgument(final boolean expression, final Object errorMessage) {
         if (!expression) {
@@ -109,12 +108,12 @@ public final class Utils {
 
     /**
      * Ensures that an object reference passed as a parameter to the calling
-     * method is not null.
+     * method is not {@code null}.
      *
      * @param <T> the type of the object reference to be checked.
      * @param reference an object reference.
      * @return the non-null reference that was validated.
-     * @throws NullPointerException if reference is null.
+     * @throws NullPointerException if reference is {@code null}.
      * @deprecated Use {@link Objects#requireNonNull(Object)}.
      */
     @Deprecated
@@ -127,7 +126,7 @@ public final class Utils {
      * instance, but not involving any parameters to the calling method.
      *
      * @param expression a boolean expression.
-     * @throws IllegalStateException if expression is false.
+     * @throws IllegalStateException if expression is {@code false}.
      */
     public static void checkState(final boolean expression) {
         checkState(expression, null);
@@ -138,8 +137,8 @@ public final class Utils {
      * instance, but not involving any parameters to the calling method.
      *
      * @param expression a boolean expression.
-     * @param message Error message for the exception when the expression is false.
-     * @throws IllegalStateException if expression is false.
+     * @param message Error message for the exception when the expression is {@code false}.
+     * @throws IllegalStateException if expression is {@code false}.
      */
     public static void checkState(final boolean expression, final String message) {
         if (!expression) {
@@ -151,7 +150,7 @@ public final class Utils {
      * Helper method to create a CryptoCipher instance and throws only
      * IOException.
      *
-     * @param properties The {@code Properties} class represents a set of
+     * @param properties The {@link Properties} class represents a set of
      *        properties.
      * @param transformation the name of the transformation, e.g.,
      * <i>AES/CBC/PKCS5Padding</i>.
@@ -211,10 +210,10 @@ public final class Utils {
 
     /**
      * Splits class names sequence into substrings, Trim each substring into an
-     * entry, and returns an list of the entries.
+     * entry, and returns a list of the entries.
      *
      * @param clazzNames a string consist of a list of the entries joined by a
-     *        delimiter, may be null or empty in which case an empty list is returned.
+     *        delimiter, may be {@code null} or empty in which case an empty list is returned.
      * @param separator a delimiter for the input string.
      * @return a list of class entries.
      */

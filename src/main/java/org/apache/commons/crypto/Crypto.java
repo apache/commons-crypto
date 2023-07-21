@@ -89,7 +89,7 @@ public final class Crypto {
      * by Maven.
      * </p>
      *
-     * @return the version; may be null if not found
+     * @return the version; may be {@code null} if not found
      */
     public static String getComponentName() {
         // Note: the component properties file allows the method to work without needing
@@ -105,7 +105,7 @@ public final class Crypto {
      * by Maven.
      * </p>
      *
-     * @return the version; may be null if not found
+     * @return the version; may be {@code null} if not found
      */
     public static String getComponentVersion() {
         // Note: the component properties file allows the method to work without needing
@@ -116,7 +116,7 @@ public final class Crypto {
     /**
      * The loading error throwable, if loading failed.
      *
-     * @return null, unless loading failed.
+     * @return {@code null}, unless loading failed.
      */
     public static Throwable getLoadingError() {
         return NativeCodeLoader.getLoadingError();
@@ -137,7 +137,7 @@ public final class Crypto {
     /**
      * Checks whether the native code has been successfully loaded for the platform.
      *
-     * @return true if the native code has been loaded successfully.
+     * @return {@code true} if the native code has been loaded successfully.
      */
     public static boolean isNativeCodeLoaded() {
         return NativeCodeLoader.isNativeCodeLoaded();

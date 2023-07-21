@@ -487,7 +487,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * This method is executed immediately after decryption. Checks whether
      * cipher should be updated and recalculate padding if needed.
      *
-     * @param position the given position in the data..
+     * @param position the given position in the data.
      * @return the byte.
      * @throws IOException if an I/O error occurs.
      */

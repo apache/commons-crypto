@@ -43,7 +43,7 @@ final class OpenSslNative {
      * @param context The cipher context address
      * @param type CtrlValues
      * @param arg argument like a tag length
-     * @param data byte buffer or null
+     * @param data byte buffer or {@code null}
      * @return return 0 if there is any error, else return 1.
      */
     public static native int ctrl(long context, int type, int arg, byte[] data);

@@ -86,7 +86,7 @@ final class OpenSsl {
      * @param transformation the name of the transformation, e.g.,
      *        AES/CTR/NoPadding.
      * @return OpenSslCipher an {@code OpenSslCipher} object
-     * @throws NoSuchAlgorithmException if {@code transformation} is null,
+     * @throws NoSuchAlgorithmException if {@code transformation} is {@code null},
      *         empty, in an invalid format, or if OpenSsl doesn't implement the
      *         specified algorithm.
      * @throws NoSuchPaddingException if {@code transformation} contains a
@@ -108,7 +108,7 @@ final class OpenSsl {
     /**
      * Gets the failure reason when loading OpenSsl native.
      *
-     * @return the failure reason; null if it was loaded and initialized successfully
+     * @return the failure reason; {@code null} if it was loaded and initialized successfully
      */
     public static Throwable getLoadingFailureReason() {
         return loadingFailureReason;
