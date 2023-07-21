@@ -67,6 +67,7 @@
       <!-- FIX -->
       <action                    type="fix" dev="ggregory" due-to="Martin Wittlinger">Refactor: Unnecessary toString() call #224.</action>
       <action dev="ggregory"     type="fix" due-to="step-security-bot, Gary Gregory">[StepSecurity] ci: Harden GitHub Actions #228.</action>
+      <action dev="ggregory"     type="fix" due-to="Martin Wiesner">Fixes grammar and typos in Javadoc #233.</action>      
       <!-- UPDATE -->
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump commons-parent from 56 to 58 #225.</action>
     </release>
