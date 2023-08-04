@@ -372,7 +372,7 @@ The following provides more details on the included cryptographic software:
       <properties>
         <skipTests>true</skipTests>
         <benchmark>org.apache</benchmark>
-        <jmh.version>1.36</jmh.version>
+        <jmh.version>1.37</jmh.version>
       </properties>
 
       <dependencies>
