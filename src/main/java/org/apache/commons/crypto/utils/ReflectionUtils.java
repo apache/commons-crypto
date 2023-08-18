@@ -35,7 +35,7 @@ public final class ReflectionUtils {
      * A unique class which is used as a sentinel value in the caching for
      * getClassByName. {@link #getClassByNameOrNull(String)}.
      */
-    private static abstract class NegativeCacheSentinel {
+    private static abstract class AbstractNegativeCacheSentinel {
         // noop
     }
 
@@ -51,7 +51,7 @@ public final class ReflectionUtils {
     /**
      * Sentinel value to store negative cache results in {@link #CACHE_CLASSES}.
      */
-    private static final Class<?> NEGATIVE_CACHE_SENTINEL = NegativeCacheSentinel.class;
+    private static final Class<?> NEGATIVE_CACHE_SENTINEL = AbstractNegativeCacheSentinel.class;
 
     /**
      * Loads a class by name.
