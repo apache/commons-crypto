@@ -33,12 +33,13 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     env:
-      LD_LIBRARY_PATH:  "/usr/local"
-      DYLD_LIBRARY_PATH:  "/usr/local"
-      ZLD_LIBRARY_PATH:  "/usr/local"
-      ZDYLD_LIBRARY_PATH:  "/usr/local"
-      DYLD:  "/usr/local"
-      DYLD_:  "/usr/local"
+      # LD_LIBRARY_PATH:  "/usr/local"
+      # DYLD_LIBRARY_PATH:  "/usr/local"
+      # ZLD_LIBRARY_PATH:  "/usr/local"
+      # ZDYLD_LIBRARY_PATH:  "/usr/local"
+      # DYLD:  "/usr/local"
+      # DYLD_:  "/usr/local"
+      commons.crypto.debug: true
     strategy:
       matrix:
         os: [macos-11, macos-12]
@@ -78,7 +79,7 @@ jobs:
     - name: Run sample OpenSslJna
       if: always()
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/Miniconda/Library/bin"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/miniconda/lib"                                                             -D"jna.library.path=/usr/local/miniconda/lib"
     # - name: Find OpenSSL Mac
     #   if: ${{ matrix.os == 'macos-latest' }}
     #   run: |
