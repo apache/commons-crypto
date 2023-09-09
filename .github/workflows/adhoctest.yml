@@ -63,8 +63,7 @@ jobs:
       run: openssl version -a
     - name: Find libcrypto
       run: |
-        cd C:
-        DIR /S libcrypto.dll
+        dir -s c:\ libcrypto.dll
     # - name: Compile with Maven
     #   env:
     #     OPENSSL_HOME: "C:\\Miniconda\\Library"
