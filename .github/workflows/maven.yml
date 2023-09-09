@@ -81,16 +81,15 @@ jobs:
       run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
     - name: Run Crypto (JNI)
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
-    - name: Run OpenSslJna (JNA - macOS)
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
+    - name: Run OpenSslJna (JNA - don't override lib)
+      run: |
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true"
+    - name: Run OpenSslJna (JNA - macOS from openssl version -a ENGINESDIR)
       if: ${{ matrix.os == 'macos-11' }}
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/miniconda/lib"
-    - name: Run OpenSslJna (JNA - Ubuntu)
-      if: ${{ matrix.os == 'ubuntu-20.04' }}
-      run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
-    - name: Run OpenSslJna (JNA - Windows)
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/Cellar/openssl@1.1/1.1.1v/lib" -D"commons.crypto.debug=true"
+    - name: Run OpenSslJna (JNA - Windows from openssl version -a ENGINESDIR)
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:\Miniconda\Library\bin"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path="C:\Program Files\OpenSSL\lib" -D"commons.crypto.debug=true"
