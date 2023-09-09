@@ -61,14 +61,14 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version -a
-    - name: Build with Maven
+    - name: Compile with Maven
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-      run: mvn -V test -D"rat.skip" -D"animal.sniffer.skip" --no-transfer-progress -DtrimStackTrace=false
+      run: mvn -V compile -D"rat.skip" -D"animal.sniffer.skip" --no-transfer-progress -DtrimStackTrace=false
     - name: Run sample Crypto
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
-    - name: Run sample OpenSslJna
+    - name: Run sample OpenSslJna (default library)
       if: always()
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true"
@@ -76,10 +76,14 @@ jobs:
     #   if: always()
     #   run: |
     #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:/Miniconda/Library/bin"
-    - name: Run sample OpenSslJna
+    - name: Run sample OpenSslJna (miniconda lib)
       if: always()
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/miniconda/lib" -D"commons.crypto.debug=true"
+    - name: Run sample OpenSslJna (Cellar lib from openssl version -a)
+      if: always()
+      run: |
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/Cellar/openssl@1.1/1.1.1v/lib" -D"commons.crypto.debug=true"
     # - name: Find OpenSSL Mac
     #   if: ${{ matrix.os == 'macos-latest' }}
     #   run: |
