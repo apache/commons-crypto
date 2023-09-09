@@ -29,7 +29,6 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.apache.commons.crypto.utils.AES;
-import org.apache.commons.crypto.utils.Utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,7 +38,7 @@ public abstract class AbstractBenchmark {
                 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16 };
     private static final byte[] IV = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
                 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
-    private static final SecretKeySpec keySpec = Utils.newSecretKeySpec(KEY);
+    private static final SecretKeySpec keySpec = AES.newSecretKeySpec(KEY);
     private static final IvParameterSpec ivSpec = new IvParameterSpec(IV);
     private static final byte[] BUFFER = new byte[1000];
 
