@@ -619,6 +619,20 @@ The following provides more details on the included cryptographic software:
           <preparationGoals>verify</preparationGoals>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <!-- These exclusions must agree with the ones in the report section -->
+          <excludes>
+            <exclude>.gitattributes</exclude>
+            <exclude>.gitignore</exclude>
+            <exclude>.git/**</exclude>
+            <exclude>.idea/**</exclude>
+            <exclude>**/build/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <reporting>
@@ -710,6 +724,7 @@ The following provides more details on the included cryptographic software:
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
+          <!-- These exclusions must agree with the ones in the build section -->
           <excludes>
             <exclude>.gitattributes</exclude>
             <exclude>.gitignore</exclude>
