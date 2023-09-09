@@ -41,7 +41,7 @@ jobs:
       DYLD_:  "/usr/local"
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-20.04]
+        os: [macos-11, macos-12]
         # os: [windows-latest]
         java: [ 8 ]
         # ref: [ 'rel/commons-crypto-1.1.0', master ]
@@ -49,37 +49,37 @@ jobs:
       fail-fast: false
 
     steps:
-    # - uses: actions/checkout@v3.0.2
-    #   with:
-    #     persist-credentials: false
-    #   with:
-    #     ref: ${{ matrix.ref }}
-    # - name: Set up JDK ${{ matrix.java }}
-    #   uses: actions/setup-java@v3.5.1
-    #   with:
-    #     distribution: 'temurin'
-    #     java-version: ${{ matrix.java }}
-    # - name: OpenSSL version
-    #   run: openssl version -a
-    # - name: Build with Maven
-    #   env:
-    #     OPENSSL_HOME: "C:\\Miniconda\\Library"
-    #   run: mvn -V test -D"rat.skip" -D"animal.sniffer.skip" --no-transfer-progress -DtrimStackTrace=false
-    # - name: Run sample Crypto
-    #   run: |
-    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
-    # - name: Run sample OpenSslJna
-    #   if: always()
-    #   run: |
-    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
+    - uses: actions/checkout@v3.0.2
+      with:
+        persist-credentials: false
+      with:
+        ref: ${{ matrix.ref }}
+    - name: Set up JDK ${{ matrix.java }}
+      uses: actions/setup-java@v3.5.1
+      with:
+        distribution: 'temurin'
+        java-version: ${{ matrix.java }}
+    - name: OpenSSL version
+      run: openssl version -a
+    - name: Build with Maven
+      env:
+        OPENSSL_HOME: "C:\\Miniconda\\Library"
+      run: mvn -V test -D"rat.skip" -D"animal.sniffer.skip" --no-transfer-progress -DtrimStackTrace=false
+    - name: Run sample Crypto
+      run: |
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
+    - name: Run sample OpenSslJna
+      if: always()
+      run: |
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
     # - name: Run sample OpenSslJna
     #   if: always()
     #   run: |
     #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:/Miniconda/Library/bin"
-    # - name: Run sample OpenSslJna
-    #   if: always()
-    #   run: |
-    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/Miniconda/Library/bin"
+    - name: Run sample OpenSslJna
+      if: always()
+      run: |
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/Miniconda/Library/bin"
     # - name: Find OpenSSL Mac
     #   if: ${{ matrix.os == 'macos-latest' }}
     #   run: |
