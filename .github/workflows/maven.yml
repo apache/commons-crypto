@@ -93,4 +93,4 @@ jobs:
     - name: Run OpenSslJna (JNA - Windows from openssl version -a ENGINESDIR)
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path="C:\Program^ Files\OpenSSL\lib" -D"commons.crypto.debug=true"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:\Program Files\OpenSSL\lib" -D"commons.crypto.debug=true"
