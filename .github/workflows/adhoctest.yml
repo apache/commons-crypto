@@ -32,14 +32,14 @@ jobs:
   build:
 
     runs-on: ${{ matrix.os }}
-    env:
+    # env:
       # LD_LIBRARY_PATH:  "/usr/local"
       # DYLD_LIBRARY_PATH:  "/usr/local"
       # ZLD_LIBRARY_PATH:  "/usr/local"
       # ZDYLD_LIBRARY_PATH:  "/usr/local"
       # DYLD:  "/usr/local"
       # DYLD_:  "/usr/local"
-      commons.crypto.debug: true
+      # commons.crypto.debug: true
     strategy:
       matrix:
         os: [macos-11, macos-12]
@@ -67,11 +67,11 @@ jobs:
       run: mvn -V test -D"rat.skip" -D"animal.sniffer.skip" --no-transfer-progress -DtrimStackTrace=false
     - name: Run sample Crypto
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
     - name: Run sample OpenSslJna
       if: always()
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true"
     # - name: Run sample OpenSslJna
     #   if: always()
     #   run: |
@@ -79,7 +79,7 @@ jobs:
     - name: Run sample OpenSslJna
       if: always()
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/miniconda/lib"                                                             -D"jna.library.path=/usr/local/miniconda/lib"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/miniconda/lib" -D"commons.crypto.debug=true"
     # - name: Find OpenSSL Mac
     #   if: ${{ matrix.os == 'macos-latest' }}
     #   run: |
