@@ -42,7 +42,7 @@ jobs:
       # commons.crypto.debug: true
     strategy:
       matrix:
-        os: [macos-11, macos-12]
+        os: [macos-latest]
         # os: [windows-latest]
         java: [ 8 ]
         # ref: [ 'rel/commons-crypto-1.1.0', master ]
