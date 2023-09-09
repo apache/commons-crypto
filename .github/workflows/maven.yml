@@ -82,10 +82,6 @@ jobs:
     - name: Run Crypto (JNI)
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto"
-    - name: Run Crypto (JNI - macOS)
-      if: ${{ matrix.os == 'macos-11' }}
-      run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"jni.library.path=/usr/local/miniconda/lib"
     - name: Run OpenSslJna (JNA - macOS)
       if: ${{ matrix.os == 'macos-11' }}
       run: |
