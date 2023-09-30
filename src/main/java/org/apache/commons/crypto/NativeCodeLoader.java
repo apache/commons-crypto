@@ -17,7 +17,6 @@
  */
 package org.apache.commons.crypto;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,11 +24,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.PosixFileAttributes;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
 import org.apache.commons.crypto.utils.Utils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * A helper to load the native code i.e. libcommons-crypto.so. This handles the
@@ -44,11 +43,6 @@ final class NativeCodeLoader {
 
     private static final String NATIVE_LIBNAME_ALT = "lib" + NATIVE_LIBNAME + ".jnilib";
 
-    /**
-     * End of file pseudo-character.
-     */
-    private static final int EOF = -1;
-
     private static final Throwable libraryLoadingError;
 
     private static final boolean libraryLoaded;
@@ -59,59 +53,6 @@ final class NativeCodeLoader {
         libraryLoaded = libraryLoadingError == null;
         debug("%s libraryLoaded = %s, libraryLoadingError = %s", SIMPLE_NAME, libraryLoaded, libraryLoadingError);
         debug("%s static init end", SIMPLE_NAME);
-    }
-
-    /**
-     * Returns the given InputStream if it is already a {@link BufferedInputStream},
-     * otherwise creates a BufferedInputStream from the given InputStream.
-     * <p>
-     * Copied from Apache Commons IO 2.5.
-     * </p>
-     *
-     * @param inputStream the InputStream to wrap or return (not {@code null})
-     * @return the given InputStream or a new {@link BufferedInputStream} for the
-     *         given InputStream
-     * @throws NullPointerException if the input parameter is {@code null}
-     */
-    @SuppressWarnings("resource")
-    private static BufferedInputStream buffer(final InputStream inputStream) {
-        // reject null early on rather than waiting for IO operation to fail
-        // not checked by BufferedInputStream
-        Objects.requireNonNull(inputStream, "inputStream");
-        return inputStream instanceof BufferedInputStream ? (BufferedInputStream) inputStream
-                : new BufferedInputStream(inputStream);
-    }
-
-    /**
-     * Checks whether in1 and in2 is equal.
-     * <p>
-     * Copied from Apache Commons IO 2.5.
-     * </p>
-     *
-     * @param input1 the input1.
-     * @param input2 the input2.
-     * @return {@code true} if in1 and in2 is equal, else {@code false}.
-     * @throws IOException if an I/O error occurs.
-     */
-    @SuppressWarnings("resource")
-    private static boolean contentsEquals(final InputStream input1, final InputStream input2) throws IOException {
-        if (input1 == input2) {
-            return true;
-        }
-        if (input1 == null ^ input2 == null) {
-            return false;
-        }
-        final BufferedInputStream bufferedInput1 = buffer(input1);
-        final BufferedInputStream bufferedInput2 = buffer(input2);
-        int ch = bufferedInput1.read();
-        while (EOF != ch) {
-            final int ch2 = bufferedInput2.read();
-            if (ch != ch2) {
-                return false;
-            }
-            ch = bufferedInput1.read();
-        }
-        return bufferedInput2.read() == EOF;
     }
 
     /**
@@ -185,7 +126,7 @@ final class NativeCodeLoader {
             try (InputStream nativeInputStream = NativeCodeLoader.class.getResourceAsStream(nativeLibraryFilePath)) {
                 try (InputStream extractedLibIn = Files.newInputStream(path)) {
                     debug("Validating '%s'...", extractedLibFile);
-                    if (!contentsEquals(nativeInputStream, extractedLibIn)) {
+                    if (!IOUtils.contentEquals(nativeInputStream, extractedLibIn)) {
                         throw new IllegalStateException(String.format("Failed to write a native library file %s to %s",
                                 nativeLibraryFilePath, extractedLibFile));
                     }

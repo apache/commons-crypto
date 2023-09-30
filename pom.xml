@@ -742,6 +742,11 @@ The following provides more details on the included cryptographic software:
       <artifactId>jna</artifactId>
       <version>${jna.version}</version>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.14.0</version>
+    </dependency>
     <!-- testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
