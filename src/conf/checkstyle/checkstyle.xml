@@ -38,5 +38,11 @@ limitations under the License.
     <module name="JavadocMethod">
       <property name="accessModifiers" value="protected, public"/>
     </module>
+    <module name="ImportOrder">
+      <property name="option" value="top"/>
+      <property name="groups" value="java,javax,org"/>
+      <property name="ordered" value="true"/>
+      <property name="separated" value="true"/>
+    </module>
  </module>
 </module>
