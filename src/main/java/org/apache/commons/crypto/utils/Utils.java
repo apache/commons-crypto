@@ -37,7 +37,7 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
  */
 public final class Utils {
 
-    private static class DefaultPropertiesHolder {
+    private static final class DefaultPropertiesHolder {
         static final Properties DEFAULT_PROPERTIES = createDefaultProperties();
 
         /**

@@ -34,7 +34,7 @@ import org.apache.commons.crypto.utils.AES;
  */
 public final class Crypto {
 
-    private static class ComponentPropertiesHolder {
+    private static final class ComponentPropertiesHolder {
 
         static final Properties PROPERTIES = getComponentProperties();
 

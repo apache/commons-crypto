@@ -40,7 +40,7 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class PositionedCryptoInputStream extends CtrCryptoInputStream {
 
-    private static class CipherState {
+    private static final class CipherState {
 
         private final CryptoCipher cryptoCipher;
         private boolean reset;
