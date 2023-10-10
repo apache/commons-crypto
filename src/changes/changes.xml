@@ -69,7 +69,7 @@
       <action dev="ggregory"     type="fix" due-to="step-security-bot, Gary Gregory">[StepSecurity] Harden GitHub builds #228, #234.</action>
       <action dev="ggregory"     type="fix" due-to="Martin Wiesner">Fixes grammar and typos in Javadoc #233.</action>      
       <!-- UPDATE -->
-      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 61 #225.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 64 #225.</action>
     </release>
     <release version="1.2.0" date="2023-01-14" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
