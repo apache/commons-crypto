@@ -170,12 +170,12 @@ public class CryptoCipherFactory {
      * @param transformation  algorithm/mode/padding
      * @return CryptoCipher  the cipher  (defaults to OpenSslCipher)
      * @throws GeneralSecurityException if cipher initialize failed
-     * @throws IllegalArgumentException if no classname(s) were provided
+     * @throws IllegalArgumentException if no class name(s) were provided
      */
     public static CryptoCipher getCryptoCipher(final String transformation, final Properties properties) throws GeneralSecurityException {
         final List<String> names = Utils.splitClassNames(getCipherClassString(properties), ",");
         if (names.isEmpty()) {
-            throw new IllegalArgumentException("No classname(s) provided");
+            throw new IllegalArgumentException("No class name(s) provided");
         }
         CryptoCipher cipher = null;
         Exception lastException = null;

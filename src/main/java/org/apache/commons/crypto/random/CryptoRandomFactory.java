@@ -173,7 +173,7 @@ public class CryptoRandomFactory {
      * @param props the configuration properties.
      * @return CryptoRandom  the cryptoRandom object.
      * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
-     * @throws IllegalArgumentException if no classname(s) are provided
+     * @throws IllegalArgumentException if no class name(s) are provided
      */
     public static CryptoRandom getCryptoRandom(final Properties props)
             throws GeneralSecurityException {
