@@ -239,9 +239,9 @@ final class NativeCodeLoader {
                 System.load(absolutePath);
             } else {
                 // Load preinstalled library (in the path -Djava.library.path)
-                final String libname = NATIVE_LIBNAME;
-                debug("%s System.loadLibrary('%s')", SIMPLE_NAME, libname);
-                System.loadLibrary(libname);
+                final String libName = NATIVE_LIBNAME;
+                debug("%s System.loadLibrary('%s')", SIMPLE_NAME, libName);
+                System.loadLibrary(libName);
             }
             return null; // OK
         } catch (final Exception | UnsatisfiedLinkError t) {
