@@ -25,13 +25,19 @@ import com.sun.jna.ptr.PointerByReference;
 
 /**
  * This interface defines the API for the native code.
+ * <p>
  * All methods are listed here; individual implementations may not support them all.
+ * </p>
  */
 interface OpenSslInterfaceNativeJna {
 
     PointerByReference _ENGINE_by_id(final String string);
 
-    /** TODO Appears to be deprecated as of OpenSSL 1.1.0. */
+    /** 
+     * TODO Appears to be deprecated as of OpenSSL 1.1.0.
+     *
+     * @return See OpenSSL. 
+     */
     int _ENGINE_cleanup();
 
     int _ENGINE_finish(final PointerByReference rdrandEngine);
