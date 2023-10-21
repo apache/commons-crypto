@@ -184,20 +184,20 @@ public class CryptoRandomFactory {
         final StringBuilder errorMessage = new StringBuilder();
         CryptoRandom random = null;
         Exception lastException = null;
-        for (final String klassName : names) {
+        for (final String className : names) {
             try {
-                final Class<?> klass = ReflectionUtils.getClassByName(klassName);
+                final Class<?> klass = ReflectionUtils.getClassByName(className);
                 random = (CryptoRandom) ReflectionUtils.newInstance(klass, props);
                 break;
             } catch (final ClassCastException e) {
                 lastException = e;
-                errorMessage.append("Class: [" + klassName + "] is not a CryptoRandom.");
+                errorMessage.append("Class: [" + className + "] is not a CryptoRandom.");
             } catch (final ClassNotFoundException e) {
                 lastException = e;
-                errorMessage.append("CryptoRandom: [" + klassName + "] not found.");
+                errorMessage.append("CryptoRandom: [" + className + "] not found.");
             } catch (final Exception e) {
                 lastException = e;
-                errorMessage.append("CryptoRandom: [" + klassName + "] failed with " + e.getMessage());
+                errorMessage.append("CryptoRandom: [" + className + "] failed with " + e.getMessage());
             }
         }
 
