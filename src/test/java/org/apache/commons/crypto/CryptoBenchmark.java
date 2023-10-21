@@ -50,8 +50,23 @@ public class CryptoBenchmark extends AbstractBenchmark {
     private static final String CIPHER_JCE         = CryptoCipherFactory.CipherProvider.JCE.getClassName();
 
     @Benchmark
-    public void RandomCreateOS() throws Exception {
-        getRandom(RANDOM_OS);
+    public void CipherCreateJce() throws Exception {
+        getCipher(CIPHER_JCE);
+    }
+
+    @Benchmark
+    public void CipherCreateOpenssl() throws Exception {
+        getCipher(CIPHER_OPENSSL);
+    }
+
+    @Benchmark
+    public void CipherTestJce() throws Exception {
+        encipher(CIPHER_JCE);
+    }
+
+    @Benchmark
+    public void CipherTestOpenssl() throws Exception {
+        encipher(CIPHER_OPENSSL);
     }
 
     @Benchmark
@@ -64,9 +79,10 @@ public class CryptoBenchmark extends AbstractBenchmark {
         getRandom(RANDOM_OPENSSL);
     }
 
+    
     @Benchmark
-    public void RandomTestOS() throws Exception {
-        random(RANDOM_OS);
+    public void RandomCreateOS() throws Exception {
+        getRandom(RANDOM_OS);
     }
 
     @Benchmark
@@ -79,25 +95,9 @@ public class CryptoBenchmark extends AbstractBenchmark {
         random(RANDOM_OPENSSL);
     }
 
-    
     @Benchmark
-    public void CipherCreateJce() throws Exception {
-        getCipher(CIPHER_JCE);
-    }
-
-    @Benchmark
-    public void CipherTestJce() throws Exception {
-        encipher(CIPHER_JCE);
-    }
-
-    @Benchmark
-    public void CipherCreateOpenssl() throws Exception {
-        getCipher(CIPHER_OPENSSL);
-    }
-
-    @Benchmark
-    public void CipherTestOpenssl() throws Exception {
-        encipher(CIPHER_OPENSSL);
+    public void RandomTestOS() throws Exception {
+        random(RANDOM_OS);
     }
 
 }

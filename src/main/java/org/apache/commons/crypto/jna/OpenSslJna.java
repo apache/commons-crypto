@@ -30,16 +30,6 @@ public final class OpenSslJna {
     private final static String KEY_DEBUG = Crypto.CONF_PREFIX + "debug";
 
     /**
-     * Constructs a new instance.
-     *
-     * @deprecated Will be private in the next major release.
-     */
-    @Deprecated
-    public OpenSslJna() {
-        // empty
-    }
-    
-    /**
      * Logs debug messages.
      *
      * @param format See {@link String#format(String, Object...)}.
@@ -51,7 +41,7 @@ public final class OpenSslJna {
             System.out.println(String.format(Objects.toString(format), args));
         }
     }
-
+    
     /**
      * Gets the cipher class of JNA implementation.
      *
@@ -127,5 +117,15 @@ public final class OpenSslJna {
      */
     static String OpenSSLVersion(final int type) {
          return OpenSslNativeJna.OpenSSLVersion(type);
+    }
+
+    /**
+     * Constructs a new instance.
+     *
+     * @deprecated Will be private in the next major release.
+     */
+    @Deprecated
+    public OpenSslJna() {
+        // empty
     }
 }

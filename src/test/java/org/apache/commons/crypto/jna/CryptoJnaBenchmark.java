@@ -47,8 +47,13 @@ public class CryptoJnaBenchmark  extends AbstractBenchmark {
 
 
     @Benchmark
-    public void RandomTestOpensslJNA() throws Exception {
-        random(RANDOM_OPENSSL_JNA);
+    public void CipherCreateOpensslJna() throws Exception {
+        getCipher(CIPHER_OPENSSL_JNA);
+    }
+
+    @Benchmark
+    public void CipherTestOpensslJna() throws Exception {
+        encipher(CIPHER_OPENSSL_JNA);
     }
 
     @Benchmark
@@ -57,13 +62,8 @@ public class CryptoJnaBenchmark  extends AbstractBenchmark {
     }
 
     @Benchmark
-    public void CipherCreateOpensslJna() throws Exception {
-        getCipher(CIPHER_OPENSSL_JNA);
-    }
-
-    @Benchmark
-    public void CipherTestOpensslJna() throws Exception {
-        encipher(CIPHER_OPENSSL_JNA);
+    public void RandomTestOpensslJNA() throws Exception {
+        random(RANDOM_OPENSSL_JNA);
     }
 
 }

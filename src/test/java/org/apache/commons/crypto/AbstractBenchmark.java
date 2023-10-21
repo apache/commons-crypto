@@ -46,13 +46,6 @@ public abstract class AbstractBenchmark {
         super();
     }
 
-    protected void random(final String cipherClass) throws Exception {
-        final CryptoRandom random = getRandom(cipherClass);
-        random.nextBytes(new byte[1000]);
-        random.nextBytes(new byte[1000]);
-        random.close();
-    }
-
     protected void encipher(final String cipherClass) throws Exception {
         final CryptoCipher enCipher = getCipher(cipherClass);
         enCipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
@@ -65,6 +58,14 @@ public abstract class AbstractBenchmark {
         enCipher.close();
     }
 
+    protected CryptoCipher getCipher(final String className) throws Exception {
+        final Properties properties = new Properties();
+        properties.setProperty(CryptoCipherFactory.CLASSES_KEY, className);
+        final CryptoCipher cipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, properties);
+        assertEquals(className, cipher.getClass().getCanonicalName());
+        return cipher;
+    }
+
     protected CryptoRandom getRandom(final String className) throws Exception {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, className);
@@ -73,12 +74,11 @@ public abstract class AbstractBenchmark {
         return cryptoRandom;
     }
 
-    protected CryptoCipher getCipher(final String className) throws Exception {
-        final Properties properties = new Properties();
-        properties.setProperty(CryptoCipherFactory.CLASSES_KEY, className);
-        final CryptoCipher cipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, properties);
-        assertEquals(className, cipher.getClass().getCanonicalName());
-        return cipher;
+    protected void random(final String cipherClass) throws Exception {
+        final CryptoRandom random = getRandom(cipherClass);
+        random.nextBytes(new byte[1000]);
+        random.nextBytes(new byte[1000]);
+        random.close();
     }
 
 }
