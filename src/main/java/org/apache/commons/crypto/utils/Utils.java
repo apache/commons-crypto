@@ -212,21 +212,21 @@ public final class Utils {
      * Splits class names sequence into substrings, Trim each substring into an
      * entry, and returns a list of the entries.
      *
-     * @param clazzNames a string consist of a list of the entries joined by a
+     * @param classNames a string consist of a list of the entries joined by a
      *        delimiter, may be {@code null} or empty in which case an empty list is returned.
      * @param separator a delimiter for the input string.
      * @return a list of class entries.
      */
-    public static List<String> splitClassNames(final String clazzNames, final String separator) {
+    public static List<String> splitClassNames(final String classNames, final String separator) {
         final List<String> res = new ArrayList<>();
-        if (clazzNames == null || clazzNames.isEmpty()) {
+        if (classNames == null || classNames.isEmpty()) {
             return res;
         }
 
-        for (String clazzName : clazzNames.split(separator)) {
-            clazzName = clazzName.trim();
-            if (!clazzName.isEmpty()) {
-                res.add(clazzName);
+        for (String className : classNames.split(separator)) {
+            className = className.trim();
+            if (!className.isEmpty()) {
+                res.add(className);
             }
         }
         return res;
