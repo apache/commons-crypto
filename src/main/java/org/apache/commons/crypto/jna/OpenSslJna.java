@@ -31,7 +31,10 @@ public final class OpenSslJna {
 
     /**
      * Constructs a new instance.
+     *
+     * @deprecated Will be private in the next major release.
      */
+    @Deprecated
     public OpenSslJna() {
         // empty
     }
