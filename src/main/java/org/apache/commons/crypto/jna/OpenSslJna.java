@@ -30,6 +30,13 @@ public final class OpenSslJna {
     private final static String KEY_DEBUG = Crypto.CONF_PREFIX + "debug";
 
     /**
+     * Constructs a new instance.
+     */
+    public OpenSslJna() {
+        // empty
+    }
+    
+    /**
      * Logs debug messages.
      *
      * @param format See {@link String#format(String, Object...)}.
@@ -43,6 +50,8 @@ public final class OpenSslJna {
     }
 
     /**
+     * Gets the cipher class of JNA implementation.
+     *
      * @return The cipher class of JNA implementation.
      */
     public static Class<? extends CryptoCipher> getCipherClass() {
@@ -50,6 +59,8 @@ public final class OpenSslJna {
     }
 
     /**
+     * Gets the random class of JNA implementation.
+     *
      * @return The random class of JNA implementation.
      */
     public static Class<? extends CryptoRandom> getRandomClass() {
@@ -68,19 +79,29 @@ public final class OpenSslJna {
     }
 
     /**
-     * @return the error of JNA.
+     * Gets the error from the JNA.
+     *
+     * @return the error from the JNA.
      */
     public static Throwable initialisationError() {
         return OpenSslNativeJna.INIT_ERROR;
     }
 
     /**
-     * @return {@code true} if JNA native loads successfully.
+     * Tests whether NA native loads successfully.
+     *
+     * @return {@code true} if JNA native loaded successfully.
      */
     public static boolean isEnabled() {
         return OpenSslNativeJna.INIT_OK;
     }
 
+    /**
+     * Main API.
+     *
+     * @param args command line arguments.
+     * @throws Throwable Throws value from {@link #initialisationError()}.
+     */
     public static void main(final String[] args) throws Throwable {
         info(Crypto.getComponentName() + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
         final Throwable initialisationError = initialisationError();
