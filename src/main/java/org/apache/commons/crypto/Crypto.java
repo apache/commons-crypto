@@ -55,7 +55,7 @@ public final class Crypto {
             return versionData;
         }
     }
-
+    
     /**
      * The prefix of all crypto configuration keys.
      */
@@ -181,6 +181,16 @@ public final class Crypto {
         } else {
             info("Native load failed: %s", getLoadingError());
         }
+    }
+
+    /**
+     * Constructs a new instance.
+     *
+     * @deprecated Will be private in the next major release.
+     */
+    @Deprecated
+    public Crypto() {
+        // empty
     }
 
 }

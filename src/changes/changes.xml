@@ -69,6 +69,7 @@
       <action dev="ggregory"     type="fix" due-to="step-security-bot, Gary Gregory">[StepSecurity] Harden GitHub builds #228, #234.</action>
       <action dev="ggregory"     type="fix" due-to="Martin Wiesner">Fixes grammar and typos in Javadoc #233.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate OpenSslJna.OpenSslJna().</action>      
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate Crypto.Crypto().</action>      
       <!-- UPDATE -->
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 64 #225.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>
