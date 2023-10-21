@@ -110,11 +110,11 @@ The following provides more details on the included cryptographic software:
   </distributionManagement>
 
   <properties>
-    <commons.release.version>1.2.0</commons.release.version>
+    <commons.release.version>1.2.1</commons.release.version>
     <commons.release.desc>(Java 8)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
-    <commons.bc.version>1.1.0</commons.bc.version>
+    <commons.bc.version>1.2.0</commons.bc.version>
     <commons.componentid>crypto</commons.componentid>
     <commons.module.name>org.apache.commons.crypto</commons.module.name>
     <commons.jira.id>CRYPTO</commons.jira.id>
