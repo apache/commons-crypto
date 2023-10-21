@@ -17,6 +17,8 @@
 
 package org.apache.commons.crypto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.nio.ByteBuffer;
 import java.util.Properties;
 
@@ -29,8 +31,6 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.apache.commons.crypto.utils.AES;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class AbstractBenchmark {
 
