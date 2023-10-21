@@ -54,4 +54,14 @@ public class AES {
         return new SecretKeySpec(key, ALGORITHM);
     }
 
+    
+    /**
+     * Constructs a new instance.
+     *
+     * @deprecated Will be private in the next major release.
+     */
+    @Deprecated
+    public AES() {
+        // empty
+    }
 }
