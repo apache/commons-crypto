@@ -301,8 +301,6 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
      */
     public static native String SSLeay_version(int type);
 
-    // ================== instance interface methods ==================
-
     @Override
     public PointerByReference _ENGINE_by_id(final String string) {
         return ENGINE_by_id(string);

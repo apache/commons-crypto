@@ -266,8 +266,6 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
      */
     public static native PointerByReference RAND_get_rand_method();
 
-    // ================== instance interface methods ==================
-
     @Override
     public PointerByReference _ENGINE_by_id(final String string) {
         return ENGINE_by_id(string);
