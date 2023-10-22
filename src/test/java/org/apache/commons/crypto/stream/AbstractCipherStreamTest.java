@@ -274,9 +274,8 @@ public abstract class AbstractCipherStreamTest {
         assertThrows(IndexOutOfBoundsException.class, () -> out.write(data, 0, data.length + 1));
         out.flush();
 
-        try (InputStream in = newCryptoInputStream(
-                new ByteArrayInputStream(encData), out.getCipher(),
-                defaultBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = out.getCipher();
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, withChannel)) {
             buf = ByteBuffer.allocate(dataLen + 100);
             byteBufferReadCheck(in, buf, 0);
         }
