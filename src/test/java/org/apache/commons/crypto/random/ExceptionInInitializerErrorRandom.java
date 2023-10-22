@@ -19,6 +19,10 @@ package org.apache.commons.crypto.random;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+/**
+ * Simulates scenarios where {@link OpenSslCryptoRandom} fails in the static code block {@code checkNative()} or
+ * {@code !OpenSslCryptoRandomNative.nextRandBytes(new byte[1])} is false.
+ */
 public class ExceptionInInitializerErrorRandom implements CryptoRandom {
 
     static {
