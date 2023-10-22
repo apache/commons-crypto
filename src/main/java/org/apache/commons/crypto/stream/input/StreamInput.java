@@ -22,6 +22,7 @@ import static org.apache.commons.crypto.stream.CryptoInputStream.EOS;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 import org.apache.commons.crypto.stream.CryptoInputStream;
 
@@ -40,9 +41,10 @@ public class StreamInput implements Input {
      *
      * @param inputStream the InputStream object.
      * @param bufferSize the buffer size.
+     * @throws NullPointerException if inputStream is null.
      */
     public StreamInput(final InputStream inputStream, final int bufferSize) {
-        this.in = inputStream;
+        this.in = Objects.requireNonNull(inputStream, "inputStream");
         this.bufferSize = bufferSize;
         this.buf = new byte[bufferSize];
     }
