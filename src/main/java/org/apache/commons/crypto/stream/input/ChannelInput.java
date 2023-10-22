@@ -20,6 +20,7 @@ package org.apache.commons.crypto.stream.input;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Objects;
 
 import org.apache.commons.crypto.stream.CryptoInputStream;
 
@@ -39,9 +40,10 @@ public class ChannelInput implements Input {
      * {@link org.apache.commons.crypto.stream.input.ChannelInput}.
      *
      * @param channel the ReadableByteChannel object.
+     * @throws NullPointerException if channel is null.
      */
     public ChannelInput(final ReadableByteChannel channel) {
-        this.channel = channel;
+        this.channel = Objects.requireNonNull(channel, "channel");
     }
 
     /**
