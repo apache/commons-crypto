@@ -311,23 +311,18 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void prepareData() throws IOException {
-        final CryptoCipher cipher;
-        try {
-            cipher = (CryptoCipher) ReflectionUtils.newInstance(
-                    ReflectionUtils.getClassByName(AbstractCipherTest.JCE_CIPHER_CLASSNAME), props,
-                    transformation);
+        try (CryptoCipher cipher = (CryptoCipher) ReflectionUtils.newInstance(ReflectionUtils.getClassByName(AbstractCipherTest.JCE_CIPHER_CLASSNAME), props,
+                transformation)) {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            // encryption data
+            try (final OutputStream out = new CryptoOutputStream(baos, cipher, bufferSize, AES.newSecretKeySpec(key), new IvParameterSpec(iv))) {
+                out.write(testData);
+                out.flush();
+            }
+            encData = baos.toByteArray();
         } catch (final ClassNotFoundException cnfe) {
             throw new IOException("Illegal crypto cipher!");
         }
-
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // encryption data
-        try (final OutputStream out = new CryptoOutputStream(baos, cipher, bufferSize,
-                AES.newSecretKeySpec(key), new IvParameterSpec(iv))) {
-            out.write(testData);
-            out.flush();
-        }
-        encData = baos.toByteArray();
     }
 
     protected void testCipher(final String cipherClass) throws Exception {
