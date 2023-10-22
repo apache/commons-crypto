@@ -75,6 +75,7 @@
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelInput.ChannelInput(ReadableByteChannel) now throws NullPointerException on null input.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">StreamInput.StreamInput(InputStream, int) now throws NullPointerException on null input.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelOutput.ChannelOutput(WritableByteChannel) now throws NullPointerException on null input.</action>
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">StreamOutput.StreamOutput(OutputStream, int) now throws NullPointerException on null input.</action>
       <!-- UPDATE -->
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 64 #225.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>

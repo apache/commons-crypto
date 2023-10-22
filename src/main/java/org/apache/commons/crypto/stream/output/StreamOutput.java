@@ -20,6 +20,7 @@ package org.apache.commons.crypto.stream.output;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 import org.apache.commons.crypto.stream.CryptoOutputStream;
 
@@ -38,11 +39,12 @@ public class StreamOutput implements Output {
      *
      * @param out the OutputStream object.
      * @param bufferSize the buffer size.
+     * @throws NullPointerException if channel is null.
      */
     public StreamOutput(final OutputStream out, final int bufferSize) {
-        this.out = out;
+        this.out = Objects.requireNonNull(out, "out");
         this.bufferSize = bufferSize;
-        buf = new byte[bufferSize];
+        this.buf = new byte[bufferSize];
     }
 
     /**
