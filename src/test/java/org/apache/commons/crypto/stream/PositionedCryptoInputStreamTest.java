@@ -169,10 +169,11 @@ public class PositionedCryptoInputStreamTest {
         assertArrayEquals(expectedData, realData);
     }
 
-    private void doMultipleReadTest() throws Exception{
-        final PositionedCryptoInputStream in = getCryptoInputStream(0);
-        final String cipherClass = in.getCipher().getClass().getName();
-        doMultipleReadTest(cipherClass);
+    private void doMultipleReadTest() throws Exception {
+        try (PositionedCryptoInputStream in = getCryptoInputStream(0)) {
+            final String cipherClass = in.getCipher().getClass().getName();
+            doMultipleReadTest(cipherClass);
+        }
     }
 
     // when there are multiple positioned read actions and one read action,
