@@ -208,9 +208,13 @@ public class CryptoRandomFactory {
                 }
             } catch (final NoClassDefFoundError noClassDefFoundError) {
                 Throwable initializerError = noClassDefFoundError.getCause();
+                String message = noClassDefFoundError.getMessage();
                 if (initializerError instanceof ExceptionInInitializerError) {
-                    lastException =  new IllegalStateException(initializerError.getMessage());
+                    lastException = new IllegalStateException(initializerError.getMessage());
                     errorMessage.append("CryptoRandom: [" + className + "] initialization failed with " + initializerError.getMessage());
+                } else if (initializerError == null && message != null && message.startsWith("Could not initialize class")) {
+                    lastException = new IllegalStateException(message);
+                    errorMessage.append("CryptoRandom: [" + className + "] initialization failed with " + message);
                 } else {
                     throw noClassDefFoundError;
                 }
