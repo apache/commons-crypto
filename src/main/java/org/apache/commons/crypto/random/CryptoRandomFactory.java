@@ -198,6 +198,14 @@ public class CryptoRandomFactory {
             } catch (final Exception e) {
                 lastException = e;
                 errorMessage.append("CryptoRandom: [" + className + "] failed with " + e.getMessage());
+            } catch (final ExceptionInInitializerError initializerError) {
+                Throwable t = initializerError.getException();
+                if (t instanceof Exception) {
+                    lastException = (Exception) t;
+                    errorMessage.append("CryptoRandom: [" + className + "] initialization failed with " + t.getMessage());
+                } else {
+                    throw initializerError;
+                }
             }
         }
 
