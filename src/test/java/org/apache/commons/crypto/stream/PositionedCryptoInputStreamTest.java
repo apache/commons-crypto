@@ -212,8 +212,7 @@ public class PositionedCryptoInputStreamTest {
     private void doPositionedReadTests() throws Exception {
         try (PositionedCryptoInputStream in = getCryptoInputStream(0);
                 CryptoCipher cipher = in.getCipher()) {
-            final String cipherClass = cipher.getClass().getName();
-            doPositionedReadTests(cipherClass);
+            doPositionedReadTests(cipher.getClass().getName());
         }
     }
 
@@ -237,8 +236,7 @@ public class PositionedCryptoInputStreamTest {
     private void doReadFullyTests() throws Exception {
         try (PositionedCryptoInputStream in = getCryptoInputStream(0);
                 CryptoCipher cipher = in.getCipher()) {
-            final String cipherClass = cipher.getClass().getName();
-            doReadFullyTests(cipherClass);
+            doReadFullyTests(cipher.getClass().getName());
         }
     }
 
