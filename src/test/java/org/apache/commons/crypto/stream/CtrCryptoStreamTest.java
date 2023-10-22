@@ -103,12 +103,12 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
             in.close();
 
-            final CtrCryptoOutputStream out = new CtrCryptoOutputStream(new ChannelOutput(Channels.newChannel(baos)), getCipher(cipherClass),
-                    Integer.parseInt(bufferSize), key, iv);
-            out.setStreamOffset(smallBufferSize);
-            assertEquals(out.getStreamOffset(), smallBufferSize);
-
-            out.close();
+            try (CryptoCipher cipher = getCipher(cipherClass);
+                    CtrCryptoOutputStream out = new CtrCryptoOutputStream(new ChannelOutput(Channels.newChannel(baos)), cipher, Integer.parseInt(bufferSize),
+                            key, iv)) {
+                out.setStreamOffset(smallBufferSize);
+                assertEquals(out.getStreamOffset(), smallBufferSize);
+            }
         }
     }
 
