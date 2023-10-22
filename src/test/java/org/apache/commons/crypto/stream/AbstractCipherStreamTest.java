@@ -117,145 +117,135 @@ public abstract class AbstractCipherStreamTest {
     }
 
     protected void doByteBufferRead(final String cipherClass, final boolean withChannel)
-        throws Exception {
+            throws Exception {
         // Skip this test if no JNI
         assumeJniPresence(cipherClass);
         ByteBuffer buf = ByteBuffer.allocate(dataLen + 100);
         // Default buffer size, initial buffer position is 0
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            defaultBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, withChannel)) {
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Default buffer size, initial buffer position is not 0
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            defaultBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 11);
         }
 
         // Small buffer size, initial buffer position is 0
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            smallBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, smallBufferSize, iv, withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Small buffer size, initial buffer position is not 0
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            smallBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, smallBufferSize, iv, withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 11);
         }
 
         // Direct buffer, default buffer size, initial buffer position is 0
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            defaultBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, withChannel)) {
             buf = ByteBuffer.allocateDirect(dataLen + 100);
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Direct buffer, default buffer size, initial buffer position is not 0
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            defaultBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 11);
         }
 
         // Direct buffer, small buffer size, initial buffer position is 0
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            smallBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, smallBufferSize, iv, withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Direct buffer, small buffer size, initial buffer position is not 0
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            smallBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, smallBufferSize, iv, withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 11);
         }
 
         // Direct buffer, small buffer size, initial buffer position is 0, final read
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            smallBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, smallBufferSize, iv, withChannel)) {
             buf.clear();
             byteBufferFinalReadCheck(in, buf, 0);
         }
 
         // Default buffer size, initial buffer position is 0, insufficient dest buffer length
-        try (InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass),
-            defaultBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, withChannel)) {
             buf = ByteBuffer.allocate(100);
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Default buffer size, initial buffer position is 0
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf = ByteBuffer.allocate(dataLen + 100);
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Default buffer size, initial buffer position is not 0
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 11);
         }
 
         // Small buffer size, initial buffer position is 0
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Small buffer size, initial buffer position is not 0
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 11);
         }
 
         // Direct buffer, default buffer size, initial buffer position is 0
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf = ByteBuffer.allocateDirect(dataLen + 100);
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Direct buffer, default buffer size, initial buffer position is not 0
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 11);
         }
 
         // Direct buffer, small buffer size, initial buffer position is 0
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 0);
         }
 
         // Direct buffer, small buffer size, initial buffer position is not 0
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf.clear();
             byteBufferReadCheck(in, buf, 11);
         }
 
         // Direct buffer, default buffer size, initial buffer position is 0, final read
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf.clear();
             byteBufferFinalReadCheck(in, buf, 0);
         }
 
         // Default buffer size, initial buffer position is 0, insufficient dest buffer length
-        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key,
-            new IvParameterSpec(iv), withChannel)) {
+        try (InputStream in = newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), key, new IvParameterSpec(iv), withChannel)) {
             buf = ByteBuffer.allocate(100);
             byteBufferReadCheck(in, buf, 0);
         }
