@@ -463,10 +463,6 @@ The following provides more details on the included cryptographic software:
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${commons.compiler.version}</version>
           <configuration>
-            <!-- Fix incremental compiler bug, see https://jira.codehaus.org/browse/MCOMPILER-205 etc. -->
-            <excludes>
-              <exclude>**/package-info.java</exclude>
-            </excludes>
             <compilerArgs>
               <compilerArg>-h</compilerArg>
               <compilerArg>target/jni-classes</compilerArg>
