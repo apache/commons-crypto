@@ -406,7 +406,8 @@ public class PositionedCryptoInputStreamTest {
 
     private void testSeekLoop(final String cipherClass, int position, final int length,
             final int bufferSize) throws Exception {
-        try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                PositionedCryptoInputStream in = getCryptoInputStream(cipher, bufferSize)) {
             while (in.available() > 0) {
                 in.seek(position);
                 final ByteBuffer buf = ByteBuffer.allocate(length);
