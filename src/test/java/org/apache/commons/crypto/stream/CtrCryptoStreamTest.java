@@ -87,7 +87,8 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
             assertEquals(channelInput.available(), 0);
 
             final String bufferSize = "4096";
-            try (CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, getCipher(cipherClass), defaultBufferSize, key, iv)) {
+            try (CryptoCipher cipher = getCipher(cipherClass);
+                    CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, cipher, defaultBufferSize, key, iv)) {
                 final Properties props = new Properties();
                 props.put(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, bufferSize);
                 in.setStreamOffset(smallBufferSize);
