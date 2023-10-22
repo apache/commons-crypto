@@ -157,7 +157,7 @@ public class PositionedCryptoInputStreamTest {
         prepareData();
     }
 
-    // compare the data from pos with length and data2 from 0 with length
+    /** compare the data from pos with length and data2 from 0 with length. */
     private void compareByteArray(final byte[] data1, final int pos, final byte[] data2,
             final int length) {
         final byte[] expectedData = new byte[length];
@@ -176,8 +176,10 @@ public class PositionedCryptoInputStreamTest {
         }
     }
 
-    // when there are multiple positioned read actions and one read action,
-    // they will not interfere each other.
+    /**
+     *  when there are multiple positioned read actions and one read action,
+     *  they will not interfere each other.
+     */
     private void doMultipleReadTest(final String cipherClass) throws Exception {
         try (CryptoCipher cipher = getCipher(cipherClass);
                 PositionedCryptoInputStream in = getCryptoInputStream(cipher, bufferSize)) {
@@ -356,7 +358,7 @@ public class PositionedCryptoInputStreamTest {
         }
     }
 
-    // test for the out of index position, eg, -1.
+    /** test for the out of index position, eg, -1. */
     private void testPositionedReadNone(final String cipherClass, final int position,
             final int length, final int bufferSize) throws Exception {
         try (CryptoCipher cipher = getCipher(cipherClass);
@@ -367,7 +369,7 @@ public class PositionedCryptoInputStreamTest {
         }
     }
 
-    // test for the End of file reached before reading fully
+    /** test for the End of file reached before reading fully. */
     private void testReadFullyFailed(final String cipherClass, final int position,
             final int length, final int bufferSize) throws Exception {
         try (CryptoCipher cipher = getCipher(cipherClass);
@@ -395,7 +397,7 @@ public class PositionedCryptoInputStreamTest {
         }
     }
 
-    // test for the out of index position, eg, -1.
+    /** test for the out of index position, eg, -1. */
     private void testSeekFailed(final String cipherClass, final int position, final int bufferSize)
             throws Exception {
         try (CryptoCipher cipher = getCipher(cipherClass);
