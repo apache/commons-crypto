@@ -520,7 +520,7 @@ The following provides more details on the included cryptographic software:
           <skipEmptyReport>false</skipEmptyReport>
           <analysisCache>true</analysisCache>
           <rulesets>
-            <ruleset>${basedir}/src/site/resources/pmd/pmd-ruleset.xml</ruleset>
+            <ruleset>${basedir}/src/conf/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
       </plugin>    
@@ -663,7 +663,7 @@ The following provides more details on the included cryptographic software:
           <skipEmptyReport>false</skipEmptyReport>
           <analysisCache>true</analysisCache>
           <rulesets>
-            <ruleset>${basedir}/src/site/resources/pmd/pmd-ruleset.xml</ruleset>
+            <ruleset>${basedir}/src/conf/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
       </plugin>
