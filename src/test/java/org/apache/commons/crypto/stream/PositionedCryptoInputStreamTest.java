@@ -179,7 +179,8 @@ public class PositionedCryptoInputStreamTest {
     // when there are multiple positioned read actions and one read action,
     // they will not interfere each other.
     private void doMultipleReadTest(final String cipherClass) throws Exception {
-        try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                PositionedCryptoInputStream in = getCryptoInputStream(cipher, bufferSize)) {
             int position = 0;
             while (in.available() > 0) {
                 final ByteBuffer buf = ByteBuffer.allocate(length);
@@ -209,9 +210,11 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void doPositionedReadTests() throws Exception {
-    	final PositionedCryptoInputStream in = getCryptoInputStream(0);
-    	final String cipherClass = in.getCipher().getClass().getName();
-    	doPositionedReadTests(cipherClass);
+        try (PositionedCryptoInputStream in = getCryptoInputStream(0);
+                CryptoCipher cipher = in.getCipher()) {
+            final String cipherClass = cipher.getClass().getName();
+            doPositionedReadTests(cipherClass);
+        }
     }
 
     private void doPositionedReadTests(final String cipherClass) throws Exception {
