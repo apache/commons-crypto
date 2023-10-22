@@ -259,8 +259,7 @@ public class PositionedCryptoInputStreamTest {
     private void doSeekTests() throws Exception {
         try (PositionedCryptoInputStream in = getCryptoInputStream(0);
                 CryptoCipher cipher = in.getCipher()) {
-            final String cipherClass = cipher.getClass().getName();
-            doSeekTests(cipherClass);
+            doSeekTests(cipher.getClass().getName());
         }
     }
 
