@@ -20,6 +20,7 @@ package org.apache.commons.crypto.stream.output;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
+import java.util.Objects;
 
 import org.apache.commons.crypto.stream.CryptoOutputStream;
 
@@ -37,9 +38,10 @@ public class ChannelOutput implements Output {
      * {@link org.apache.commons.crypto.stream.output.ChannelOutput}.
      *
      * @param channel the WritableByteChannel object.
+     * @throws NullPointerException if channel is null.
      */
     public ChannelOutput(final WritableByteChannel channel) {
-        this.channel = channel;
+        this.channel = Objects.requireNonNull(channel, "channel");
     }
 
     /**
