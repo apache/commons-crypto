@@ -256,10 +256,12 @@ public class PositionedCryptoInputStreamTest {
                 bufferSize);
     }
 
-    private void doSeekTests() throws Exception{
-        final PositionedCryptoInputStream in = getCryptoInputStream(0);
-        final String cipherClass = in.getCipher().getClass().getName();
-        doSeekTests(cipherClass);
+    private void doSeekTests() throws Exception {
+        try (PositionedCryptoInputStream in = getCryptoInputStream(0);
+                CryptoCipher cipher = in.getCipher()) {
+            final String cipherClass = cipher.getClass().getName();
+            doSeekTests(cipherClass);
+        }
     }
 
     private void doSeekTests(final String cipherClass) throws Exception {
