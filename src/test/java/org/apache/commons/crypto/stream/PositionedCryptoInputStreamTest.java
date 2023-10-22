@@ -170,8 +170,9 @@ public class PositionedCryptoInputStreamTest {
     }
 
     private void doMultipleReadTest() throws Exception {
-        try (PositionedCryptoInputStream in = getCryptoInputStream(0)) {
-            final String cipherClass = in.getCipher().getClass().getName();
+        try (PositionedCryptoInputStream in = getCryptoInputStream(0);
+                CryptoCipher cipher = in.getCipher()) {
+            final String cipherClass = cipher.getClass().getName();
             doMultipleReadTest(cipherClass);
         }
     }
