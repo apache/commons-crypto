@@ -38,12 +38,12 @@ public class ExceptionInInitializerErrorRandom implements CryptoRandom {
     }
 
     @Override
-    public void nextBytes(byte[] bytes) {
+    public void close() throws IOException {
         // empty
     }
 
     @Override
-    public void close() throws IOException {
+    public void nextBytes(byte[] bytes) {
         // empty
     }
 }
