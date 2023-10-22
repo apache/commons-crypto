@@ -30,14 +30,14 @@ import org.junit.jupiter.api.Test;
 
 public class CryptoCipherFactoryTest {
     @Test
-    public void testDefaultCipher() throws GeneralSecurityException {
-        final CryptoCipher defaultCipher = CryptoCipherFactory
-                .getCryptoCipher(AES.CTR_NO_PADDING);
-        final String name = defaultCipher.getClass().getName();
-        if (OpenSsl.getLoadingFailureReason() == null) {
-            assertEquals(OpenSslCipher.class.getName(), name);
-        } else {
-            assertEquals(JceCipher.class.getName(), name);
+    public void testDefaultCipher() throws GeneralSecurityException, IOException {
+        try (CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING)) {
+            final String name = defaultCipher.getClass().getName();
+            if (OpenSsl.getLoadingFailureReason() == null) {
+                assertEquals(OpenSslCipher.class.getName(), name);
+            } else {
+                assertEquals(JceCipher.class.getName(), name);
+            }
         }
     }
 
