@@ -30,7 +30,7 @@ public class ExceptionInInitializerErrorRandom implements CryptoRandom {
     }
 
     private static void check() throws GeneralSecurityException {
-        throw new GeneralSecurityException("Native library is not loaded");
+        throw new GeneralSecurityException("ExceptionInInitializerErrorRandom init failed");
     }
 
     @Override
