@@ -308,26 +308,24 @@ public abstract class AbstractCipherStreamTest {
         assumeJniPresence(cipherClass);
 
         // Test InvalidAlgorithmParameters
-       Exception ex = assertThrows(IOException.class, () -> newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData),
-               AES.newSecretKeySpec(key), new GCMParameterSpec(0, new byte[0]), withChannel));
-        assertEquals(ex.getMessage(),"Illegal parameters");
+        Exception ex = assertThrows(IOException.class, () -> newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData),
+                AES.newSecretKeySpec(key), new GCMParameterSpec(0, new byte[0]), withChannel));
+        assertEquals(ex.getMessage(), "Illegal parameters");
         // Test InvalidAlgorithmParameters
-        ex =  assertThrows(IOException.class, () -> newCryptoOutputStream(transformation, props, baos,
-                AES.newSecretKeySpec(key), new GCMParameterSpec(0,
-                        new byte[0]), withChannel));
-        assertEquals(ex.getMessage(),"Illegal parameters");
+        ex = assertThrows(IOException.class,
+                () -> newCryptoOutputStream(transformation, props, baos, AES.newSecretKeySpec(key), new GCMParameterSpec(0, new byte[0]), withChannel));
+        assertEquals(ex.getMessage(), "Illegal parameters");
 
         // Test Invalid Key
-        assertThrows(IOException.class, () -> newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData),
-                AES.newSecretKeySpec(new byte[10]), new IvParameterSpec(iv), withChannel));
-        // Test Invalid Key
-        assertThrows(IOException.class, () -> newCryptoOutputStream(transformation, props, baos, new byte[10],
+        assertThrows(IOException.class, () -> newCryptoInputStream(transformation, props, new ByteArrayInputStream(encData), AES.newSecretKeySpec(new byte[10]),
                 new IvParameterSpec(iv), withChannel));
+        // Test Invalid Key
+        assertThrows(IOException.class, () -> newCryptoOutputStream(transformation, props, baos, new byte[10], new IvParameterSpec(iv), withChannel));
 
         // Test reading a closed stream.
         InputStream closedIn;
-        try (final InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData),
-                getCipher(cipherClass), defaultBufferSize, iv, withChannel)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                final InputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, withChannel)) {
             closedIn = in;
         }
         // Throw exception.
@@ -342,8 +340,7 @@ public abstract class AbstractCipherStreamTest {
         }
 
         // Test checking a closed stream.
-        final OutputStream out = newCryptoOutputStream(transformation, props, baos, key, new IvParameterSpec(iv),
-                withChannel);
+        final OutputStream out = newCryptoOutputStream(transformation, props, baos, key, new IvParameterSpec(iv), withChannel);
         out.close();
         // Throw exception.
         assertThrows(IOException.class, ((CryptoOutputStream) out)::checkStream);
@@ -356,8 +353,8 @@ public abstract class AbstractCipherStreamTest {
         }
 
         // Test checkStreamCipher
-        try {
-            CryptoInputStream.checkStreamCipher(getCipher(cipherClass));
+        try (CryptoCipher cipher = getCipher(cipherClass)) {
+            CryptoInputStream.checkStreamCipher(cipher);
         } catch (final IOException ioEx) {
             assertEquals(ioEx.getMessage(), "AES/CTR/NoPadding is required");
         } finally {
@@ -365,8 +362,8 @@ public abstract class AbstractCipherStreamTest {
         }
 
         // Test unsupported operation handling.
-        try (final InputStream inNewCrytptoStr = newCryptoInputStream(new ByteArrayInputStream(encData),
-                getCipher(cipherClass), defaultBufferSize, iv, false)) {
+        try (final InputStream inNewCrytptoStr = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass), defaultBufferSize, iv,
+                false)) {
             closedIn.mark(0);
             assertFalse(closedIn.markSupported());
             ex = assertThrows(IOException.class, inNewCrytptoStr::reset);
