@@ -65,6 +65,7 @@ public class PositionedCryptoInputStreamTest {
 
         @Override
         public void close() {
+            // empty
         }
 
         @Override
