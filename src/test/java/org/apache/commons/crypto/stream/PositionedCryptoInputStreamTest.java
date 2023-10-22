@@ -341,7 +341,8 @@ public class PositionedCryptoInputStreamTest {
 
     private void testPositionedReadLoop(final String cipherClass, int position,
             final int length, final int bufferSize, final int total) throws Exception {
-        try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                PositionedCryptoInputStream in = getCryptoInputStream(cipher, bufferSize)) {
             // do the position read until the end of data
             while (position < total) {
                 final byte[] bytes = new byte[length];
