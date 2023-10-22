@@ -47,22 +47,21 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     protected void doDecryptTest(final String cipherClass, final boolean withChannel)
             throws IOException {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                CtrCryptoInputStream in = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, withChannel)) {
 
-        final CtrCryptoInputStream in = newCryptoInputStream(new ByteArrayInputStream(encData),
-                getCipher(cipherClass), defaultBufferSize, iv, withChannel);
-
-        final ByteBuffer buf = ByteBuffer.allocateDirect(dataLen);
-        buf.put(encData);
-        buf.rewind();
-        in.decrypt(buf, 0, dataLen);
-        final byte[] readData = new byte[dataLen];
-        final byte[] expectedData = new byte[dataLen];
-        buf.get(readData);
-        System.arraycopy(data, 0, expectedData, 0, dataLen);
-        assertArrayEquals(readData, expectedData);
-        final Exception ex = assertThrows(IOException.class, () -> in.decryptBuffer(buf));
-        assertEquals(ex.getCause().getClass(), ShortBufferException.class);
-
+            final ByteBuffer buf = ByteBuffer.allocateDirect(dataLen);
+            buf.put(encData);
+            buf.rewind();
+            in.decrypt(buf, 0, dataLen);
+            final byte[] readData = new byte[dataLen];
+            final byte[] expectedData = new byte[dataLen];
+            buf.get(readData);
+            System.arraycopy(data, 0, expectedData, 0, dataLen);
+            assertArrayEquals(readData, expectedData);
+            final Exception ex = assertThrows(IOException.class, () -> in.decryptBuffer(buf));
+            assertEquals(ex.getCause().getClass(), ShortBufferException.class);
+        }
     }
 
     @Override
