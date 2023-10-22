@@ -398,7 +398,8 @@ public class PositionedCryptoInputStreamTest {
     // test for the out of index position, eg, -1.
     private void testSeekFailed(final String cipherClass, final int position, final int bufferSize)
             throws Exception {
-        try (final PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                final PositionedCryptoInputStream in = getCryptoInputStream(cipher, bufferSize)) {
             assertThrows(IllegalArgumentException.class, () -> in.seek(position));
         }
     }
