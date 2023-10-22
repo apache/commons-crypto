@@ -362,8 +362,8 @@ public abstract class AbstractCipherStreamTest {
         }
 
         // Test unsupported operation handling.
-        try (final InputStream inNewCrytptoStr = newCryptoInputStream(new ByteArrayInputStream(encData), getCipher(cipherClass), defaultBufferSize, iv,
-                false)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                final InputStream inNewCrytptoStr = newCryptoInputStream(new ByteArrayInputStream(encData), cipher, defaultBufferSize, iv, false)) {
             closedIn.mark(0);
             assertFalse(closedIn.markSupported());
             ex = assertThrows(IOException.class, inNewCrytptoStr::reset);
