@@ -199,7 +199,7 @@ public class CryptoRandomFactory {
                 lastException = e;
                 errorMessage.append("CryptoRandom: [" + className + "] failed with " + e.getMessage());
             } catch (final ExceptionInInitializerError initializerError) {
-                Throwable t = initializerError.getException();
+                Throwable t = initializerError.getCause();
                 if (t instanceof Exception) {
                     lastException = (Exception) t;
                     errorMessage.append("CryptoRandom: [" + className + "] initialization failed with " + t.getMessage());
