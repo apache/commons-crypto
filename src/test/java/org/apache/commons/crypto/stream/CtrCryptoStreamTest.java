@@ -86,22 +86,20 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
             assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
             assertEquals(channelInput.available(), 0);
 
-            final CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, getCipher(cipherClass), defaultBufferSize, key, iv);
-
-            final Properties props = new Properties();
             final String bufferSize = "4096";
-            props.put(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, bufferSize);
-            in.setStreamOffset(smallBufferSize);
+            try (CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, getCipher(cipherClass), defaultBufferSize, key, iv)) {
+                final Properties props = new Properties();
+                props.put(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, bufferSize);
+                in.setStreamOffset(smallBufferSize);
 
-            assertEquals(CryptoInputStream.getBufferSize(props), Integer.parseInt(bufferSize));
-            assertEquals(smallBufferSize, in.getStreamOffset());
-            assertEquals(in.getBufferSize(), 8192);
-            assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
-            assertEquals(in.getKey().getAlgorithm(), AES.ALGORITHM);
-            assertEquals(in.getParams().getClass(), IvParameterSpec.class);
-            assertNotNull(in.getInput());
-
-            in.close();
+                assertEquals(CryptoInputStream.getBufferSize(props), Integer.parseInt(bufferSize));
+                assertEquals(smallBufferSize, in.getStreamOffset());
+                assertEquals(in.getBufferSize(), 8192);
+                assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
+                assertEquals(in.getKey().getAlgorithm(), AES.ALGORITHM);
+                assertEquals(in.getParams().getClass(), IvParameterSpec.class);
+                assertNotNull(in.getInput());
+            }
 
             try (CryptoCipher cipher = getCipher(cipherClass);
                     CtrCryptoOutputStream out = new CtrCryptoOutputStream(new ChannelOutput(Channels.newChannel(baos)), cipher, Integer.parseInt(bufferSize),
