@@ -78,39 +78,38 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
         assertEquals(streamInput.available(), encData.length);
 
-        final ChannelInput channelInput = new ChannelInput(Channels.newChannel(new ByteArrayInputStream(encData)));
-        ex = assertThrows(UnsupportedOperationException.class, () -> channelInput.seek(0));
-        assertEquals(ex.getMessage(), "Seek is not supported by this implementation");
+        try (ChannelInput channelInput = new ChannelInput(Channels.newChannel(new ByteArrayInputStream(encData)))) {
+            ex = assertThrows(UnsupportedOperationException.class, () -> channelInput.seek(0));
+            assertEquals(ex.getMessage(), "Seek is not supported by this implementation");
 
-        ex = assertThrows(UnsupportedOperationException.class, () -> channelInput.read(0, new byte[0], 0, 0));
-        assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
-        assertEquals(channelInput.available(), 0);
+            ex = assertThrows(UnsupportedOperationException.class, () -> channelInput.read(0, new byte[0], 0, 0));
+            assertEquals(ex.getMessage(), "Positioned read is not supported by this implementation");
+            assertEquals(channelInput.available(), 0);
 
-        final CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, getCipher(cipherClass),
-                defaultBufferSize, key, iv);
+            final CtrCryptoInputStream in = new CtrCryptoInputStream(channelInput, getCipher(cipherClass), defaultBufferSize, key, iv);
 
-        final Properties props = new Properties();
-        final String bufferSize = "4096";
-        props.put(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, bufferSize);
-        in.setStreamOffset(smallBufferSize);
+            final Properties props = new Properties();
+            final String bufferSize = "4096";
+            props.put(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, bufferSize);
+            in.setStreamOffset(smallBufferSize);
 
-        assertEquals(CryptoInputStream.getBufferSize(props), Integer.parseInt(bufferSize));
-        assertEquals(smallBufferSize, in.getStreamOffset());
-        assertEquals(in.getBufferSize(), 8192);
-        assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
-        assertEquals(in.getKey().getAlgorithm(), AES.ALGORITHM);
-        assertEquals(in.getParams().getClass(), IvParameterSpec.class);
-        assertNotNull(in.getInput());
+            assertEquals(CryptoInputStream.getBufferSize(props), Integer.parseInt(bufferSize));
+            assertEquals(smallBufferSize, in.getStreamOffset());
+            assertEquals(in.getBufferSize(), 8192);
+            assertEquals(in.getCipher().getClass(), Class.forName(cipherClass));
+            assertEquals(in.getKey().getAlgorithm(), AES.ALGORITHM);
+            assertEquals(in.getParams().getClass(), IvParameterSpec.class);
+            assertNotNull(in.getInput());
 
-        in.close();
+            in.close();
 
-        final CtrCryptoOutputStream out = new CtrCryptoOutputStream(new ChannelOutput(
-                Channels.newChannel(baos)), getCipher(cipherClass),
-                Integer.parseInt(bufferSize), key, iv);
-        out.setStreamOffset(smallBufferSize);
-        assertEquals(out.getStreamOffset(), smallBufferSize);
+            final CtrCryptoOutputStream out = new CtrCryptoOutputStream(new ChannelOutput(Channels.newChannel(baos)), getCipher(cipherClass),
+                    Integer.parseInt(bufferSize), key, iv);
+            out.setStreamOffset(smallBufferSize);
+            assertEquals(out.getStreamOffset(), smallBufferSize);
 
-        out.close();
+            out.close();
+        }
     }
 
     @Override
