@@ -358,7 +358,8 @@ public class PositionedCryptoInputStreamTest {
     // test for the out of index position, eg, -1.
     private void testPositionedReadNone(final String cipherClass, final int position,
             final int length, final int bufferSize) throws Exception {
-        try (PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                PositionedCryptoInputStream in = getCryptoInputStream(cipher, bufferSize)) {
             final byte[] bytes = new byte[length];
             final int n = in.read(position, bytes, 0, length);
             assertEquals(n, -1);
