@@ -88,6 +88,23 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
+    public void testReentrancyOfExceptionInInitializerErrorRandom() throws GeneralSecurityException, IOException {
+        final Properties properties = new Properties();
+        String classes = ExceptionInInitializerErrorRandom.class.getName().concat(",")
+                .concat(CryptoRandomFactory.RandomProvider.JAVA.getClassName());
+        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, classes);
+        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
+            assertEquals(JavaCryptoRandom.class.getName(), random.getClass().getName());
+        }
+        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
+            assertEquals(JavaCryptoRandom.class.getName(), random.getClass().getName());
+        }
+        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
+            assertEquals(JavaCryptoRandom.class.getName(), random.getClass().getName());
+        }
+    }
+
+    @Test
     public void testFailingRandom() {
         final Properties properties = new Properties();
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());

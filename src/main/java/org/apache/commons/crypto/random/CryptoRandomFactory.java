@@ -206,6 +206,14 @@ public class CryptoRandomFactory {
                 } else {
                     throw initializerError;
                 }
+            } catch (final NoClassDefFoundError noClassDefFoundError) {
+                Throwable initializerError = noClassDefFoundError.getCause();
+                if (initializerError instanceof ExceptionInInitializerError) {
+                    lastException =  new IllegalStateException(initializerError.getMessage());
+                    errorMessage.append("CryptoRandom: [" + className + "] initialization failed with " + initializerError.getMessage());
+                } else {
+                    throw noClassDefFoundError;
+                }
             }
         }
 
