@@ -369,7 +369,8 @@ public class PositionedCryptoInputStreamTest {
     // test for the End of file reached before reading fully
     private void testReadFullyFailed(final String cipherClass, final int position,
             final int length, final int bufferSize) throws Exception {
-        try (final PositionedCryptoInputStream in = getCryptoInputStream(getCipher(cipherClass), bufferSize)) {
+        try (CryptoCipher cipher = getCipher(cipherClass);
+                final PositionedCryptoInputStream in = getCryptoInputStream(cipher, bufferSize)) {
             final byte[] bytes = new byte[length];
             assertThrows(IOException.class, () -> in.readFully(position, bytes, 0, length));
             in.close();
