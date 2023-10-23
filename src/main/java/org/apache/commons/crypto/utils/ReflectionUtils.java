@@ -19,7 +19,10 @@ package org.apache.commons.crypto.utils;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
