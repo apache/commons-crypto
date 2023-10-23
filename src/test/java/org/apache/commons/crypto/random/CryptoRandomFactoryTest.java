@@ -93,14 +93,10 @@ public class CryptoRandomFactoryTest {
         String classes = ExceptionInInitializerErrorRandom.class.getName().concat(",")
                 .concat(CryptoRandomFactory.RandomProvider.JAVA.getClassName());
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, classes);
-        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
-            assertEquals(JavaCryptoRandom.class.getName(), random.getClass().getName());
-        }
-        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
-            assertEquals(JavaCryptoRandom.class.getName(), random.getClass().getName());
-        }
-        try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
-            assertEquals(JavaCryptoRandom.class.getName(), random.getClass().getName());
+        for (int i = 0; i < 3; i++) {
+            try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
+                assertEquals(JavaCryptoRandom.class.getName(), random.getClass().getName());
+            }
         }
     }
 

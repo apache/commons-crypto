@@ -198,26 +198,6 @@ public class CryptoRandomFactory {
             } catch (final Exception e) {
                 lastException = e;
                 errorMessage.append("CryptoRandom: [" + className + "] failed with " + e.getMessage());
-            } catch (final ExceptionInInitializerError initializerError) {
-                Throwable t = initializerError.getCause();
-                if (t instanceof Exception) {
-                    lastException = (Exception) t;
-                    errorMessage.append("CryptoRandom: [" + className + "] initialization failed with " + t.getMessage());
-                } else {
-                    throw initializerError;
-                }
-            } catch (final NoClassDefFoundError noClassDefFoundError) {
-                Throwable initializerError = noClassDefFoundError.getCause();
-                String message = noClassDefFoundError.getMessage();
-                if (initializerError instanceof ExceptionInInitializerError) {
-                    lastException = new IllegalStateException(initializerError.getMessage());
-                    errorMessage.append("CryptoRandom: [" + className + "] initialization failed with " + initializerError.getMessage());
-                } else if (initializerError == null && message != null && message.startsWith("Could not initialize class")) {
-                    lastException = new IllegalStateException(message);
-                    errorMessage.append("CryptoRandom: [" + className + "] initialization failed with " + message);
-                } else {
-                    throw noClassDefFoundError;
-                }
             }
         }
 

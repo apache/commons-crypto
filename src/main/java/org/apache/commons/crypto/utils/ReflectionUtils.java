@@ -19,10 +19,8 @@ package org.apache.commons.crypto.utils;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 
@@ -40,6 +38,7 @@ public final class ReflectionUtils {
     }
 
     private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
+    private static final Map<ClassLoader, Set<String>> INIT_ERROR_CLASSES = new ConcurrentHashMap<>();
 
     private static final ClassLoader CLASSLOADER;
 
@@ -63,6 +62,9 @@ public final class ReflectionUtils {
     public static Class<?> getClassByName(final String name) throws ClassNotFoundException {
         final Class<?> ret = getClassByNameOrNull(name);
         if (ret == null) {
+            if (INIT_ERROR_CLASSES.get(CLASSLOADER).contains(name)) {
+                throw new IllegalStateException("Class " + name + " initialization error");
+            }
             throw new ClassNotFoundException("Class " + name + " not found");
         }
         return ret;
@@ -73,9 +75,16 @@ public final class ReflectionUtils {
      * couldn't be loaded. This is to avoid the overhead of creating an exception.
      *
      * @param name the class name.
-     * @return the class object, or {@code null} if it could not be found.
+     * @return the class object, or {@code null} if it could not be found or initialization failed.
      */
     private static Class<?> getClassByNameOrNull(final String name) {
+        final Set<String> set =
+            INIT_ERROR_CLASSES.computeIfAbsent(CLASSLOADER, k -> Collections.synchronizedSet(new HashSet<>()));
+
+        if (set.contains(name)) {
+            return null;
+        }
+
         final Map<String, WeakReference<Class<?>>> map;
 
         synchronized (CACHE_CLASSES) {
@@ -94,6 +103,10 @@ public final class ReflectionUtils {
             } catch (final ClassNotFoundException e) {
                 // Leave a marker that the class isn't found
                 map.put(name, new WeakReference<>(NEGATIVE_CACHE_SENTINEL));
+                return null;
+            } catch (final ExceptionInInitializerError error) {
+                // Leave a marker that the class initialization failed
+                set.add(name);
                 return null;
             }
             // two putters can race here, but they'll put the same class
