@@ -84,8 +84,7 @@ public final class ReflectionUtils {
      * @return the class object, or {@code null} if it could not be found or initialization failed.
      */
     private static Class<?> getClassByNameOrNull(final String name) {
-        final Set<String> set =
-            INIT_ERROR_CLASSES.computeIfAbsent(CLASS_LOADER, k -> Collections.synchronizedSet(new HashSet<>()));
+        final Set<String> set = INIT_ERROR_CLASSES.computeIfAbsent(CLASS_LOADER, k -> Collections.synchronizedSet(new HashSet<>()));
 
         if (set.contains(name)) {
             return null;
