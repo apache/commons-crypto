@@ -93,6 +93,9 @@ mac32:
 mac64:
 	$(MAKE) native OS_NAME=Mac OS_ARCH=x86_64
 
+macArm64:
+	$(MAKE) native OS_NAME=Mac OS_ARCH=arm64-apple-macos11
+
 linux32:
 	$(MAKE) native OS_NAME=Linux OS_ARCH=x86
 
