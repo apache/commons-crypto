@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 
@@ -43,7 +44,7 @@ public final class ReflectionUtils {
     }
 
     private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
-    private static final Map<ClassLoader, Set<String>> INIT_ERROR_CLASSES = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<ClassLoader, Set<String>> INIT_ERROR_CLASSES = new ConcurrentHashMap<>();
 
     private static final ClassLoader CLASSLOADER;
 
