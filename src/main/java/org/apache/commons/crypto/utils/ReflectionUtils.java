@@ -46,11 +46,11 @@ public final class ReflectionUtils {
     private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
     private static final ConcurrentMap<ClassLoader, Set<String>> INIT_ERROR_CLASSES = new ConcurrentHashMap<>();
 
-    private static final ClassLoader CLASSLOADER;
+    private static final ClassLoader CLASS_LOADER;
 
     static {
         final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-        CLASSLOADER = threadClassLoader != null ? threadClassLoader : CryptoCipher.class.getClassLoader();
+        CLASS_LOADER = threadClassLoader != null ? threadClassLoader : CryptoCipher.class.getClassLoader();
     }
 
     /**
@@ -68,7 +68,7 @@ public final class ReflectionUtils {
     public static Class<?> getClassByName(final String name) throws ClassNotFoundException {
         final Class<?> ret = getClassByNameOrNull(name);
         if (ret == null) {
-            if (INIT_ERROR_CLASSES.get(CLASSLOADER).contains(name)) {
+            if (INIT_ERROR_CLASSES.get(CLASS_LOADER).contains(name)) {
                 throw new IllegalStateException("Class " + name + " initialization error");
             }
             throw new ClassNotFoundException("Class " + name + " not found");
@@ -85,7 +85,7 @@ public final class ReflectionUtils {
      */
     private static Class<?> getClassByNameOrNull(final String name) {
         final Set<String> set =
-            INIT_ERROR_CLASSES.computeIfAbsent(CLASSLOADER, k -> Collections.synchronizedSet(new HashSet<>()));
+            INIT_ERROR_CLASSES.computeIfAbsent(CLASS_LOADER, k -> Collections.synchronizedSet(new HashSet<>()));
 
         if (set.contains(name)) {
             return null;
@@ -94,7 +94,7 @@ public final class ReflectionUtils {
         final Map<String, WeakReference<Class<?>>> map;
 
         synchronized (CACHE_CLASSES) {
-            map = CACHE_CLASSES.computeIfAbsent(CLASSLOADER, k -> Collections.synchronizedMap(new WeakHashMap<>()));
+            map = CACHE_CLASSES.computeIfAbsent(CLASS_LOADER, k -> Collections.synchronizedMap(new WeakHashMap<>()));
         }
 
         Class<?> clazz = null;
@@ -105,7 +105,7 @@ public final class ReflectionUtils {
 
         if (clazz == null) {
             try {
-                clazz = Class.forName(name, true, CLASSLOADER);
+                clazz = Class.forName(name, true, CLASS_LOADER);
             } catch (final ClassNotFoundException e) {
                 // Leave a marker that the class isn't found
                 map.put(name, new WeakReference<>(NEGATIVE_CACHE_SENTINEL));
