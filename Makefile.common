@@ -189,7 +189,9 @@ Linux-aarch64_LIBNAME   := libcommons-crypto.so
 Linux-aarch64_LIBNAME_OSSL3 := libcommons-crypto-ossl3.so
 Linux-aarch64_COMMONS_CRYPTO_FLAGS  :=
 
+ifndef Mac-INC_OPENSSL
 Mac-INC_OPENSSL   := /usr/local/opt/openssl/include
+endif
 
 Mac-x86_CC        := gcc -arch i386
 Mac-x86_CXX       := g++ -arch i386
