@@ -62,4 +62,4 @@ jobs:
       # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-      run: mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false clean verify -Pbenchmark
+      run: mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false clean test-compile -Pbenchmark
