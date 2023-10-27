@@ -388,6 +388,11 @@ The following provides more details on the included cryptographic software:
             <artifactId>maven-compiler-plugin</artifactId>
             <version>${commons.compiler.version}</version>
             <configuration combine.self="override">
+              <!-- Needs to agree with main compiler settings; reapply the args which are lost by the override -->
+              <compilerArgs>
+                <compilerArg>-h</compilerArg>
+                <compilerArg>target/jni-classes</compilerArg>
+              </compilerArgs>
               <testIncludes>
                 <testInclude>**/*</testInclude>
               </testIncludes>
