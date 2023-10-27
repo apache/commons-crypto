@@ -17,8 +17,8 @@ name: "Scorecards supply-chain security"
 
 on:
   branch_protection_rule:
-  schedule:
-    - cron: "30 1 * * 6"    # Weekly on Saturdays
+  # schedule:
+  #   - cron: "30 1 * * 6"    # Weekly on Saturdays
   push:
     branches: [ "master" ]
     paths-ignore:
