@@ -123,6 +123,8 @@ The following provides more details on the included cryptographic software:
     <project.inceptionYear>2016</project.inceptionYear>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <!-- override parent default of iso-8859-1 -->
+    <commons.encoding>UTF-8</commons.encoding>
     <commons.javadoc.java.link>http://docs.oracle.com/javase/8/docs/api/</commons.javadoc.java.link>
 
     <checkstyle.header.file>${basedir}/LICENSE-header.txt</checkstyle.header.file>
@@ -531,7 +533,7 @@ The following provides more details on the included cryptographic software:
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <!-- define filter encoding -->
-          <propertiesEncoding>UTF-8</propertiesEncoding>
+          <propertiesEncoding>${commons.encoding}</propertiesEncoding>
         </configuration>
         <executions>
           <execution>
