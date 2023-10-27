@@ -544,6 +544,10 @@ The following provides more details on the included cryptographic software:
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <!-- define filter encoding -->
+          <propertiesEncoding>UTF-8</propertiesEncoding>
+        </configuration>
         <executions>
           <execution>
             <id>create-version-file</id>
