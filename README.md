@@ -48,7 +48,7 @@ Apache Commons Crypto
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/?gav=true)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-crypto/1.2.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-crypto/1.2.0)
 [![CodeQL](https://github.com/apache/commons-crypto/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/apache/commons-crypto/actions/workflows/codeql-analysis.yml)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/commons-text/badge)](https://api.securityscorecards.dev/projects/github.com/apache/commons-text)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/commons-crypto/badge)](https://api.securityscorecards.dev/projects/github.com/apache/commons-crypto)
 
 Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption
 Standard New Instructions). It provides Java API for both cipher level and Java stream level.
