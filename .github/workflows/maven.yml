@@ -101,5 +101,7 @@ jobs:
         mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:\Program Files\OpenSSL\lib" -D"commons.crypto.debug=true"
     - name: Check benchmark code compiles
       if: ${{ matrix.java == '8' }}
+      env:
+        OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
         mvn --show-version --batch-mode --no-transfer-progress clean test-compile -Pbenchmark
