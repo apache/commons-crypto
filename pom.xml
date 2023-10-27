@@ -124,18 +124,6 @@ The following provides more details on the included cryptographic software:
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <commons.javadoc.java.link>http://docs.oracle.com/javase/8/docs/api/</commons.javadoc.java.link>
-    <!--
-        Encoding of Java source files: ensures that the compiler and
-        the javadoc generator use the right encoding. Subprojects may
-        overwrite this, if they are using another encoding.
-    -->
-    <commons.encoding>iso-8859-1</commons.encoding>
-    <!-- used in this pom to provide the Javadoc HTML file encoding -->
-    <commons.docEncoding>${commons.encoding}</commons.docEncoding>
-    <!-- Define source encoding for filtering; used by general plugins -->
-    <project.build.sourceEncoding>${commons.encoding}</project.build.sourceEncoding>
-    <!-- This is used by reporting plugins -->
-    <project.reporting.outputEncoding>${commons.encoding}</project.reporting.outputEncoding>
 
     <checkstyle.header.file>${basedir}/LICENSE-header.txt</checkstyle.header.file>
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
