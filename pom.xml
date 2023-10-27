@@ -124,9 +124,6 @@ The following provides more details on the included cryptographic software:
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <commons.javadoc.java.link>http://docs.oracle.com/javase/8/docs/api/</commons.javadoc.java.link>
-    <!-- Ensure copies work OK (can be removed later when this is in parent POM) -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!--
         Encoding of Java source files: ensures that the compiler and
         the javadoc generator use the right encoding. Subprojects may
