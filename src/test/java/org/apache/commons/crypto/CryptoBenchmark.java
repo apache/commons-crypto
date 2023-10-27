@@ -28,6 +28,7 @@ import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.Mode;
 
 /**
  * Basic Benchmark to compare creation and runtimes for the different implementations.
