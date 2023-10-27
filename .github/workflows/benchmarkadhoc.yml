@@ -31,8 +31,8 @@ jobs:
       matrix:
         # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
         os: [macos-11, ubuntu-20.04, windows-latest]
-        # These names are used in conditional statements below.
-        java: [ 8 ]
+        # Run lowest and highest Java versions only
+        java: [ 8, 21 ]
         experimental: [false]
       fail-fast: false
         
