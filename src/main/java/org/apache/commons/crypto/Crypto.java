@@ -79,7 +79,7 @@ public final class Crypto {
      */
     public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX + "lib.tempdir";
 
-    private static boolean quiet = false;
+    private static boolean quiet;
 
     /**
      * Gets the component version of Apache Commons Crypto.
