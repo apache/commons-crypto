@@ -41,10 +41,11 @@ jobs:
         # These names are used in conditional statements below.
         java: [ 8, 11, 17, 21 ]
         experimental: [false]
-        include:
-          - java: 21
-            os: macos-13-arm64
-            experimental: true        
+        # macos-13-arm64 does not appear to be available
+        # include:
+        #   - java: 21
+        #     os: macos-13-arm64
+        #     experimental: true        
 #        include:
 #          - java: 22-ea
 #            os: ubuntu-20.04
