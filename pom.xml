@@ -145,114 +145,6 @@ The following provides more details on the included cryptographic software:
     <maven.buildNumber.timestampFormat>yyyy-MM-dd HH:mm:ssZ</maven.buildNumber.timestampFormat>
   </properties>
 
-  <developers>
-    <developer>
-      <name>Aaron T Myers</name>
-      <email>atm@apache.org</email>
-      <id>atm</id>
-    </developer>
-    <developer>
-      <name>Andrew Wang</name>
-      <email>wang@apache.org</email>
-      <id>wang</id>
-    </developer>
-    <developer>
-      <name>Chris Nauroth</name>
-      <email>cnauroth@apache.org</email>
-      <id>cnauroth</id>
-    </developer>
-    <developer>
-      <name>Colin P. McCabe</name>
-      <email>cmccabe@apache.org</email>
-      <id>cmccabe</id>
-    </developer>
-    <developer>
-      <name>Dapeng Sun</name>
-      <email>sdp@apache.org</email>
-      <id>sdp</id>
-    </developer>
-    <developer>
-      <name>Dian Fu</name>
-      <email>dianfu@apache.org</email>
-      <id>dianfu</id>
-    </developer>
-    <developer>
-      <name>Dong Chen</name>
-      <email>dongc@apache.org</email>
-      <id>dongc</id>
-    </developer>
-    <developer>
-      <name>Ferdinand Xu</name>
-      <email>xuf@apache.org</email>
-      <id>xuf</id>
-    </developer>
-    <developer>
-      <name>Haifeng Chen</name>
-      <email>haifengchen@apache.org</email>
-      <id>haifengchen</id>
-    </developer>
-    <developer>
-      <name>Marcelo Vanzin</name>
-      <email>vanzin@apache.org</email>
-      <id>vanzin</id>
-    </developer>
-    <developer>
-      <name>Uma Maheswara Rao G</name>
-      <email>umamahesh@apache.org</email>
-      <id>umamahesh</id>
-    </developer>
-    <developer>
-      <name>Yi Liu</name>
-      <email>yliu@apache.org</email>
-      <id>yliu</id>
-    </developer>
-    <developer>
-      <id>ggregory</id>
-      <name>Gary Gregory</name>
-      <email>ggregory at apache.org</email>
-      <url>https://www.garygregory.com</url>
-      <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>      
-      <roles>
-        <role>PMC Member</role>
-      </roles>
-      <timezone>America/New_York</timezone>
-      <properties>
-        <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
-      </properties>
-    </developer>
-  </developers>
-
-  <contributors>
-    <contributor>
-      <name>Colin Ma</name>
-      <email>junjie.ma@intel.com</email>
-    </contributor>
-    <contributor>
-      <name>Xianda Ke</name>
-      <email>xianda.ke@intel.com</email>
-    </contributor>
-    <contributor>
-      <name>Ke Jia</name>
-      <email>ke.a.jia@intel.com</email>
-    </contributor>
-    <contributor>
-      <name>George Kankava </name>
-      <email>george.kankava@devfactory.com</email>
-    </contributor>
-    <contributor>
-      <name>Tian Jianguo</name>
-      <email>jianguo.tian@intel.com</email>
-    </contributor>
-    <contributor>
-      <name>Adam Retter</name>
-      <organization>Evolved Binary</organization>
-    </contributor>
-    <contributor>
-      <name>Arturo Bernal</name>
-    </contributor>
-  </contributors>
-
   <profiles>
     <profile>
       <id>win32</id>
@@ -748,4 +640,113 @@ The following provides more details on the included cryptographic software:
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <developers>
+    <developer>
+      <name>Aaron T Myers</name>
+      <email>atm@apache.org</email>
+      <id>atm</id>
+    </developer>
+    <developer>
+      <name>Andrew Wang</name>
+      <email>wang@apache.org</email>
+      <id>wang</id>
+    </developer>
+    <developer>
+      <name>Chris Nauroth</name>
+      <email>cnauroth@apache.org</email>
+      <id>cnauroth</id>
+    </developer>
+    <developer>
+      <name>Colin P. McCabe</name>
+      <email>cmccabe@apache.org</email>
+      <id>cmccabe</id>
+    </developer>
+    <developer>
+      <name>Dapeng Sun</name>
+      <email>sdp@apache.org</email>
+      <id>sdp</id>
+    </developer>
+    <developer>
+      <name>Dian Fu</name>
+      <email>dianfu@apache.org</email>
+      <id>dianfu</id>
+    </developer>
+    <developer>
+      <name>Dong Chen</name>
+      <email>dongc@apache.org</email>
+      <id>dongc</id>
+    </developer>
+    <developer>
+      <name>Ferdinand Xu</name>
+      <email>xuf@apache.org</email>
+      <id>xuf</id>
+    </developer>
+    <developer>
+      <name>Haifeng Chen</name>
+      <email>haifengchen@apache.org</email>
+      <id>haifengchen</id>
+    </developer>
+    <developer>
+      <name>Marcelo Vanzin</name>
+      <email>vanzin@apache.org</email>
+      <id>vanzin</id>
+    </developer>
+    <developer>
+      <name>Uma Maheswara Rao G</name>
+      <email>umamahesh@apache.org</email>
+      <id>umamahesh</id>
+    </developer>
+    <developer>
+      <name>Yi Liu</name>
+      <email>yliu@apache.org</email>
+      <id>yliu</id>
+    </developer>
+    <developer>
+      <id>ggregory</id>
+      <name>Gary Gregory</name>
+      <email>ggregory at apache.org</email>
+      <url>https://www.garygregory.com</url>
+      <organization>The Apache Software Foundation</organization>
+      <organizationUrl>https://www.apache.org/</organizationUrl>      
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>America/New_York</timezone>
+      <properties>
+        <picUrl>https://people.apache.org/~ggregory/img/garydgregory80.png</picUrl>
+      </properties>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Colin Ma</name>
+      <email>junjie.ma@intel.com</email>
+    </contributor>
+    <contributor>
+      <name>Xianda Ke</name>
+      <email>xianda.ke@intel.com</email>
+    </contributor>
+    <contributor>
+      <name>Ke Jia</name>
+      <email>ke.a.jia@intel.com</email>
+    </contributor>
+    <contributor>
+      <name>George Kankava </name>
+      <email>george.kankava@devfactory.com</email>
+    </contributor>
+    <contributor>
+      <name>Tian Jianguo</name>
+      <email>jianguo.tian@intel.com</email>
+    </contributor>
+    <contributor>
+      <name>Adam Retter</name>
+      <organization>Evolved Binary</organization>
+    </contributor>
+    <contributor>
+      <name>Arturo Bernal</name>
+    </contributor>
+  </contributors>
+
 </project>
