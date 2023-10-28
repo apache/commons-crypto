@@ -39,7 +39,10 @@ endif
 NATIVE_TARGET_DIR:=$(TARGET)/classes/org/apache/commons/crypto/native/$(OS_NAME)/$(OS_ARCH)
 NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
 
-all: $(NATIVE_DLL)
+all: show $(NATIVE_DLL)
+
+show:
+	@echo "=== OS_NAME=$(OS_NAME) OS_ARCH=$(OS_ARCH) os_arch=$(os_arch) ==="
 
 $(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h: $(TARGET)/classes/org/apache/commons/crypto/cipher/OpenSslNative.class
 	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpenSslNative
@@ -74,7 +77,7 @@ clean:
 	$(DELTREE) $(subst /,$(FSEP),$(TARGET)/jni-classes)
 	$(DELTREE) $(subst /,$(FSEP),$(COMMONS_CRYPTO_OUT))
 
-native: $(NATIVE_DLL)
+native: show $(NATIVE_DLL)
 
 $(NATIVE_DLL): $(COMMONS_CRYPTO_OUT)/$(LIBNAME)
 	@mkdir -p $(@D)
