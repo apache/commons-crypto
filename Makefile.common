@@ -118,10 +118,11 @@ Linux-ppc64_COMMONS_CRYPTO_FLAGS  :=
 AIX-ppc64_CC        := gcc
 AIX-ppc64_CXX       := g++
 AIX-ppc64_STRIP     := strip -X64
-AIX-ppc64_LIBNAME   := libcommons-crypto.a
 AIX-ppc64_CXXFLAGS     := -DHAVE_CONFIG_H -Ilib/inc_linux -I"$(JAVA_HOME)/include" -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
 AIX-ppc64_CFLAGS       := -DHAVE_CONFIG_H -Ilib/inc_linux -I"$(JAVA_HOME)/include" -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64
 AIX-ppc64_LINKFLAGS := -shared -static-libgcc -static-libstdc++ -lcrypt
+AIX-ppc64_LIBNAME   := libcommons-crypto.a
+# TODO: AIX-ppc64_LIBNAME_OSSL3 ?
 AIX-ppc64_COMMONS_CRYPTO_FLAGS  :=
 
 SunOS-x86_CC            := gcc
@@ -222,6 +223,16 @@ Mac-arm64_LINKFLAGS := -dynamiclib -L/usr/local/lib
 Mac-arm64_LIBNAME   := libcommons-crypto.jnilib
 Mac-arm64_LIBNAME_OSSL3 := libcommons-crypto-ossl3.jnilib
 Mac-arm64_COMMONS_CRYPTO_FLAGS  :=
+
+Mac-aarch64_CC        := gcc -arch arm64
+Mac-aarch64_CXX       := gcc -arch arm64
+Mac-aarch64_STRIP     := strip -x
+Mac-aarch64_CFLAGS    := -Ilib/inc_mac -I"$(JAVA_HOME)/include" -O2 -fPIC -mmacosx-version-min=11.0 -fvisibility=hidden -I/usr/local/include -I$(Mac_INC_OPENSSL)
+Mac-aarch64_CXXFLAGS  := -Ilib/inc_mac -I"$(JAVA_HOME)/include" -O2 -fPIC -mmacosx-version-min=11.0 -fvisibility=hidden -I/usr/local/include -I$(Mac_INC_OPENSSL)
+Mac-aarch64_LINKFLAGS := -dynamiclib -L/usr/local/lib
+Mac-aarch64_LIBNAME   := libcommons-crypto.jnilib
+Mac-aarch64_LIBNAME_OSSL3 := libcommons-crypto-ossl3.jnilib
+Mac-aarch64_COMMONS_CRYPTO_FLAGS  :=
 
 FreeBSD-x86_64_CC           := $(CROSS_PREFIX)gcc
 FreeBSD-x86_64_CXX          := $(CROSS_PREFIX)g++
