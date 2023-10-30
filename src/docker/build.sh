@@ -29,6 +29,7 @@ mvn -V package -Drat.skip
 
 # use process-classes rather than package to speed up builds
 mvn -DskipTests -Drat.skip process-classes -P linux-aarch64
+mvn -DskipTests -Drat.skip process-classes -P linux-riscv64
 mvn -DskipTests -Drat.skip process-classes -P win64
 mvn -DskipTests -Drat.skip process-classes -P linux64
 

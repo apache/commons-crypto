@@ -207,6 +207,12 @@ The following provides more details on the included cryptographic software:
       </properties>
     </profile>
     <profile>
+      <id>linux-riscv64</id>
+      <properties>
+        <target.name>linux-riscv64</target.name>
+      </properties>
+    </profile>
+    <profile>
       <id>jacoco</id>
       <activation>
         <file>
