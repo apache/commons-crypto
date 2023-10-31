@@ -58,23 +58,25 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version -a
-    - name: OpenSSL engine (macos)
-      # need to override the libarary on macOS
-      if: ${{ matrix.os == 'macos-11' }}
-      run: |
-        echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
+    # - name: OpenSSL engine (macos)
+    #   # need to override the libarary on macOS
+    #   if: ${{ matrix.os == 'macos-11' }}
+    #   run: |
+    #     echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
     - name: OpenSSL engine (windows)
       # need to override the libarary on windows
       if: ${{ matrix.os == 'windows-latest' }}
+      # e.g. ENGINESDIR: "C:\Program Files\OpenSSL\lib\engines-1_1"
       run: |
         openssl version -e
         chcp 65001 #set code page to utf-8
         echo ("ENGINESDIR=C:\Program Files\OpenSSL\lib\") >> $env:GITHUB_ENV
         echo (openssl version -e).replace('ENGINESDIR: "','"ED=').replace('engines-1_1','') >> $env:GITHUB_ENV
-    - name: Build with Maven (not Windows)
-      if: ${{ matrix.os != 'windows-latest' }}
-      run: |
-        mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
+        echo (openssl version -e).replace('ENGINESDIR: "','"ED=').replace('engines-1_1','')
+    # - name: Build with Maven (not Windows)
+    #   if: ${{ matrix.os != 'windows-latest' }}
+    #   run: |
+    #     mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
     - name: Build with Maven (Windows)
       if: ${{ matrix.os == 'windows-latest' }}
       # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
@@ -86,9 +88,9 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        echo $env:ENGINESDIR
-        echo $env:ED
-        mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$env:ENGINESDIR" -D"jna.library.path=$env:ENGINESDIR"
+        echo mvn -D"jni.library.path=$env:ENGINESDIR"
+        echo mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=C:\Program Files\OpenSSL\lib\" -D"jna.library.path=C:\Program Files\OpenSSL\lib\"
+        mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=C:\Program Files\OpenSSL\lib\" -D"jna.library.path=C:\Program Files\OpenSSL\lib\"
     # - name: Run Crypto (JNI)
     #   run: |
     #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
