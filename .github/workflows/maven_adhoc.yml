@@ -31,7 +31,7 @@ jobs:
       matrix:
         # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
         # os: [macos-11, ubuntu-20.04, windows-latest]
-        os: [macos-11, windows-latest]
+        os: [ windows-latest]
         # These names are used in conditional statements below.
         # java: [ 8, 11, 17, 21 ]
         java: [ 8 ]
@@ -69,7 +69,12 @@ jobs:
       run: |
         openssl version -e
         echo "ENGINESDIR=C:\Program Files\OpenSSL\lib\" >> "$GITHUB_ENV"
-    - name: Build with Maven
+    - name: Build with Maven (not Windows)
+      if: ${{ matrix.os != 'macos-11' }}
+      run: |
+        mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
+    - name: Build with Maven (Windows)
+      if: ${{ matrix.os == 'macos-11' }}
       # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
       # It's not clear how one is supposed to find the correct setting;
       # The value below was found by searching for openssl files under C (warning: slow)
@@ -79,8 +84,8 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        echo "ED=$ENGINESDIR"
-        mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
+        echo "ENGINESDIR=%ENGINESDIR%"
+        mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=%ENGINESDIR%" -D"jna.library.path=%ENGINESDIR%"
     # - name: Run Crypto (JNI)
     #   run: |
     #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
