@@ -25,8 +25,24 @@ services:
       - ../..:/home/crypto
       - ~/.m2/repository:/root/.m2/repository
 
+  crypto-aarch64: &crypto-aarch64
+    image: commons-crypto:aarch64
+    platform: linux/arm64/v8
+    build:
+      context: .
+      dockerfile: Dockerfile.aarch64
+    # mount the source and Maven repo
+    volumes:
+      - ../..:/home/crypto
+      - ~/.m2/repository:/root/.m2/repository
+
+  crypto-aarch64-test:
+    <<: *crypto-aarch64
+    command: bash -xc "mvn -V surefire:test"
+
   crypto-riscv64: &crypto-riscv64
     image: commons-crypto:riscv64
+    platform: linux/riscv64
     build:
       context: .
       dockerfile: Dockerfile.riscv64
@@ -37,5 +53,5 @@ services:
 
   crypto-riscv64-test:
     <<: *crypto-riscv64
-    command: mvn -V surefire:test
+    command: bash -xc "mvn -V surefire:test"
 
