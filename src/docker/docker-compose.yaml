@@ -38,7 +38,7 @@ services:
 
   crypto-aarch64-test:
     <<: *crypto-aarch64
-    command: bash -xc "mvn -V surefire:test"
+    command: bash -xc "mvn -V -B -ntp surefire:test"
 
   crypto-riscv64: &crypto-riscv64
     image: commons-crypto:riscv64
@@ -53,5 +53,5 @@ services:
 
   crypto-riscv64-test:
     <<: *crypto-riscv64
-    command: bash -xc "mvn -V surefire:test"
+    command: bash -xc "mvn -V -B -ntp surefire:test"
 
