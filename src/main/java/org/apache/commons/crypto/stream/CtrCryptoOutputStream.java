@@ -373,7 +373,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     }
 
     /**
-     * Set the underlying stream offset
+     * Sets the underlying stream offset
      *
      * @param streamOffset the underlying stream offset
      */
