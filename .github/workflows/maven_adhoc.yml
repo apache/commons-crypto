@@ -58,6 +58,10 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version -a
+    - name: OpenSSL engine (unix)
+      if: ${{ matrix.os == 'macos-11' }}
+      run: |
+        echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: /=/p') >> "$GITHUB_ENV"
     - name: Build with Maven
       # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
       # It's not clear how one is supposed to find the correct setting;
@@ -67,24 +71,18 @@ jobs:
       # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-      run: mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false
-    - name: Run Crypto (JNI)
-      run: |
-        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
-    - name: Run OpenSslJna (JNA - don't override lib)
-      run: |
-        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true"
-    - name: Run OpenSslJna (JNA - macOS from openssl version -a ENGINESDIR)
-      if: ${{ matrix.os == 'macos-11' }}
-      run: |
-        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/Cellar/openssl@1.1/1.1.1w/lib/" -D"commons.crypto.debug=true"
-    - name: Run OpenSslJna (JNA - Windows from openssl version -a ENGINESDIR)
-      if: ${{ matrix.os == 'windows-latest' }}
-      run: |
-        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:\Program Files\OpenSSL\lib\" -D"commons.crypto.debug=true"
-    - name: Check benchmark code compiles
-      if: ${{ matrix.java == '8' }}
-      env:
-        OPENSSL_HOME: "C:\\Miniconda\\Library"
-      run: |
-        mvn --show-version --batch-mode --no-transfer-progress clean test-compile -Pbenchmark
+      run: mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
+    # - name: Run Crypto (JNI)
+    #   run: |
+    #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
+    # - name: Run OpenSslJna (JNA - don't override lib)
+    #   run: |
+    #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true"
+    # - name: Run OpenSslJna (JNA - macOS from openssl version -a ENGINESDIR)
+    #   if: ${{ matrix.os == 'macos-11' }}
+    #   run: |
+    #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/Cellar/openssl@1.1/1.1.1w/lib/" -D"commons.crypto.debug=true"
+    # - name: Run OpenSslJna (JNA - Windows from openssl version -a ENGINESDIR)
+    #   if: ${{ matrix.os == 'windows-latest' }}
+    #   run: |
+    #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:\Program Files\OpenSSL\lib\" -D"commons.crypto.debug=true"
