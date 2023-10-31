@@ -39,7 +39,7 @@ public final class Crypto {
         static final Properties PROPERTIES = getComponentProperties();
 
         /**
-         * Get component properties from component.properties.
+         * Gets component properties from component.properties.
          *
          * @return Properties contains project version.
          */
