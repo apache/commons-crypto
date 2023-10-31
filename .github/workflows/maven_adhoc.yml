@@ -48,14 +48,14 @@ jobs:
       fail-fast: false
         
     steps:
-    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      with:
-        persist-credentials: false
-    - name: Set up JDK ${{ matrix.java }}
-      uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
-      with:
-        distribution: 'temurin'
-        java-version: ${{ matrix.java }}
+    # - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+    #   with:
+    #     persist-credentials: false
+    # - name: Set up JDK ${{ matrix.java }}
+    #   uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+    #   with:
+    #     distribution: 'temurin'
+    #     java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version -a
     # - name: OpenSSL engine (macos)
@@ -70,10 +70,8 @@ jobs:
       run: |
         openssl version -e
         chcp 65001 #set code page to utf-8
-        echo ("ENGINESDIR=C:\Program Files\OpenSSL\lib\") >> $env:GITHUB_ENV
-        echo ("ENGINESDIR=C:\Program Files\OpenSSL\lib\")
-        echo ((openssl version -e).replace('ENGINESDIR: "','"ED=').replace('engines-1_1','')) >> $env:GITHUB_ENV
-        echo ((openssl version -e).replace('ENGINESDIR: "','"ED=').replace('engines-1_1',''))
+        echo ((openssl version -e) -replace ': "','=' -replace 'engines.+','') >> $env:GITHUB_ENV
+        echo ((openssl version -e) -replace ': "','=' -replace 'engines.+','')
     # - name: Build with Maven (not Windows)
     #   if: ${{ matrix.os != 'windows-latest' }}
     #   run: |
@@ -89,7 +87,7 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        mvn test --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=C:\Program Files\OpenSSL\lib\" -D"jna.library.path=C:\Program Files\OpenSSL\lib\"
+        echo mvn test --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=C:\Program Files\OpenSSL\lib\" -D"jna.library.path=C:\Program Files\OpenSSL\lib\"
     # - name: Run Crypto (JNI)
     #   run: |
     #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
