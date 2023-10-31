@@ -77,11 +77,11 @@ jobs:
     - name: Run OpenSslJna (JNA - macOS from openssl version -a ENGINESDIR)
       if: ${{ matrix.os == 'macos-11' }}
       run: |
-        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/Cellar/openssl@1.1/1.1.1w/lib/engines-1.1" -D"commons.crypto.debug=true"
+        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/Cellar/openssl@1.1/1.1.1w/lib/" -D"commons.crypto.debug=true"
     - name: Run OpenSslJna (JNA - Windows from openssl version -a ENGINESDIR)
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:\Program Files\OpenSSL\lib\engines-1_1" -D"commons.crypto.debug=true"
+        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:\Program Files\OpenSSL\lib\" -D"commons.crypto.debug=true"
     - name: Check benchmark code compiles
       if: ${{ matrix.java == '8' }}
       env:
