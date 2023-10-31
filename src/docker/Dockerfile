@@ -26,25 +26,25 @@ ENV PATH=${MAVEN_HOME}/bin:${PATH}
 RUN apt-get update && apt-get -y -qq install software-properties-common \
       && add-apt-repository ppa:openjdk-r/ppa && apt-get update \
       && apt-get -y -qq install openjdk-8-jdk \
-      && apt-get -y -qq install build-essential \
-      && apt-get -y -qq install libssl-dev \
-      && apt-get -y -qq install gcc-aarch64-linux-gnu \
-      && apt-get -y -qq install g++-aarch64-linux-gnu \
-      && apt-get -y -qq install gcc-riscv64-linux-gnu \
-      && apt-get -y -qq install g++-riscv64-linux-gnu \
-      && apt-get -y -qq install mingw-w64 \
-      && apt-get -y -qq install curl -L \
-      && apt-get -y -qq install dos2unix \
+                                build-essential \
+                                libssl-dev \
+                                gcc-aarch64-linux-gnu \
+                                g++-aarch64-linux-gnu \
+                                gcc-riscv64-linux-gnu \
+                                g++-riscv64-linux-gnu \
+                                mingw-w64 \
+                                curl -L \
+                                dos2unix \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 # Install 32-bit dependencies and tooling.
 RUN dpkg --add-architecture i386 && apt-get update \
       && apt-get -y -qq install libssl-dev:i386 \
-      && apt-get -y -qq install gcc-arm-linux-gnueabi \
-      && apt-get -y -qq install g++-arm-linux-gnueabi \
-      && apt-get -y -qq install gcc-arm-linux-gnueabihf \
-      && apt-get -y -qq install g++-arm-linux-gnueabihf
+                                gcc-arm-linux-gnueabi \
+                                g++-arm-linux-gnueabi \
+                                gcc-arm-linux-gnueabihf \
+                                g++-arm-linux-gnueabihf
 
 # Do this separately to make upgrades easier
 RUN curl -L https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz \
