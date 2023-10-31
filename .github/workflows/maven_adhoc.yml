@@ -70,8 +70,8 @@ jobs:
       run: |
         openssl version -e
         chcp 65001 #set code page to utf-8
-        echo ((openssl version -e) -replace ': "','=' -replace 'engines.+','') >> $env:GITHUB_ENV
-        echo ((openssl version -e) -replace ': "','=' -replace 'engines.+','')
+        echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*','' >> $env:GITHUB_ENV
+        echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*',''
     # - name: Build with Maven (not Windows)
     #   if: ${{ matrix.os != 'windows-latest' }}
     #   run: |
@@ -87,7 +87,7 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        echo mvn test --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=C:\Program Files\OpenSSL\lib\" -D"jna.library.path=C:\Program Files\OpenSSL\lib\"
+        echo mvn test --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$env:ENGINESDIR" -D"jna.library.path=$env:ENGINESDIR"
     # - name: Run Crypto (JNI)
     #   run: |
     #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
