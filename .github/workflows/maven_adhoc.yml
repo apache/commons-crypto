@@ -70,8 +70,8 @@ jobs:
       run: |
         openssl version -e
         chcp 65001 #set code page to utf-8
-        echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*','' >> $env:GITHUB_ENV
-        echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*',''
+        echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*','') >> $env:GITHUB_ENV
+        echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*','')
     # - name: Build with Maven (not Windows)
     #   if: ${{ matrix.os != 'windows-latest' }}
     #   run: |
