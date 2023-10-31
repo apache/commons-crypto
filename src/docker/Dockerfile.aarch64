@@ -23,11 +23,11 @@ ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-arm64
 ENV MAVEN_HOME=/opt/maven
 ENV PATH=${MAVEN_HOME}/bin:${PATH}
 # Install 64-bit dependencies and tooling.
-RUN apt-get update && apt-get --assume-yes install software-properties-common \
+RUN apt-get update && apt-get -y -qq install software-properties-common \
       && add-apt-repository ppa:openjdk-r/ppa && apt-get update \
-      && apt-get --assume-yes install openjdk-21-jdk \
-      && apt-get --assume-yes install libssl-dev \
-      && apt-get --assume-yes install curl \
+      && apt-get -y -qq install openjdk-21-jdk \
+      && apt-get -y -qq install libssl-dev \
+      && apt-get -y -qq install curl \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
