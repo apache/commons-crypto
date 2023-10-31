@@ -17,8 +17,25 @@ version: '3'
 services:
   crypto:
     image: commons-crypto
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     # mount the source and Maven repo
     volumes:
       - ../..:/home/crypto
       - ~/.m2/repository:/root/.m2/repository
+
+  crypto-riscv64: &crypto-riscv64
+    image: commons-crypto:riscv64
+    build:
+      context: .
+      dockerfile: Dockerfile.riscv64
+    # mount the source and Maven repo
+    volumes:
+      - ../..:/home/crypto
+      - ~/.m2/repository:/root/.m2/repository
+
+  crypto-riscv64-test:
+    <<: *crypto-riscv64
+    command: mvn -V surefire:test
+
