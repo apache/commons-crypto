@@ -175,7 +175,7 @@ public final class Crypto {
                 }
             }
             info("Additional OpenSSL_version(n) details:");
-            for (int j = 1; j < 6; j++) {
+            for (int j = 1; j < 6; j++) { // entry 0 is shown above
                 info("%s: %s", j, OpenSslInfoNative.OpenSSLVersion(j));
             }
         } else {
