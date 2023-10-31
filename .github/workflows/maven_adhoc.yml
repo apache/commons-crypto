@@ -84,8 +84,8 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        echo "ENGINESDIR=%ENGINESDIR%"
-        mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=%ENGINESDIR%" -D"jna.library.path=%ENGINESDIR%"
+        $Env:ENGINESDIR
+        echo mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$Env:ENGINESDIR" -D"jna.library.path=$Env:ENGINESDIR"
     # - name: Run Crypto (JNI)
     #   run: |
     #     mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
