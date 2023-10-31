@@ -33,7 +33,7 @@ RUN apt-get update && apt-get -y -qq install software-properties-common \
                                 gcc-riscv64-linux-gnu \
                                 g++-riscv64-linux-gnu \
                                 mingw-w64 \
-                                curl -L \
+                                curl \
                                 dos2unix \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
