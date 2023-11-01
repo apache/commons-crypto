@@ -67,7 +67,7 @@ Now perform the release (don't run mvn clean!)
 # Creating a release candidate using another OS
 
 If the Release Manager (RM) does not have access to a macOS system, they will need to obtain a copy
-of the macOS native binary from another Commons developer. 
+of the macOS native binary from another Commons developer.
 
 The process starts as above, but just before using the host system to build the release,
 add the macOS binary to the workspace at:

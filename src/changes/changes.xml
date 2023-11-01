@@ -30,9 +30,9 @@
   property to the number of days since the last release.
 
   To generate the release notes from this file:
-  
+
   mvn changes:announcement-generate -Prelease-notes [-Dchanges.version=nnn]
-  
+
   then tweak the formatting if necessary
   and commit
 
@@ -68,8 +68,8 @@
       <action                    type="fix" dev="ggregory" due-to="Martin Wittlinger">Refactor: Unnecessary toString() call #224.</action>
       <action dev="ggregory"     type="fix" due-to="step-security-bot, Gary Gregory">[StepSecurity] Harden GitHub builds #228, #234.</action>
       <action dev="ggregory"     type="fix" due-to="Martin Wiesner">Fixes grammar and typos in Javadoc #233.</action>
-      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate OpenSslJna.OpenSslJna().</action>      
-      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate Crypto.Crypto().</action>      
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate OpenSslJna.OpenSslJna().</action>
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate Crypto.Crypto().</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate AES.AES().</action>
       <action dev="ggregory"     type="fix" issue="CRYPTO-169" due-to="L. C. Hsieh, Yang Jie, Gary Gregory">Add protection for the ExceptionInInitializerError scenario to the CryptoRandomFactory#getCryptoRandom(Properties) method #258.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelInput.ChannelInput(ReadableByteChannel) now throws NullPointerException on null input.</action>

@@ -55,7 +55,7 @@ public final class Crypto {
             return versionData;
         }
     }
-    
+
     /**
      * The prefix of all crypto configuration keys.
      */

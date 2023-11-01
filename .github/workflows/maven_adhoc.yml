@@ -37,7 +37,7 @@ jobs:
         # java: [ 8, 11, 17, 21 ]
         java: [ 8 ]
         experimental: [false]
-        
+
     steps:
     # - name: Search
     #  run: |

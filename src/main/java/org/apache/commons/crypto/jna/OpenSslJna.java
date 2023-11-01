@@ -41,7 +41,7 @@ public final class OpenSslJna {
             System.out.println(String.format(Objects.toString(format), args));
         }
     }
-    
+
     /**
      * Gets the cipher class of JNA implementation.
      *
