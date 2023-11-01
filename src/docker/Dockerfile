@@ -23,32 +23,32 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV MAVEN_HOME=/opt/maven
 ENV PATH=${MAVEN_HOME}/bin:${PATH}
 # Install 64-bit dependencies and tooling.
-RUN apt-get update && apt-get -y -qq install software-properties-common \
+RUN apt-get update && apt-get --assume-yes install software-properties-common \
       && add-apt-repository ppa:openjdk-r/ppa && apt-get update \
-      && apt-get -y -qq install openjdk-8-jdk \
-                                build-essential \
-                                libssl-dev \
-                                gcc-aarch64-linux-gnu \
-                                g++-aarch64-linux-gnu \
-                                gcc-riscv64-linux-gnu \
-                                g++-riscv64-linux-gnu \
-                                mingw-w64 \
-                                curl \
-                                dos2unix \
+      && apt-get --assume-yes install openjdk-8-jdk \
+      && apt-get --assume-yes install build-essential \
+      && apt-get --assume-yes install libssl-dev \
+      && apt-get --assume-yes install gcc-aarch64-linux-gnu \
+      && apt-get --assume-yes install g++-aarch64-linux-gnu \
+      && apt-get --assume-yes install gcc-riscv64-linux-gnu \
+      && apt-get --assume-yes install g++-riscv64-linux-gnu \
+      && apt-get --assume-yes install mingw-w64 \
+      && apt-get --assume-yes install wget \
+      && apt-get --assume-yes install dos2unix \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 # Install 32-bit dependencies and tooling.
 RUN dpkg --add-architecture i386 && apt-get update \
-      && apt-get -y -qq install libssl-dev:i386 \
-                                gcc-arm-linux-gnueabi \
-                                g++-arm-linux-gnueabi \
-                                gcc-arm-linux-gnueabihf \
-                                g++-arm-linux-gnueabihf
+      && apt-get --assume-yes install libssl-dev:i386 \
+      && apt-get --assume-yes install gcc-arm-linux-gnueabi \
+      && apt-get --assume-yes install g++-arm-linux-gnueabi \
+      && apt-get --assume-yes install gcc-arm-linux-gnueabihf \
+      && apt-get --assume-yes install g++-arm-linux-gnueabihf
 
 # Do this separately to make upgrades easier
-RUN curl -L https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz \
-      | tar xzf - -C /opt && ln -s /opt/apache-maven-3.8.8 /opt/maven
+RUN wget https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz \
+&& tar xf apache-maven-*.tar.gz -C /opt && ln -s /opt/apache-maven-3.8.8 /opt/maven
 
 # Ensure we are in the correct directory (this will be overlaid by the virtual mount)
 WORKDIR /home/crypto
