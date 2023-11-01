@@ -101,6 +101,9 @@ mac64:
 macArm64:
 	$(MAKE) native OS_NAME=Mac OS_ARCH=arm64
 
+mac-aarch64:
+	$(MAKE) native OS_NAME=Mac OS_ARCH=aarch64
+
 linux32:
 	$(MAKE) native OS_NAME=Linux OS_ARCH=x86
 
@@ -121,3 +124,22 @@ linux-armhf:
 # for cross-compilation on Ubuntu, install the g++-aarch64-linux-gnu
 linux-aarch64:
 	$(MAKE) native CROSS_PREFIX=aarch64-linux-gnu- OS_NAME=Linux OS_ARCH=aarch64
+
+linux-ppc: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc
+
+linux-ppc64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc64
+
+sunos32: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=x86
+
+sunos64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=x86_64
+
+sunos-sparc: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=sparc
+
+aix-ppc64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=AIX OS_ARCH=ppc64
+
