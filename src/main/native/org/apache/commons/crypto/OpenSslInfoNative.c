@@ -81,7 +81,7 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
 
 static int load_library(JNIEnv *env)
 {
-  char msg[100];
+  char msg[1000];
 #ifdef UNIX
   void *openssl = open_library(env);
 #endif
