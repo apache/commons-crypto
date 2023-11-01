@@ -13,9 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This file creates a Docker image for use in building various native binaries
-# for Linux 64-bit and 32-bit, and Windows 64-bit and 32-bit.
-# See the README for further details.
+# This file creates a Docker image for use in building linux-aarch64 on CI
 
 FROM ubuntu:20.04
 

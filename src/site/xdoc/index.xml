@@ -84,7 +84,6 @@ limitations under the License.
       <li>debian-amd64; OpenSSL 1.1.1g</li>
       <li>debian-arm64; OpenSSL 1.1.1f</li>
       <li>linux-aarch64; OpenSSL 1.0.2k-fips</li>
-      <li>linux-riscv64; OpenSSL 1.1.1f</li>
       <li>Linux x86_64; OpenSSL 1.1.1</li>
       <li>Windows 64 (mingw64); OpenSSL 1.1.1d</li>
     </ul>
