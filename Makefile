@@ -119,9 +119,3 @@ linux-armhf:
 # for cross-compilation on Ubuntu, install the g++-aarch64-linux-gnu
 linux-aarch64:
 	$(MAKE) native CROSS_PREFIX=aarch64-linux-gnu- OS_NAME=Linux OS_ARCH=aarch64
-
-clean-native-linux32:
-	$(MAKE) clean-native OS_NAME=Linux OS_ARCH=x86
-
-clean-native-win32:
-	$(MAKE) clean-native OS_NAME=Windows OS_ARCH=x86
