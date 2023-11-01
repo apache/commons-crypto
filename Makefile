@@ -83,6 +83,8 @@ $(NATIVE_DLL): $(COMMONS_CRYPTO_OUT)/$(LIBNAME)
 	@mkdir -p $(@D)
 	cp $< $@
 
+# These targets should correspond with the entries in the list 'known_os_archs' defined in Makefile.common
+# e.g. linux32 corresponds with Linux-x86
 win32:
 	$(MAKE) native CROSS_PREFIX=i686-w64-mingw32- OS_NAME=Windows OS_ARCH=x86
 
