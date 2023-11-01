@@ -47,26 +47,26 @@ jobs:
         - os: macos-11
           java: 21
         include:
-        - os: macos-11 
+        - os: macos-11
           java: 21
-          experimental: true        
+          experimental: true
         # macos-13-arm64 does not appear to be available
         # include:
         #   - java: 21
         #     os: macos-13-arm64
-        #     experimental: true        
+        #     experimental: true
 #        include:
 #          - java: 22-ea
 #            os: ubuntu-20.04
-#            experimental: true        
+#            experimental: true
 #          - java: 22-ea
 #            os: windows-latest
-#            experimental: true        
+#            experimental: true
 #          - java: 22-ea
 #            os: macos-latest
-#            experimental: true        
+#            experimental: true
       fail-fast: false
-        
+
     steps:
     - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
@@ -84,8 +84,25 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version -a
+    - name: OpenSSL engine (macos)
+      # need to override the libarary on macOS
+      if: ${{ matrix.os == 'macos-11' }}
+      run: |
+        echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
+    - name: OpenSSL engine (windows)
+      # need to override the libarary on windows
+      if: ${{ matrix.os == 'windows-latest' }}
+      # e.g. ENGINESDIR: "C:\Program Files\OpenSSL\lib\engines-1_1"
+      # The code below extracts "C:\Program Files\OpenSSL\lib", as expected
+      # but this does not seem to be the correct setting to override system library
+      # To be resolved...
+      run: |
+        openssl version -e
+        chcp 65001 #set code page to utf-8
+        echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*','') >> $env:GITHUB_ENV
     - name: Build with Maven
-      # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
+      shell: bash
+      # OPENSSL_HOME is needed for Windows build to find some header files
       # It's not clear how one is supposed to find the correct setting;
       # The value below was found by searching for openssl files under C (warning: slow)
       # Other possible values are:
@@ -93,7 +110,8 @@ jobs:
       # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-      run: mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false
+      run: |
+        mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
     - name: Run Crypto (JNI)
       run: |
         mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
