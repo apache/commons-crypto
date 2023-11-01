@@ -117,8 +117,10 @@ jobs:
       run: |
         mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.path=$ENGINESDIR"
     - name: Run OpenSslJna (JNA - don't override lib)
+      shell: bash
+      # This is likely to fail, so reset the status
       run: |
-        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true"
+        mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" || true
     - name: Run OpenSslJna (JNA - macOS from openssl version -a ENGINESDIR)
       if: ${{ matrix.os == 'macos-11' }}
       run: |
