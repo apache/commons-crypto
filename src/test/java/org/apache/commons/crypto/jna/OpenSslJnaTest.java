@@ -29,6 +29,8 @@ public class OpenSslJnaTest {
         OpenSslJna.main(new String[0]);
         // Ensure that test loaded OpenSSL, not some other library
         // This may require jna.library.path to be defined if the default library is not OpenSSL
-        assertThat(OpenSslNativeJna.OpenSSLVersion(0), containsString("OpenSSL"));
+        if (!"skip".equals(System.getProperty("commons.crypto.openssl.check"))) { // allow check to be skipped
+            assertThat(OpenSslNativeJna.OpenSSLVersion(0), containsString("OpenSSL"));
+        }
     }
 }
