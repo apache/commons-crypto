@@ -41,15 +41,6 @@ jobs:
         # These names are used in conditional statements below.
         java: [ 8, 11, 17, 21 ]
         experimental: [false]
-        # macos-11 / java21 keeps failing: java is loading libcrypto in an unsafe way
-        # so change it to experimental to stop failing the entire workflow
-        exclude:
-        - os: macos-11
-          java: 21
-        include:
-        - os: macos-11
-          java: 21
-          experimental: true
         # macos-13-arm64 does not appear to be available
         # include:
         #   - java: 21
