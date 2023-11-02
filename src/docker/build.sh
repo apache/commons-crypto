@@ -17,7 +17,7 @@
 
 # Script to build native files under Docker
 
-set -e
+set -ex
 
 cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 
@@ -25,7 +25,7 @@ cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 
 # Run the 64-bit builds.
-mvn -V -B -ntp clean package -Drat.skip
+mvn -V -B -ntp clean package -Drat.skip $*
 
 # use process-classes rather than package to speed up builds
 mvn -DskipTests -Drat.skip process-classes -P linux-aarch64
