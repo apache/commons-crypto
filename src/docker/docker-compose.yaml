@@ -36,10 +36,6 @@ services:
       - ../..:/home/crypto
       - ~/.m2/repository:/root/.m2/repository
 
-  crypto-aarch64-test:
-    <<: *crypto-aarch64
-    command: bash -xc "mvn -V -B -ntp surefire:test"
-
   crypto-riscv64: &crypto-riscv64
     image: commons-crypto:riscv64
     platform: linux/riscv64
@@ -50,8 +46,3 @@ services:
     volumes:
       - ../..:/home/crypto
       - ~/.m2/repository:/root/.m2/repository
-
-  crypto-riscv64-test:
-    <<: *crypto-riscv64
-    command: bash -xc "mvn -V -B -ntp surefire:test"
-
