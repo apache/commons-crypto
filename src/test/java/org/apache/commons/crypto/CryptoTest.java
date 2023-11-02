@@ -63,7 +63,9 @@ public class CryptoTest {
         assertTrue(Crypto.isNativeCodeLoaded(), "Completed OK");
         // Ensure that test loaded OpenSSL, not some other library
         // This may require jni.library.path to be defined if the default library is not OpenSSL
-        assertThat(OpenSslInfoNative.OpenSSLVersion(0), containsString("OpenSSL"));
+        if (!"skip".equals(System.getProperty("commons.crypto.openssl.check"))) { // allow check to be skipped
+            assertThat(OpenSslInfoNative.OpenSSLVersion(0), containsString("OpenSSL"));
+        }
     }
 
 }
