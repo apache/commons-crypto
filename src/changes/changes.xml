@@ -160,7 +160,7 @@
     </release>
 
     <release version="1.0.0" date="2016-07-22" description="
-Initial release (Java 7).
+Initial release (Java 7 or above).
 
 The initial release is known to build on Linux, MacOS/X and Windows (using MinGW).
 
