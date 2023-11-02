@@ -143,7 +143,7 @@ jobs:
         include:
           - platform: aarch64
           - platform: riscv64
-            build_params: "-Djna.version=5.12.0" # See https://github.com/java-native-access/jna/issues/1557
+            jna_override: "-Djna.version=5.12.0" # See https://github.com/java-native-access/jna/issues/1557
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -154,6 +154,7 @@ jobs:
             platforms: ${{ matrix.platform }}
       - run: |
           # Build package
-          docker compose -f src/docker/docker-compose.yaml run crypto src/docker/build.sh ${{ matrix.build_params }}
+          docker compose -f src/docker/docker-compose.yaml run crypto src/docker/build.sh
           # Run on platform
-          docker compose -f src/docker/docker-compose.yaml run crypto-${{ matrix.platform }}-test
+          docker compose -f src/docker/docker-compose.yaml run crypto-${{ matrix.platform }} \
+            mvn -V -B -ntp surefire:test ${{ matrix.jna_override }}
