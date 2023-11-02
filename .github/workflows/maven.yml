@@ -97,29 +97,28 @@ jobs:
       # but this does not seem to be the correct setting to override system library
       # To avoid failing tests unnecessarily, skip the check for OpenSSL in the library name
       # To be resolved...
-      shell: bash
+      # N.B. This must *not* be run under the bash shell, as that changes the default openssl library
       run: |
-        openssl version -e
-        echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
-        echo "CHECK_SKIP=skip" >> $GITHUB_ENV
+        openssl version -a
+        chcp 65001 #set code page to utf-8
+        echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*','') >> $env:GITHUB_ENV
+        echo "CHECK_SKIP=skip" >> $env:GITHUB_ENV
     - name: Build with Maven
-      shell: bash
       # OPENSSL_HOME is needed for Windows build to find some header files
       # It's not clear how one is supposed to find the correct setting;
       # The value below was found by searching for openssl files under C (warning: slow)
       # Other possible values are:
       # "C:\\Miniconda\\pkgs\\openssl-1.1.1n-h2bbff1b_0\\Library"
       # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
+      # N.B. This must *not* be run under the bash shell, as that changes the default openssl library under Windows
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
         mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR" -D"commons.crypto.openssl.check=$CHECK_SKIP"
     - name: Run Crypto (JNI - override default lib)
-      shell: bash
       run: |
         mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.path=$ENGINESDIR"
     - name: Run OpenSslJna (JNA - don't override lib)
-      shell: bash
       # This is likely to fail, so reset the status
       run: |
         mvn --show-version --batch-mode --no-transfer-progress -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" || true
