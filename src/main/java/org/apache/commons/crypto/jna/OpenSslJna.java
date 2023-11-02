@@ -41,7 +41,7 @@ public final class OpenSslJna {
             System.out.println(String.format(Objects.toString(format), args));
         }
     }
-    
+
     /**
      * Gets the cipher class of JNA implementation.
      *
@@ -96,6 +96,7 @@ public final class OpenSslJna {
      * @throws Throwable Throws value from {@link #initialisationError()}.
      */
     public static void main(final String[] args) throws Throwable {
+        info("jna.library.path=%s", System.getProperty("jna.library.path"));
         info(Crypto.getComponentName() + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
         final Throwable initialisationError = initialisationError();
         if (initialisationError != null) {

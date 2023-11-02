@@ -52,8 +52,15 @@ endif
 
 
 # os=Default is meant to be generic Unix/Linux
-# The following list must include all OS entries beloe (apart from Default)
-known_os_archs := Linux-x86 Linux-x86_64 Linux-aarch64 Linux-arm Linux-armhf Linux-ppc Linux-ppc64 Linux-riscv64 Mac-x86 Mac-x86_64 Mac-arm64 Mac-aarch64 FreeBSD-x86_64 Windows-x86 Windows-x86_64 SunOS-x86 SunOS-sparc SunOS-x86_64 AIX-ppc64
+# The following list must include all OS entries below (apart from Default)
+# Also there should be a target in the makefile for each of the combinations
+# For example, 'Linux-x86' is invoked by the target 'linux32'
+known_os_archs := Linux-x86 Linux-x86_64 Linux-aarch64 Linux-riscv64 Linux-arm Linux-armhf Linux-ppc Linux-ppc64 \
+                  Mac-x86 Mac-x86_64 Mac-arm64 Mac-aarch64 \
+                  FreeBSD-x86_64 \
+                  Windows-x86 Windows-x86_64 \
+                  SunOS-x86 SunOS-sparc SunOS-x86_64 \
+                  AIX-ppc64
 os_arch := $(OS_NAME)-$(OS_ARCH)
 
 ifeq (,$(findstring $(strip $(os_arch)),$(known_os_archs)))

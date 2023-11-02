@@ -30,9 +30,9 @@
   property to the number of days since the last release.
 
   To generate the release notes from this file:
-  
+
   mvn changes:announcement-generate -Prelease-notes [-Dchanges.version=nnn]
-  
+
   then tweak the formatting if necessary
   and commit
 
@@ -65,11 +65,22 @@
   <body>
     <release version="1.2.1" date="202X-MM-DD" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
+      <action issue="CRYPTO-171" type="fix" dev="sebb">openssl(2) not supported since Sierra on macOS M1</action>
+      <action                    type="fix" dev="sebb">pom.xml: copy compiler args for benchmarks</action>
+      <action                    type="fix" dev="sebb">pom.xml: don't install as defaultGoal</action>
+      <action                    type="fix" dev="sebb">pom.xml: change default to utf-8; drop stuff done in parent</action>
+      <action                    type="fix" dev="sebb">PMD: drop deprecated rules</action>
+      <action                    type="fix" dev="sebb">dlerror message can exceed 100 chars</action>
+      <action                    type="fix" dev="sebb">Makefile: restore commented out targets that are needed</action>
+      <action                    type="fix" dev="sebb">Makefile: add Mac-aarch64 to os_known_archs</action>
+      <action                    type="fix" dev="sebb">Makefile: ensure all known_os_archs have targets</action>
+      <action                    type="fix" dev="sebb">Makefile: arm64-apple-macos11 is not a valid OS_ARCH value</action>
+      <action                    type="fix" dev="sebb">Makefile: add target to show OS and ARCH settings</action>
       <action                    type="fix" dev="ggregory" due-to="Martin Wittlinger">Refactor: Unnecessary toString() call #224.</action>
       <action dev="ggregory"     type="fix" due-to="step-security-bot, Gary Gregory">[StepSecurity] Harden GitHub builds #228, #234.</action>
       <action dev="ggregory"     type="fix" due-to="Martin Wiesner">Fixes grammar and typos in Javadoc #233.</action>
-      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate OpenSslJna.OpenSslJna().</action>      
-      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate Crypto.Crypto().</action>      
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate OpenSslJna.OpenSslJna().</action>
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate Crypto.Crypto().</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate AES.AES().</action>
       <action dev="ggregory"     type="fix" issue="CRYPTO-169" due-to="L. C. Hsieh, Yang Jie, Gary Gregory">Add protection for the ExceptionInInitializerError scenario to the CryptoRandomFactory#getCryptoRandom(Properties) method #258.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelInput.ChannelInput(ReadableByteChannel) now throws NullPointerException on null input.</action>
@@ -77,6 +88,8 @@
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelOutput.ChannelOutput(WritableByteChannel) now throws NullPointerException on null input.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">StreamOutput.StreamOutput(OutputStream, int) now throws NullPointerException on null input.</action>
       <!-- UPDATE -->
+      <action                    type="update" dev="sebb" due-to="Ludovic Henry">Dockerfile: Bump maven to 3.8.8 (previous no longer online)</action>
+      <action                    type="update" dev="sebb">Tests: show details of crypt library actually loaded</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 64 #225.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>
     </release>

@@ -16,6 +16,9 @@
  */
 package org.apache.commons.crypto;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -54,10 +57,13 @@ public class CryptoTest {
 
     @Test
     public void testMain() throws Throwable {
-        // Check that Crypt.main will actually run tests
+        // Check that Crypto.main will actually run tests
         assertTrue(Crypto.isNativeCodeLoaded(), "Native code loaded OK");
-        Crypto.main(new String[] { "-q" }); // output causes issues for testing
+        Crypto.main(new String[] { }); // show the JNI library details
         assertTrue(Crypto.isNativeCodeLoaded(), "Completed OK");
+        // Ensure that test loaded OpenSSL, not some other library
+        // This may require jni.library.path to be defined if the default library is not OpenSSL
+        assertThat(OpenSslInfoNative.OpenSSLVersion(0), containsString("OpenSSL"));
     }
 
 }

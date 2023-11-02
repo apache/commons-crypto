@@ -216,7 +216,15 @@ static void pthreads_locking_callback(int mode, int type, char *file, int line)
 
 static unsigned long pthreads_thread_id(void)
 {
+// CRYPTO-171 - not supported on macOS M1 after 10.12 (Sierra)
+// It would be best to throw an error, but that does not seem possible
+// without access to the JNI environment, so print a message instead
+#if defined(MAC_OS) && defined(__arm64__)
+  fprintf(stderr, "openssl(2) is not supported on this architecture\n");
+  return 0;
+#else
   return (unsigned long)syscall(SYS_gettid);
+#endif
 }
 
 static void locks_setup(void)

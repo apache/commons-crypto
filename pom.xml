@@ -27,10 +27,10 @@
 
   <name>Apache Commons Crypto</name>
   <description>
-Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption Standard New Instructions). 
+Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption Standard New Instructions).
 It provides Java API for both the cipher level and Java stream level.
-Developers can use it to implement high-performance AES encryption/decryption with minimum code and effort. 
-Please note that Crypto doesn't implement the cryptographic algorithm such as AES directly. 
+Developers can use it to implement high-performance AES encryption/decryption with minimum code and effort.
+Please note that Crypto doesn't implement the cryptographic algorithm such as AES directly.
 It wraps OpenSSL and JCE which implements the algorithms.
 
 Features
@@ -131,7 +131,7 @@ The following provides more details on the included cryptographic software:
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
 
     <japicmp.skip>false</japicmp.skip>
-    
+
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <jna.version>5.13.0</jna.version>
 
@@ -341,7 +341,7 @@ The following provides more details on the included cryptographic software:
           <version>2.3.8</version>
         </dependency>
       </dependencies>
-    </profile>  
+    </profile>
   </profiles>
 
   <build>
@@ -419,7 +419,7 @@ The following provides more details on the included cryptographic software:
             <ruleset>${basedir}/src/conf/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
-      </plugin>    
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -645,6 +645,12 @@ The following provides more details on the included cryptographic software:
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <developers>
@@ -714,7 +720,7 @@ The following provides more details on the included cryptographic software:
       <email>ggregory at apache.org</email>
       <url>https://www.garygregory.com</url>
       <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>      
+      <organizationUrl>https://www.apache.org/</organizationUrl>
       <roles>
         <role>PMC Member</role>
       </roles>

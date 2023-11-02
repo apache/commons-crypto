@@ -55,7 +55,7 @@ public final class Crypto {
             return versionData;
         }
     }
-    
+
     /**
      * The prefix of all crypto configuration keys.
      */
@@ -151,6 +151,7 @@ public final class Crypto {
      */
     public static void main(final String[] args) throws Exception {
         quiet = args.length == 1 && args[0].equals("-q");
+        info("jni.library.path=%s", System.getProperty("jni.library.path"));
         info("%s %s", getComponentName(), getComponentVersion());
         if (isNativeCodeLoaded()) {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
@@ -175,7 +176,7 @@ public final class Crypto {
                 }
             }
             info("Additional OpenSSL_version(n) details:");
-            for (int j = 1; j < 6; j++) {
+            for (int j = 1; j < 6; j++) { // entry 0 is shown above
                 info("%s: %s", j, OpenSslInfoNative.OpenSSLVersion(j));
             }
         } else {
