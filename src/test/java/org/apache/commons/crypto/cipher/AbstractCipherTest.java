@@ -173,7 +173,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void closeTestAfterInit() throws Exception {
+	public void testCloseTestAfterInit() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
@@ -182,7 +182,7 @@ public abstract class AbstractCipherTest {
 	}
 
     @Test
-	public void closeTestNoInit() throws Exception {
+	public void testCloseTestNoInit() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
 		try (final CryptoCipher enc = getCipher(transformations[0])) {
@@ -191,7 +191,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void closeTestRepeat() throws Exception {
+	public void testCloseTestRepeat() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
@@ -201,7 +201,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void cryptoTest() throws Exception {
+	public void testCryptoTest() throws Exception {
 		for (final String tran : transformations) {
 			/** uses the small data set in {@link TestData} */
 			cipherTests = TestData.getTestData(tran);
@@ -241,7 +241,7 @@ public abstract class AbstractCipherTest {
     }
 
 	@Test
-    public void reInitAfterClose() throws Exception {
+    public void testReInitAfterClose() throws Exception {
         // This test deliberately does not use try with resources in order to control
         // the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
@@ -252,7 +252,7 @@ public abstract class AbstractCipherTest {
     }
 
 	@Test
-	public void reInitTest() throws Exception {
+	public void testReInitTest() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {

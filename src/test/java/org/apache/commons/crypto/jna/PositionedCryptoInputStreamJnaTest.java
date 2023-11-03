@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 public class PositionedCryptoInputStreamJnaTest extends PositionedCryptoInputStreamTest {
 
     @Test
-    public void doTest() throws Exception {
+    public void testCipher() throws Exception {
         testCipher(OpenSslJnaCipher.class.getName());
     }
 

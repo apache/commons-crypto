@@ -277,12 +277,12 @@ public class PositionedCryptoInputStreamTest {
     }
 
     @Test
-    public void doTestJCE() throws Exception {
+    public void testJCE() throws Exception {
         testCipher(AbstractCipherTest.JCE_CIPHER_CLASSNAME);
     }
 
     @Test
-    public void doTestJNI() throws Exception {
+    public void testJNI() throws Exception {
         assumeTrue(Crypto.isNativeCodeLoaded());
         testCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME);
     }
