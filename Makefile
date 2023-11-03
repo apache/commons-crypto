@@ -130,7 +130,7 @@ linux-riscv64:
 	$(MAKE) native CROSS_PREFIX=riscv64-linux-gnu- OS_NAME=Linux OS_ARCH=riscv64
 
 linux-ppc: # TODO: Untested; may need additional CROSS_PREFIX define
-       $(MAKE) native OS_NAME=Linux OS_ARCH=ppc
+	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc
 
 linux-ppc64: # TODO: Untested; may need additional CROSS_PREFIX define
 	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc64
