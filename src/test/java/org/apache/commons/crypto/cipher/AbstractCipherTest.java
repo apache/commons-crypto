@@ -172,6 +172,36 @@ public abstract class AbstractCipherTest {
 		}
 	}
 
+	private CryptoCipher getCipher(final String transformation) throws ClassNotFoundException {
+		return (CryptoCipher) ReflectionUtils.newInstance(ReflectionUtils.getClassByName(cipherClass), props,
+				transformation);
+	}
+
+    protected abstract void init();
+
+	SecretKeySpec newSecretKeySpec() {
+        return AES.newSecretKeySpec(KEY);
+    }
+
+	private void resetCipher(final String transformation, final byte[] key, final byte[] iv)
+			throws ClassNotFoundException, InvalidKeyException, InvalidAlgorithmParameterException {
+		enc = getCipher(transformation);
+		dec = getCipher(transformation);
+
+		enc.init(Cipher.ENCRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
+
+		dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
+	}
+
+	@BeforeEach
+	public void setup() {
+		init();
+		assertNotNull(cipherClass, "cipherClass");
+		assertNotNull(transformations, "transformations");
+		props = new Properties();
+		props.setProperty(CryptoCipherFactory.CLASSES_KEY, cipherClass);
+	}
+
 	@Test
 	public void testCloseTestAfterInit() throws Exception {
 		// This test deliberately does not use try with resources in order to control
@@ -181,7 +211,7 @@ public abstract class AbstractCipherTest {
         }
 	}
 
-    @Test
+	@Test
 	public void testCloseTestNoInit() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
@@ -229,58 +259,6 @@ public abstract class AbstractCipherTest {
 		}
 	}
 
-	private CryptoCipher getCipher(final String transformation) throws ClassNotFoundException {
-		return (CryptoCipher) ReflectionUtils.newInstance(ReflectionUtils.getClassByName(cipherClass), props,
-				transformation);
-	}
-
-	protected abstract void init();
-
-	SecretKeySpec newSecretKeySpec() {
-        return AES.newSecretKeySpec(KEY);
-    }
-
-	@Test
-    public void testReInitAfterClose() throws Exception {
-        // This test deliberately does not use try with resources in order to control
-        // the sequence of operations exactly
-        try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-            enc.close();
-            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-        }
-    }
-
-	@Test
-	public void testReInitTest() throws Exception {
-		// This test deliberately does not use try with resources in order to control
-		// the sequence of operations exactly
-        try (final CryptoCipher enc = getCipher(transformations[0])) {
-            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
-        }
-	}
-
-	private void resetCipher(final String transformation, final byte[] key, final byte[] iv)
-			throws ClassNotFoundException, InvalidKeyException, InvalidAlgorithmParameterException {
-		enc = getCipher(transformation);
-		dec = getCipher(transformation);
-
-		enc.init(Cipher.ENCRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
-
-		dec.init(Cipher.DECRYPT_MODE, AES.newSecretKeySpec(key), new IvParameterSpec(iv));
-	}
-
-	@BeforeEach
-	public void setup() {
-		init();
-		assertNotNull(cipherClass, "cipherClass");
-		assertNotNull(transformations, "transformations");
-		props = new Properties();
-		props.setProperty(CryptoCipherFactory.CLASSES_KEY, cipherClass);
-	}
-
 	@Test
 	public void testInvalidIV() throws Exception {
 		for (final String transform : transformations) {
@@ -326,5 +304,27 @@ public abstract class AbstractCipherTest {
 	public void testNullTransform() {
 		assertThrows(IllegalArgumentException.class,
 				() -> getCipher(null).close());
+	}
+
+	@Test
+    public void testReInitAfterClose() throws Exception {
+        // This test deliberately does not use try with resources in order to control
+        // the sequence of operations exactly
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+            enc.close();
+            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+        }
+    }
+
+	@Test
+	public void testReInitTest() throws Exception {
+		// This test deliberately does not use try with resources in order to control
+		// the sequence of operations exactly
+        try (final CryptoCipher enc = getCipher(transformations[0])) {
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+            enc.init(Cipher.DECRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+            enc.init(Cipher.ENCRYPT_MODE, newSecretKeySpec(), new IvParameterSpec(IV));
+        }
 	}
 }
