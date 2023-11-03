@@ -17,15 +17,14 @@
 
 FROM riscv64/ubuntu:20.04
 
-ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-riscv64
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-riscv64
 ENV MAVEN_HOME=/opt/maven
 ENV PATH=${MAVEN_HOME}/bin:${PATH}
 # Install 64-bit dependencies and tooling.
-RUN apt-get update && apt-get -y -qq install software-properties-common \
-      && add-apt-repository ppa:openjdk-r/ppa && apt-get update \
-      && apt-get -y -qq install openjdk-21-jdk \
-                                libssl-dev \
-                                curl \
+RUN apt-get update -qq && apt-get -y -qq install \
+        openjdk-17-jre-headless \
+        libssl-dev \
+        curl \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
