@@ -22,7 +22,6 @@ on:
   workflow_dispatch:
   push:
     include:
-      - '**/jna/**'
       - '**/native/**'
       - '**/maven_crossbuild.yml'
 
