@@ -59,6 +59,10 @@ jobs:
 #          - java: 22-ea
 #            os: macos-latest
 #            experimental: true
+        # We don't need to build all Java versions every time
+        # Try excluding 11, 17 on branch pushes
+        exclude:
+          java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push_request') && [11, 17] || [] }} 
       fail-fast: false
 
     steps:
