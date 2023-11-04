@@ -28,7 +28,6 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     strategy:
@@ -44,9 +43,9 @@ jobs:
 
     steps:
     - name: Search
-     run: |
-       dir "C:\Progam Files"
-       dir "C:\Progam Files\OpenSSL"
+      run: |
+        dir "C:\Progam Files"
+        dir "C:\Progam Files\OpenSSL"
       #  Get-Childitem –Path "C:\Program Files"  -File -Include libcrypto* -Recurse -ErrorAction SilentlyContinue
     #  - name: Checkout
     #    uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
