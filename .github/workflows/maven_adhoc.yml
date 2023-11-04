@@ -18,6 +18,10 @@ name: Maven adhoc
 on:
   # allow direct trigger
   workflow_dispatch:
+  # self-trigger
+  push:
+    paths:
+      - '**/maven_adhoc.yml'
 
 permissions:
   contents: read
@@ -39,47 +43,25 @@ jobs:
         experimental: [false]
 
     steps:
-    # - name: Search
-    #  run: |
-    #    dir c:\
-    #    Get-Childitem –Path "C:\Program Files"  -File -Include libcrypto* -Recurse -ErrorAction SilentlyContinue
-     - name: Checkout
-       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-       with:
-         persist-credentials: false
-     - name: Set up JDK ${{ matrix.java }}
-       uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
-       with:
-         distribution: 'temurin'
-         java-version: ${{ matrix.java }}
-     - name: OpenSSL version
-       run: openssl version -a
-     - name: OpenSSL engine (macos)
-       # need to override the libarary on macOS
-       if: ${{ matrix.os == 'macos-11' }}
-       run: |
-         echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
-     - name: OpenSSL engine (windows)
-       # need to override the libarary on windows
-       if: ${{ matrix.os == 'windows-latest' }}
-       # e.g. ENGINESDIR: "C:\Program Files\OpenSSL\lib\engines-1_1"
-       run: |
-         chcp 65001 #set code page to utf-8
-         echo ((openssl version -e) -replace ': "','=' -replace '\\engines-.*','') >> $env:GITHUB_ENV
-     # - name: Build with Maven (not Windows)
-     #   if: ${{ matrix.os != 'windows-latest' }}
-     #   run: |
-     #     mvn --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
-     - name: Build with Maven
-       shell: bash
-       # OPENSSL_HOME is needed for Windows build; not used by other builds so can set unconditionally
-       # It's not clear how one is supposed to find the correct setting;
-       # The value below was found by searching for openssl files under C (warning: slow)
-       # Other possible values are:
-       # "C:\\Miniconda\\pkgs\\openssl-1.1.1n-h2bbff1b_0\\Library"
-       # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
-       env:
-         OPENSSL_HOME: "C:\\Miniconda\\Library"
-         ENGINESDIR: "C:\\Program Files\\OpenSSL"
-       run: |
-         mvn test --show-version --batch-mode --no-transfer-progress -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
+    - name: Search
+     run: |
+       dir "C:\Progam Files"
+       dir "C:\Progam Files\OpenSSL"
+      #  Get-Childitem –Path "C:\Program Files"  -File -Include libcrypto* -Recurse -ErrorAction SilentlyContinue
+    #  - name: Checkout
+    #    uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+    #    with:
+    #      persist-credentials: false
+    #  - name: Set up JDK ${{ matrix.java }}
+    #    uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+    #    with:
+    #      distribution: 'temurin'
+    #      java-version: ${{ matrix.java }}
+    #  - name: OpenSSL version
+    #    run: openssl version -a
+    #  - name: Build with Maven
+    #    env:
+    #      OPENSSL_HOME: "C:\\Miniconda\\Library"
+    #      ENGINESDIR: "C:\\Program Files\\OpenSSL"
+    #    run: |
+    #      mvn test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:ENGINESDIR" -D"jna.library.path=$env:ENGINESDIR"
