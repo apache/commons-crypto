@@ -103,10 +103,14 @@ final class NativeCodeLoader {
                 if (isDebug()) {
                     debug("Extracted '%s' to '%s': %,d bytes [%s]", nativeLibraryFilePath, extractedLibFile, byteCount,
                             Files.isExecutable(path) ? "X+" : "X-");
-                    final PosixFileAttributes attributes = Files.readAttributes(path, PosixFileAttributes.class);
-                    if (attributes != null) {
-                        debug("Attributes '%s': %s %s %s", extractedLibFile, attributes.permissions(),
-                                attributes.owner(), attributes.group());
+                    try {
+                        final PosixFileAttributes attributes = Files.readAttributes(path, PosixFileAttributes.class);
+                        if (attributes != null) {
+                            debug("Attributes '%s': %s %s %s", extractedLibFile, attributes.permissions(),
+                                    attributes.owner(), attributes.group());
+                        }
+                    } catch (final UnsupportedOperationException e)  {
+                        debug(e.getMessage());
                     }
                 }
             } finally {
