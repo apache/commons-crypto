@@ -62,8 +62,8 @@ jobs:
         # We don't need to build all Java versions every time
         # Try excluding 11, 17 on branch pushes
         exclude:
-          - java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push_request') && 11 || 99 }} 
-          - java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push_request') && 17 || 99 }} 
+          - java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push') && 11 || 99 }} 
+          - java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push') && 17 || 99 }} 
       fail-fast: false
 
     steps:
