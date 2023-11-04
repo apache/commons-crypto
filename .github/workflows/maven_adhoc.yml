@@ -65,6 +65,7 @@ jobs:
         LIB: "C:\\Program Files\\OpenSSL\\lib"
       run: |
         mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip"
+        mvn test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
     - name: JNA test
       if: always()
       env:
