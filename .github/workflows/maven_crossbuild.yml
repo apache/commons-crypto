@@ -1,0 +1,53 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Java Cross Build
+
+# This is done as a separate action for now, as it takes a long time
+
+on:
+  # allow direct trigger
+  workflow_dispatch:
+  push:
+    include:
+      - '**/jna/**'
+      - '**/native/**'
+      - '**/maven_crossbuild.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-cross:
+    strategy:
+      matrix:
+        include:
+          - platform: aarch64
+          - platform: riscv64
+            jna_override: "-Djna.version=5.12.0" # See https://github.com/java-native-access/jna/issues/1557
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
+      - uses: docker/setup-qemu-action@2b82ce82d56a2a04d2637cd93a637ae1b359c0a7 # v2
+        with:
+            platforms: ${{ matrix.platform }}
+      - run: |
+          # Build package
+          docker compose -f src/docker/docker-compose.yaml run crypto src/docker/build.sh
+          # Run on platform
+          docker compose -f src/docker/docker-compose.yaml run crypto-${{ matrix.platform }} \
+            mvn -V -B -ntp surefire:test ${{ matrix.jna_override }}

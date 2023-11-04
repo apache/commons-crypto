@@ -15,6 +15,8 @@
 
 name: Java CI
 
+# cross-build tests are done in a separate action as they currrently take a long time
+
 on:
   # allow direct trigger
   workflow_dispatch:
@@ -22,6 +24,7 @@ on:
     paths-ignore:
       - '**/workflows/*.yml'
       - '!**/workflows/maven.yml'
+      - '!**/workflows/maven_crossbuild.yml'
   pull_request:
     paths-ignore:
       - '**/workflows/*.yml'
@@ -122,25 +125,3 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
         mvn -V -B -ntp clean test-compile -Pbenchmark
-
-  build-cross:
-    strategy:
-      matrix:
-        include:
-          - platform: aarch64
-          - platform: riscv64
-            jna_override: "-Djna.version=5.12.0" # See https://github.com/java-native-access/jna/issues/1557
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-        with:
-          persist-credentials: false
-      - uses: docker/setup-qemu-action@2b82ce82d56a2a04d2637cd93a637ae1b359c0a7 # v2
-        with:
-            platforms: ${{ matrix.platform }}
-      - run: |
-          # Build package
-          docker compose -f src/docker/docker-compose.yaml run crypto src/docker/build.sh
-          # Run on platform
-          docker compose -f src/docker/docker-compose.yaml run crypto-${{ matrix.platform }} \
-            mvn -V -B -ntp surefire:test ${{ matrix.jna_override }}
