@@ -77,7 +77,9 @@ void close_library();
 #include <dlfcn.h>
 #include <jni.h>
 
-void *open_library(JNIEnv *env);
+typedef void * HMODULE; // to agree with Windows type name
+
+HMODULE open_library(JNIEnv *env);
 
 /**
  * A helper function to dlsym a 'symbol' from a given library-handle.
@@ -133,16 +135,20 @@ void *do_dlsym_fallback(JNIEnv *env, void *handle, const char *symbol, const cha
 }
 
 /* A helper macro to dlsym the requisite dynamic symbol and bail-out on error. */
-#define LOAD_DYNAMIC_SYMBOL(func_ptr, env, handle, symbol) \
+// func_type is currently ignored, so can use same macro invocation as for Windows
+#define LOAD_DYNAMIC_SYMBOL(_func_type, func_ptr, env, handle, symbol) \
   if ((func_ptr = do_dlsym(env, handle, symbol)) == NULL) { \
     return; \
   }
 
 /* A macro to dlsym the requisite dynamic symbol (with fallback) and bail-out on error. */
-#define LOAD_DYNAMIC_SYMBOL_FALLBACK(func_ptr, env, handle, symbol, fallback) \
+// func_type is currently ignored, so can use same macro invocation as for Windows
+#define LOAD_DYNAMIC_SYMBOL_FALLBACK(_func_type, func_ptr, env, handle, symbol, fallback) \
   if ((func_ptr = do_dlsym_fallback(env, handle, symbol, fallback)) == NULL) { \
     return; \
   }
+// Macro to hide different method names
+#define GET_LAST_ERROR dlerror()
 #endif
 // Unix part end
 
@@ -251,6 +257,8 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
   }
   return func_ptr;
 }
+// Macro to hide different method names
+#define GET_LAST_ERROR GetLastError()
 #endif
 // Windows part end
 
