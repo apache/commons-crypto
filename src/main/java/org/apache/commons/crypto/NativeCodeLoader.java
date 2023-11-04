@@ -110,7 +110,7 @@ final class NativeCodeLoader {
                                     attributes.owner(), attributes.group());
                         }
                     } catch (final UnsupportedOperationException e)  {
-                        debug(e.getMessage());
+                        debug("Files.readAttributes failed on %s: %s", path, e.getMessage());
                     }
                 }
             } finally {
