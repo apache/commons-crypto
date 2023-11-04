@@ -64,7 +64,7 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
         LIB: "C:\\Program Files\\OpenSSL\\lib"
       run: |
-        mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.debug=true"  -D"commons.crypto.openssl.check=skip"
+        mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip"
     - name: JNA test
       if: always()
       env:
