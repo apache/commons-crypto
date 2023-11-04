@@ -50,18 +50,30 @@ jobs:
     - name: OpenSSL version
       run: openssl version -a
       #  Get-Childitem –Path "C:\Program Files"  -File -Include libcrypto* -Recurse -ErrorAction SilentlyContinue
-    #  - name: Checkout
-    #    uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-    #    with:
-    #      persist-credentials: false
-    #  - name: Set up JDK ${{ matrix.java }}
-    #    uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
-    #    with:
-    #      distribution: 'temurin'
-    #      java-version: ${{ matrix.java }}
-    #  - name: Build with Maven
-    #    env:
-    #      OPENSSL_HOME: "C:\\Miniconda\\Library"
-    #      ENGINESDIR: "C:\\Program Files\\OpenSSL"
-    #    run: |
-    #      mvn test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:ENGINESDIR" -D"jna.library.path=$env:ENGINESDIR"
+     - name: Checkout
+       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+       with:
+         persist-credentials: false
+     - name: Set up JDK ${{ matrix.java }}
+       uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+       with:
+         distribution: 'temurin'
+         java-version: ${{ matrix.java }}
+     - name: Build with Maven
+       env:
+         OPENSSL_HOME: "C:\\Miniconda\\Library"
+         LIB: "C:\\Program Files\\OpenSSL"
+       run: |
+         mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB"
+     - name: JNA test
+      if: always()
+       env:
+         LIB: "C:\\Program Files\\OpenSSL"
+       run: |
+          mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -Dcommons.crypto.debug -D"jna.library.path=$env:LIB"
+     - name: JNI test
+      if: always()
+       env:
+         LIB: "C:\\Program Files\\OpenSSL"
+       run: |
+          mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -Dcommons.crypto.debug -D"jni.library.path=$env:LIB"
