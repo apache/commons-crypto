@@ -21,7 +21,7 @@ on:
   # allow direct trigger
   workflow_dispatch:
   push:
-    include:
+    paths:
       - '**/native/**'
       - '**/maven_crossbuild.yml'
 
