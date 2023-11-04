@@ -101,13 +101,7 @@ static __dlsym_EVP_aes_192_gcm dlsym_EVP_aes_192_gcm;
 static __dlsym_EVP_aes_128_gcm dlsym_EVP_aes_128_gcm;
 #endif
 
-#ifdef UNIX
-static void loadAes(JNIEnv *env, void *openssl)
-#endif
-
-#ifdef WINDOWS
 static void loadAes(JNIEnv *env, HMODULE openssl)
-#endif
 {
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_256_ctr, dlsym_EVP_aes_256_ctr,  \
                       env, openssl, "EVP_aes_256_ctr");

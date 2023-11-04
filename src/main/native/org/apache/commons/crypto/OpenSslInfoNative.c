@@ -54,12 +54,7 @@ static __dlsym_OpenSSL_version dlsym_OpenSSL_version;
 
 static char dynamicLibraryPath[80];  // where was the crypto library found?
 
-#ifdef UNIX
-static void get_methods(JNIEnv *env, void *openssl)
-#endif
-#ifdef WINDOWS
 static void get_methods(JNIEnv *env, HMODULE openssl)
-#endif
 {
   LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
   LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
