@@ -46,6 +46,9 @@ jobs:
       run: |
         dir "C:\Program Files"
         dir "C:\Program Files\OpenSSL"
+        dir "C:\Program Files\OpenSSL\lib"
+    - name: OpenSSL version
+      run: openssl version -a
       #  Get-Childitem –Path "C:\Program Files"  -File -Include libcrypto* -Recurse -ErrorAction SilentlyContinue
     #  - name: Checkout
     #    uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -56,8 +59,6 @@ jobs:
     #    with:
     #      distribution: 'temurin'
     #      java-version: ${{ matrix.java }}
-    #  - name: OpenSSL version
-    #    run: openssl version -a
     #  - name: Build with Maven
     #    env:
     #      OPENSSL_HOME: "C:\\Miniconda\\Library"
