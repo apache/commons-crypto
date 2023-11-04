@@ -30,6 +30,8 @@ RUN apt-get update && apt-get --assume-yes install software-properties-common \
       && apt-get --assume-yes install libssl-dev \
       && apt-get --assume-yes install gcc-aarch64-linux-gnu \
       && apt-get --assume-yes install g++-aarch64-linux-gnu \
+      && apt-get --assume-yes install gcc-riscv64-linux-gnu \
+      && apt-get --assume-yes install g++-riscv64-linux-gnu \
       && apt-get --assume-yes install mingw-w64 \
       && apt-get --assume-yes install wget \
       && apt-get --assume-yes install dos2unix \
