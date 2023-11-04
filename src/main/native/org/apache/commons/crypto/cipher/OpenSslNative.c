@@ -133,13 +133,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
     (JNIEnv *env, jclass clazz)
 {
   char msg[1000];
-#ifdef UNIX
-  void *openssl = open_library(env);
-#endif
-
-#ifdef WINDOWS
   HMODULE openssl = open_library(env);
-#endif
 
   if (!openssl) {
 #ifdef UNIX

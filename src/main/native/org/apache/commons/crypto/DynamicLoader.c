@@ -22,15 +22,8 @@ Shared code to load and unload the library.
 
 #include "org_apache_commons_crypto.h"
 
-#ifdef UNIX
-static void *openssl; // the cached pointer
-void *open_library(JNIEnv *env)
-#endif
-
-#ifdef WINDOWS
 static HMODULE openssl; // the cached pointer
 HMODULE open_library(JNIEnv *env)
-#endif
 
 {
   if (!openssl) {

@@ -77,7 +77,9 @@ void close_library();
 #include <dlfcn.h>
 #include <jni.h>
 
-void *open_library(JNIEnv *env);
+typedef void * HMODULE; // to agree with Windows type name
+
+HMODULE open_library(JNIEnv *env);
 
 /**
  * A helper function to dlsym a 'symbol' from a given library-handle.
