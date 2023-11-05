@@ -44,8 +44,7 @@ HMODULE open_library(JNIEnv *env)
 #endif
 
 #ifdef WINDOWS
-    // not necessary to provide override for Windows
-    openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
+    openssl = LoadLibrary(libraryPath);
 #endif
 
   }
