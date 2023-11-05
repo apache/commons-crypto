@@ -47,6 +47,7 @@ jobs:
         dir "C:\Program Files"
         dir "C:\Program Files\OpenSSL"
         dir "C:\Program Files\OpenSSL\lib"
+        dir "C:\Windows\SYSTEM32"
     - name: OpenSSL version
       run: openssl version -a
       #  Get-Childitem –Path "C:\Program Files"  -File -Include libcrypto* -Recurse -ErrorAction SilentlyContinue
@@ -64,8 +65,7 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
         LIB: "C:\\Program Files\\OpenSSL\\lib"
       run: |
-        mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip"
-        mvn test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
+        mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
     - name: JNA test
       if: always()
       env:
