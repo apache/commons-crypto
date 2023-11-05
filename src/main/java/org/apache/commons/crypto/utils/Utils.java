@@ -190,6 +190,8 @@ public final class Utils {
 
     /*
      * Override the default DLL name if jni.library.path is a valid directory
+     * If jni.library.name is defined, this overrides the default name
+     *
      * @param name - the default name, passed from native code
      * @return the updated library path
      * This method is designed for use from the DynamicLoader native code.
@@ -201,11 +203,12 @@ public final class Utils {
      * Do not change the method name or its signature!
      */
     static String libraryPath(final String name) {
+        final String overridename = System.getProperty("jni.library.name", name);
         final String override = System.getProperty("jni.library.path");
         if (override != null && new File(override).isDirectory()) {
-            return new File(override, name).getPath();
+            return new File(override, overridename).getPath();
         }
-        return name;
+        return overridename;
     }
 
     /**
