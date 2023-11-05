@@ -140,7 +140,7 @@ final class JceCipher implements CryptoCipher {
      * not a block cipher
      */
     @Override
-    public final int getBlockSize() {
+    public int getBlockSize() {
         return cipher.getBlockSize();
     }
 
