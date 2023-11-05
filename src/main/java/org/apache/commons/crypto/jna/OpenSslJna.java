@@ -96,7 +96,10 @@ public final class OpenSslJna {
      * @throws Throwable Throws value from {@link #initialisationError()}.
      */
     public static void main(final String[] args) throws Throwable {
+        // These are used by JNA code if defined:
         info("jna.library.path=%s", System.getProperty("jna.library.path"));
+        info("jna.platform.library.path=%s", System.getProperty("jna.platform.library.path"));
+        // can set jna.debug_load=true for loading info
         info(Crypto.getComponentName() + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
         final Throwable initialisationError = initialisationError();
         if (initialisationError != null) {
