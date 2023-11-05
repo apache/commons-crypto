@@ -65,6 +65,7 @@
   <body>
     <release version="1.2.1" date="202X-MM-DD" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
+      <action issue="CRYPTO-167" type="fix" dev="sebb">cannot use THROW to report missing env</action>
       <action issue="CRYPTO-171" type="fix" dev="sebb">openssl(2) not supported since Sierra on macOS M1</action>
       <action                    type="fix" dev="sebb">pom.xml: copy compiler args for benchmarks</action>
       <action                    type="fix" dev="sebb">pom.xml: don't install as defaultGoal</action>
@@ -92,6 +93,8 @@
       <action                    type="update" dev="sebb">Tests: show details of crypt library actually loaded</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 64 #225.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>
+      <!-- ADD -->
+      <action                    type="add" dev="sebb" due-to="Ludovic Henry">CRYPTO-172: Add support for Linux-riscv64 #264</action>
     </release>
     <release version="1.2.0" date="2023-01-14" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->

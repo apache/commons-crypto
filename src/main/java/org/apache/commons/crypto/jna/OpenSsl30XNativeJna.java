@@ -26,8 +26,9 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
 
-// There is no OpenSSL 2.x version; this appears to be for LibreSSL
-final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
+// Currently this is the same as OpenSsl11XNativeJna
+// This may change if additional methods need to be added
+final class OpenSsl30XNativeJna implements OpenSslInterfaceNativeJna {
 
     static final boolean INIT_OK;
 
@@ -52,20 +53,13 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     // Try to keep methods aligned across versions
 
     /**
-     * Gets engine by id.
+     * Gets engine by id
      *
      * @param id
-     *            engine id.
+     *            engine id
      * @return engine instance
      */
     public static native PointerByReference ENGINE_by_id(String id);
-
-    /**
-     * Cleanups before program exit, it will avoid memory leaks.
-     *
-     * @return 0 on success, 1 otherwise.
-     */
-    public static native int ENGINE_cleanup();
 
     /**
      * Releases all functional references.
@@ -99,9 +93,9 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
      * Sets the engine as the default for random number generation.
      *
      * @param e
-     *            engine reference.
+     *            engine reference
      * @param flags
-     *            ENGINE_METHOD_RAND.
+     *            ENGINE_METHOD_RAND
      * @return zero if failed.
      */
     public static native int ENGINE_set_default(PointerByReference e, int flags);
@@ -109,7 +103,7 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     /**
      * Generates a human-readable string representing the error code e.
      *
-     * @see <a href="https://www.openssl.org/docs/man1.0.2/man3/ERR_error_string.html">ERR_error_string</a>
+     * @see <a href="https://www.openssl.org/docs/man3.1.0/man3/ERR_error_string.html">ERR_error_string</a>
      *
      * @param err
      *            the error code
@@ -119,55 +113,40 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
      */
     public static native String ERR_error_string(NativeLong err, char[] null_);
 
-    // TODO: NOT USED?
-    /**
-     * Registers the error strings for all libcrypto functions.
-     */
-    public static native void ERR_load_crypto_strings();
-
     /**
      * @return the earliest error code from the thread's error queue without modifying it.
      */
     public static native NativeLong ERR_peek_error();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CBC mode.
+     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_128_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CTR mode.
+     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_128_ctr();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CBC mode.
+     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_192_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CTR mode.
+     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_192_ctr();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CBC mode.
+     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_256_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CTR mode.
+     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_256_ctr();
-
-    /**
-     * Clears all information from a cipher context and free up any allocated * memory associate
-     * with it.
-     *
-     * @param c
-     *            openssl evp cipher
-     */
-    public static native void EVP_CIPHER_CTX_cleanup(PointerByReference c);
 
     /**
      * Clears all information from a cipher context and free up any allocated memory associate with
@@ -178,15 +157,6 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
      */
     public static native void EVP_CIPHER_CTX_free(PointerByReference c);
 
-    // TODO: NOT USED?
-    /**
-     * EVP_CIPHER_CTX_init() remains as an alias for EVP_CIPHER_CTX_reset.
-     *
-     * @param p
-     *            cipher context
-     */
-    public static native void EVP_CIPHER_CTX_init(PointerByReference p);
-
     /**
      * Creates a cipher context.
      *
@@ -195,12 +165,20 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     public static native PointerByReference EVP_CIPHER_CTX_new();
 
     /**
-     * Enables or disables padding.
+     * Clears all information from a cipher context and free up any allocated * memory associate
+     * with it.
      *
      * @param c
-     *            cipher context.
+     *            openssl evp cipher
+     */
+
+    /**
+     * Enables or disables padding
+     *
+     * @param c
+     *            cipher context
      * @param pad
-     *            If the pad parameter is zero then no padding is performed.
+     *            If the pad parameter is zero then no padding is performed
      * @return always returns 1
      */
     public static native int EVP_CIPHER_CTX_set_padding(PointerByReference c, int pad);
@@ -218,6 +196,9 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
      */
     public static native int EVP_CipherFinal_ex(PointerByReference ctx, ByteBuffer bout,
             int[] outl);
+
+    // ENGINE API: https://www.openssl.org/docs/man1.1.1/man3/ENGINE_add.html
+    // (The above page includes all the ENGINE functions used below)
 
     /**
      * Init a cipher.
@@ -239,8 +220,6 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     public static native int EVP_CipherInit_ex(PointerByReference ctx, PointerByReference cipher,
             PointerByReference impl, byte[] key, byte[] iv, int enc);
 
-    // ENGINE API: https://www.openssl.org/docs/man1.0.2/man3/engine.html
-
     /**
      * Continues a multiple-part encryption/decryption operation.
      *
@@ -260,47 +239,34 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
             ByteBuffer in, int inl);
 
     /**
-     * Generates random data.
+     * Retrieves version/build information about OpenSSL library.
+     *
+     * @see <a href="https://www.openssl.org/docs/man1.1.1/man3/OpenSSL_version.html">OpenSSL_version</a>
+     * @param type
+     *            type can be OPENSSL_VERSION, OPENSSL_CFLAGS, OPENSSL_BUILT_ON...
+     * @return A pointer to a constant string describing the version of the OpenSSL library or
+     *         giving information about the library build.
+     */
+    public static native String OpenSSL_version(int type);
+
+    /**
+     * Generates random data
      *
      * @param buf
      *            the bytes for generated random.
      * @param num
-     *            buffer length.
+     *            buffer length
      * @return 1 on success, 0 otherwise.
      */
     public static native int RAND_bytes(ByteBuffer buf, int num);
 
     // Random generator
     /**
-     * OpenSSL uses for random number generation.
+     * OpenSSL uses for random number generation
      *
-     * @return pointers to the respective methods.
+     * @return pointers to the respective methods
      */
     public static native PointerByReference RAND_get_rand_method();
-
-    /**
-     * OpenSSL uses for random number generation.
-     *
-     * @return pointers to the respective methods.
-     */
-    public static native PointerByReference RAND_SSLeay();
-
-    /**
-     * TODO (does not appear to be used yet)
-     * @return OPENSSL_VERSION_NUMBER which is a numeric release version identifier
-     */
-    public static native NativeLong SSLeay();
-
-    /**
-     * Retrieves version/build information about OpenSSL library.
-     * This is returned by {@link OpenSslNativeJna#OpenSSLVersion(int)}
-     *
-     * @param type
-     *            type can be SSLEAY_VERSION, SSLEAY_CFLAGS, SSLEAY_BUILT_ON...
-     * @return A pointer to a constant string describing the version of the OpenSSL library or
-     *         giving information about the library build.
-     */
-    public static native String SSLeay_version(int type);
 
     @Override
     public PointerByReference _ENGINE_by_id(final String string) {
@@ -309,7 +275,7 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
 
     @Override
     public int _ENGINE_cleanup() {
-        return ENGINE_cleanup();
+        return 0; // Not available
     }
 
     @Override
@@ -379,7 +345,7 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
 
     @Override
     public void _EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
-        EVP_CIPHER_CTX_cleanup(context);
+        // Not available
     }
 
     @Override
@@ -426,7 +392,7 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
 
     @Override
     public String _OpenSSL_version(final int i) {
-        return SSLeay_version(i);
+        return OpenSSL_version(i);
     }
 
     @Override
@@ -441,6 +407,7 @@ final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
 
     @Override
     public PointerByReference _RAND_SSLeay() {
-        return RAND_SSLeay();
+        return null; // Not available
     }
+
 }

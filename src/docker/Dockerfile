@@ -30,8 +30,10 @@ RUN apt-get update && apt-get --assume-yes install software-properties-common \
       && apt-get --assume-yes install libssl-dev \
       && apt-get --assume-yes install gcc-aarch64-linux-gnu \
       && apt-get --assume-yes install g++-aarch64-linux-gnu \
+      && apt-get --assume-yes install gcc-riscv64-linux-gnu \
+      && apt-get --assume-yes install g++-riscv64-linux-gnu \
       && apt-get --assume-yes install mingw-w64 \
-      && apt-get --assume-yes install wget \
+      && apt-get --assume-yes install curl \
       && apt-get --assume-yes install dos2unix \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
@@ -45,8 +47,8 @@ RUN dpkg --add-architecture i386 && apt-get update \
       && apt-get --assume-yes install g++-arm-linux-gnueabihf
 
 # Do this separately to make upgrades easier
-RUN wget https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz \
-&& tar xf apache-maven-*.tar.gz -C /opt && ln -s /opt/apache-maven-3.8.8 /opt/maven
+RUN curl -sL https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz \
+        | tar xzf - -C /opt && ln -s /opt/apache-maven-3.8.8 /opt/maven
 
 # Ensure we are in the correct directory (this will be overlaid by the virtual mount)
 WORKDIR /home/crypto

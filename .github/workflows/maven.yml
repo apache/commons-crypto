@@ -15,6 +15,8 @@
 
 name: Java CI
 
+# cross-build tests are done in a separate action as they currrently take a long time
+
 on:
   # allow direct trigger
   workflow_dispatch:
@@ -22,6 +24,7 @@ on:
     paths-ignore:
       - '**/workflows/*.yml'
       - '!**/workflows/maven.yml'
+      - '!**/workflows/maven_crossbuild.yml'
   pull_request:
     paths-ignore:
       - '**/workflows/*.yml'
@@ -56,6 +59,11 @@ jobs:
 #          - java: 22-ea
 #            os: macos-latest
 #            experimental: true
+        # We don't need to build all Java versions every time
+        # Try excluding 11, 17 on branch pushes
+        exclude:
+          - java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push') && 11 || 99 }} 
+          - java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push') && 17 || 99 }} 
       fail-fast: false
 
     steps:

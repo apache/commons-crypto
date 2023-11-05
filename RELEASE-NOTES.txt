@@ -197,6 +197,7 @@ Testing:
 - Linux x86_64; OpenSSL 1.1.1; thanks to Alex Remily.
 - Windows 64 (mingw64); OpenSSL 1.1.1d; thanks to Alex Remily.
 - linux-aarch64; OpenSSL 1.0.2k-fips; thanks to Geoffrey Blake.
+- linux-riscv64; OpenSSL 1.1.1f; thanks to Ludovic Henry.
 - debian-arm64; OpenSSL 1.1.1f; thanks to Geoffrey Blake.
 
 Historical list of changes: https://commons.apache.org/proper/commons-crypto/changes-report.html

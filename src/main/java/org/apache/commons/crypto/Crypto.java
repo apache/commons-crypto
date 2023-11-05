@@ -180,7 +180,12 @@ public final class Crypto {
                 info("%s: %s", j, OpenSslInfoNative.OpenSSLVersion(j));
             }
         } else {
-            info("Native load failed: %s", getLoadingError());
+            Throwable error = getLoadingError();
+            String msg = "";
+            if (error != null) {
+                msg = error.getMessage();
+            }
+            info("Native load failed: %s %s", error, msg);
         }
     }
 

@@ -125,6 +125,10 @@ linux-armhf:
 linux-aarch64:
 	$(MAKE) native CROSS_PREFIX=aarch64-linux-gnu- OS_NAME=Linux OS_ARCH=aarch64
 
+# for cross-compilation on Ubuntu, install the g++-riscv64-linux-gnu
+linux-riscv64:
+	$(MAKE) native CROSS_PREFIX=riscv64-linux-gnu- OS_NAME=Linux OS_ARCH=riscv64
+
 linux-ppc: # TODO: Untested; may need additional CROSS_PREFIX define
 	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc
 
