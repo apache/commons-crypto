@@ -71,9 +71,9 @@ jobs:
       if: always()
       env:
         LIB: "C:\\Program Files\\OpenSSL\\lib"
-        NAME: "libcrypto-1_1-x64.dll"
+        NAME: "crypto-1_1-x64"
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" -D"jna.library.path=$env:LIB"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
     - name: JNI test
       if: always()
       env:
