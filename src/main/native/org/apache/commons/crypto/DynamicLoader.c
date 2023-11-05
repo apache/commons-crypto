@@ -44,7 +44,7 @@ HMODULE open_library(JNIEnv *env)
 #endif
 
 #ifdef WINDOWS
-    openssl = LoadLibrary((LPCSTR)libraryPath);
+    openssl = LoadLibrary((char *)libraryPath);
 #endif
 
   }
