@@ -38,7 +38,7 @@ import javax.crypto.ShortBufferException;
  * CryptoRandomFactory.RandomProvider
  * </p>
  */
-class JceCipher implements CryptoCipher {
+final class JceCipher implements CryptoCipher {
     private final Cipher cipher;
 
     /**
