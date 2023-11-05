@@ -64,8 +64,9 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
         LIB: "C:\\Program Files\\OpenSSL\\lib"
+        NAME: "libcrypto-1_1-x64.dll"
       run: |
-        mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
+        mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
     - name: JNA test
       if: always()
       env:
@@ -77,4 +78,4 @@ jobs:
       env:
         LIB: "C:\\Program Files\\OpenSSL\\lib"
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.path=$env:LIB"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.name=$env:NAME"
