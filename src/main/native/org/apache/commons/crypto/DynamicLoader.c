@@ -44,7 +44,7 @@ HMODULE open_library(JNIEnv *env)
 #endif
 
 #ifdef WINDOWS
-    openssl = LoadLibrary(TEXT(libraryPath));
+    openssl = LoadLibrary(TEXT("libcrypto-1_1-x64.dll"));
 #endif
 
   }
