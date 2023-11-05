@@ -92,7 +92,7 @@ HMODULE open_library(JNIEnv *env);
  */
 static __attribute__ ((unused))
 void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
-  if (!env || !handle || !symbol) {
+  if (!handle || !symbol) {
       THROW(env, "java/lang/InternalError", NULL);
       return NULL;
   }
@@ -118,7 +118,7 @@ void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
  */
 static __attribute__ ((unused))
 void *do_dlsym_fallback(JNIEnv *env, void *handle, const char *symbol, const char *fallback) {
-  if (!env || !handle) {
+  if (!handle) {
     THROW(env, "java/lang/InternalError", NULL);
       return NULL;
   }
@@ -208,7 +208,7 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
   DWORD dwErrorCode = ERROR_SUCCESS;
   FARPROC func_ptr = NULL;
 
-  if (!env || !handle || !symbol) {
+  if (!handle || !symbol) {
     THROW(env, "java/lang/InternalError", NULL);
     return NULL;
   }
@@ -241,7 +241,7 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
   DWORD dwErrorCode = ERROR_SUCCESS;
   FARPROC func_ptr = NULL;
 
-  if (!env || !handle || !symbol) {
+  if (!handle || !symbol) {
     THROW(env, "java/lang/InternalError", NULL);
     return NULL;
   }
