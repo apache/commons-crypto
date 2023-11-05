@@ -27,7 +27,11 @@ HMODULE open_library(JNIEnv *env)
 
 {
   if (!openssl) {
-    const char *libraryPath = COMMONS_CRYPTO_OPENSSL_LIBRARY;
+#ifdef WINDOWS
+    TCHAR libraryPath = COMMONS_CRYPTO_OPENSSL_LIBRARY;
+#else
+    char *libraryPath = COMMONS_CRYPTO_OPENSSL_LIBRARY;
+#endif
     jclass clazz = (*env)->FindClass(env, "org/apache/commons/crypto/utils/Utils");
     if (clazz) {
         jmethodID libraryPathFunc = (*env)->GetStaticMethodID(env, clazz, "libraryPath", "(Ljava/lang/String;)Ljava/lang/String;");
@@ -44,7 +48,7 @@ HMODULE open_library(JNIEnv *env)
 #endif
 
 #ifdef WINDOWS
-    openssl = LoadLibrary(TEXT("libcrypto-1_1-x64.dll"));
+    openssl = LoadLibrary(libraryPath);
 #endif
 
   }
