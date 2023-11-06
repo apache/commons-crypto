@@ -100,14 +100,12 @@ static int openssl_rand_bytes(unsigned char *buf, int num);
 
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_initSR (JNIEnv *env, jclass clazz)
 {
-  HMODULE openssl = open_library(env);
+  HMODULE openssl = open_library(env); // calls THROW and returns 0 on error
 
   if (!openssl) {
-    char msg[1000];
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY, GET_LAST_ERROR);
-    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
   }
+
   LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
 #ifdef UNIX
   dlerror();  // Clear any existing error

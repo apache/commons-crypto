@@ -74,13 +74,9 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
 
 static int load_library(JNIEnv *env)
 {
-  HMODULE openssl = open_library(env);
+  HMODULE openssl = open_library(env); // calls THROW and returns 0 on error
 
   if (!openssl) {
-    char msg[1000];
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    GET_LAST_ERROR);
-    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
   }
   get_methods(env, openssl);

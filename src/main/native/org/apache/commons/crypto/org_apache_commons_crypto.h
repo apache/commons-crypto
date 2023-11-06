@@ -147,8 +147,7 @@ void *do_dlsym_fallback(JNIEnv *env, void *handle, const char *symbol, const cha
   if ((func_ptr = do_dlsym_fallback(env, handle, symbol, fallback)) == NULL) { \
     return; \
   }
-// Macro to hide different method names
-#define GET_LAST_ERROR dlerror()
+
 #endif
 // Unix part end
 
@@ -257,8 +256,7 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
   }
   return func_ptr;
 }
-// Macro to hide different method names
-#define GET_LAST_ERROR GetLastError()
+
 #endif
 // Windows part end
 

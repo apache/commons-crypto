@@ -18,7 +18,7 @@ package org.apache.commons.crypto.random;
 
 import java.util.Properties;
 
-class FailingRandom implements CryptoRandom {
+final class FailingRandom implements CryptoRandom {
 
     public static native void NoSuchMethod();
 

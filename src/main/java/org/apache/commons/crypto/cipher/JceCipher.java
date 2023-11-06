@@ -38,7 +38,7 @@ import javax.crypto.ShortBufferException;
  * CryptoRandomFactory.RandomProvider
  * </p>
  */
-class JceCipher implements CryptoCipher {
+final class JceCipher implements CryptoCipher {
     private final Cipher cipher;
 
     /**
@@ -140,7 +140,7 @@ class JceCipher implements CryptoCipher {
      * not a block cipher
      */
     @Override
-    public final int getBlockSize() {
+    public int getBlockSize() {
         return cipher.getBlockSize();
     }
 
