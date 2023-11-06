@@ -78,8 +78,14 @@ static int load_library(JNIEnv *env)
 
   if (!openssl) {
     char msg[1000];
+#ifdef UNIX
     snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    GET_LAST_ERROR);
+    dlerror()); // returns char*
+#endif
+#ifdef WINDOWS
+    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+    GetLastError()); // returns DWORD
+#endif
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
   }
