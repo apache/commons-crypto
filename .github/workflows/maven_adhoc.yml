@@ -63,18 +63,18 @@ jobs:
     - name: Build with Maven
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-        NAME: "libcrypto-1_1-x64"
+        LIB: "C:\\Program Files\\OpenSSL\\lib"
       run: |
-        mvn clean test -B -V -ntp -D"jna.debug_load=true" -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME" -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
+        mvn clean test -B -V -ntp -DtrimStackTrace=false -D"jni.library.path=$env:LIB" -D"jna.library.path=$env:LIB" -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
     - name: JNA test
       if: always()
       env:
-        NAME: "crypto-1_1-x64"
+        LIB: "C:\\Program Files\\OpenSSL\\lib"
       run: |
-        mvn -q exec:java -D"jna.debug_load=true" -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" -D"jna.library.path=$env:LIB"
     - name: JNI test
       if: always()
       env:
-        NAME: "libcrypto-1_1-x64"
+        LIB: "C:\\Program Files\\OpenSSL\\lib"
       run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.name=$env:NAME"
+        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.path=$env:LIB"

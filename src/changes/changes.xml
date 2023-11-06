@@ -95,7 +95,6 @@
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>
       <!-- ADD -->
       <action                    type="add" dev="sebb" due-to="Ludovic Henry">CRYPTO-172: Add support for Linux-riscv64 #264</action>
-      <action                    type="add" dev="sebb">CRYPTO-174: Allow override of SSL library name for Windows</action>
     </release>
     <release version="1.2.0" date="2023-01-14" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
