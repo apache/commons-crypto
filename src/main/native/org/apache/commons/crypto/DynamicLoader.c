@@ -57,9 +57,23 @@ HMODULE open_library(JNIEnv *env)
     dlerror()); // returns char*
 #endif
 #ifdef WINDOWS
-    // TODO: convert to string
-    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    GetLastError()); // returns DWORD
+    // Crude method to convert most likely errors to string
+    DWORD lastError = GetLastError();
+    char *lastmsg;
+    if (lasterror == 126)
+    {
+        lastmsg = "specified module cannot be found";
+    }
+    else if (lasterror == 193)
+    {
+        lastmsg = "module is not a valid Win32 application";
+    }
+    else
+    {
+        lastmsg = "unknown error - check online Windows documentation";
+    }
+    snprintf(msg, sizeof(msg), "Cannot load %s (%d: %s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+    lasterror, lastmsg);
 #endif
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
