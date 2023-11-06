@@ -60,11 +60,11 @@ HMODULE open_library(JNIEnv *env)
     // Crude method to convert most likely errors to string
     DWORD lastError = GetLastError();
     char *lastmsg;
-    if (lasterror == 126)
+    if (lastError == 126)
     {
         lastmsg = "specified module cannot be found";
     }
-    else if (lasterror == 193)
+    else if (lastError == 193)
     {
         lastmsg = "module is not a valid Win32 application";
     }
