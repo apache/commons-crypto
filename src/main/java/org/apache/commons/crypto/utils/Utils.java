@@ -203,7 +203,7 @@ public final class Utils {
      * On both macOS and Linux, different versions of the library are stored in different directories.
      * In each case, there is a link from the canonical name (libcrypto.xx) to the versioned name (libcrypto-1.2.3.xx)
      * However on Windows, all the DLL versions seem to be stored in the same directory.
-     * This means that Windows code needs to be given the versioned name (e.g. crypto-1_1-x64)
+     * This means that Windows code needs to be given the versioned name (e.g. libcrypto-1_1-x64)
      * This is done by defining jni.library.name.
      * 
      * Do not change the method name or its signature!
