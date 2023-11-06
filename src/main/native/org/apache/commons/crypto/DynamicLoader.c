@@ -73,7 +73,7 @@ HMODULE open_library(JNIEnv *env)
         lastmsg = "unknown error - check online Windows documentation";
     }
     snprintf(msg, sizeof(msg), "Cannot load %s (%d: %s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    lasterror, lastmsg);
+    lastError, lastmsg);
 #endif
     THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
