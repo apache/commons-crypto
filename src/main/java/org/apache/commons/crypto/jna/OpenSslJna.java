@@ -99,6 +99,7 @@ public final class OpenSslJna {
         // These are used by JNA code if defined:
         info("jna.library.path=%s", System.getProperty("jna.library.path"));
         info("jna.platform.library.path=%s", System.getProperty("jna.platform.library.path"));
+        info("commons.crypto.OpenSslJna=%s\n", System.getProperty("commons.crypto.OpenSslJna"));
         // can set jna.debug_load=true for loading info
         info(Crypto.getComponentName() + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
         final Throwable initialisationError = initialisationError();
