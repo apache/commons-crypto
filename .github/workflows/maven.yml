@@ -118,9 +118,8 @@ jobs:
       # N.B. This must *not* be run under the bash shell, as that changes the default openssl library under Windows
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-        NAME: "libcrypto-1_1-x64"
       run: |
-        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME" -D"commons.crypto.openssl.check=$env:CHECK_SKIP"
+        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.path=$env:ENGINESDIR" -D"jna.library.path=$env:ENGINESDIR" -D"commons.crypto.openssl.check=$env:CHECK_SKIP"
     - name: Build with Maven (not Windows)
       if: ${{ matrix.os != 'windows-latest' }}
       run: |
