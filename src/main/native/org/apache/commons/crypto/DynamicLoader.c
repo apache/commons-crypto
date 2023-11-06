@@ -44,26 +44,40 @@ HMODULE open_library(JNIEnv *env)
 #endif
 
 #ifdef WINDOWS
-    // not necessary to provide override for Windows
-    openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
+    size_t liblen = strlen(libraryPath) + 1;
+    wchar_t* lib = (wchar_t *)malloc(liblen);
+    mbstowcs(lib, libraryPath, liblen); // convert for Windows call
+    openssl = LoadLibrary(lib);
 #endif
 
-  }
-//   Did we succeed?
-  if (!openssl)
-  {
-      char msg[1000];
+    //   Did we succeed?
+    if (!openssl)
+    {
+        char msg[1000];
 #ifdef UNIX
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    dlerror()); // returns char*
+        snprintf(msg, sizeof(msg), "Cannot load '%s' (%s)!", libraryPath, dlerror()); // returns char*
 #endif
 #ifdef WINDOWS
-    // TODO: convert to string
-    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    GetLastError()); // returns DWORD
+        // Crude method to convert most likely errors to string
+        DWORD lastError = GetLastError();
+        char *lastmsg;
+        if (lastError == 126)
+        {
+            lastmsg = "specified module cannot be found";
+        }
+        else if (lastError == 193)
+        {
+            lastmsg = "module is not a valid Win32 application";
+        }
+        else
+        {
+            lastmsg = "unknown error - check online Windows documentation";
+        }
+        snprintf(msg, sizeof(msg), "Cannot load '%s' (%d: %s)!", libraryPath, lastError, lastmsg);
 #endif
-    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
-    return 0;
+        THROW(env, "java/lang/UnsatisfiedLinkError", msg);
+        return 0;
+    }
   }
   return openssl;
 }
