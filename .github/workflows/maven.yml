@@ -40,8 +40,7 @@ jobs:
     strategy:
       matrix:
         # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
-        # os: [macos-11, ubuntu-20.04, windows-latest]
-        os: [windows-latest]
+        os: [macos-11, ubuntu-20.04, windows-latest]
         # These names are used in conditional statements below.
         java: [ 8, 11, 17, 21 ]
         experimental: [false]
@@ -121,7 +120,7 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
         NAME: "libcrypto-1_1-x64"
       run: |
-        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.namexx=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME" -D"commons.crypto.openssl.check=$env:CHECK_SKIP"
+        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME" -D"commons.crypto.openssl.check=$env:CHECK_SKIP"
     - name: Build with Maven (not Windows)
       if: ${{ matrix.os != 'windows-latest' }}
       run: |
