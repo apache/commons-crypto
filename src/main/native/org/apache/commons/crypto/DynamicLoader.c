@@ -44,7 +44,10 @@ HMODULE open_library(JNIEnv *env)
 #endif
 
 #ifdef WINDOWS
-    openssl = LoadLibrary(TEXT("libcrypto-1_1-x64.dll")); // TEMP HACK
+    size_t liblen = strlen(libraryPath) + 1;
+    wchar_t* lib = (wchar_t *)malloc(liblen);
+    mbstowcs(lib, libraryPath, liblen); // convert for Windows call
+    openssl = LoadLibrary(lib);
 #endif
 
   }
