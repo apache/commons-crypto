@@ -49,6 +49,22 @@ HMODULE open_library(JNIEnv *env)
 #endif
 
   }
+//   Did we succeed?
+  if (!openssl)
+  {
+      char msg[1000];
+#ifdef UNIX
+    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+    dlerror()); // returns char*
+#endif
+#ifdef WINDOWS
+    // TODO: convert to string
+    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
+    GetLastError()); // returns DWORD
+#endif
+    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
+    return 0;
+  }
   return openssl;
 }
 

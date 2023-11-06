@@ -126,19 +126,9 @@ static void loadAes(JNIEnv *env, HMODULE openssl)
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initIDs
     (JNIEnv *env, jclass clazz)
 {
-  HMODULE openssl = open_library(env);
+  HMODULE openssl = open_library(env); // calls THROW and returns 0 on error
 
   if (!openssl) {
-    char msg[1000];
-#ifdef UNIX
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    dlerror()); // returns char*
-#endif
-#ifdef WINDOWS
-    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    GetLastError()); // returns DWORD
-#endif
-    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
   }
 
