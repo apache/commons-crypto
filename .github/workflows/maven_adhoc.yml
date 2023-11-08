@@ -35,22 +35,15 @@ jobs:
       matrix:
         # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
         # os: [macos-11, ubuntu-20.04, windows-latest]
-        os: [ windows-latest ]
+        os: [ macos-latest, ubuntu-latest ]
         # These names are used in conditional statements below.
         # java: [ 8, 11, 17, 21 ]
         java: [ 8 ]
         experimental: [false]
 
     steps:
-    - name: Search
-      run: |
-        dir "C:\Program Files"
-        dir "C:\Program Files\OpenSSL"
-        dir "C:\Program Files\OpenSSL\lib"
-        dir "C:\Windows\SYSTEM32"
     - name: OpenSSL version
       run: openssl version -a
-      #  Get-Childitem –Path "C:\Program Files"  -File -Include libcrypto* -Recurse -ErrorAction SilentlyContinue
     - name: Checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
@@ -65,19 +58,19 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
         NAME: "libcrypto-1_1-x64"
       run: |
-        mvn clean test -B -V -ntp -D"jna.debug_load=true" -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME" -D"commons.crypto.debug=true"
-    - name: JNA test
-      if: always()
-      env:
-        NAME: "crypto-1_1-x64"
-      run: |
-        mvn -q exec:java -D"jna.debug_load=true" -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
-    - name: JNI test
-      if: always()
-      env:
-        NAME: "libcrypto-1_1-x64"
-      run: |
-        mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.name=$env:NAME"
+        mvn clean test -B -V -ntp -D"jna.debug_load=true" -DtrimStackTrace=false -D"commons.crypto.debug=true"
+    # - name: JNA test
+    #   if: always()
+    #   env:
+    #     NAME: "crypto-1_1-x64"
+    #   run: |
+    #     mvn -q exec:java -D"jna.debug_load=true" -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
+    # - name: JNI test
+    #   if: always()
+    #   env:
+    #     NAME: "libcrypto-1_1-x64"
+    #   run: |
+    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.name=$env:NAME"
     - name: JNI test default
       if: always()
       run: |
