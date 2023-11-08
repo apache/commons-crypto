@@ -95,7 +95,7 @@ jobs:
       # Not sure how to derive this automatically
       run: |
         openssl version -a
-        echo "NAME=libcrypt-1_1-x64.dll" >> $env:GITHUB_ENV
+        echo "NAME=libcrypto-1_1-x64.dll" >> $env:GITHUB_ENV
         echo "CHECK_SKIP=skip" >> $env:GITHUB_ENV
     # N.B. '-V -B -ntp' is shorthand for '--show-version --batch-mode --no-transfer-progress'
     # 
