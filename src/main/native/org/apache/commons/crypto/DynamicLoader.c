@@ -44,10 +44,7 @@ HMODULE open_library(JNIEnv *env)
 #endif
 
 #ifdef WINDOWS
-    size_t liblen = strlen(libraryPath) + 1;
-    wchar_t* lib = (wchar_t *)malloc(liblen);
-    mbstowcs(lib, libraryPath, liblen); // convert for Windows call
-    openssl = LoadLibrary(lib);
+    openssl = LoadLibraryA(libraryPath); // use the non-generic method; assume libraryPath is suitable
 #endif
 
     //   Did we succeed?
