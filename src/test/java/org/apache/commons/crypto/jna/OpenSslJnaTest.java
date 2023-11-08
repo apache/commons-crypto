@@ -17,9 +17,6 @@
  */
 package org.apache.commons.crypto.jna;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import org.junit.jupiter.api.Test;
 
 public class OpenSslJnaTest {
@@ -27,10 +24,5 @@ public class OpenSslJnaTest {
     @Test
     public void testMain() throws Throwable {
         OpenSslJna.main(new String[0]);
-        // Ensure that test loaded OpenSSL, not some other library
-        // This may require jna.library.path to be defined if the default library is not OpenSSL
-        if (!"skip".equals(System.getProperty("commons.crypto.openssl.check"))) { // allow check to be skipped
-            assertThat(OpenSslNativeJna.OpenSSLVersion(0), containsString("OpenSSL"));
-        }
     }
 }

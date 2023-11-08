@@ -96,7 +96,6 @@ jobs:
       run: |
         openssl version -a
         echo "NAME=libcrypto-1_1-x64.dll" >> $env:GITHUB_ENV
-        echo "CHECK_SKIP=skip" >> $env:GITHUB_ENV
     # N.B. '-V -B -ntp' is shorthand for '--show-version --batch-mode --no-transfer-progress'
     # 
     # The bash shell under Windows changes the openssl default library, so is not used for running tests
@@ -117,11 +116,11 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME" -D"commons.crypto.openssl.check=$env:CHECK_SKIP"
+        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
     - name: Build with Maven (not Windows)
       if: ${{ matrix.os != 'windows-latest' }}
       run: |
-        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR" -D"commons.crypto.openssl.check=$CHECK_SKIP"
+        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
     - name: Check benchmark code compiles
       if: ${{ matrix.java == '8' }}
       env:

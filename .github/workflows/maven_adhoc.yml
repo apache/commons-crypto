@@ -65,7 +65,7 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
         NAME: "libcrypto-1_1-x64"
       run: |
-        mvn clean test -B -V -ntp -D"jna.debug_load=true" -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME" -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
+        mvn clean test -B -V -ntp -D"jna.debug_load=true" -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME" -D"commons.crypto.debug=true"
     - name: JNA test
       if: always()
       env:
@@ -89,4 +89,4 @@ jobs:
     - name: Maven test default
       if: always()
       run: |
-        mvn surefire:test -B -V -ntp -D"jna.debug_load=true" -DtrimStackTrace=false -D"commons.crypto.openssl.check=skip" -D"commons.crypto.debug=true"
+        mvn surefire:test -B -V -ntp -D"jna.debug_load=true" -DtrimStackTrace=false -D"commons.crypto.debug=true"
