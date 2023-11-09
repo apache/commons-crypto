@@ -51,6 +51,7 @@ import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.ReflectionUtils;
+import org.apache.commons.crypto.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -711,7 +712,7 @@ public abstract class AbstractCipherStreamTest {
         doReadWriteTest(count, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
         // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
         for (int i = 0; i < 8; i++) {
-            iv[8 + i] = (byte) 0xff;
+            iv[8 + i] = (byte) Utils.BYTE_MASK;
         }
         doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
         doReadWriteTest(count, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, iv);

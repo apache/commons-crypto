@@ -37,6 +37,9 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
  */
 public final class Utils {
 
+    public static final int BYTE_MASK = 0xFF; // mask to keep a byte from a longer number
+    public static final int OPENSSL_VERSION_MAX_INDEX = 20; // max seen so far is 9, but leave some spare
+
     private static final class DefaultPropertiesHolder {
         static final Properties DEFAULT_PROPERTIES = createDefaultProperties();
 

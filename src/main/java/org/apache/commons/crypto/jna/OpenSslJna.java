@@ -21,6 +21,7 @@ import java.util.Objects;
 import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.random.CryptoRandom;
+import org.apache.commons.crypto.utils.Utils;
 
 /**
  * Provides access to package protected class objects and a {@link #main(String[])} method that prints version information.
@@ -108,8 +109,11 @@ public final class OpenSslJna {
             System.err.flush(); // helpful for stack traces to not mix in other output.
             throw initialisationError; // propagate to make error obvious
         }
-        for (int i = 0; i <= 5; i++) {
-            info("OpenSSLVersion(%d): %s", i, OpenSSLVersion(i));
+        for (int i = 0; i <= Utils.OPENSSL_VERSION_MAX_INDEX; i++) {
+            String data = OpenSSLVersion(i);
+            if (!"not available".equals(data)) {
+                info("OpenSSLVersion(%d): %s", i, data);
+            }
         }
     }
 

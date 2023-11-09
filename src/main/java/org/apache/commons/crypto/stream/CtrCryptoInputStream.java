@@ -83,9 +83,9 @@ public class CtrCryptoInputStream extends CryptoInputStream {
         int sum = 0;
         while (i-- > 0) {
             // (sum >>> Byte.SIZE) is the carry for addition
-            sum = (initIV[i] & 0xff) + (sum >>> Byte.SIZE); // NOPMD
+            sum = (initIV[i] & Utils.BYTE_MASK) + (sum >>> Byte.SIZE); // NOPMD
             if (j++ < Long.BYTES) { // Big-endian, and long is 8 bytes length
-                sum += (byte) counter & 0xff;
+                sum += (byte) counter & Utils.BYTE_MASK;
                 counter >>>= Long.BYTES;
             }
             IV[i] = (byte) sum;

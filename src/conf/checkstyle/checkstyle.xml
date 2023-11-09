@@ -34,6 +34,8 @@ limitations under the License.
     <module name="ExplicitInitializationCheck" />
     <module name="AvoidStarImport"/>
     <module name="RedundantImport"/>
+    <module name="MagicNumber"/>
+    <module name="SuppressionCommentFilter"/>
     <module name="UnusedImports"/>
     <module name="NeedBraces"/>
     <module name="JavadocMethod">

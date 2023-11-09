@@ -27,6 +27,7 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.apache.commons.crypto.utils.AES;
+import org.apache.commons.crypto.utils.Utils;
 
 /**
  * Provides diagnostic information about Commons Crypto and keys for native
@@ -177,8 +178,11 @@ public final class Crypto {
                 }
             }
             info("Additional OpenSSL_version(n) details:");
-            for (int j = 1; j < 6; j++) { // entry 0 is shown above
-                info("%s: %s", j, OpenSslInfoNative.OpenSSLVersion(j));
+            for (int j = 1; j < Utils.OPENSSL_VERSION_MAX_INDEX; j++) { // entry 0 is shown above
+                String data = OpenSslInfoNative.OpenSSLVersion(j);
+                if (!"not available".equals(data)) {
+                    info("OpenSSLVersion(%d): %s", j, data);
+                }
             }
         } else {
             Throwable error = getLoadingError();

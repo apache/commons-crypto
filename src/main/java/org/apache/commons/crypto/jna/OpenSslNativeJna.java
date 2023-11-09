@@ -68,7 +68,9 @@ final class OpenSslNativeJna {
         // Must find one of the above two functions; else give up
 
         VERSION = versionFunction.invokeLong(new Object[]{});
-        VERSION_X_Y = VERSION & 0xffff0000; // keep only major.minor
+        //CHECKSTYLE:OFF
+        VERSION_X_Y = VERSION & 0xffff0000; // keep only major.minor checkstyle:
+        //CHECKSTYLE:ON
 
         OpenSslJna.debug(String.format("OpenSslNativeJna detected version 0x%x => 0x%x", VERSION, VERSION_X_Y));
 
