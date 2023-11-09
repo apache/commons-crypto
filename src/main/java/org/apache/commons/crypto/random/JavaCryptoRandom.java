@@ -65,7 +65,7 @@ final class JavaCryptoRandom implements CryptoRandom {
      * @return int an {@code int} containing the user-specified number of random bits (right justified, with leading zeros).
      */
     protected int next(final int numBits) {
-        Utils.checkArgument(numBits >= 0 && numBits <= 32);
+        Utils.checkArgument(numBits >= 0 && numBits <= Integer.SIZE);
         // Can't simply invoke instance.next(bits) here, because that is package protected.
         // But, this should do.
         return instance.nextInt() >>> (Integer.SIZE - numBits);
