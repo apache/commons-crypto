@@ -332,6 +332,10 @@ The following provides more details on the included cryptographic software:
     <!-- Allow testing of JNI code only -->
     <profile>
       <id>testjni</id>
+      <properties>
+        <!-- prevent JNA code from loading -->
+        <commons.crypto.OpenSslNativeJna>_</commons.crypto.OpenSslNativeJna>
+      </properties>
       <build>
         <plugins>
           <plugin>
@@ -350,6 +354,10 @@ The following provides more details on the included cryptographic software:
     <!-- Allow testing of JNA code only -->
     <profile>
       <id>testjna</id>
+      <properties>
+        <!-- prevent JNI code from loading -->
+        <jni.library.name>_</jni.library.name>
+      </properties>
       <build>
         <plugins>
           <plugin>
@@ -670,6 +678,7 @@ The following provides more details on the included cryptographic software:
       <version>${jna.version}</version>
     </dependency>
     <dependency>
+      <!-- Currently only used for IOUtils.contentEquals in NativeCodeLoader -->
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.15.0</version>
