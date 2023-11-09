@@ -128,7 +128,9 @@ jobs:
       run: |
         mvn -V -B -ntp clean test-compile -Pbenchmark
     - name: Check JNI and JNA tests are independent
+      # N.B. the default library fails with 'java is loading libcrypto in an unsafe way'
+      # so we need to define the appropriate library for each test
       if: ${{ matrix.java == '8' }}
       run: |
-        mvn -V -B -ntp test -Ptestjni
-        mvn -V -B -ntp test -Ptestjna
+        mvn -V -B -ntp test -Ptestjni -D"jni.library.path=$ENGINESDIR"
+        mvn -V -B -ntp test -Ptestjna -D"jna.library.path=$ENGINESDIR"
