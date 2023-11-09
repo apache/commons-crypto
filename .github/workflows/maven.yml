@@ -127,3 +127,8 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
         mvn -V -B -ntp clean test-compile -Pbenchmark
+    - name: Check JNI and JNA tests are independent
+      if: ${{ matrix.java == '8' }}
+      run: |
+        mvn -V -B -ntp test -Ptestjni
+        mvn -V -B -ntp test -Ptestjna
