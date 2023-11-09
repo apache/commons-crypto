@@ -82,4 +82,26 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
 
         doSkipTest(CIPHER_OPENSSL_JNA, true);
     }
+
+    @Override
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
+    public void testExceptions() throws Exception {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        doExceptionTest(CIPHER_OPENSSL_JNA, baos, false);
+
+        doExceptionTest(CIPHER_OPENSSL_JNA, baos, true);
+    }
+
+    @Override
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
+    public void testFieldGetters() throws Exception {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        doFieldGetterTest(CIPHER_OPENSSL_JNA, baos, false);
+
+        doFieldGetterTest(CIPHER_OPENSSL_JNA, baos, true);
+    }
+
+
 }
