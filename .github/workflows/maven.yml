@@ -129,7 +129,7 @@ jobs:
     - name: Check JNI and JNA tests are independent
       # N.B. the default library fails with 'java is loading libcrypto in an unsafe way'
       # so we need to define the appropriate library for each test
-      if: ${{ matrix.java == '8' && matrix.os == 'ubuntu-20.04' }}
+      if: ${{ matrix.java == '8' && matrix.os != 'windows-latest' }}
       run: |
-        mvn -V -B -ntp test -Ptestjni -D"jni.library.path=$ENGINESDIR"
-        mvn -V -B -ntp test -Ptestjna -D"jna.library.path=$ENGINESDIR"
+        mvn -V -B -ntp test -Ptestjni -D"jni.library.path=$ENGINESDIR" -Dcommons.crypto.OpenSslNativeJna=___
+        mvn -V -B -ntp test -Ptestjna -D"jna.library.path=$ENGINESDIR" -Djni.library.name=___
