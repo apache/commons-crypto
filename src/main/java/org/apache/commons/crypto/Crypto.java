@@ -163,26 +163,30 @@ public final class Crypto {
             info("OpenSSL library info: %s", OpenSslInfoNative.OpenSSLVersion(0));
             info("DLL name: %s", OpenSslInfoNative.DLLName());
             info("DLL path: %s", OpenSslInfoNative.DLLPath());
-            { // CryptoRandom
-                final Properties props = new Properties();
-                props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
-                try (CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props)) {
-                    info("Random instance created OK: %s", cryptoRandom);
-                }
-            }
-            { // CryptoCipher
-                final Properties props = new Properties();
-                props.setProperty(CryptoCipherFactory.CLASSES_KEY, CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
-                try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, props)) {
-                    info("Cipher %s instance created OK: %s", AES.CTR_NO_PADDING, cryptoCipher);
-                }
-            }
             info("Additional OpenSSL_version(n) details:");
             for (int j = 1; j < Utils.OPENSSL_VERSION_MAX_INDEX; j++) { // entry 0 is shown above
                 String data = OpenSslInfoNative.OpenSSLVersion(j);
                 if (!"not available".equals(data)) {
                     info("OpenSSLVersion(%d): %s", j, data);
                 }
+            }
+            try { // CryptoRandom
+                final Properties props = new Properties();
+                props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
+                try (CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props)) {
+                    info("Random instance created OK: %s", cryptoRandom);
+                }
+            } catch (Exception e) {
+                info("Failed: %s", e);
+            }
+            try { // CryptoCipher
+                final Properties props = new Properties();
+                props.setProperty(CryptoCipherFactory.CLASSES_KEY, CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
+                try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, props)) {
+                    info("Cipher %s instance created OK: %s", AES.CTR_NO_PADDING, cryptoCipher);
+                }
+            } catch (Exception e) {
+                info("Failed: %s", e);
             }
         } else {
             Throwable error = getLoadingError();
