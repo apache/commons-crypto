@@ -24,7 +24,6 @@ on:
     paths-ignore:
       - '**/workflows/*.yml'
       - '!**/workflows/maven.yml'
-      - '!**/workflows/maven_crossbuild.yml'
   pull_request:
     paths-ignore:
       - '**/workflows/*.yml'
