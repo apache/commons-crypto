@@ -44,7 +44,6 @@ final class OpenSslNativeJna {
     /** Major Minor version from JNA call, without the maintenance level. */
     static final long VERSION_X_Y;
 
-    static final long VERSION_1_0_X = 0x10000000;
     static final long VERSION_1_1_X = 0x10100000;
     static final long VERSION_2_0_X = 0x20000000;
     static final long VERSION_3_0_X = 0x30000000;
@@ -61,7 +60,7 @@ final class OpenSslNativeJna {
         OpenSslJna.debug("OpenSslNativeJna NativeLibrary.getInstance('%s') -> %s", libraryName, crypto);
         Function versionFunction = null;
         try {
-            versionFunction = crypto.getFunction("SSLeay");
+            versionFunction = crypto.getFunction("SSLeay"); // Needed for LibreSSL 2.x
         } catch (final UnsatisfiedLinkError e) {
             versionFunction = crypto.getFunction("OpenSSL_version_num");
         }
@@ -74,10 +73,7 @@ final class OpenSslNativeJna {
 
         OpenSslJna.debug(String.format("OpenSslNativeJna detected version 0x%x => 0x%x", VERSION, VERSION_X_Y));
 
-        if (VERSION_X_Y == VERSION_1_0_X) {
-            OpenSslJna.debug("Creating OpenSsl10XNativeJna");
-            JnaImplementation = new OpenSsl10XNativeJna();
-        } else if (VERSION_X_Y == VERSION_1_1_X) {
+        if (VERSION_X_Y == VERSION_1_1_X) {
             OpenSslJna.debug("Creating OpenSsl11XNativeJna");
             JnaImplementation = new OpenSsl11XNativeJna();
         } else if (VERSION_X_Y == VERSION_2_0_X) {
@@ -87,10 +83,8 @@ final class OpenSslNativeJna {
            OpenSslJna.debug("Creating OpenSsl30XNativeJna");
            JnaImplementation = new OpenSsl30XNativeJna();
        } else {
-            // TODO: Throw error?
-            OpenSslJna.debug("Creating OpenSsl10XNativeJna");
-            JnaImplementation = new OpenSsl10XNativeJna();
-        }
+            throw new UnsupportedOperationException(String.format("Unsupported Version: %x", VERSION_X_Y));
+       }
 
         INIT_OK = JnaImplementation._INIT_OK();
 
