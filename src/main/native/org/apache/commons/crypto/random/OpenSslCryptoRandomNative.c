@@ -51,14 +51,6 @@ static int (*dlsym_ENGINE_free) (ENGINE *);
 static int (*dlsym_RAND_bytes) (unsigned char *, int);
 static unsigned long (*dlsym_ERR_get_error) (void);
 static unsigned long (*dlsym_OpenSSL_version_num)(void);
-// static int (*dlsym_CRYPTO_num_locks) (void);
-static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
-// static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-// static void (*dlsym_ENGINE_load_rdrand) (void);
-// static void (*dlsym_ENGINE_cleanup) (void);
-static void pthreads_locking_callback(int mode, int type, char *file, int line);
-static unsigned long pthreads_thread_id(void);
-static pthread_mutex_t *lock_cs;
 #endif
 
 #ifdef WINDOWS
@@ -72,10 +64,6 @@ typedef int (__cdecl *__dlsym_ENGINE_free) (ENGINE *);
 typedef int (__cdecl *__dlsym_RAND_bytes) (unsigned char *, int);
 typedef unsigned long (__cdecl *__dlsym_ERR_get_error) (void);
 typedef unsigned long (__cdecl *__dlsym_OpenSSL_version_num) (void);
-// typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
-// typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
-// typedef void (__cdecl *__dlsym_ENGINE_load_rdrand) (void);
-// typedef void (__cdecl *__dlsym_ENGINE_cleanup) (void);
 static __dlsym_CRYPTO_malloc dlsym_CRYPTO_malloc;
 static __dlsym_CRYPTO_free dlsym_CRYPTO_free;
 static __dlsym_ENGINE_by_id dlsym_ENGINE_by_id;
@@ -86,11 +74,6 @@ static __dlsym_ENGINE_free dlsym_ENGINE_free;
 static __dlsym_RAND_bytes dlsym_RAND_bytes;
 static __dlsym_ERR_get_error dlsym_ERR_get_error;
 static __dlsym_OpenSSL_version_num dlsym_OpenSSL_version_num;
-// static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
-// static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
-// static __dlsym_ENGINE_load_rdrand dlsym_ENGINE_load_rdrand;
-// static __dlsym_ENGINE_cleanup dlsym_ENGINE_cleanup;
-static void windows_locking_callback(int mode, int type, char *file, int line);
 static HANDLE *lock_cs;
 #endif
 
@@ -161,52 +144,6 @@ JNIEXPORT jboolean JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRa
   }
   return JNI_TRUE;
 }
-
-/**
- * To ensure thread safety for random number generators, we need to call
- * CRYPTO_set_locking_callback.
- * http://wiki.openssl.org/index.php/Random_Numbers
- * Example: crypto/threads/mttest.c
- */
-#ifdef UNIX
-static void pthreads_locking_callback(int mode, int type, char *file, int line)
-{
-  UNUSED(file), UNUSED(line);
-
-  if (mode & CRYPTO_LOCK) {
-    pthread_mutex_lock(&(lock_cs[type]));
-  } else {
-    pthread_mutex_unlock(&(lock_cs[type]));
-  }
-}
-
-static unsigned long pthreads_thread_id(void)
-{
-// CRYPTO-171 - not supported on macOS M1 after 10.12 (Sierra)
-// It would be best to throw an error, but that does not seem possible
-// without access to the JNI environment, so print a message instead
-#if defined(MAC_OS) && defined(__arm64__)
-  fprintf(stderr, "openssl(2) is not supported on this architecture\n");
-  return 0;
-#else
-  return (unsigned long)syscall(SYS_gettid);
-#endif
-}
-
-#endif /* UNIX */
-
-#ifdef WINDOWS
-static void windows_locking_callback(int mode, int type, char *file, int line)
-{
-  UNUSED(file), UNUSED(line);
-
-  if (mode & CRYPTO_LOCK) {
-    WaitForSingleObject(lock_cs[type], INFINITE);
-  } else {
-    ReleaseMutex(lock_cs[type]);
-  }
-}
-#endif /* WINDOWS */
 
 /**
  * If using an Intel chipset with RDRAND, the high-performance hardware
