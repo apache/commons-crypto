@@ -314,7 +314,6 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
 #define NOPADDING 0
 #define PKCS5PADDING 1
 
-#define VERSION_1_0_X 0x10000000
 #define VERSION_1_1_X 0x10100000
 #define VERSION_3_0_X 0x30000000
 

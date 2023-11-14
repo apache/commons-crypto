@@ -56,8 +56,8 @@ static char dynamicLibraryPath[80];  // where was the crypto library found?
 
 static void get_methods(JNIEnv *env, HMODULE openssl)
 {
-  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
-  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay"); // SSLeay fallback needed by LibreSSL 2.x
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version"); // SSLeay fallback needed by LibreSSL 2.x
 #ifdef UNIX
   Dl_info info;
   (void) dladdr(dlsym_OpenSSL_version_num, &info); // ignore the return code

@@ -51,11 +51,11 @@ static int (*dlsym_ENGINE_free) (ENGINE *);
 static int (*dlsym_RAND_bytes) (unsigned char *, int);
 static unsigned long (*dlsym_ERR_get_error) (void);
 static unsigned long (*dlsym_OpenSSL_version_num)(void);
-static int (*dlsym_CRYPTO_num_locks) (void);
+// static int (*dlsym_CRYPTO_num_locks) (void);
 static void (*dlsym_CRYPTO_set_id_callback) (unsigned long (*)());
-static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
-static void (*dlsym_ENGINE_load_rdrand) (void);
-static void (*dlsym_ENGINE_cleanup) (void);
+// static void (*dlsym_CRYPTO_set_locking_callback) (void (*)());
+// static void (*dlsym_ENGINE_load_rdrand) (void);
+// static void (*dlsym_ENGINE_cleanup) (void);
 static void pthreads_locking_callback(int mode, int type, char *file, int line);
 static unsigned long pthreads_thread_id(void);
 static pthread_mutex_t *lock_cs;
@@ -72,10 +72,10 @@ typedef int (__cdecl *__dlsym_ENGINE_free) (ENGINE *);
 typedef int (__cdecl *__dlsym_RAND_bytes) (unsigned char *, int);
 typedef unsigned long (__cdecl *__dlsym_ERR_get_error) (void);
 typedef unsigned long (__cdecl *__dlsym_OpenSSL_version_num) (void);
-typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
-typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
-typedef void (__cdecl *__dlsym_ENGINE_load_rdrand) (void);
-typedef void (__cdecl *__dlsym_ENGINE_cleanup) (void);
+// typedef int (__cdecl *__dlsym_CRYPTO_num_locks) (void);
+// typedef void (__cdecl *__dlsym_CRYPTO_set_locking_callback) (void (*)());
+// typedef void (__cdecl *__dlsym_ENGINE_load_rdrand) (void);
+// typedef void (__cdecl *__dlsym_ENGINE_cleanup) (void);
 static __dlsym_CRYPTO_malloc dlsym_CRYPTO_malloc;
 static __dlsym_CRYPTO_free dlsym_CRYPTO_free;
 static __dlsym_ENGINE_by_id dlsym_ENGINE_by_id;
@@ -86,10 +86,10 @@ static __dlsym_ENGINE_free dlsym_ENGINE_free;
 static __dlsym_RAND_bytes dlsym_RAND_bytes;
 static __dlsym_ERR_get_error dlsym_ERR_get_error;
 static __dlsym_OpenSSL_version_num dlsym_OpenSSL_version_num;
-static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
-static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
-static __dlsym_ENGINE_load_rdrand dlsym_ENGINE_load_rdrand;
-static __dlsym_ENGINE_cleanup dlsym_ENGINE_cleanup;
+// static __dlsym_CRYPTO_num_locks dlsym_CRYPTO_num_locks;
+// static __dlsym_CRYPTO_set_locking_callback dlsym_CRYPTO_set_locking_callback;
+// static __dlsym_ENGINE_load_rdrand dlsym_ENGINE_load_rdrand;
+// static __dlsym_ENGINE_cleanup dlsym_ENGINE_cleanup;
 static void windows_locking_callback(int mode, int type, char *file, int line);
 static HANDLE *lock_cs;
 #endif
@@ -107,6 +107,11 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
   }
 
   LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
+  // Reject attempt to use obsolete version
+  if (dlsym_OpenSSL_version_num() >= VERSION_1_1_X) {
+    THROW(env, "java/lang/UnsatisfiedLinkError", "Versions below 1.1 are not supported");
+    return;
+  }
 #ifdef UNIX
   dlerror();  // Clear any existing error
 #endif
@@ -119,12 +124,6 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
   LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_free, dlsym_ENGINE_free, env, openssl, "ENGINE_free");
   LOAD_DYNAMIC_SYMBOL(__dlsym_RAND_bytes, dlsym_RAND_bytes, env, openssl, "RAND_bytes");
   LOAD_DYNAMIC_SYMBOL(__dlsym_ERR_get_error, dlsym_ERR_get_error, env, openssl, "ERR_get_error");
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_num_locks, dlsym_CRYPTO_num_locks, env, openssl, "CRYPTO_num_locks");
-    LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_set_locking_callback, dlsym_CRYPTO_set_locking_callback, env, openssl, "CRYPTO_set_locking_callback");
-    LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_load_rdrand, dlsym_ENGINE_load_rdrand, env, openssl, "ENGINE_load_rdrand");
-    LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_cleanup, dlsym_ENGINE_cleanup, env, openssl, "ENGINE_cleanup");
-  }
 
   openssl_rand_init();
 }
@@ -194,66 +193,9 @@ static unsigned long pthreads_thread_id(void)
 #endif
 }
 
-static void locks_setup(void)
-{
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    int i;
-    lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(pthread_mutex_t), __FILE__, __LINE__);
-
-    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-      pthread_mutex_init(&(lock_cs[i]), NULL);
-    }
-
-    dlsym_CRYPTO_set_id_callback((unsigned long (*)())pthreads_thread_id);
-    dlsym_CRYPTO_set_locking_callback((void (*)())pthreads_locking_callback);
-  }
-}
-
-static void locks_cleanup(void)
-{
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    int i;
-    dlsym_CRYPTO_set_locking_callback(NULL);
-
-    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-      pthread_mutex_destroy(&(lock_cs[i]));
-    }
-
-    dlsym_CRYPTO_free(lock_cs);
-  }
-}
 #endif /* UNIX */
 
 #ifdef WINDOWS
-static void locks_setup(void)
-{
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    int i;
-    lock_cs = dlsym_CRYPTO_malloc(dlsym_CRYPTO_num_locks() * sizeof(HANDLE),  \
-      __FILE__, __LINE__);
-
-    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-      lock_cs[i] = CreateMutex(NULL, FALSE, NULL);
-    }
-    dlsym_CRYPTO_set_locking_callback((void (*)(int, int, char *, int))  \
-      windows_locking_callback);
-    /* id callback defined */
-  }
-}
-
-static void locks_cleanup(void)
-{
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    int i;
-    dlsym_CRYPTO_set_locking_callback(NULL);
-
-    for (i = 0; i < dlsym_CRYPTO_num_locks(); i++) {
-      CloseHandle(lock_cs[i]);
-    }
-    dlsym_CRYPTO_free(lock_cs);
-  }
-}
-
 static void windows_locking_callback(int mode, int type, char *file, int line)
 {
   UNUSED(file), UNUSED(line);
@@ -272,11 +214,6 @@ static void windows_locking_callback(int mode, int type, char *file, int line)
  */
 static ENGINE * openssl_rand_init(void)
 {
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    locks_setup();
-    dlsym_ENGINE_load_rdrand();
-  }
-
   ENGINE *eng = dlsym_ENGINE_by_id("rdrand");
 
   int ret = -1;
@@ -310,13 +247,6 @@ static void openssl_rand_clean(ENGINE *eng, int clean_locks)
   if (NULL != eng) {
     dlsym_ENGINE_finish(eng);
     dlsym_ENGINE_free(eng);
-
-    if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-      dlsym_ENGINE_cleanup();
-      if (clean_locks) {
-        locks_cleanup();
-      }
-    }
   }
 }
 
