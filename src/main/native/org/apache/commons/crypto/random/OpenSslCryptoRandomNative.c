@@ -108,7 +108,7 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
 
   LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
   // Reject attempt to use obsolete version
-  if (dlsym_OpenSSL_version_num() >= VERSION_1_1_X) {
+  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
     THROW(env, "java/lang/UnsatisfiedLinkError", "Versions below 1.1 are not supported");
     return;
   }
