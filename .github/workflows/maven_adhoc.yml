@@ -35,7 +35,7 @@ jobs:
       matrix:
         # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
         # os: [macos-11, ubuntu-20.04, windows-latest]
-        os: [ macos-latest, ubuntu-latest ]
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
         # These names are used in conditional statements below.
         # java: [ 8, 11, 17, 21 ]
         java: [ 21 ]
@@ -58,18 +58,6 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
         mvn clean test -B -V -ntp -DskipTests
-    # - name: JNA test
-    #   if: always()
-    #   env:
-    #     NAME: "crypto-1_1-x64"
-    #   run: |
-    #     mvn -q exec:java -D"jna.debug_load=true" -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
-    # - name: JNI test
-    #   if: always()
-    #   env:
-    #     NAME: "libcrypto-1_1-x64"
-    #   run: |
-    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true" -D"jni.library.name=$env:NAME"
     - name: JNI test default
       run: |
         mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
