@@ -45,6 +45,10 @@ import com.sun.jna.ptr.PointerByReference;
  */
 final class OpenSslJnaCipher implements CryptoCipher {
 
+    private static final int AES_128_ENCODED_KEYLEN = 16;
+    private static final int AES_192_ENCODED_KEYLEN = 24;
+    private static final int AES_256_ENCODED_KEYLEN = 32;
+
     /**
      * AlgorithmMode of JNA. Currently only support AES/CTR/NoPadding.
      */
@@ -224,13 +228,13 @@ final class OpenSslJnaCipher implements CryptoCipher {
 
         if (algorithmMode == AlgorithmMode.AES_CBC) {
             switch (keyEncodedLength) {
-            case 16:
+            case AES_128_ENCODED_KEYLEN:
                 algo = OpenSslNativeJna.EVP_aes_128_cbc();
                 break;
-            case 24:
+            case AES_192_ENCODED_KEYLEN:
                 algo = OpenSslNativeJna.EVP_aes_192_cbc();
                 break;
-            case 32:
+            case AES_256_ENCODED_KEYLEN:
                 algo = OpenSslNativeJna.EVP_aes_256_cbc();
                 break;
             default:
@@ -239,13 +243,13 @@ final class OpenSslJnaCipher implements CryptoCipher {
 
         } else {
             switch (keyEncodedLength) {
-            case 16:
+            case AES_128_ENCODED_KEYLEN:
                 algo = OpenSslNativeJna.EVP_aes_128_ctr();
                 break;
-            case 24:
+            case AES_192_ENCODED_KEYLEN:
                 algo = OpenSslNativeJna.EVP_aes_192_ctr();
                 break;
-            case 32:
+            case AES_256_ENCODED_KEYLEN:
                 algo = OpenSslNativeJna.EVP_aes_256_ctr();
                 break;
             default:

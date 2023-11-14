@@ -37,6 +37,9 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
  */
 public final class Utils {
 
+    public static final int BYTE_MASK = 0xFF; // mask to keep a byte from a longer number
+    public static final int OPENSSL_VERSION_MAX_INDEX = 20; // max seen so far is 9, but leave some spare
+
     private static final class DefaultPropertiesHolder {
         static final Properties DEFAULT_PROPERTIES = createDefaultProperties();
 
@@ -190,6 +193,8 @@ public final class Utils {
 
     /*
      * Override the default DLL name if jni.library.path is a valid directory
+     * If jni.library.name is defined, this overrides the default name.
+     *
      * @param name - the default name, passed from native code
      * @return the updated library path
      * This method is designed for use from the DynamicLoader native code.
@@ -197,15 +202,22 @@ public final class Utils {
      * makes maintenance easier.
      * The code is intended for use with macOS where SIP makes it hard to override
      * the environment variables needed to override the DLL search path. It also
-     * works for Linux, but is not (currently) used or needed for Windows.
+     * works for Linux.
+     * On both macOS and Linux, different versions of the library are stored in different directories.
+     * In each case, there is a link from the canonical name (libcrypto.xx) to the versioned name (libcrypto-1.2.3.xx)
+     * However on Windows, all the DLL versions seem to be stored in the same directory.
+     * This means that Windows code needs to be given the versioned name (e.g. libcrypto-1_1-x64)
+     * This is done by defining jni.library.name.
+     * 
      * Do not change the method name or its signature!
      */
     static String libraryPath(final String name) {
+        final String overridename = System.getProperty("jni.library.name", name);
         final String override = System.getProperty("jni.library.path");
         if (override != null && new File(override).isDirectory()) {
-            return new File(override, name).getPath();
+            return new File(override, overridename).getPath();
         }
-        return name;
+        return overridename;
     }
 
     /**

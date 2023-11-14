@@ -48,6 +48,7 @@ final class OpenSslNativeJna {
     static final long VERSION_1_1_X = 0x10100000;
     static final long VERSION_2_0_X = 0x20000000;
     static final long VERSION_3_0_X = 0x30000000;
+    static final long VERSION_3_1_X = 0x30100000;
 
     private static final OpenSslInterfaceNativeJna JnaImplementation;
 
@@ -67,9 +68,12 @@ final class OpenSslNativeJna {
         // Must find one of the above two functions; else give up
 
         VERSION = versionFunction.invokeLong(new Object[]{});
-        OpenSslJna.debug(String.format("OpenSslNativeJna detected version 0x%x", VERSION));
+        //CHECKSTYLE:OFF
+        VERSION_X_Y = VERSION & 0xffff0000; // keep only major.minor checkstyle:
+        //CHECKSTYLE:ON
 
-        VERSION_X_Y = VERSION & 0xffff0000; // keep only major.minor
+        OpenSslJna.debug(String.format("OpenSslNativeJna detected version 0x%x => 0x%x", VERSION, VERSION_X_Y));
+
         if (VERSION_X_Y == VERSION_1_0_X) {
             OpenSslJna.debug("Creating OpenSsl10XNativeJna");
             JnaImplementation = new OpenSsl10XNativeJna();
@@ -77,12 +81,12 @@ final class OpenSslNativeJna {
             OpenSslJna.debug("Creating OpenSsl11XNativeJna");
             JnaImplementation = new OpenSsl11XNativeJna();
         } else if (VERSION_X_Y == VERSION_2_0_X) {
-            OpenSslJna.debug("Creating OpenSsl20XNativeJna");
-            JnaImplementation = new OpenSsl20XNativeJna();
-//        } else if (VERSION_X_Y == VERSION_3_0_X) {
-//            OpenSslJna.debug("Creating OpenSsl30XNativeJna");
-//            JnaImplementation = new OpenSsl30XNativeJna();
-        } else {
+            OpenSslJna.debug("Creating LibreSsl20XNativeJna");
+            JnaImplementation = new LibreSsl20XNativeJna();
+       } else if (VERSION_X_Y == VERSION_3_0_X || VERSION_X_Y == VERSION_3_1_X) { // assume these are the same
+           OpenSslJna.debug("Creating OpenSsl30XNativeJna");
+           JnaImplementation = new OpenSsl30XNativeJna();
+       } else {
             // TODO: Throw error?
             OpenSslJna.debug("Creating OpenSsl10XNativeJna");
             JnaImplementation = new OpenSsl10XNativeJna();

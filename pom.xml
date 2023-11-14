@@ -27,10 +27,10 @@
 
   <name>Apache Commons Crypto</name>
   <description>
-Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption Standard New Instructions). 
+Apache Commons Crypto is a cryptographic library optimized with AES-NI (Advanced Encryption Standard New Instructions).
 It provides Java API for both the cipher level and Java stream level.
-Developers can use it to implement high-performance AES encryption/decryption with minimum code and effort. 
-Please note that Crypto doesn't implement the cryptographic algorithm such as AES directly. 
+Developers can use it to implement high-performance AES encryption/decryption with minimum code and effort.
+Please note that Crypto doesn't implement the cryptographic algorithm such as AES directly.
 It wraps OpenSSL and JCE which implements the algorithms.
 
 Features
@@ -111,8 +111,7 @@ The following provides more details on the included cryptographic software:
 
   <properties>
     <commons.release.version>1.2.1</commons.release.version>
-    <commons.release.version>1.2.2</commons.release.version>
-    <commons.release.desc>(Java 8)</commons.release.desc>
+    <commons.release.desc>(Java 8 or above)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
     <commons.bc.version>1.2.0</commons.bc.version>
@@ -131,7 +130,7 @@ The following provides more details on the included cryptographic software:
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
 
     <japicmp.skip>false</japicmp.skip>
-    
+
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <jna.version>5.13.0</jna.version>
 
@@ -264,6 +263,50 @@ The following provides more details on the included cryptographic software:
       </build>
     </profile>
 
+    <!-- Allow testing of JNI code only -->
+    <profile>
+      <id>testjni</id>
+      <properties>
+        <!-- prevent JNA code from loading -->
+        <commons.crypto.OpenSslNativeJna>_</commons.crypto.OpenSslNativeJna>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/jna/**</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Allow testing of JNA code only -->
+    <profile>
+      <id>testjna</id>
+      <properties>
+        <!-- prevent JNI code from loading -->
+        <jni.library.name>_</jni.library.name>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>**/jna/**</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <activation>
         <jdk>[11.,)</jdk>
@@ -275,7 +318,7 @@ The following provides more details on the included cryptographic software:
           <version>2.3.8</version>
         </dependency>
       </dependencies>
-    </profile>  
+    </profile>
   </profiles>
 
   <build>
@@ -353,7 +396,7 @@ The following provides more details on the included cryptographic software:
             <ruleset>${basedir}/src/conf/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
-      </plugin>    
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -569,6 +612,7 @@ The following provides more details on the included cryptographic software:
       <version>${jna.version}</version>
     </dependency>
     <dependency>
+      <!-- Currently only used for IOUtils.contentEquals in NativeCodeLoader -->
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.15.0</version>
@@ -577,6 +621,12 @@ The following provides more details on the included cryptographic software:
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -648,7 +698,7 @@ The following provides more details on the included cryptographic software:
       <email>ggregory at apache.org</email>
       <url>https://www.garygregory.com</url>
       <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>      
+      <organizationUrl>https://www.apache.org/</organizationUrl>
       <roles>
         <role>PMC Member</role>
       </roles>

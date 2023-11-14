@@ -30,6 +30,7 @@
 #include "org_apache_commons_crypto_cipher_OpenSslNative.h"
 
 #ifdef UNIX
+static unsigned long (*dlsym_OpenSSL_version_num) (void);
 static EVP_CIPHER_CTX * (*dlsym_EVP_CIPHER_CTX_new)(void);
 static void (*dlsym_EVP_CIPHER_CTX_free)(EVP_CIPHER_CTX *);
 static int (*dlsym_EVP_CIPHER_CTX_set_padding)(EVP_CIPHER_CTX *, int);
@@ -55,6 +56,8 @@ static EVP_CIPHER * (*dlsym_EVP_aes_128_gcm)(void);
 #endif
 
 #ifdef WINDOWS
+typedef unsigned long (__cdecl *__dlsym_OpenSSL_version_num) (void);
+static __dlsym_OpenSSL_version_num dlsym_OpenSSL_version_num;
 typedef EVP_CIPHER_CTX * (__cdecl *__dlsym_EVP_CIPHER_CTX_new)(void);
 typedef void (__cdecl *__dlsym_EVP_CIPHER_CTX_free)(EVP_CIPHER_CTX *);
 typedef int (__cdecl *__dlsym_EVP_CIPHER_CTX_set_padding)(EVP_CIPHER_CTX *, int);
@@ -101,27 +104,8 @@ static __dlsym_EVP_aes_192_gcm dlsym_EVP_aes_192_gcm;
 static __dlsym_EVP_aes_128_gcm dlsym_EVP_aes_128_gcm;
 #endif
 
-#ifdef UNIX
-static void loadAes(JNIEnv *env, void *openssl)
-#endif
-
-#ifdef WINDOWS
 static void loadAes(JNIEnv *env, HMODULE openssl)
-#endif
 {
-#ifdef UNIX
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_ctr, env, openssl, "EVP_aes_256_ctr");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_192_ctr, env, openssl, "EVP_aes_192_ctr");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_128_ctr, env, openssl, "EVP_aes_128_ctr");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_cbc, env, openssl, "EVP_aes_256_cbc");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_192_cbc, env, openssl, "EVP_aes_192_cbc");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_128_cbc, env, openssl, "EVP_aes_128_cbc");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_256_gcm, env, openssl, "EVP_aes_256_gcm");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_192_gcm, env, openssl, "EVP_aes_192_gcm");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_aes_128_gcm, env, openssl, "EVP_aes_128_gcm");
-#endif
-
-#ifdef WINDOWS
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_256_ctr, dlsym_EVP_aes_256_ctr,  \
                       env, openssl, "EVP_aes_256_ctr");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_192_ctr, dlsym_EVP_aes_192_ctr,  \
@@ -140,50 +124,22 @@ static void loadAes(JNIEnv *env, HMODULE openssl)
                       env, openssl, "EVP_aes_192_gcm");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_128_gcm, dlsym_EVP_aes_128_gcm,  \
                       env, openssl, "EVP_aes_128_gcm");
-#endif
 }
 
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initIDs
     (JNIEnv *env, jclass clazz)
 {
-  char msg[1000];
-#ifdef UNIX
-  void *openssl = open_library(env);
-#endif
-
-#ifdef WINDOWS
-  HMODULE openssl = open_library(env);
-#endif
+  HMODULE openssl = open_library(env); // calls THROW and returns 0 on error
 
   if (!openssl) {
-#ifdef UNIX
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    dlerror());
-#endif
-#ifdef WINDOWS
-    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    GetLastError());
-#endif
-    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
   }
 
 #ifdef UNIX
   dlerror();  // Clear any existing error
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_new, env, openssl, "EVP_CIPHER_CTX_new");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_free, env, openssl, "EVP_CIPHER_CTX_free");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_set_padding, env, openssl, "EVP_CIPHER_CTX_set_padding");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_ctrl, env, openssl, "EVP_CIPHER_CTX_ctrl");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_block_size, env, openssl, "EVP_CIPHER_CTX_block_size");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_cipher, env, openssl, "EVP_CIPHER_CTX_cipher");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_flags, env, openssl, "EVP_CIPHER_flags");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CIPHER_CTX_test_flags, env, openssl, "EVP_CIPHER_CTX_test_flags");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CipherInit_ex, env, openssl, "EVP_CipherInit_ex");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CipherUpdate, env, openssl, "EVP_CipherUpdate");
-  LOAD_DYNAMIC_SYMBOL(dlsym_EVP_CipherFinal_ex, env, openssl, "EVP_CipherFinal_ex");
 #endif
-
-#ifdef WINDOWS
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, \
+                      env, openssl, "OpenSSL_version_num", "SSLeay");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_new, dlsym_EVP_CIPHER_CTX_new,  \
                       env, openssl, "EVP_CIPHER_CTX_new");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_free, dlsym_EVP_CIPHER_CTX_free,  \
@@ -192,12 +148,21 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
                       env, openssl, "EVP_CIPHER_CTX_set_padding");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_ctrl, dlsym_EVP_CIPHER_CTX_ctrl,  \
                       env, openssl, "EVP_CIPHER_CTX_ctrl");
+  char *block_size_name;
+  char *flags_name;
+  if (dlsym_OpenSSL_version_num() < VERSION_3_0_X) {
+    block_size_name = "EVP_CIPHER_CTX_block_size";
+    flags_name = "EVP_CIPHER_flags";
+  } else {
+    block_size_name = "EVP_CIPHER_CTX_get_block_size";
+    flags_name = "EVP_CIPHER_get_flags";
+  }
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_block_size, dlsym_EVP_CIPHER_CTX_block_size,  \
-                      env, openssl, "EVP_CIPHER_CTX_block_size");
+                    env, openssl, block_size_name);
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_flags, dlsym_EVP_CIPHER_flags,  \
+                    env, openssl, flags_name);
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_cipher, dlsym_EVP_CIPHER_CTX_cipher,  \
                       env, openssl, "EVP_CIPHER_CTX_cipher");
-  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_flags, dlsym_EVP_CIPHER_flags,  \
-                      env, openssl, "EVP_CIPHER_flags");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CIPHER_CTX_test_flags, dlsym_EVP_CIPHER_CTX_test_flags,  \
                       env, openssl, "EVP_CIPHER_CTX_test_flags");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherInit_ex, dlsym_EVP_CipherInit_ex,  \
@@ -206,7 +171,6 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initI
                       env, openssl, "EVP_CipherUpdate");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_CipherFinal_ex, dlsym_EVP_CipherFinal_ex,  \
                       env, openssl, "EVP_CipherFinal_ex");
-#endif
 
   loadAes(env, openssl);
   jthrowable jthr = (*env)->ExceptionOccurred(env);

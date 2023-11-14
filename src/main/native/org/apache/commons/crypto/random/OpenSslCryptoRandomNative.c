@@ -100,48 +100,16 @@ static int openssl_rand_bytes(unsigned char *buf, int num);
 
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandomNative_initSR (JNIEnv *env, jclass clazz)
 {
-  char msg[1000];
-#ifdef UNIX
-  void *openssl = open_library(env);
-#endif
-
-#ifdef WINDOWS
-  HMODULE openssl = open_library(env);
-#endif
+  HMODULE openssl = open_library(env); // calls THROW and returns 0 on error
 
   if (!openssl) {
-#ifdef UNIX
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY, dlerror());
-#endif
-#ifdef WINDOWS
-    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY, GetLastError());
-#endif
-    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return;
   }
-#ifdef UNIX
-  LOAD_DYNAMIC_SYMBOL_FALLBACK(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
-  dlerror();  // Clear any existing error
-  LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_malloc, env, openssl, "CRYPTO_malloc");
-  LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_free, env, openssl, "CRYPTO_free");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_by_id, env, openssl, "ENGINE_by_id");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_init, env, openssl, "ENGINE_init");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_set_default, env, openssl, "ENGINE_set_default");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_finish, env, openssl, "ENGINE_finish");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_free, env, openssl, "ENGINE_free");
-  LOAD_DYNAMIC_SYMBOL(dlsym_RAND_bytes, env, openssl, "RAND_bytes");
-  LOAD_DYNAMIC_SYMBOL(dlsym_ERR_get_error, env, openssl, "ERR_get_error");
-  if (dlsym_OpenSSL_version_num() < VERSION_1_1_X) {
-    LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_num_locks, env, openssl, "CRYPTO_num_locks");
-    LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_id_callback, env, openssl, "CRYPTO_set_id_callback");
-    LOAD_DYNAMIC_SYMBOL(dlsym_CRYPTO_set_locking_callback, env, openssl, "CRYPTO_set_locking_callback");
-    LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_load_rdrand, env, openssl, "ENGINE_load_rdrand");
-    LOAD_DYNAMIC_SYMBOL(dlsym_ENGINE_cleanup, env, openssl, "ENGINE_cleanup");
-  }
-#endif
 
-#ifdef WINDOWS
   LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
+#ifdef UNIX
+  dlerror();  // Clear any existing error
+#endif
   LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_malloc, dlsym_CRYPTO_malloc, env, openssl, "CRYPTO_malloc");
   LOAD_DYNAMIC_SYMBOL(__dlsym_CRYPTO_free, dlsym_CRYPTO_free, env, openssl, "CRYPTO_free");
   LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_by_id, dlsym_ENGINE_by_id, env, openssl, "ENGINE_by_id");
@@ -157,7 +125,6 @@ JNIEXPORT void JNICALL Java_org_apache_commons_crypto_random_OpenSslCryptoRandom
     LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_load_rdrand, dlsym_ENGINE_load_rdrand, env, openssl, "ENGINE_load_rdrand");
     LOAD_DYNAMIC_SYMBOL(__dlsym_ENGINE_cleanup, dlsym_ENGINE_cleanup, env, openssl, "ENGINE_cleanup");
   }
-#endif
 
   openssl_rand_init();
 }
@@ -216,7 +183,15 @@ static void pthreads_locking_callback(int mode, int type, char *file, int line)
 
 static unsigned long pthreads_thread_id(void)
 {
+// CRYPTO-171 - not supported on macOS M1 after 10.12 (Sierra)
+// It would be best to throw an error, but that does not seem possible
+// without access to the JNI environment, so print a message instead
+#if defined(MAC_OS) && defined(__arm64__)
+  fprintf(stderr, "openssl(2) is not supported on this architecture\n");
+  return 0;
+#else
   return (unsigned long)syscall(SYS_gettid);
+#endif
 }
 
 static void locks_setup(void)

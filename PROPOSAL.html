@@ -40,38 +40,38 @@
 
  <body bgcolor="white">
 
-  
 
-<div align="center"> 
+
+<div align="center">
 
 <h1>Proposal for <em>Apache Commons Crypto</em> Package</h1>
 
  </div>
 
-  
+
 
 <h3>(0) Rationale</h3>
 
-  
 
-<p>Providing Java based optimized and high performance cryptographic IO streams for 
+
+<p>Providing Java based optimized and high performance cryptographic IO streams for
 the applications that want to implement the data encryption. It also provides cipher
-level API to use. It does provide the openssl API integration and provide the fallback 
+level API to use. It does provide the openssl API integration and provide the fallback
 mechanism to use JCE when openssl library unavailable.</p>
 
-<p>(Note: Please note that Commons Crypto doesn’t 
+<p>(Note: Please note that Commons Crypto doesn’t
 
-implement the cryptographic algorithm such as AES directly. It wraps to OpenSSL or JCE 
+implement the cryptographic algorithm such as AES directly. It wraps to OpenSSL or JCE
 
 which implement algorithms.)</p>
 
-   
+
 
 <h3>(1) Scope of the Package</h3>
 
-  
 
-<p>This proposal is to create a package of cryptographic IO classes with the integration 
+
+<p>This proposal is to create a package of cryptographic IO classes with the integration
 
 of OpenSSL library. </p>
 
@@ -79,42 +79,42 @@ of OpenSSL library. </p>
 
  based on demand from the users later.</p>
 
-   
+
 
 <h3>(1.5) Interaction With Other Packages</h3>
 
-  
 
-<p><em>IO</em> Commons Crypto relies on standard JDK 7 (or later) APIs for production 
 
-deployment and on OpenSSL 1.0.1c devl libraries. It utilizes the JUnit unit testing 
+<p><em>IO</em> Commons Crypto relies on standard JDK 7 (or later) APIs for production
+
+deployment and on OpenSSL 1.0.1c devl libraries. It utilizes the JUnit unit testing
 
 framework, but this is of interest only to developers of the component.
 
- The functionality provided by Commons Crypto is currently in use by Apache Hadoop 
- 
- and Apache Spark, and both of those communities have expressed interest in changing 
- 
+ The functionality provided by Commons Crypto is currently in use by Apache Hadoop
+
+ and Apache Spark, and both of those communities have expressed interest in changing
+
  their dependency to be on the central Commons Crypto package once it exists.</p>
 
-   
+
 
 <h3>(2) Initial Source of the Package</h3>
 
-  
+
 
 
 <p>The initial classes came from the Apache Hadoop.</p>
 
-  
+
 
 <p>The proposed package name for the new component is <code>org.apache.commons.crypto</code>.</p>
 
-   
+
 
 <h3>(3)  Required Apache Commons Resources</h3>
 
-  
+
 
 <ul>
 
@@ -122,7 +122,7 @@ framework, but this is of interest only to developers of the component.
 
  <li>Mailing List - Discussions will take place on the general <em>dev@commons.apache.org</em>
 
-mailing list. 
+mailing list.
 <br>To help list subscribers identify messages of interest,
 
 it is suggested that the message subject of messages about this component
@@ -133,15 +133,15 @@ be prefixed with     [Crypto]. </br></li>
 
  <li>Confluence FAQ - New category “commons-crypto" (when available).</li>
 
- 
+
 
 </ul>
 
-   
+
 
 <h3>(4) Initial Committers</h3>
 
-  
+
 
 <ul>
 

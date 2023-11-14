@@ -33,10 +33,10 @@ interface OpenSslInterfaceNativeJna {
 
     PointerByReference _ENGINE_by_id(final String string);
 
-    /** 
+    /**
      * TODO Appears to be deprecated as of OpenSSL 1.1.0.
      *
-     * @return See OpenSSL. 
+     * @return See OpenSSL.
      */
     int _ENGINE_cleanup();
 

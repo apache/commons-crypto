@@ -26,7 +26,8 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
 
-final class OpenSsl20XNativeJna implements OpenSslInterfaceNativeJna {
+// There is no OpenSSL 2.x version; this is for LibreSSL
+final class LibreSsl20XNativeJna implements OpenSslInterfaceNativeJna {
 
     static final boolean INIT_OK;
 

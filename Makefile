@@ -83,6 +83,8 @@ $(NATIVE_DLL): $(COMMONS_CRYPTO_OUT)/$(LIBNAME)
 	@mkdir -p $(@D)
 	cp $< $@
 
+# These targets should correspond with the entries in the list 'known_os_archs' defined in Makefile.common
+# e.g. linux32 corresponds with Linux-x86
 win32:
 	$(MAKE) native CROSS_PREFIX=i686-w64-mingw32- OS_NAME=Windows OS_ARCH=x86
 
@@ -98,6 +100,9 @@ mac64:
 
 macArm64:
 	$(MAKE) native OS_NAME=Mac OS_ARCH=arm64
+
+mac-aarch64:
+	$(MAKE) native OS_NAME=Mac OS_ARCH=aarch64
 
 linux32:
 	$(MAKE) native OS_NAME=Linux OS_ARCH=x86
@@ -120,8 +125,25 @@ linux-armhf:
 linux-aarch64:
 	$(MAKE) native CROSS_PREFIX=aarch64-linux-gnu- OS_NAME=Linux OS_ARCH=aarch64
 
-clean-native-linux32:
-	$(MAKE) clean-native OS_NAME=Linux OS_ARCH=x86
+# for cross-compilation on Ubuntu, install the g++-riscv64-linux-gnu
+linux-riscv64:
+	$(MAKE) native CROSS_PREFIX=riscv64-linux-gnu- OS_NAME=Linux OS_ARCH=riscv64
 
-clean-native-win32:
-	$(MAKE) clean-native OS_NAME=Windows OS_ARCH=x86
+linux-ppc: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc
+
+linux-ppc64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc64
+
+sunos32: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=x86
+
+sunos64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=x86_64
+
+sunos-sparc: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=sparc
+
+aix-ppc64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=AIX OS_ARCH=ppc64
+

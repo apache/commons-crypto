@@ -77,7 +77,9 @@ void close_library();
 #include <dlfcn.h>
 #include <jni.h>
 
-void *open_library(JNIEnv *env);
+typedef void * HMODULE; // to agree with Windows type name
+
+HMODULE open_library(JNIEnv *env);
 
 /**
  * A helper function to dlsym a 'symbol' from a given library-handle.
@@ -90,7 +92,7 @@ void *open_library(JNIEnv *env);
  */
 static __attribute__ ((unused))
 void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
-  if (!env || !handle || !symbol) {
+  if (!handle || !symbol) {
       THROW(env, "java/lang/InternalError", NULL);
       return NULL;
   }
@@ -116,7 +118,7 @@ void *do_dlsym(JNIEnv *env, void *handle, const char *symbol) {
  */
 static __attribute__ ((unused))
 void *do_dlsym_fallback(JNIEnv *env, void *handle, const char *symbol, const char *fallback) {
-  if (!env || !handle) {
+  if (!handle) {
     THROW(env, "java/lang/InternalError", NULL);
       return NULL;
   }
@@ -133,16 +135,19 @@ void *do_dlsym_fallback(JNIEnv *env, void *handle, const char *symbol, const cha
 }
 
 /* A helper macro to dlsym the requisite dynamic symbol and bail-out on error. */
-#define LOAD_DYNAMIC_SYMBOL(func_ptr, env, handle, symbol) \
+// func_type is currently ignored, so can use same macro invocation as for Windows
+#define LOAD_DYNAMIC_SYMBOL(_func_type, func_ptr, env, handle, symbol) \
   if ((func_ptr = do_dlsym(env, handle, symbol)) == NULL) { \
     return; \
   }
 
 /* A macro to dlsym the requisite dynamic symbol (with fallback) and bail-out on error. */
-#define LOAD_DYNAMIC_SYMBOL_FALLBACK(func_ptr, env, handle, symbol, fallback) \
+// func_type is currently ignored, so can use same macro invocation as for Windows
+#define LOAD_DYNAMIC_SYMBOL_FALLBACK(_func_type, func_ptr, env, handle, symbol, fallback) \
   if ((func_ptr = do_dlsym_fallback(env, handle, symbol, fallback)) == NULL) { \
     return; \
   }
+
 #endif
 // Unix part end
 
@@ -202,7 +207,7 @@ static FARPROC WINAPI do_dlsym(JNIEnv *env, HMODULE handle, LPCSTR symbol) {
   DWORD dwErrorCode = ERROR_SUCCESS;
   FARPROC func_ptr = NULL;
 
-  if (!env || !handle || !symbol) {
+  if (!handle || !symbol) {
     THROW(env, "java/lang/InternalError", NULL);
     return NULL;
   }
@@ -235,7 +240,7 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
   DWORD dwErrorCode = ERROR_SUCCESS;
   FARPROC func_ptr = NULL;
 
-  if (!env || !handle || !symbol) {
+  if (!handle || !symbol) {
     THROW(env, "java/lang/InternalError", NULL);
     return NULL;
   }
@@ -251,6 +256,7 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
   }
   return func_ptr;
 }
+
 #endif
 // Windows part end
 
@@ -258,14 +264,14 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
 #define LOCK_CLASS(env, clazz, classname) \
   if ((*env)->MonitorEnter(env, clazz) != 0) { \
     char exception_msg[128]; \
-    snprintf(exception_msg, 128, "Failed to lock %s", classname); \
+    snprintf(exception_msg, sizeof(exception_msg), "Failed to lock %s", classname); \
     THROW(env, "java/lang/InternalError", exception_msg); \
   }
 
 #define UNLOCK_CLASS(env, clazz, classname) \
   if ((*env)->MonitorExit(env, clazz) != 0) { \
     char exception_msg[128]; \
-    snprintf(exception_msg, 128, "Failed to unlock %s", classname); \
+    snprintf(exception_msg, sizeof(exception_msg), "Failed to unlock %s", classname); \
     THROW(env, "java/lang/InternalError", exception_msg); \
   }
 
@@ -310,6 +316,7 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
 
 #define VERSION_1_0_X 0x10000000
 #define VERSION_1_1_X 0x10100000
+#define VERSION_3_0_X 0x30000000
 
 #endif
 

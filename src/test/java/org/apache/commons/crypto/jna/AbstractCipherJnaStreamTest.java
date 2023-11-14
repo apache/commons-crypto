@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 import org.apache.commons.crypto.stream.AbstractCipherStreamTest;
+import org.apache.commons.crypto.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -65,7 +66,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
         doReadWriteTest(count, CIPHER_OPENSSL_JNA, AbstractCipherTest.JCE_CIPHER_CLASSNAME, iv);
         // Overflow test, IV: xx xx xx xx xx xx xx xx ff ff ff ff ff ff ff ff
         for (int i = 0; i < 8; i++) {
-            iv[8 + i] = (byte) 0xff;
+            iv[8 + i] = (byte) Utils.BYTE_MASK;
         }
         doReadWriteTest(count, CIPHER_OPENSSL_JNA, CIPHER_OPENSSL_JNA, iv);
         doReadWriteTest(count, AbstractCipherTest.JCE_CIPHER_CLASSNAME, CIPHER_OPENSSL_JNA, iv);
@@ -81,4 +82,26 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
 
         doSkipTest(CIPHER_OPENSSL_JNA, true);
     }
+
+    @Override
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
+    public void testExceptions() throws Exception {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        doExceptionTest(CIPHER_OPENSSL_JNA, baos, false);
+
+        doExceptionTest(CIPHER_OPENSSL_JNA, baos, true);
+    }
+
+    @Override
+    @Test
+    @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
+    public void testFieldGetters() throws Exception {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        doFieldGetterTest(CIPHER_OPENSSL_JNA, baos, false);
+
+        doFieldGetterTest(CIPHER_OPENSSL_JNA, baos, true);
+    }
+
+
 }

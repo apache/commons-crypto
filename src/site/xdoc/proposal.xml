@@ -22,12 +22,12 @@ limitations under the License.
  </properties>
 
  <body>
-  
+
    <section name="Proposal for Apache Commons Crypto Package"><br/>
    <h4>March 24, 2016</h4>
-  
 
-  
+
+
 <subsection name="(0) Rationale">
   <p>
    Providing Java based optimized and high performance cryptographic IO streams for

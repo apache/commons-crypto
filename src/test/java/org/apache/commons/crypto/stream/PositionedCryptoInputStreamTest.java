@@ -276,17 +276,6 @@ public class PositionedCryptoInputStreamTest {
         testSeekFailed(cipherClass, -1, bufferSize);
     }
 
-    @Test
-    public void doTestJCE() throws Exception {
-        testCipher(AbstractCipherTest.JCE_CIPHER_CLASSNAME);
-    }
-
-    @Test
-    public void doTestJNI() throws Exception {
-        assumeTrue(Crypto.isNativeCodeLoaded());
-        testCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME);
-    }
-
     private CryptoCipher getCipher(final String cipherClass) throws IOException {
         try {
             return (CryptoCipher) ReflectionUtils.newInstance(
@@ -334,6 +323,17 @@ public class PositionedCryptoInputStreamTest {
         doSeekTests();
         doMultipleReadTest(cipherClass);
         doMultipleReadTest();
+    }
+
+    @Test
+    public void testJCE() throws Exception {
+        testCipher(AbstractCipherTest.JCE_CIPHER_CLASSNAME);
+    }
+
+    @Test
+    public void testJNI() throws Exception {
+        assumeTrue(Crypto.isNativeCodeLoaded());
+        testCipher(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME);
     }
 
     private void testPositionedReadLoop(final String cipherClass, int position,

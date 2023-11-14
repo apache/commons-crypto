@@ -54,23 +54,16 @@ static __dlsym_OpenSSL_version dlsym_OpenSSL_version;
 
 static char dynamicLibraryPath[80];  // where was the crypto library found?
 
-#ifdef UNIX
-static void get_methods(JNIEnv *env, void *openssl)
-#endif
-#ifdef WINDOWS
 static void get_methods(JNIEnv *env, HMODULE openssl)
-#endif
 {
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
 #ifdef UNIX
-  LOAD_DYNAMIC_SYMBOL_FALLBACK(dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
-  LOAD_DYNAMIC_SYMBOL_FALLBACK(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
   Dl_info info;
   (void) dladdr(dlsym_OpenSSL_version_num, &info); // ignore the return code
   strncpy(dynamicLibraryPath, info.dli_fname, sizeof(dynamicLibraryPath) - 1); // allow for null
 #endif
 #ifdef WINDOWS
-  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay");
-  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version");
   LPWSTR lpFilename;
   WCHAR buffer[80];
   lpFilename = buffer;
@@ -81,25 +74,9 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
 
 static int load_library(JNIEnv *env)
 {
-  char msg[100];
-#ifdef UNIX
-  void *openssl = open_library(env);
-#endif
-
-#ifdef WINDOWS
-  HMODULE openssl = open_library(env);
-#endif
+  HMODULE openssl = open_library(env); // calls THROW and returns 0 on error
 
   if (!openssl) {
-#ifdef UNIX
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    dlerror());
-#endif
-#ifdef WINDOWS
-    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    GetLastError());
-#endif
-    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
   }
   get_methods(env, openssl);
