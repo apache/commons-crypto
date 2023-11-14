@@ -28,18 +28,18 @@ cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 mvn -V -B -ntp clean package -Drat.skip
 
 # use process-classes rather than package to speed up builds
-mvn -DskipTests -Drat.skip process-classes -P linux-aarch64
-mvn -DskipTests -Drat.skip process-classes -P linux-riscv64
-mvn -DskipTests -Drat.skip process-classes -P win64
-mvn -DskipTests -Drat.skip process-classes -P linux64
+mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux-aarch64
+mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux-riscv64
+mvn -DskipTests -Drat.skip process-classes -Dtarget.name=win64
+mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux64
 
 # Ensure the correct config file is installed
 cp /usr/include/i386-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 
 # Run the 32-bit builds.
-mvn -DskipTests -Drat.skip process-classes -P linux-armhf
-mvn -DskipTests -Drat.skip process-classes -P linux-arm
-mvn -DskipTests -Drat.skip process-classes -P win32
+mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux-armhf
+mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux-arm
+mvn -DskipTests -Drat.skip process-classes -Dtarget.name=win32
 
 # see separate script for optional linux32 build
 

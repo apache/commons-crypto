@@ -29,7 +29,7 @@ cp /usr/include/i386-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 # Needed for linux32, but causes linux 64 builds to fail
 apt-get --assume-yes install g++-multilib
 
-mvn -DskipTests package -P linux32
+mvn -DskipTests package -Dtarget.name=linux32
 
 # Show generated files
 find target/classes/org/apache/commons/crypto/native -type f -ls
