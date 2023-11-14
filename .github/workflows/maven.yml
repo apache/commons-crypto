@@ -15,7 +15,21 @@
 
 name: Java CI
 
-on: [push, pull_request]
+# cross-build tests are done in a separate action as they currrently take a long time
+
+on:
+  # allow direct trigger
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '**/workflows/*.yml'
+      - '!**/workflows/maven.yml'
+  pull_request:
+    paths-ignore:
+      - '**/workflows/*.yml'
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -24,34 +38,98 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [macos-latest]
-        java: [ 8, 11, 17 ]
+        # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
+        os: [macos-11, ubuntu-20.04, windows-latest]
+        # These names are used in conditional statements below.
+        java: [ 8, 11, 17, 21 ]
         experimental: [false]
+        # macos-13-arm64 does not appear to be available
+        # include:
+        #   - java: 21
+        #     os: macos-13-arm64
+        #     experimental: true
 #        include:
-#          - java: 18-ea
-#            os: ubuntu-latest
-#            experimental: true        
-#          - java: 18-ea
+#          - java: 22-ea
+#            os: ubuntu-20.04
+#            experimental: true
+#          - java: 22-ea
 #            os: windows-latest
-#            experimental: true        
-#          - java: 18-ea
+#            experimental: true
+#          - java: 22-ea
 #            os: macos-latest
-#            experimental: true        
+#            experimental: true
+        # We don't need to build all Java versions every time
+        # Try excluding 11, 17 on branch pushes
+        exclude:
+          - java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push') && 11 || 99 }} 
+          - java: ${{ (github.ref != 'refs/heads/master' && github.event_name == 'push') && 17 || 99 }} 
       fail-fast: false
-        
+
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/cache@v3.0.4
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      with:
+        persist-credentials: false
+    - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: Set up JDK ${{ matrix.java }}
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
-    - name: Build with Maven
-      run: mvn -V --file pom.xml --no-transfer-progress -DtrimStackTrace=false
+    - name: OpenSSL version
+      run: openssl version -a
+    - name: OpenSSL engine (macos)
+      # need to override the libarary on macOS
+      if: ${{ matrix.os == 'macos-11' }}
+      run: |
+        echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
+    - name: OpenSSL engine (windows)
+      # need to override the libarary on windows
+      if: ${{ matrix.os == 'windows-latest' }}
+      # e.g. NAME: "libcrypto-1_1-x64.dll"
+      # Not sure how to derive this automatically
+      run: |
+        openssl version -a
+        echo "NAME=libcrypto-1_1-x64.dll" >> $env:GITHUB_ENV
+    # N.B. '-V -B -ntp' is shorthand for '--show-version --batch-mode --no-transfer-progress'
+    # 
+    # The bash shell under Windows changes the openssl default library, so is not used for running tests
+    # Unfortunately that means separate steps for Windows, as it uses a different syntax for referrring to
+    # environment variables: $env:VARNAME instead of $VARNAME
+    # Also, note that Windows stores all the DLLs in the same directory.
+    # Instead of defining jni.library.path and jna.library.path we need to define
+    # jni.library.name and commons.crypto.OpenSslNativeJna to override the file names
+    - name: Build with Maven (Windows)
+      if: ${{ matrix.os == 'windows-latest' }}
+      # OPENSSL_HOME is needed for Windows build to find some header files
+      # It's not clear how one is supposed to find the correct setting;
+      # The value below was found by searching for openssl files under C (warning: slow)
+      # Other possible values are:
+      # "C:\\Miniconda\\pkgs\\openssl-1.1.1n-h2bbff1b_0\\Library"
+      # "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\opt"
+      # N.B. This must *not* be run under the bash shell, as that changes the default openssl library under Windows
+      env:
+        OPENSSL_HOME: "C:\\Miniconda\\Library"
+      run: |
+        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
+    - name: Build with Maven (not Windows)
+      if: ${{ matrix.os != 'windows-latest' }}
+      run: |
+        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
+    - name: Check benchmark code compiles
+      if: ${{ matrix.java == '8' }}
+      env:
+        OPENSSL_HOME: "C:\\Miniconda\\Library"
+      run: |
+        mvn -V -B -ntp clean test-compile -Pbenchmark
+    - name: Check JNI and JNA tests are independent
+      # N.B. the default library fails with 'java is loading libcrypto in an unsafe way'
+      # so we need to define the appropriate library for each test
+      if: ${{ matrix.java == '8' && matrix.os != 'windows-latest' }}
+      run: |
+        mvn -V -B -ntp test -Ptestjni -D"jni.library.path=$ENGINESDIR" -Dcommons.crypto.OpenSslNativeJna=___
+        mvn -V -B -ntp test -Ptestjna -D"jna.library.path=$ENGINESDIR" -Djni.library.name=___

@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -36,54 +37,137 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
  */
 public final class Utils {
 
-    private static class DefaultPropertiesHolder {
+    public static final int BYTE_MASK = 0xFF; // mask to keep a byte from a longer number
+    public static final int OPENSSL_VERSION_MAX_INDEX = 20; // max seen so far is 9, but leave some spare
+
+    private static final class DefaultPropertiesHolder {
         static final Properties DEFAULT_PROPERTIES = createDefaultProperties();
-     }
+
+        /**
+         * Loads system properties when configuration file of the name
+         * {@link #SYSTEM_PROPERTIES_FILE} is found.
+         *
+         * @return the default properties
+         */
+        private static Properties createDefaultProperties() {
+          // default to system
+          final Properties defaultedProps = new Properties(System.getProperties());
+          final URL url = Thread.currentThread().getContextClassLoader().getResource(SYSTEM_PROPERTIES_FILE);
+          if (url == null) {
+              // Fail early when the resource is not found which makes SpotBugs happy on Java 17.
+              return defaultedProps;
+          }
+          try {
+              final Properties fileProps = new Properties();
+              try (InputStream is = url.openStream()) {
+                  fileProps.load(is);
+              }
+              final Enumeration<?> names = fileProps.propertyNames();
+              while (names.hasMoreElements()) {
+                  final String name = (String) names.nextElement();
+                  // ensure System properties override ones in the file so one can override the file on the command line
+                  if (System.getProperty(name) == null) {
+                      defaultedProps.setProperty(name, fileProps.getProperty(name));
+                  }
+              }
+          } catch (final Exception ex) {
+              System.err.println("Could not load '" + SYSTEM_PROPERTIES_FILE + "' from classpath: " + ex);
+          }
+          return defaultedProps;
+      }
+   }
 
     /**
      * The file name of configuration file.
-     * TODO is there any need for it to have the CONF_PREFIX?
      */
-    private static final String SYSTEM_PROPERTIES_FILE = Crypto.CONF_PREFIX
-            + "properties";
+    private static final String SYSTEM_PROPERTIES_FILE = Crypto.CONF_PREFIX + "properties";
 
     /**
-     * The private constructor of {@link Utils}.
+     * Ensures the truth of an expression involving one or more parameters to
+     * the calling method.
+     *
+     * @param expression a boolean expression.
+     * @throws IllegalArgumentException if expression is {@code false}.
      */
-    private Utils() {
+    public static void checkArgument(final boolean expression) {
+        if (!expression) {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
-     * Loads system properties when configuration file of the name
-     * {@link #SYSTEM_PROPERTIES_FILE} is found.
+     * Checks the truth of an expression.
      *
-     * @return the default properties
+     * @param expression a boolean expression.
+     * @param errorMessage the exception message to use if the check fails; will
+     *        be converted to a string using <code>String.valueOf(Object)</code>.
+     * @throws IllegalArgumentException if expression is {@code false}.
      */
-    private static Properties createDefaultProperties() {
-        // default to system
-        final Properties defaultedProps = new Properties(System.getProperties());
-        final URL url = Thread.currentThread().getContextClassLoader().getResource(SYSTEM_PROPERTIES_FILE);
-        if (url == null) {
-            // Fail early when the resource is not found which makes SpotBugs happy on Java 17.
-            return defaultedProps;
+    public static void checkArgument(final boolean expression, final Object errorMessage) {
+        if (!expression) {
+            throw new IllegalArgumentException(String.valueOf(errorMessage));
         }
+    }
+
+    /**
+     * Ensures that an object reference passed as a parameter to the calling
+     * method is not {@code null}.
+     *
+     * @param <T> the type of the object reference to be checked.
+     * @param reference an object reference.
+     * @return the non-null reference that was validated.
+     * @throws NullPointerException if reference is {@code null}.
+     * @deprecated Use {@link Objects#requireNonNull(Object)}.
+     */
+    @Deprecated
+    public static <T> T checkNotNull(final T reference) {
+        return Objects.requireNonNull(reference, "reference");
+    }
+
+    /**
+     * Ensures the truth of an expression involving the state of the calling
+     * instance, but not involving any parameters to the calling method.
+     *
+     * @param expression a boolean expression.
+     * @throws IllegalStateException if expression is {@code false}.
+     */
+    public static void checkState(final boolean expression) {
+        checkState(expression, null);
+    }
+
+    /**
+     * Ensures the truth of an expression involving the state of the calling
+     * instance, but not involving any parameters to the calling method.
+     *
+     * @param expression a boolean expression.
+     * @param message Error message for the exception when the expression is {@code false}.
+     * @throws IllegalStateException if expression is {@code false}.
+     */
+    public static void checkState(final boolean expression, final String message) {
+        if (!expression) {
+            throw new IllegalStateException(message);
+        }
+    }
+
+    /**
+     * Helper method to create a CryptoCipher instance and throws only
+     * IOException.
+     *
+     * @param properties The {@link Properties} class represents a set of
+     *        properties.
+     * @param transformation the name of the transformation, e.g.,
+     * <i>AES/CBC/PKCS5Padding</i>.
+     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
+     * for information about standard transformation names.
+     * @return the CryptoCipher instance.
+     * @throws IOException if an I/O error occurs.
+     */
+    public static CryptoCipher getCipherInstance(final String transformation, final Properties properties) throws IOException {
         try {
-            final Properties fileProps = new Properties();
-            try (InputStream is = url.openStream()) {
-                fileProps.load(is);
-            }
-            final Enumeration<?> names = fileProps.propertyNames();
-            while (names.hasMoreElements()) {
-                final String name = (String) names.nextElement();
-                // ensure System properties override ones in the file so one can override the file on the command line
-                if (System.getProperty(name) == null) {
-                    defaultedProps.setProperty(name, fileProps.getProperty(name));
-                }
-            }
-        } catch (final Exception ex) {
-            System.err.println("Could not load '" + SYSTEM_PROPERTIES_FILE + "' from classpath: " + ex.toString());
+            return CryptoCipherFactory.getCryptoCipher(transformation, properties);
+        } catch (final GeneralSecurityException e) {
+            throw new IOException(e);
         }
-        return defaultedProps;
     }
 
     /**
@@ -107,119 +191,63 @@ public final class Utils {
         return properties;
      }
 
-    /**
-     * Helper method to create a CryptoCipher instance and throws only
-     * IOException.
+    /*
+     * Override the default DLL name if jni.library.path is a valid directory
+     * If jni.library.name is defined, this overrides the default name.
      *
-     * @param properties The {@code Properties} class represents a set of
-     *        properties.
-     * @param transformation the name of the transformation, e.g.,
-     * <i>AES/CBC/PKCS5Padding</i>.
-     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
-     * for information about standard transformation names.
-     * @return the CryptoCipher instance.
-     * @throws IOException if an I/O error occurs.
+     * @param name - the default name, passed from native code
+     * @return the updated library path
+     * This method is designed for use from the DynamicLoader native code.
+     * Although it could all be implemented in native code, this hook method
+     * makes maintenance easier.
+     * The code is intended for use with macOS where SIP makes it hard to override
+     * the environment variables needed to override the DLL search path. It also
+     * works for Linux.
+     * On both macOS and Linux, different versions of the library are stored in different directories.
+     * In each case, there is a link from the canonical name (libcrypto.xx) to the versioned name (libcrypto-1.2.3.xx)
+     * However on Windows, all the DLL versions seem to be stored in the same directory.
+     * This means that Windows code needs to be given the versioned name (e.g. libcrypto-1_1-x64)
+     * This is done by defining jni.library.name.
+     * 
+     * Do not change the method name or its signature!
      */
-    public static CryptoCipher getCipherInstance(
-            final String transformation, final Properties properties)
-            throws IOException {
-        try {
-            return CryptoCipherFactory.getCryptoCipher(transformation, properties);
-        } catch (final GeneralSecurityException e) {
-            throw new IOException(e);
+    static String libraryPath(final String name) {
+        final String overridename = System.getProperty("jni.library.name", name);
+        final String override = System.getProperty("jni.library.path");
+        if (override != null && new File(override).isDirectory()) {
+            return new File(override, overridename).getPath();
         }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to
-     * the calling method.
-     *
-     * @param expression a boolean expression.
-     * @throws IllegalArgumentException if expression is false.
-     */
-    public static void checkArgument(final boolean expression) {
-        if (!expression) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    /**
-     * Checks the truth of an expression.
-     *
-     * @param expression a boolean expression.
-     * @param errorMessage the exception message to use if the check fails; will
-     *        be converted to a string using <code>String
-     *                     .valueOf(Object)</code>.
-     * @throws IllegalArgumentException if expression is false.
-     */
-    public static void checkArgument(final boolean expression, final Object errorMessage) {
-        if (!expression) {
-            throw new IllegalArgumentException(String.valueOf(errorMessage));
-        }
-    }
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling
-     * method is not null.
-     *
-     * @param <T> the type of the object reference to be checked.
-     * @param reference an object reference.
-     * @return the non-null reference that was validated.
-     * @throws NullPointerException if reference is null.
-     * @deprecated Use {@link Objects#requireNonNull(Object)}.
-     */
-    @Deprecated
-    public static <T> T checkNotNull(final T reference) {
-        return Objects.requireNonNull(reference, "reference");
-    }
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling
-     * instance, but not involving any parameters to the calling method.
-     *
-     * @param expression a boolean expression.
-     * @throws IllegalStateException if expression is false.
-     */
-    public static void checkState(final boolean expression) {
-        checkState(expression, null);
-    }
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling
-     * instance, but not involving any parameters to the calling method.
-     *
-     * @param expression a boolean expression.
-     * @param message Error message for the exception when the expression is false.
-     * @throws IllegalStateException if expression is false.
-     */
-    public static void checkState(final boolean expression, final String message) {
-        if (!expression) {
-            throw new IllegalStateException(message);
-        }
+        return overridename;
     }
 
     /**
      * Splits class names sequence into substrings, Trim each substring into an
-     * entry,and returns an list of the entries.
+     * entry, and returns a list of the entries.
      *
-     * @param clazzNames a string consist of a list of the entries joined by a
-     *        delimiter, may be null or empty in which case an empty list is returned.
+     * @param classNames a string consist of a list of the entries joined by a
+     *        delimiter, may be {@code null} or empty in which case an empty list is returned.
      * @param separator a delimiter for the input string.
      * @return a list of class entries.
      */
-    public static List<String> splitClassNames(final String clazzNames, final String separator) {
+    public static List<String> splitClassNames(final String classNames, final String separator) {
         final List<String> res = new ArrayList<>();
-        if (clazzNames == null || clazzNames.isEmpty()) {
+        if (classNames == null || classNames.isEmpty()) {
             return res;
         }
 
-        for (String clazzName : clazzNames.split(separator)) {
-            clazzName = clazzName.trim();
-            if (!clazzName.isEmpty()) {
-                res.add(clazzName);
+        for (String className : classNames.split(separator)) {
+            className = className.trim();
+            if (!className.isEmpty()) {
+                res.add(className);
             }
         }
         return res;
+    }
+
+    /**
+     * The private constructor of {@link Utils}.
+     */
+    private Utils() {
     }
 
 }

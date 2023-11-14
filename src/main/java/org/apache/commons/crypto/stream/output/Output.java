@@ -19,16 +19,41 @@ package org.apache.commons.crypto.stream.output;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.WritableByteChannel;
+
+import org.apache.commons.crypto.stream.CryptoOutputStream;
 
 /**
  * The Output interface abstract the output target of
- * {@code CryptoOutputStream} so that different implementation of output
- * can be used. The implementation Output interface will usually wraps an output
- * mechanism such as {@code OutputStream} or
- * {@code WritableByteChannel}.
+ * {@link CryptoOutputStream} so that different implementation of output
+ * can be used. The implementation Output interface will usually wrap an output
+ * mechanism such as {@link OutputStream} or
+ * {@link WritableByteChannel}.
  */
 public interface Output extends Closeable {
+
+    /**
+     * Closes this output and releases any system resources associated with the
+     * under layer output.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    void close() throws IOException;
+
+    /**
+     * Flushes this output and forces any buffered output bytes to be written
+     * out if the under layer output method support. The general contract of
+     * {@code flush} is that calling it is an indication that, if any bytes
+     * previously written have been buffered by the implementation of the output
+     * stream, such bytes should immediately be written to their intended
+     * destination.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    void flush() throws IOException;
 
     /**
      * Writes a sequence of bytes to this output from the given buffer.
@@ -55,25 +80,4 @@ public interface Output extends Closeable {
      * @throws IOException If some other I/O error occurs.
      */
     int write(ByteBuffer src) throws IOException;
-
-    /**
-     * Flushes this output and forces any buffered output bytes to be written
-     * out if the under layer output method support. The general contract of
-     * {@code flush} is that calling it is an indication that, if any bytes
-     * previously written have been buffered by the implementation of the output
-     * stream, such bytes should immediately be written to their intended
-     * destination.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    void flush() throws IOException;
-
-    /**
-     * Closes this output and releases any system resources associated with the
-     * under layer output.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    void close() throws IOException;
 }

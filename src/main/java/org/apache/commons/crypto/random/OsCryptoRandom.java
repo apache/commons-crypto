@@ -21,17 +21,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Random;
 
 import org.apache.commons.crypto.utils.IoUtils;
 
 /**
- * A Random implementation that uses random bytes sourced from the operating
- * system.
+ * A Random implementation that uses random bytes sourced from the operating system.
+ * <p>
+ * This class is not public/protected so does not appear in the main Javadoc Please ensure that property use is documented in the enum
+ * CryptoRandomFactory.RandomProvider
+ * </p>
  */
-class OsCryptoRandom extends Random implements CryptoRandom {
-
-    private static final long serialVersionUID = 6391500337172057900L;
+final class OsCryptoRandom implements CryptoRandom {
 
     private static final int RESERVOIR_LENGTH = 8192;
 
@@ -40,6 +40,43 @@ class OsCryptoRandom extends Random implements CryptoRandom {
     private final byte[] reservoir = new byte[RESERVOIR_LENGTH];
 
     private int pos = reservoir.length;
+
+    /**
+     * Constructs a {@link OsCryptoRandom}.
+     *
+     * @param props the configuration properties.
+     * Uses {@link CryptoRandomFactory#DEVICE_FILE_PATH_KEY} to determine the
+     * path to the random device, default is
+     * {@link CryptoRandomFactory#DEVICE_FILE_PATH_DEFAULT}
+     */
+    public OsCryptoRandom(final Properties props) {
+        final File randomDevFile = new File(props.getProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY, CryptoRandomFactory.DEVICE_FILE_PATH_DEFAULT));
+
+        try {
+            close();
+            this.stream = new FileInputStream(randomDevFile);
+        } catch (final IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        try {
+            fillReservoir(0);
+        } catch (final IllegalStateException e) {
+            close();
+            throw e;
+        }
+    }
+
+    /**
+     * Overrides {@link java.lang.AutoCloseable#close()}. Closes the OS stream.
+     */
+    @Override
+    synchronized public void close() {
+        if (stream != null) {
+            IoUtils.closeQuietly(stream);
+            stream = null;
+        }
+    }
 
     /**
      * Fills the reservoir.
@@ -54,36 +91,6 @@ class OsCryptoRandom extends Random implements CryptoRandom {
                 throw new IllegalStateException("failed to fill reservoir", e);
             }
             pos = 0;
-        }
-    }
-
-    /**
-     * Constructs a {@link OsCryptoRandom}.
-     *
-     * @param props the configuration properties.
-     * Uses {@link CryptoRandomFactory#DEVICE_FILE_PATH_KEY} to determine the
-     * path to the random device, default is
-     * {@link CryptoRandomFactory#DEVICE_FILE_PATH_DEFAULT}
-     */
-    // N.B. this class is not public/protected so does not appear in the main Javadoc
-    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public OsCryptoRandom(final Properties props) {
-        final File randomDevFile = new File(
-                props.getProperty(CryptoRandomFactory.DEVICE_FILE_PATH_KEY,
-                                  CryptoRandomFactory.DEVICE_FILE_PATH_DEFAULT));
-
-        try {
-            close();
-            this.stream = new FileInputStream(randomDevFile);
-        } catch (final IOException e) {
-            throw new IllegalArgumentException(e);
-        }
-
-        try {
-            fillReservoir(0);
-        } catch (final IllegalStateException e) {
-            close();
-            throw e;
         }
     }
 
@@ -104,35 +111,6 @@ class OsCryptoRandom extends Random implements CryptoRandom {
             System.arraycopy(reservoir, pos, bytes, off, n);
             off += n;
             pos += n;
-        }
-    }
-
-    /**
-     * Overrides Random#next(). Generates the next pseudorandom number.
-     * Subclasses should override this, as this is used by all other methods.
-     *
-     * @param nbits random bits.
-     * @return the next pseudorandom value from this random number generator's
-     *         sequence.
-     */
-    @Override
-    synchronized protected int next(final int nbits) {
-        fillReservoir(4);
-        int n = 0;
-        for (int i = 0; i < 4; i++) {
-            n = (n << 8) | (reservoir[pos++] & 0xff);
-        }
-        return n & (0xffffffff >> (32 - nbits));
-    }
-
-    /**
-     * Overrides {@link java.lang.AutoCloseable#close()}. Closes the OS stream.
-     */
-    @Override
-    synchronized public void close() {
-        if (stream != null) {
-            IoUtils.closeQuietly(stream);
-            stream = null;
         }
     }
 

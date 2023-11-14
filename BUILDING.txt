@@ -1,3 +1,19 @@
+<!---
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
 Build instructions for Apache Commons Crypto
 
 ----------------------------------------------------------------------------------
@@ -8,9 +24,9 @@ Requirements:
 * Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy
   Files (if running unit tests)
 * export JAVA_HOME
-* Maven 3.0 or above
+* Maven 3.3.9 or above
 * Make
-* OpenSSL devel 1.1.1 or above (OpenSSL library header files are required)
+* OpenSSL devel 1.1.1 (OpenSSL library header files are required)
 * GCC
 * G++
 
@@ -46,7 +62,7 @@ Check OpenSSL version:
 
   $ openssl version
 
-If it is not 1.0.1c or above, upgrade OpenSSL version to 1.0.1c or above:
+If it is not 1.1.1, upgrade OpenSSL version to 1.1.1:
 
 Upgrade OpenSSL in Linux:
 
@@ -54,7 +70,7 @@ You can follow your OS distribution instructions to upgrade OpenSSL to a proper 
 
 Upgrade OpenSSL in Mac:
 
-  $ brew install openssl101
+  $ brew install openssl111
   $ brew link openssl --force
 
 Get OpenSSL headers: sudo apt -y install libssl-dev
@@ -89,5 +105,4 @@ File menu: Choose Import..., select "Existing Maven Project".
 Building distributions:
 
 Please read http://commons.apache.org/releases/index.html
-
 

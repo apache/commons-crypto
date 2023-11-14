@@ -18,7 +18,7 @@
 package org.apache.commons.crypto.cipher;
 
 /**
- * This enum is defined for OpensslNative.ctrl() to allow various cipher
+ * This enum is defined for OpenSslNative.ctrl() to allow various cipher
  * specific parameters to be determined and set.
  * see the macro definitions in openssl/evp.h
  */

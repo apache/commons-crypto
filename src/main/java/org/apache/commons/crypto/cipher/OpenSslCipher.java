@@ -33,8 +33,12 @@ import javax.crypto.ShortBufferException;
 
 /**
  * Implements the CryptoCipher using JNI into OpenSSL.
+ * <p>
+ * this class is not public/protected so does not appear in the main Javadoc Please ensure that property use is documented in the enum
+ * CryptoRandomFactory.RandomProvider
+ * </p>
  */
-class OpenSslCipher implements CryptoCipher {
+final class OpenSslCipher implements CryptoCipher {
 
     private final OpenSsl openSslEngine;
     private boolean initialized;
@@ -48,8 +52,6 @@ class OpenSslCipher implements CryptoCipher {
      * @param transformation  transformation for OpenSSL openSslEngine (algorithm/mode/padding)
      * @throws GeneralSecurityException if OpenSSL openSslEngine initialize failed
      */
-    // N.B. this class is not public/protected so does not appear in the main Javadoc
-    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
     public OpenSslCipher(final Properties props, final String transformation) // NOPMD
             throws GeneralSecurityException {
         this.transformation = transformation;
@@ -63,72 +65,16 @@ class OpenSslCipher implements CryptoCipher {
     }
 
     /**
-     * Returns the block size (in bytes).
-     *
-     * @return the block size (in bytes), or 0 if the underlying algorithm is
-     * not a block openSslEngine
+     * Closes the OpenSSL openSslEngine. Clean the OpenSsl native context.
      */
     @Override
-    public final int getBlockSize() {
-        return CryptoCipherFactory.AES_BLOCK_SIZE;
+    public void close() {
+        openSslEngine.clean();
     }
 
     /**
-     * Returns the algorithm name of this {@code CryptoCipher} object.
-     *
-     * <p>This is the same name that was specified in one of the
-     * {@code CryptoCipherFactory#getInstance} calls that created this
-     * {@code CryptoCipher} object..
-     *
-     * @return the algorithm name of this {@code CryptoCipher} object.
-     */
-    @Override
-    public String getAlgorithm() {
-        return transformation;
-    }
-
-    /**
-     * Initializes the openSslEngine with mode, key and iv.
-     *
-     * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
-     * @param key crypto key for the openSslEngine
-     * @param params the algorithm parameters
-     * @throws InvalidKeyException If key length is invalid
-     * @throws InvalidAlgorithmParameterException if IV length is wrong
-     */
-    @Override
-    public void init(final int mode, final Key key, final AlgorithmParameterSpec params)
-            throws InvalidKeyException, InvalidAlgorithmParameterException {
-        Objects.requireNonNull(key, "key");
-        Objects.requireNonNull(params, "params");
-
-        int cipherMode = OpenSsl.DECRYPT_MODE;
-        if (mode == Cipher.ENCRYPT_MODE) {
-            cipherMode = OpenSsl.ENCRYPT_MODE;
-        }
-        openSslEngine.init(cipherMode, key.getEncoded(), params);
-        initialized = true;
-    }
-
-    /**
-     * Continues a multiple-part encryption/decryption operation. The data is
-     * encrypted or decrypted, depending on how this openSslEngine was initialized.
-     *
-     * @param inBuffer the input ByteBuffer
-     * @param outBuffer the output ByteBuffer
-     * @return int number of bytes stored in {@code output}
-     * @throws ShortBufferException if there is insufficient space in the output
-     *         buffer
-     */
-    @Override
-    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
-            throws ShortBufferException {
-        return openSslEngine.update(inBuffer, outBuffer);
-    }
-
-    /**
-     * Continues a multiple-part encryption/decryption operation. The data is
-     * encrypted or decrypted, depending on how this openSslEngine was initialized.
+     * Encrypts or decrypts data in a single-part operation, or finishes a
+     * multiple-part operation.
      *
      * @param input the input byte array
      * @param inputOffset the offset in input where the input starts
@@ -136,14 +82,22 @@ class OpenSslCipher implements CryptoCipher {
      * @param output the byte array for the result
      * @param outputOffset the offset in output where the result is stored
      * @return the number of bytes stored in output
-     * @throws ShortBufferException if there is insufficient space in the output
-     *         byte array
+     * @throws ShortBufferException if the given output byte array is too small
+     *         to hold the result
+     * @throws BadPaddingException if this openSslEngine is in decryption mode, and
+     *         (un)padding has been requested, but the decrypted data is not
+     *         bounded by the appropriate padding bytes
+     * @throws IllegalBlockSizeException if this openSslEngine is a block openSslEngine, no
+     *         padding has been requested (only in encryption mode), and the
+     *         total input length of the data processed by this openSslEngine is not a
+     *         multiple of block size; or if this encryption algorithm is unable
+     *         to process the input data provided.
      */
     @Override
-    public int update(final byte[] input, final int inputOffset, final int inputLen,
-            final byte[] output, final int outputOffset) throws ShortBufferException {
-        return openSslEngine
-                .update(input, inputOffset, inputLen, output, outputOffset);
+    public int doFinal(final byte[] input, final int inputOffset, final int inputLen,
+            final byte[] output, final int outputOffset) throws ShortBufferException,
+            IllegalBlockSizeException, BadPaddingException {
+        return openSslEngine.doFinal(input, inputOffset, inputLen, output, outputOffset);
     }
 
     /**
@@ -173,8 +127,55 @@ class OpenSslCipher implements CryptoCipher {
     }
 
     /**
-     * Encrypts or decrypts data in a single-part operation, or finishes a
-     * multiple-part operation.
+     * Returns the algorithm name of this {@code CryptoCipher} object.
+     *
+     * <p>
+     * This is the same name that was specified in one of the
+     * {@code CryptoCipherFactory#getInstance} calls that created this
+     * {@code CryptoCipher} object..
+     * </p>
+     *
+     * @return the algorithm name of this {@code CryptoCipher} object.
+     */
+    @Override
+    public String getAlgorithm() {
+        return transformation;
+    }
+
+    /**
+     * Returns the block size (in bytes).
+     *
+     * @return the block size (in bytes), or 0 if the underlying algorithm is
+     * not a block openSslEngine
+     */
+    @Override
+    public int getBlockSize() {
+        return CryptoCipherFactory.AES_BLOCK_SIZE;
+    }
+
+    /**
+     * Initializes the openSslEngine with mode, key and iv.
+     *
+     * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
+     * @param key crypto key for the openSslEngine
+     * @param params the algorithm parameters
+     * @throws InvalidKeyException If key length is invalid
+     * @throws InvalidAlgorithmParameterException if IV length is wrong
+     */
+    @Override
+    public void init(final int mode, final Key key, final AlgorithmParameterSpec params)
+            throws InvalidKeyException, InvalidAlgorithmParameterException {
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(params, "params");
+
+        final int cipherMode = mode == Cipher.ENCRYPT_MODE ? OpenSsl.ENCRYPT_MODE: OpenSsl.DECRYPT_MODE;
+        openSslEngine.init(cipherMode, key.getEncoded(), params);
+        initialized = true;
+    }
+
+    /**
+     * Continues a multiple-part encryption/decryption operation. The data is
+     * encrypted or decrypted, depending on how this openSslEngine was initialized.
      *
      * @param input the input byte array
      * @param inputOffset the offset in input where the input starts
@@ -182,24 +183,32 @@ class OpenSslCipher implements CryptoCipher {
      * @param output the byte array for the result
      * @param outputOffset the offset in output where the result is stored
      * @return the number of bytes stored in output
-     * @throws ShortBufferException if the given output byte array is too small
-     *         to hold the result
-     * @throws BadPaddingException if this openSslEngine is in decryption mode, and
-     *         (un)padding has been requested, but the decrypted data is not
-     *         bounded by the appropriate padding bytes
-     * @throws IllegalBlockSizeException if this openSslEngine is a block openSslEngine, no
-     *         padding has been requested (only in encryption mode), and the
-     *         total input length of the data processed by this openSslEngine is not a
-     *         multiple of block size; or if this encryption algorithm is unable
-     *         to process the input data provided.
+     * @throws ShortBufferException if there is insufficient space in the output
+     *         byte array
      */
     @Override
-    public int doFinal(final byte[] input, final int inputOffset, final int inputLen,
-            final byte[] output, final int outputOffset) throws ShortBufferException,
-            IllegalBlockSizeException, BadPaddingException {
-        return openSslEngine.doFinal(input, inputOffset, inputLen, output,outputOffset);
+    public int update(final byte[] input, final int inputOffset, final int inputLen,
+            final byte[] output, final int outputOffset) throws ShortBufferException {
+        return openSslEngine
+                .update(input, inputOffset, inputLen, output, outputOffset);
     }
 
+
+    /**
+     * Continues a multiple-part encryption/decryption operation. The data is
+     * encrypted or decrypted, depending on how this openSslEngine was initialized.
+     *
+     * @param inBuffer the input ByteBuffer
+     * @param outBuffer the output ByteBuffer
+     * @return int number of bytes stored in {@code output}
+     * @throws ShortBufferException if there is insufficient space in the output
+     *         buffer
+     */
+    @Override
+    public int update(final ByteBuffer inBuffer, final ByteBuffer outBuffer)
+            throws ShortBufferException {
+        return openSslEngine.update(inBuffer, outBuffer);
+    }
 
     /**
      * Continues a multi-part update of the Additional Authentication
@@ -210,11 +219,12 @@ class OpenSslCipher implements CryptoCipher {
      * either GCM mode, all AAD must be supplied before beginning
      * operations on the ciphertext (via the {@code update} and
      * {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
      * @throws IllegalArgumentException if the {@code aad}
-     * byte array is null
+     * byte array is {@code null}
      * @throws IllegalStateException if this opensslEngine is in a wrong state
      * (e.g., has not been initialized), does not accept AAD, or if
      * operating in either GCM mode and one of the {@code update}
@@ -239,6 +249,7 @@ class OpenSslCipher implements CryptoCipher {
         openSslEngine.updateAAD(aad);
     }
 
+
     /**
      * Continues a multi-part update of the Additional Authentication
      * Data (AAD).
@@ -248,11 +259,12 @@ class OpenSslCipher implements CryptoCipher {
      * either GCM mode, all AAD must be supplied before beginning
      * operations on the ciphertext (via the {@code update} and
      * {@code doFinal} methods).
+     * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
      *
      * @throws IllegalArgumentException if the {@code aad}
-     * byte array is null
+     * byte array is {@code null}
      * @throws IllegalStateException if this opensslEngine is in a wrong state
      * (e.g., has not been initialized), does not accept AAD, or if
      * operating in either GCM mode and one of the {@code update}
@@ -278,14 +290,5 @@ class OpenSslCipher implements CryptoCipher {
         final byte[] aadBytes = new byte[aadLen];
         aad.get(aadBytes);
         openSslEngine.updateAAD(aadBytes);
-    }
-
-
-    /**
-     * Closes the OpenSSL openSslEngine. Clean the OpenSsl native context.
-     */
-    @Override
-    public void close() {
-        openSslEngine.clean();
     }
 }

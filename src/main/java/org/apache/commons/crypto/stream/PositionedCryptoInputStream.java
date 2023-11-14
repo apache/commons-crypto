@@ -28,8 +28,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
-import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.stream.input.Input;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.IoUtils;
 import org.apache.commons.crypto.utils.Utils;
 
@@ -40,15 +40,58 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class PositionedCryptoInputStream extends CtrCryptoInputStream {
 
+    private static final class CipherState {
+
+        private final CryptoCipher cryptoCipher;
+        private boolean reset;
+
+        /**
+         * Constructs a new instance.
+         *
+         * @param cryptoCipher the CryptoCipher instance.
+         */
+        public CipherState(final CryptoCipher cryptoCipher) {
+            this.cryptoCipher = cryptoCipher;
+            this.reset = false;
+        }
+
+        /**
+         * Gets the CryptoCipher instance.
+         *
+         * @return the cipher.
+         */
+        public CryptoCipher getCryptoCipher() {
+            return cryptoCipher;
+        }
+
+        /**
+         * Gets the reset.
+         *
+         * @return the value of reset.
+         */
+        public boolean isReset() {
+            return reset;
+        }
+
+        /**
+         * Sets the value of reset.
+         *
+         * @param reset the reset.
+         */
+        public void reset(final boolean reset) {
+            this.reset = reset;
+        }
+    }
+
     /**
      * DirectBuffer pool
      */
-    private final Queue<ByteBuffer> bufferPool = new ConcurrentLinkedQueue<>();
+    private final Queue<ByteBuffer> byteBufferPool = new ConcurrentLinkedQueue<>();
 
     /**
      * CryptoCipher pool
      */
-    private final Queue<CipherState> cipherPool = new ConcurrentLinkedQueue<>();
+    private final Queue<CipherState> cipherStatePool = new ConcurrentLinkedQueue<>();
 
     /**
      * properties for constructing a CryptoCipher
@@ -69,7 +112,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by PositionedCryptoInputStream.
     public PositionedCryptoInputStream(final Properties properties, final Input in, final byte[] key,
             final byte[] iv, final long streamOffset) throws IOException {
-        this(properties, in, Utils.getCipherInstance("AES/CTR/NoPadding", properties),
+        this(properties, in, Utils.getCipherInstance(AES.CTR_NO_PADDING, properties),
                 CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
@@ -92,62 +135,73 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         this.properties = properties;
     }
 
-    /**
-     * Reads up to the specified number of bytes from a given position within a
-     * stream and return the number of bytes read. This does not change the
-     * current offset of the stream, and is thread-safe.
-     *
-     * @param buffer the buffer into which the data is read.
-     * @param length the maximum number of bytes to read.
-     * @param offset the start offset in the data.
-     * @param position the offset from the start of the stream.
-     * @throws IOException if an I/O error occurs.
-     * @return int the total number of decrypted data bytes read into the
-     *         buffer.
-     */
-    public int read(final long position, final byte[] buffer, final int offset, final int length)
-            throws IOException {
-        checkStream();
-        final int n = input.read(position, buffer, offset, length);
-        if (n > 0) {
-            // This operation does not change the current offset of the file
-            decrypt(position, buffer, offset, n);
+    /** Cleans direct buffer pool */
+    private void cleanByteBufferPool() {
+        ByteBuffer buf;
+        while ((buf = byteBufferPool.poll()) != null) {
+            CryptoInputStream.freeDirectBuffer(buf);
         }
-        return n;
     }
 
-    /**
-     * Reads the specified number of bytes from a given position within a
-     * stream. This does not change the current offset of the stream and is
-     * thread-safe.
-     *
-     * @param buffer the buffer into which the data is read.
-     * @param length the maximum number of bytes to read.
-     * @param offset the start offset in the data.
-     * @param position the offset from the start of the stream.
-     * @throws IOException if an I/O error occurs.
-     */
-    public void readFully(final long position, final byte[] buffer, final int offset, final int length)
-            throws IOException {
-        checkStream();
-        IoUtils.readFully(input, position, buffer, offset, length);
-        if (length > 0) {
-            // This operation does not change the current offset of the file
-            decrypt(position, buffer, offset, length);
+    /** Cleans direct buffer pool */
+    private void cleanCipherStatePool() {
+        CipherState cs;
+        while ((cs = cipherStatePool.poll()) != null) {
+            try {
+                cs.getCryptoCipher().close();
+            } catch (IOException ignored) {
+                // ignore
+            }
         }
     }
 
     /**
-     * Reads the specified number of bytes from a given position within a
-     * stream. This does not change the current offset of the stream and is
-     * thread-safe.
+     * Overrides the {@link CryptoInputStream#close()}. Closes this input stream
+     * and releases any system resources associated with the stream.
      *
-     * @param position the offset from the start of the stream.
-     * @param buffer the buffer into which the data is read.
      * @throws IOException if an I/O error occurs.
      */
-    public void readFully(final long position, final byte[] buffer) throws IOException {
-        readFully(position, buffer, 0, buffer.length);
+    @Override
+    public void close() throws IOException {
+        if (!isOpen()) {
+            return;
+        }
+
+        cleanByteBufferPool();
+        cleanCipherStatePool();
+        super.close();
+    }
+
+    /**
+     * Does the decryption using inBuffer as input and outBuffer as output. Upon
+     * return, inBuffer is cleared; the decrypted data starts at
+     * outBuffer.position() and ends at outBuffer.limit().
+     *
+     * @param state the CipherState instance.
+     * @param inByteBuffer the input buffer.
+     * @param outByteBuffer the output buffer.
+     * @param padding the padding.
+     * @throws IOException if an I/O error occurs.
+     */
+    private void decrypt(final CipherState state, final ByteBuffer inByteBuffer,
+            final ByteBuffer outByteBuffer, final byte padding) throws IOException {
+        Utils.checkState(inByteBuffer.position() >= padding);
+        if (inByteBuffer.position() == padding) {
+            // There is no real data in inBuffer.
+            return;
+        }
+        inByteBuffer.flip();
+        outByteBuffer.clear();
+        decryptBuffer(state, inByteBuffer, outByteBuffer);
+        inByteBuffer.clear();
+        outByteBuffer.flip();
+        if (padding > 0) {
+            /*
+             * The plain text and cipher text have a 1:1 mapping, they start at
+             * the same position.
+             */
+            outByteBuffer.position(padding);
+        }
     }
 
     /**
@@ -185,41 +239,9 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
                 padding = postDecryption(state, inByteBuffer, position + n, iv);
             }
         } finally {
-            returnBuffer(inByteBuffer);
-            returnBuffer(outByteBuffer);
-            returnCipherState(state);
-        }
-    }
-
-    /**
-     * Does the decryption using inBuffer as input and outBuffer as output. Upon
-     * return, inBuffer is cleared; the decrypted data starts at
-     * outBuffer.position() and ends at outBuffer.limit().
-     *
-     * @param state the CipherState instance.
-     * @param inByteBuffer the input buffer.
-     * @param outByteBuffer the output buffer.
-     * @param padding the padding.
-     * @throws IOException if an I/O error occurs.
-     */
-    private void decrypt(final CipherState state, final ByteBuffer inByteBuffer,
-            final ByteBuffer outByteBuffer, final byte padding) throws IOException {
-        Utils.checkState(inByteBuffer.position() >= padding);
-        if (inByteBuffer.position() == padding) {
-            // There is no real data in inBuffer.
-            return;
-        }
-        inByteBuffer.flip();
-        outByteBuffer.clear();
-        decryptBuffer(state, inByteBuffer, outByteBuffer);
-        inByteBuffer.clear();
-        outByteBuffer.flip();
-        if (padding > 0) {
-            /*
-             * The plain text and cipher text have a 1:1 mapping, they start at
-             * the same position.
-             */
-            outByteBuffer.position(padding);
+            returnToPool(inByteBuffer);
+            returnToPool(outByteBuffer);
+            returnToPool(state);
         }
     }
 
@@ -231,6 +253,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param outByteBuffer the output buffer.
      * @throws IOException if an I/O error occurs.
      */
+    @SuppressWarnings("resource") // getCryptoCipher does not allocate
     private void decryptBuffer(final CipherState state, final ByteBuffer inByteBuffer,
             final ByteBuffer outByteBuffer) throws IOException {
         final int inputSize = inByteBuffer.remaining();
@@ -251,6 +274,29 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     }
 
     /**
+     * Gets direct buffer from pool. Caller MUST also call {@link #returnToPool(ByteBuffer)}.
+     *
+     * @return the buffer.
+     * @see #returnToPool(ByteBuffer)
+     */
+    private ByteBuffer getBuffer() {
+        final ByteBuffer buffer = byteBufferPool.poll();
+        return buffer != null ? buffer : ByteBuffer.allocateDirect(getBufferSize());
+    }
+
+    /**
+     * Gets CryptoCipher from pool. Caller MUST also call {@link #returnToPool(CipherState)}.
+     *
+     * @return the CipherState instance.
+     * @throws IOException if an I/O error occurs.
+     */
+    @SuppressWarnings("resource") // Caller calls #returnToPool(CipherState)
+    private CipherState getCipherState() throws IOException {
+        final CipherState state = cipherStatePool.poll();
+        return state != null ? state : new CipherState(Utils.getCipherInstance(AES.CTR_NO_PADDING, properties));
+    }
+
+    /**
      * This method is executed immediately after decryption. Check whether
      * cipher should be updated and recalculate padding if needed.
      *
@@ -259,10 +305,9 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param position the offset from the start of the stream.
      * @param iv the iv.
      * @return the padding.
-     * @throws IOException if an I/O error occurs.
      */
     private byte postDecryption(final CipherState state, final ByteBuffer inByteBuffer,
-            final long position, final byte[] iv) throws IOException {
+            final long position, final byte[] iv) {
         byte padding = 0;
         if (state.isReset()) {
             /*
@@ -279,15 +324,72 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     }
 
     /**
+     * Reads up to the specified number of bytes from a given position within a
+     * stream and return the number of bytes read. This does not change the
+     * current offset of the stream, and is thread-safe.
+     *
+     * @param buffer the buffer into which the data is read.
+     * @param length the maximum number of bytes to read.
+     * @param offset the start offset in the data.
+     * @param position the offset from the start of the stream.
+     * @throws IOException if an I/O error occurs.
+     * @return int the total number of decrypted data bytes read into the
+     *         buffer.
+     */
+    public int read(final long position, final byte[] buffer, final int offset, final int length)
+            throws IOException {
+        checkStream();
+        final int n = input.read(position, buffer, offset, length);
+        if (n > 0) {
+            // This operation does not change the current offset of the file
+            decrypt(position, buffer, offset, n);
+        }
+        return n;
+    }
+
+    /**
+     * Reads the specified number of bytes from a given position within a
+     * stream. This does not change the current offset of the stream and is
+     * thread-safe.
+     *
+     * @param position the offset from the start of the stream.
+     * @param buffer the buffer into which the data is read.
+     * @throws IOException if an I/O error occurs.
+     */
+    public void readFully(final long position, final byte[] buffer) throws IOException {
+        readFully(position, buffer, 0, buffer.length);
+    }
+
+    /**
+     * Reads the specified number of bytes from a given position within a
+     * stream. This does not change the current offset of the stream and is
+     * thread-safe.
+     *
+     * @param buffer the buffer into which the data is read.
+     * @param length the maximum number of bytes to read.
+     * @param offset the start offset in the data.
+     * @param position the offset from the start of the stream.
+     * @throws IOException if an I/O error occurs.
+     */
+    public void readFully(final long position, final byte[] buffer, final int offset, final int length)
+            throws IOException {
+        checkStream();
+        IoUtils.readFully(input, position, buffer, offset, length);
+        if (length > 0) {
+            // This operation does not change the current offset of the file
+            decrypt(position, buffer, offset, length);
+        }
+    }
+
+    /**
      * Calculates the counter and iv, reset the cipher.
      *
      * @param state the CipherState instance.
      * @param position the offset from the start of the stream.
      * @param iv the iv.
-     * @throws IOException if an I/O error occurs.
      */
-    private void resetCipher(final CipherState state, final long position, final byte[] iv)
-            throws IOException {
+    @SuppressWarnings("resource") // getCryptoCipher does not allocate
+    private void resetCipher(final CipherState state, final long position, final byte[] iv) {
         final long counter = getCounter(position);
         CtrCryptoInputStream.calculateIV(getInitIV(), counter, iv);
         try {
@@ -299,24 +401,15 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     }
 
     /**
-     * Gets CryptoCipher from pool.
+     * Returns direct buffer to pool.
      *
-     * @return the CipherState instance.
-     * @throws IOException if an I/O error occurs.
+     * @param buf the buffer.
      */
-    private CipherState getCipherState() throws IOException {
-        CipherState state = cipherPool.poll();
-        if (state == null) {
-            final CryptoCipher cryptoCipher;
-            try {
-                cryptoCipher = CryptoCipherFactory.getCryptoCipher("AES/CTR/NoPadding", properties);
-            } catch (final GeneralSecurityException e) {
-                throw new IOException(e);
-            }
-            state = new CipherState(cryptoCipher);
+    private void returnToPool(final ByteBuffer buf) {
+        if (buf != null) {
+            buf.clear();
+            byteBufferPool.add(buf);
         }
-
-        return state;
     }
 
     /**
@@ -324,102 +417,9 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      *
      * @param state the CipherState instance.
      */
-    private void returnCipherState(final CipherState state) {
+    private void returnToPool(final CipherState state) {
         if (state != null) {
-            cipherPool.add(state);
-        }
-    }
-
-    /**
-     * Gets direct buffer from pool.
-     *
-     * @return the buffer.
-     */
-    private ByteBuffer getBuffer() {
-        ByteBuffer buffer = bufferPool.poll();
-        if (buffer == null) {
-            buffer = ByteBuffer.allocateDirect(getBufferSize());
-        }
-
-        return buffer;
-    }
-
-    /**
-     * Returns direct buffer to pool.
-     *
-     * @param buf the buffer.
-     */
-    private void returnBuffer(final ByteBuffer buf) {
-        if (buf != null) {
-            buf.clear();
-            bufferPool.add(buf);
-        }
-    }
-
-    /**
-     * Overrides the {@link CryptoInputStream#close()}. Closes this input stream
-     * and releases any system resources associated with the stream.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void close() throws IOException {
-        if (!isOpen()) {
-            return;
-        }
-
-        cleanBufferPool();
-        super.close();
-    }
-
-    /** Clean direct buffer pool */
-    private void cleanBufferPool() {
-        ByteBuffer buf;
-        while ((buf = bufferPool.poll()) != null) {
-            CryptoInputStream.freeDirectBuffer(buf);
-        }
-    }
-
-    private static class CipherState {
-
-        private final CryptoCipher cryptoCipher;
-        private boolean reset;
-
-        /**
-         * The constructor of {@link CipherState}.
-         *
-         * @param cipher the CryptoCipher instance.
-         */
-        public CipherState(final CryptoCipher cipher) {
-            this.cryptoCipher = cipher;
-            this.reset = false;
-        }
-
-        /**
-         * Gets the CryptoCipher instance.
-         *
-         * @return the cipher.
-         */
-        public CryptoCipher getCryptoCipher() {
-            return cryptoCipher;
-        }
-
-        /**
-         * Gets the reset.
-         *
-         * @return the value of reset.
-         */
-        public boolean isReset() {
-            return reset;
-        }
-
-        /**
-         * Sets the value of reset.
-         *
-         * @param reset the reset.
-         */
-        public void reset(final boolean reset) {
-            this.reset = reset;
+            cipherStatePool.add(state);
         }
     }
 }

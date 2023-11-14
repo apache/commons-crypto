@@ -22,16 +22,16 @@ limitations under the License.
  </properties>
 
  <body>
-  
+
    <section name="Proposal for Apache Commons Crypto Package"><br/>
    <h4>March 24, 2016</h4>
-  
 
-  
+
+
 <subsection name="(0) Rationale">
   <p>
    Providing Java based optimized and high performance cryptographic IO streams for
-   the applications who wants to implement the data encryption. It also provides cipher
+   the applications that want to implement the data encryption. It also provides cipher
    level API to use. It does provide the openssl API integration and provide the fallback
    mechanism to use JCE when openssl library unavailable.
   </p>
@@ -40,8 +40,8 @@ limitations under the License.
 <subsection name="(1) Scope of the Package">
   <p>
       This proposal is to create a package of cryptographic IO classes with the integration
-      of Openssl library.
-      It focuses on AES-NI optimizations mainly and it can be extended to other algorithms
+      of OpenSSL library.
+      It focuses on AES-NI optimizations mainly, and it can be extended to other algorithms
       based on demand from the users later.
   </p>
 

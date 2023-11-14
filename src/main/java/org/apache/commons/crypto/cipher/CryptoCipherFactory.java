@@ -26,36 +26,15 @@ import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
- * This is the factory class used for creating {@link CryptoCipher} instances.
+ * Creates {@link CryptoCipher} instances.
  */
 public class CryptoCipherFactory {
-
-    /**
-     * The configuration key of the provider class for JCE cipher.
-     */
-    public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX
-            + "cipher.jce.provider";
-    /**
-     * The configuration key of the CryptoCipher implementation class.
-     * <p>
-     * The value of CLASSES_KEY needs to be the full name of a
-     * class that implements the
-     * {@link org.apache.commons.crypto.cipher.CryptoCipher CryptoCipher} interface
-     * The internal classes are listed in the enum
-     * {@link CipherProvider CipherProvider}
-     * which can be used to obtain the full class name.
-     * <p>
-     * The value can also be a comma-separated list of class names in
-     * order of descending priority.
-     */
-
-    public static final String CLASSES_KEY = Crypto.CONF_PREFIX
-            + "cipher.classes";
 
     /**
      * Defines the internal CryptoCipher implementations.
      * <p>
      * Usage:
+     * </p>
      * <blockquote><pre>
      * props.setProperty(CryptoCipherFactory.CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
      * props.setProperty(...); // if required by the implementation
@@ -68,6 +47,7 @@ public class CryptoCipherFactory {
          * The OpenSSL cipher implementation (using JNI)
          * <p>
          * This implementation does not use any properties
+         * </p>
          */
         // Please ensure the property description agrees with the implementation
         OPENSSL(OpenSslCipher.class),
@@ -77,6 +57,7 @@ public class CryptoCipherFactory {
          * <p>
          * uses the property {@link #JCE_PROVIDER_KEY}
          * to define the provider name, if present.
+         * </p>
          */
         // Please ensure the property description agrees with the implementation
         JCE(JceCipher.class);
@@ -114,6 +95,28 @@ public class CryptoCipherFactory {
     }
 
     /**
+     * The configuration key of the provider class for JCE cipher.
+     */
+    public static final String JCE_PROVIDER_KEY = Crypto.CONF_PREFIX + "cipher.jce.provider";
+
+    /**
+     * The configuration key of the CryptoCipher implementation class.
+     * <p>
+     * The value of CLASSES_KEY needs to be the full name of a
+     * class that implements the
+     * {@link org.apache.commons.crypto.cipher.CryptoCipher CryptoCipher} interface
+     * The internal classes are listed in the enum
+     * {@link CipherProvider CipherProvider}
+     * which can be used to obtain the full class name.
+     * </p>
+     * <p>
+     * The value can also be a comma-separated list of class names in
+     * order of descending priority.
+     * </p>
+     */
+    public static final String CLASSES_KEY = Crypto.CONF_PREFIX + "cipher.classes";
+
+    /**
      * For AES, the algorithm block is fixed size of 128 bits.
      *
      * @see <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
@@ -130,49 +133,18 @@ public class CryptoCipherFactory {
             .concat(CipherProvider.JCE.getClassName());
 
     /**
-     * The private Constructor of {@link CryptoCipherFactory}.
-     */
-    private CryptoCipherFactory() {
-    }
-
-    /**
-     * Gets a cipher instance for specified algorithm/mode/padding.
+     * Gets the cipher class.
      *
-     * @param properties  the configuration properties - uses {@link #CLASSES_KEY}
-     * @param transformation  algorithm/mode/padding
-     * @return CryptoCipher  the cipher  (defaults to OpenSslCipher)
-     * @throws GeneralSecurityException if cipher initialize failed
-     * @throws IllegalArgumentException if no classname(s) were provided
+     * @param props The {@code Properties} class represents a set of
+     *        properties.
+     * @return the cipher class based on the props.
      */
-    public static CryptoCipher getCryptoCipher(final String transformation, final Properties properties)
-        throws GeneralSecurityException {
-
-        final List<String> names = Utils.splitClassNames(getCipherClassString(properties), ",");
-        if (names.isEmpty()) {
-            throw new IllegalArgumentException("No classname(s) provided");
+    private static String getCipherClassString(final Properties props) {
+        String cipherClassString = props.getProperty(CryptoCipherFactory.CLASSES_KEY, CLASSES_DEFAULT);
+        if (cipherClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
+            cipherClassString = CLASSES_DEFAULT;
         }
-        CryptoCipher cipher = null;
-        Exception lastException = null;
-
-        final StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
-        for (final String klass : names) {
-            try {
-                final Class<?> cls = ReflectionUtils.getClassByName(klass);
-                cipher = ReflectionUtils.newInstance(cls.asSubclass
-                        (CryptoCipher.class), properties, transformation);
-                break;
-            } catch (final Exception e) {
-                lastException = e;
-                errorMessage.append("{" + klass + "}");
-            }
-        }
-
-        if (cipher != null) {
-            return cipher;
-        }
-        errorMessage.append(" is not available or transformation " +
-                transformation + " is not supported.");
-        throw new GeneralSecurityException(errorMessage.toString(), lastException);
+        return cipherClassString;
     }
 
     /**
@@ -192,18 +164,45 @@ public class CryptoCipherFactory {
     }
 
     /**
-     * Gets the cipher class.
+     * Gets a cipher instance for specified algorithm/mode/padding.
      *
-     * @param props The {@code Properties} class represents a set of
-     *        properties.
-     * @return the cipher class based on the props.
+     * @param properties  the configuration properties - uses {@link #CLASSES_KEY}
+     * @param transformation  algorithm/mode/padding
+     * @return CryptoCipher  the cipher  (defaults to OpenSslCipher)
+     * @throws GeneralSecurityException if cipher initialize failed
+     * @throws IllegalArgumentException if no class name(s) were provided
      */
-    private static String getCipherClassString(final Properties props) {
-        String cipherClassString = props.getProperty(CryptoCipherFactory.CLASSES_KEY, CLASSES_DEFAULT);
-        if (cipherClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
-            cipherClassString = CLASSES_DEFAULT;
+    public static CryptoCipher getCryptoCipher(final String transformation, final Properties properties) throws GeneralSecurityException {
+        final List<String> names = Utils.splitClassNames(getCipherClassString(properties), ",");
+        if (names.isEmpty()) {
+            throw new IllegalArgumentException("No class name(s) provided");
         }
-        return cipherClassString;
+        CryptoCipher cipher = null;
+        Exception lastException = null;
+
+        final StringBuilder errorMessage = new StringBuilder("CryptoCipher ");
+        for (final String klass : names) {
+            try {
+                final Class<?> cls = ReflectionUtils.getClassByName(klass);
+                cipher = ReflectionUtils.newInstance(cls.asSubclass(CryptoCipher.class), properties, transformation);
+                break;
+            } catch (final Exception e) {
+                lastException = e;
+                errorMessage.append("{" + klass + "}");
+            }
+        }
+
+        if (cipher != null) {
+            return cipher;
+        }
+        errorMessage.append(" is not available or transformation " + transformation + " is not supported.");
+        throw new GeneralSecurityException(errorMessage.toString(), lastException);
+    }
+
+    /**
+     * The private Constructor of {@link CryptoCipherFactory}.
+     */
+    private CryptoCipherFactory() {
     }
 
 }

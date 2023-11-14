@@ -28,6 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory.CipherProvider;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -35,15 +36,25 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class CipherByteArrayExample {
 
+    /**
+     * Converts String to UTF8 bytes
+     *
+     * @param input the input string
+     * @return UTF8 bytes
+     */
+    private static byte[] getUTF8Bytes(final String input) {
+        return input.getBytes(StandardCharsets.UTF_8);
+    }
+
     public static void main(final String[] args) throws Exception {
 
-        final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"), "AES");
+        final SecretKeySpec key = AES.newSecretKeySpec(getUTF8Bytes("1234567890123456"));
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
 
         final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, CipherProvider.OPENSSL.getClassName());
         // Creates a CryptoCipher instance with the transformation and properties.
-        final String transform = "AES/CBC/PKCS5Padding";
+        final String transform = AES.CBC_PKCS5_PADDING;
         byte[] output;
         int updateBytes;
         int finalBytes;
@@ -82,16 +93,6 @@ public class CipherByteArrayExample {
 
             System.out.println("output: " + new String(decoded, StandardCharsets.UTF_8));
         }
-    }
-
-    /**
-     * Converts String to UTF8 bytes
-     *
-     * @param input the input string
-     * @return UTF8 bytes
-     */
-    private static byte[] getUTF8Bytes(final String input) {
-        return input.getBytes(StandardCharsets.UTF_8);
     }
 
 }

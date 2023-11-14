@@ -24,10 +24,10 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.Mode;
 
 /**
  * Basic Benchmark to compare creation and runtimes for the different implementations.
@@ -47,8 +47,13 @@ public class CryptoJnaBenchmark  extends AbstractBenchmark {
 
 
     @Benchmark
-    public void RandomTestOpensslJNA() throws Exception {
-        random(RANDOM_OPENSSL_JNA);
+    public void CipherCreateOpensslJna() throws Exception {
+        getCipher(CIPHER_OPENSSL_JNA);
+    }
+
+    @Benchmark
+    public void CipherTestOpensslJna() throws Exception {
+        encipher(CIPHER_OPENSSL_JNA);
     }
 
     @Benchmark
@@ -57,13 +62,8 @@ public class CryptoJnaBenchmark  extends AbstractBenchmark {
     }
 
     @Benchmark
-    public void CipherCreateOpensslJna() throws Exception {
-        getCipher(CIPHER_OPENSSL_JNA);
-    }
-
-    @Benchmark
-    public void CipherTestOpensslJna() throws Exception {
-        encipher(CIPHER_OPENSSL_JNA);
+    public void RandomTestOpensslJNA() throws Exception {
+        random(RANDOM_OPENSSL_JNA);
     }
 
 }

@@ -13,26 +13,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package org.apache.commons.crypto.random;
 
 import java.util.Properties;
 
-class FailingRandom implements CryptoRandom {
+final class FailingRandom implements CryptoRandom {
 
-    // Should fail with NoSuchMethodException
+    public static native void NoSuchMethod();
+
+    /** Should fail with NoSuchMethodException. */
     FailingRandom(final Properties props) {
         NoSuchMethod();
     }
 
     @Override
     public void close() {
+        // empty
     }
 
     @Override
     public void nextBytes(final byte[] bytes) {
+        // empty
     }
-
-    public static native void NoSuchMethod();
 }

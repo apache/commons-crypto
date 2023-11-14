@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+// identify caller to the include file (to avoid unnecessary define of _GNU_SOURCE)
+#define ORG_APACHE_COMMONS_OPENSSLINFONATIVE_C
 #include "org_apache_commons_crypto.h"
 
 #include <stdio.h>
@@ -50,51 +52,31 @@ static __dlsym_OpenSSL_version_num dlsym_OpenSSL_version_num;
 static __dlsym_OpenSSL_version dlsym_OpenSSL_version;
 #endif
 
-#ifdef UNIX
-static void get_methods(JNIEnv *env, void *openssl)
-#endif
-#ifdef WINDOWS
+static char dynamicLibraryPath[80];  // where was the crypto library found?
+
 static void get_methods(JNIEnv *env, HMODULE openssl)
-#endif
 {
-  LOAD_OPENSSL_VERSION_FUNCTION(dlsym_OpenSSL_version_num, env, openssl);
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version_num, dlsym_OpenSSL_version_num, env, openssl, "OpenSSL_version_num", "SSLeay"); // SSLeay fallback needed by LibreSSL 2.x
+  LOAD_DYNAMIC_SYMBOL_FALLBACK(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version", "SSLeay_version"); // SSLeay fallback needed by LibreSSL 2.x
 #ifdef UNIX
-  if (dlsym_OpenSSL_version_num() > VERSION_1_1_X) {
-    LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
-  } else {
-    LOAD_DYNAMIC_SYMBOL(dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
-  }
+  Dl_info info;
+  (void) dladdr(dlsym_OpenSSL_version_num, &info); // ignore the return code
+  strncpy(dynamicLibraryPath, info.dli_fname, sizeof(dynamicLibraryPath) - 1); // allow for null
 #endif
 #ifdef WINDOWS
-  if (dlsym_OpenSSL_version_num() > VERSION_1_1_X) {
-    LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "OpenSSL_version");
-  } else {
-    LOAD_DYNAMIC_SYMBOL(__dlsym_OpenSSL_version, dlsym_OpenSSL_version, env, openssl, "SSLeay_version");
-  }
-#endif
+  LPWSTR lpFilename;
+  WCHAR buffer[80];
+  lpFilename = buffer;
+  (void) GetModuleFileName(openssl, lpFilename, sizeof(buffer)); // ignore return code
+  wcstombs(dynamicLibraryPath, buffer, sizeof(dynamicLibraryPath));
+  #endif
 }
 
 static int load_library(JNIEnv *env)
 {
-  char msg[100];
-#ifdef UNIX
-  void *openssl = dlopen(COMMONS_CRYPTO_OPENSSL_LIBRARY, RTLD_LAZY | RTLD_GLOBAL);
-#endif
-
-#ifdef WINDOWS
-  HMODULE openssl = LoadLibrary(TEXT(COMMONS_CRYPTO_OPENSSL_LIBRARY));
-#endif
+  HMODULE openssl = open_library(env); // calls THROW and returns 0 on error
 
   if (!openssl) {
-#ifdef UNIX
-    snprintf(msg, sizeof(msg), "Cannot load %s (%s)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    dlerror());
-#endif
-#ifdef WINDOWS
-    snprintf(msg, sizeof(msg), "Cannot load %s (%d)!", COMMONS_CRYPTO_OPENSSL_LIBRARY,  \
-    GetLastError());
-#endif
-    THROW(env, "java/lang/UnsatisfiedLinkError", msg);
     return 0;
   }
   get_methods(env, openssl);
@@ -136,5 +118,22 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenS
     return NULL;
   }
   jstring answer = (*env)->NewStringUTF(env,dlsym_OpenSSL_version(type));
+  return answer;
+}
+
+JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_DLLName
+  (JNIEnv *env, jclass clazz)
+{
+  jstring answer = (*env)->NewStringUTF(env, COMMONS_CRYPTO_OPENSSL_LIBRARY);
+  return answer;
+}
+
+JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_DLLPath
+  (JNIEnv *env, jclass clazz)
+{
+  if (!load_library(env)) {
+    return NULL;
+  }
+  jstring answer = (*env)->NewStringUTF(env, dynamicLibraryPath);
   return answer;
 }

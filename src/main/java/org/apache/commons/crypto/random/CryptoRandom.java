@@ -20,9 +20,10 @@ package org.apache.commons.crypto.random;
 import java.io.Closeable;
 
 /**
- * The interface for CryptoRandom.
+ * Generates random bytes.
  * <p>
- * Note that implementations must provide a constructor that takes a Properties instance
+ * Note that implementations must provide a constructor that takes a Properties instance.
+ * </p>
  */
 public interface CryptoRandom extends Closeable {
 

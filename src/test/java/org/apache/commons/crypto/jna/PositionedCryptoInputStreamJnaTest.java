@@ -13,7 +13,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package org.apache.commons.crypto.jna;
 
@@ -24,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- *
  */
 public class PositionedCryptoInputStreamJnaTest extends PositionedCryptoInputStreamTest {
 
@@ -34,7 +32,12 @@ public class PositionedCryptoInputStreamJnaTest extends PositionedCryptoInputStr
     }
 
     @Test
-    public void doTest() throws Exception {
+    @Override // Don't load JNI!
+    public void testJNI() throws Exception {
+    }
+
+    @Test
+    public void testCipher() throws Exception {
         testCipher(OpenSslJnaCipher.class.getName());
     }
 

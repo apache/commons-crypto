@@ -17,6 +17,7 @@
  */
 package org.apache.commons.crypto;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -26,6 +27,7 @@ import java.util.Locale;
  * information from the build environment.
  */
 final class OsInfo {
+
     private final static HashMap<String, String> archMapping = new HashMap<>();
 
     /**
@@ -64,12 +66,6 @@ final class OsInfo {
      */
     static final String PPC64 = "ppc64";
 
-    /**
-     * The private constructor of {@link OsInfo}.
-     */
-    private OsInfo() {
-    }
-
     static {
         // x86 mappings
         archMapping.put(X86, X86);
@@ -83,7 +79,7 @@ final class OsInfo {
         archMapping.put(X86_64, X86_64);
         archMapping.put("amd64", X86_64);
         archMapping.put("em64t", X86_64);
-        archMapping.put("universal", X86_64); // Needed for openjdk7 in Mac
+        archMapping.put("universal", X86_64); // Needed for openjdk7 on Mac
 
         // Itanium 64-bit mappings
         archMapping.put(IA64, IA64);
@@ -100,49 +96,12 @@ final class OsInfo {
         archMapping.put("power_pc", PPC);
         archMapping.put("power_rs", PPC);
 
-        // TODO: PowerPC 64bit mappings
+        // PowerPC 64bit mappings
         archMapping.put(PPC64, PPC64);
         archMapping.put("power64", PPC64);
         archMapping.put("powerpc64", PPC64);
         archMapping.put("power_pc64", PPC64);
         archMapping.put("power_rs64", PPC64);
-    }
-
-    /**
-     * The main method. This is used by the JNI make processing in Makefile.common
-     *
-     * @param args the argv.
-     */
-    public static void main(final String[] args) {
-        if (args.length >= 1) {
-            if ("--os".equals(args[0])) {
-                System.out.print(getOSName());
-                return;
-            } else if ("--arch".equals(args[0])) {
-                System.out.print(getArchName());
-                return;
-            }
-        }
-
-        System.out.print(getNativeLibFolderPathForCurrentOS());
-    }
-
-    /**
-     * Gets the native lib folder.
-     *
-     * @return the current OS's native lib folder.
-     */
-    static String getNativeLibFolderPathForCurrentOS() {
-        return getOSName() + "/" + getArchName();
-    }
-
-    /**
-     * Gets the OS name.
-     *
-     * @return the OS name.
-     */
-    static String getOSName() {
-        return translateOSNameToFolderName(System.getProperty("os.name"));
     }
 
     /**
@@ -153,13 +112,12 @@ final class OsInfo {
     static String getArchName() {
         // if running Linux on ARM, need to determine ABI of JVM
         final String osArch = System.getProperty("os.arch");
-        if (osArch.startsWith("arm") && System.getProperty("os.name").contains("Linux")) {
+        if (osArch.startsWith("arm") && getOsNameProperty().contains("Linux")) {
             final String javaHome = System.getProperty("java.home");
             try {
                 // determine if first JVM found uses ARM hard-float ABI
                 final String[] cmdarray = { "/bin/sh", "-c",
-                        "find '" + javaHome + "' -name 'libjvm.so' | head -1 | xargs readelf -A | "
-                                + "grep 'Tag_ABI_VFP_args: VFP registers'" };
+                        "find '" + javaHome + "' -name 'libjvm.so' | head -1 | xargs readelf -A | grep 'Tag_ABI_VFP_args: VFP registers'" };
                 final int exitCode = Runtime.getRuntime().exec(cmdarray).waitFor();
                 if (exitCode == 0) {
                     return "armhf";
@@ -168,12 +126,64 @@ final class OsInfo {
                 // ignored: fall back to "arm" arch (soft-float ABI)
             }
         } else {
-            final String lc = osArch.toLowerCase(Locale.US);
-            if (archMapping.containsKey(lc)) {
-                return archMapping.get(lc);
+            final String string = archMapping.get(osArch.toLowerCase(Locale.US));
+            if (string != null) {
+                return string;
             }
         }
         return translateArchNameToFolderName(osArch);
+    }
+
+    /**
+     * Gets the native lib folder.
+     *
+     * @return the current OS's native lib folder.
+     */
+    static String getNativeLibFolderPathForCurrentOS() {
+        return getOSName() + File.separator + getArchName();
+    }
+
+    /**
+     * Gets the OS name.
+     *
+     * @return the OS name.
+     */
+    static String getOSName() {
+        return translateOSNameToFolderName(getOsNameProperty());
+    }
+
+    static String getOsNameProperty() {
+        return System.getProperty("os.name");
+    }
+
+    /**
+     * The main method. This is used by the JNI make processing in {@code Makefile.common}
+     *
+     * @param args the argv.
+     */
+    public static void main(final String[] args) {
+        if (args.length >= 1) {
+            if ("--os".equals(args[0])) {
+                System.out.println(getOSName());
+                return;
+            }
+            if ("--arch".equals(args[0])) {
+                System.out.println(getArchName());
+                return;
+            }
+        }
+
+        System.out.println(getNativeLibFolderPathForCurrentOS());
+    }
+
+    /**
+     * Translates the architecture name to folder name.
+     *
+     * @param archName the architecture name.
+     * @return the folder name.
+     */
+    private static String translateArchNameToFolderName(final String archName) {
+        return archName.replaceAll("\\W", "");
     }
 
     /**
@@ -185,24 +195,22 @@ final class OsInfo {
     private static String translateOSNameToFolderName(final String osName) {
         if (osName.contains("Windows")) {
             return "Windows";
-        } else if (osName.contains("Mac")) {
-            return "Mac";
-        } else if (osName.contains("Linux")) {
-            return "Linux";
-        } else if (osName.contains("AIX")) {
-            return "AIX";
-        } else {
-            return osName.replaceAll("\\W", "");
         }
+        if (osName.contains("Mac")) {
+            return "Mac";
+        }
+        if (osName.contains("Linux")) {
+            return "Linux";
+        }
+        if (osName.contains("AIX")) {
+            return "AIX";
+        }
+        return osName.replaceAll("\\W", "");
     }
 
     /**
-     * Translates the architecture name to folder name.
-     *
-     * @param archName the architecture name.
-     * @return the folder name.
+     * The private constructor of {@link OsInfo}.
      */
-    private static String translateArchNameToFolderName(final String archName) {
-        return archName.replaceAll("\\W", "");
+    private OsInfo() {
     }
 }

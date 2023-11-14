@@ -20,11 +20,14 @@ package org.apache.commons.crypto.stream.output;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
+import java.util.Objects;
+
+import org.apache.commons.crypto.stream.CryptoOutputStream;
 
 /**
- * The ChannelOutput class takes a {@code WritableByteChannel} object and
+ * The ChannelOutput class takes a {@link WritableByteChannel} object and
  * wraps it as {@code Output} object acceptable by
- * {@code CryptoOutputStream} as the output target.
+ * {@link CryptoOutputStream} as the output target.
  */
 public class ChannelOutput implements Output {
 
@@ -35,24 +38,21 @@ public class ChannelOutput implements Output {
      * {@link org.apache.commons.crypto.stream.output.ChannelOutput}.
      *
      * @param channel the WritableByteChannel object.
+     * @throws NullPointerException if channel is null.
      */
     public ChannelOutput(final WritableByteChannel channel) {
-        this.channel = channel;
+        this.channel = Objects.requireNonNull(channel, "channel");
     }
 
     /**
-     * Overrides the
-     * {@link org.apache.commons.crypto.stream.output.Output#write(ByteBuffer)}.
-     * Writes a sequence of bytes to this output from the given buffer.
+     * Overrides the {@link Output#close()}. Closes this output and releases any
+     * system resources associated with the under layer output.
      *
-     * @param src The buffer from which bytes are to be retrieved.
-     *
-     * @return The number of bytes written, possibly zero.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int write(final ByteBuffer src) throws IOException {
-        return channel.write(src);
+    public void close() throws IOException {
+        channel.close();
     }
 
     /**
@@ -68,13 +68,17 @@ public class ChannelOutput implements Output {
     }
 
     /**
-     * Overrides the {@link Output#close()}. Closes this output and releases any
-     * system resources associated with the under layer output.
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.output.Output#write(ByteBuffer)}.
+     * Writes a sequence of bytes to this output from the given buffer.
      *
+     * @param src The buffer from which bytes are to be retrieved.
+     *
+     * @return The number of bytes written, possibly zero.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void close() throws IOException {
-        channel.close();
+    public int write(final ByteBuffer src) throws IOException {
+        return channel.write(src);
     }
 }

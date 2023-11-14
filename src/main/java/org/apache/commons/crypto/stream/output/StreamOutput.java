@@ -20,10 +20,13 @@ package org.apache.commons.crypto.stream.output;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.Objects;
+
+import org.apache.commons.crypto.stream.CryptoOutputStream;
 
 /**
- * The StreamOutput class takes a {@code OutputStream} object and wraps it
- * as {@code Output} object acceptable by {@code CryptoOutputStream}
+ * The StreamOutput class takes a {@link OutputStream} object and wraps it
+ * as {@link Output} object acceptable by {@link CryptoOutputStream}
  * as the output target.
  */
 public class StreamOutput implements Output {
@@ -32,16 +35,48 @@ public class StreamOutput implements Output {
     private final OutputStream out;
 
     /**
-     * Constructs a {@link org.apache.commons.crypto.stream.output.StreamOutput}
-     * .
+     * Constructs a new instance.
      *
      * @param out the OutputStream object.
-     * @param bufferSize the buffersize.
+     * @param bufferSize the buffer size.
+     * @throws NullPointerException if channel is null.
      */
     public StreamOutput(final OutputStream out, final int bufferSize) {
-        this.out = out;
+        this.out = Objects.requireNonNull(out, "out");
         this.bufferSize = bufferSize;
-        buf = new byte[bufferSize];
+        this.buf = new byte[bufferSize];
+    }
+
+    /**
+     * Overrides the {@link Output#close()}. Closes this output and releases any
+     * system resources associated with the under layer output.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void close() throws IOException {
+        out.close();
+    }
+
+    /**
+     * Overrides the {@link Output#flush()}. Flushes this output and forces any
+     * buffered output bytes to be written out if the under layer output method
+     * support.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void flush() throws IOException {
+        out.flush();
+    }
+
+    /**
+     * Gets the output stream.
+     *
+     * @return the output stream.
+     */
+    protected OutputStream getOut() {
+        return out;
     }
 
     /**
@@ -67,37 +102,5 @@ public class StreamOutput implements Output {
         }
 
         return len;
-    }
-
-    /**
-     * Overrides the {@link Output#flush()}. Flushes this output and forces any
-     * buffered output bytes to be written out if the under layer output method
-     * support.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void flush() throws IOException {
-        out.flush();
-    }
-
-    /**
-     * Overrides the {@link Output#close()}. Closes this output and releases any
-     * system resources associated with the under layer output.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void close() throws IOException {
-        out.close();
-    }
-
-    /**
-     * Gets the output stream.
-     *
-     * @return the output stream.
-     */
-    protected OutputStream getOut() {
-        return out;
     }
 }

@@ -29,30 +29,31 @@ import org.apache.commons.crypto.stream.input.Input;
 public final class IoUtils {
 
     /**
-     * The private constructor of {@link IoUtils}.
+     * Closes the Closeable objects and <b>ignore</b> any {@link IOException} or
+     * null pointers. Must only be used for cleanup in exception handlers.
+     *
+     * @param closeables the objects to close.
      */
-    private IoUtils() {
+    public static void cleanup(final Closeable... closeables) {
+        if (closeables != null) {
+            for (final Closeable c : closeables) {
+                closeQuietly(c);
+            }
+        }
     }
 
     /**
-     * Does the readFully based on the Input read.
+     * Closes the given {@link Closeable} quietly by ignoring IOException.
      *
-     * @param in the input stream of bytes.
-     * @param buf the buffer to be read.
-     * @param off the start offset in array buffer.
-     * @param len the maximum number of bytes to read.
-     * @throws IOException if an I/O error occurs.
+     * @param closeable The resource to close.
+     * @since 1.1.0
      */
-    public static void readFully(final InputStream in, final byte[] buf, int off, final int len)
-            throws IOException {
-        int toRead = len;
-        while (toRead > 0) {
-            final int ret = in.read(buf, off, toRead);
-            if (ret < 0) {
-                throw new IOException("Premature EOF from inputStream");
+    public static void closeQuietly(final Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (final IOException e) { // NOPMD
             }
-            toRead -= ret;
-            off += ret;
         }
     }
 
@@ -82,31 +83,30 @@ public final class IoUtils {
     }
 
     /**
-     * Closes the Closeable objects and <b>ignore</b> any {@link IOException} or
-     * null pointers. Must only be used for cleanup in exception handlers.
+     * Does the readFully based on the Input read.
      *
-     * @param closeables the objects to close.
+     * @param in the input stream of bytes.
+     * @param buf the buffer to be read.
+     * @param off the start offset in array buffer.
+     * @param len the maximum number of bytes to read.
+     * @throws IOException if an I/O error occurs.
      */
-    public static void cleanup(final Closeable... closeables) {
-        if (closeables != null) {
-            for (final Closeable c : closeables) {
-                closeQuietly(c);
+    public static void readFully(final InputStream in, final byte[] buf, int off, final int len)
+            throws IOException {
+        int toRead = len;
+        while (toRead > 0) {
+            final int ret = in.read(buf, off, toRead);
+            if (ret < 0) {
+                throw new IOException("Premature EOF from inputStream");
             }
+            toRead -= ret;
+            off += ret;
         }
     }
 
     /**
-     * Closes the given {@link Closeable} quietly by ignoring IOException.
-     *
-     * @param closeable The resource to close.
-     * @since 1.1.0
+     * The private constructor of {@link IoUtils}.
      */
-    public static void closeQuietly(final Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (final IOException e) { // NOPMD
-            }
-        }
+    private IoUtils() {
     }
 }

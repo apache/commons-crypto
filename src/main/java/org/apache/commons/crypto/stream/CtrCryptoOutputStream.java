@@ -26,12 +26,12 @@ import java.util.Properties;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.stream.output.ChannelOutput;
 import org.apache.commons.crypto.stream.output.Output;
 import org.apache.commons.crypto.stream.output.StreamOutput;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -84,6 +84,79 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
+     * @param output the Output instance.
+     * @param cipher the CryptoCipher instance.
+     * @param bufferSize the bufferSize.
+     * @param key crypto key for the cipher.
+     * @param iv Initialization vector for the cipher.
+     * @throws IOException if an I/O error occurs.
+     */
+    protected CtrCryptoOutputStream(final Output output, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv) throws IOException {
+        this(output, cipher, bufferSize, key, iv, 0);
+    }
+
+    /**
+     * Constructs a {@link CtrCryptoOutputStream}.
+     *
+     * @param output the output stream.
+     * @param cipher the CryptoCipher instance.
+     * @param bufferSize the bufferSize.
+     * @param key crypto key for the cipher.
+     * @param iv Initialization vector for the cipher.
+     * @param streamOffset the start offset in the data.
+     * @throws IOException if an I/O error occurs.
+     */
+    protected CtrCryptoOutputStream(final Output output, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
+            throws IOException {
+        super(output, cipher, bufferSize, AES.newSecretKeySpec(key),
+                new IvParameterSpec(iv));
+
+        CryptoInputStream.checkStreamCipher(cipher);
+        this.streamOffset = streamOffset;
+        this.initIV = iv.clone();
+        this.iv = iv.clone();
+
+        resetCipher();
+    }
+
+    /**
+     * Constructs a {@link CtrCryptoOutputStream}.
+     *
+     * @param out the output stream.
+     * @param cipher the CryptoCipher instance.
+     * @param bufferSize the bufferSize.
+     * @param key crypto key for the cipher.
+     * @param iv Initialization vector for the cipher.
+     * @throws IOException if an I/O error occurs.
+     */
+    protected CtrCryptoOutputStream(final OutputStream out, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv) throws IOException {
+        this(out, cipher, bufferSize, key, iv, 0);
+    }
+
+    /**
+     * Constructs a {@link CtrCryptoOutputStream}.
+     *
+     * @param outputStream the output stream.
+     * @param cipher the CryptoCipher instance.
+     * @param bufferSize the bufferSize.
+     * @param key crypto key for the cipher.
+     * @param iv Initialization vector for the cipher.
+     * @param streamOffset the start offset in the data.
+     * @throws IOException if an I/O error occurs.
+     */
+    @SuppressWarnings("resource") // Closing the instance closes the StreamOutput
+    protected CtrCryptoOutputStream(final OutputStream outputStream, final CryptoCipher cipher,
+            final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
+            throws IOException {
+        this(new StreamOutput(outputStream, bufferSize), cipher, bufferSize, key, iv, streamOffset);
+    }
+
+    /**
+     * Constructs a {@link CtrCryptoOutputStream}.
+     *
      * @param props The {@code Properties} class represents a set of
      *        properties.
      * @param out the output stream.
@@ -94,6 +167,25 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     public CtrCryptoOutputStream(final Properties props, final OutputStream out,
             final byte[] key, final byte[] iv) throws IOException {
         this(props, out, key, iv, 0);
+    }
+
+    /**
+     * Constructs a {@link CtrCryptoOutputStream}.
+     *
+     * @param properties The {@code Properties} class represents a set of
+     *        properties.
+     * @param outputStream the output stream.
+     * @param key crypto key for the cipher.
+     * @param iv Initialization vector for the cipher.
+     * @param streamOffset the start offset in the data.
+     * @throws IOException if an I/O error occurs.
+     */
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoOutputStream.
+    public CtrCryptoOutputStream(final Properties properties, final OutputStream outputStream,
+            final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
+        this(outputStream, Utils.getCipherInstance(
+                AES.CTR_NO_PADDING, properties),
+                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
@@ -114,16 +206,20 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param out the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param properties The {@code Properties} class represents a set of
+     *        properties.
+     * @param channel the WritableByteChannel instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
+     * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(final OutputStream out, final CryptoCipher cipher,
-            final int bufferSize, final byte[] key, final byte[] iv) throws IOException {
-        this(out, cipher, bufferSize, key, iv, 0);
+    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoOutputStream.
+    public CtrCryptoOutputStream(final Properties properties, final WritableByteChannel channel,
+            final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
+        this(channel, Utils.getCipherInstance(
+                AES.CTR_NO_PADDING, properties),
+                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
@@ -145,77 +241,6 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param output the Output instance.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param iv Initialization vector for the cipher.
-     * @throws IOException if an I/O error occurs.
-     */
-    protected CtrCryptoOutputStream(final Output output, final CryptoCipher cipher,
-            final int bufferSize, final byte[] key, final byte[] iv) throws IOException {
-        this(output, cipher, bufferSize, key, iv, 0);
-    }
-
-    /**
-     * Constructs a {@link CtrCryptoOutputStream}.
-     *
-     * @param properties The {@code Properties} class represents a set of
-     *        properties.
-     * @param outputStream the output stream.
-     * @param key crypto key for the cipher.
-     * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
-     * @throws IOException if an I/O error occurs.
-     */
-    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoOutputStream.
-    public CtrCryptoOutputStream(final Properties properties, final OutputStream outputStream,
-            final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
-        this(outputStream, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", properties),
-                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
-    }
-
-    /**
-     * Constructs a {@link CtrCryptoOutputStream}.
-     *
-     * @param properties The {@code Properties} class represents a set of
-     *        properties.
-     * @param channel the WritableByteChannel instance.
-     * @param key crypto key for the cipher.
-     * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
-     * @throws IOException if an I/O error occurs.
-     */
-    @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoOutputStream.
-    public CtrCryptoOutputStream(final Properties properties, final WritableByteChannel channel,
-            final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
-        this(channel, Utils.getCipherInstance(
-                "AES/CTR/NoPadding", properties),
-                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
-    }
-
-    /**
-     * Constructs a {@link CtrCryptoOutputStream}.
-     *
-     * @param outputStream the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
-     * @throws IOException if an I/O error occurs.
-     */
-    protected CtrCryptoOutputStream(final OutputStream outputStream, final CryptoCipher cipher,
-            final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
-            throws IOException {
-        this(new StreamOutput(outputStream, bufferSize), cipher, bufferSize, key, iv,
-                streamOffset);
-    }
-
-    /**
-     * Constructs a {@link CtrCryptoOutputStream}.
-     *
      * @param channel the WritableByteChannel instance.
      * @param cipher the CryptoCipher instance.
      * @param bufferSize the bufferSize.
@@ -224,36 +249,11 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      * @param streamOffset the start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
-    protected CtrCryptoOutputStream(final WritableByteChannel channel,
+   @SuppressWarnings("resource") // Closing the instance closes the ChannelOutput
+   protected CtrCryptoOutputStream(final WritableByteChannel channel,
             final CryptoCipher cipher, final int bufferSize, final byte[] key, final byte[] iv,
             final long streamOffset) throws IOException {
-        this(new ChannelOutput(channel), cipher, bufferSize, key, iv,
-                streamOffset);
-    }
-
-    /**
-     * Constructs a {@link CtrCryptoOutputStream}.
-     *
-     * @param output the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
-     * @throws IOException if an I/O error occurs.
-     */
-    protected CtrCryptoOutputStream(final Output output, final CryptoCipher cipher,
-            final int bufferSize, final byte[] key, final byte[] iv, final long streamOffset)
-            throws IOException {
-        super(output, cipher, bufferSize, new SecretKeySpec(key, "AES"),
-                new IvParameterSpec(iv));
-
-        CryptoInputStream.checkStreamCipher(cipher);
-        this.streamOffset = streamOffset;
-        this.initIV = iv.clone();
-        this.iv = iv.clone();
-
-        resetCipher();
+       this(new ChannelOutput(channel), cipher, bufferSize, key, iv, streamOffset);
     }
 
     /**
@@ -299,6 +299,30 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     }
 
     /**
+     * Does the encryption if the ByteBuffer data.
+     *
+     * @param out the output ByteBuffer.
+     * @throws IOException if an I/O error occurs.
+     */
+    private void encryptBuffer(final ByteBuffer out) throws IOException {
+        final int inputSize = inBuffer.remaining();
+        try {
+            final int n = cipher.update(inBuffer, out);
+            if (n < inputSize) {
+                /**
+                 * Typically code will not get here. CryptoCipher#update will
+                 * consume all input data and put result in outBuffer.
+                 * CryptoCipher#doFinal will reset the cipher context.
+                 */
+                cipher.doFinal(inBuffer, out);
+                cipherReset = true;
+            }
+        } catch (final GeneralSecurityException e) {
+            throw new IOException(e);
+        }
+    }
+
+    /**
      * Does final encryption of the last data.
      *
      * @throws IOException if an I/O error occurs.
@@ -307,6 +331,15 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     protected void encryptFinal() throws IOException {
         // The same as the normal encryption for Counter mode
         encrypt();
+    }
+
+    /**
+     * Gets the underlying stream offset
+     *
+     * @return the underlying stream offset
+     */
+    protected long getStreamOffset() {
+        return streamOffset;
     }
 
     /**
@@ -340,40 +373,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     }
 
     /**
-     * Does the encryption if the ByteBuffer data.
-     *
-     * @param out the output ByteBuffer.
-     * @throws IOException if an I/O error occurs.
-     */
-    private void encryptBuffer(final ByteBuffer out) throws IOException {
-        final int inputSize = inBuffer.remaining();
-        try {
-            final int n = cipher.update(inBuffer, out);
-            if (n < inputSize) {
-                /**
-                 * Typically code will not get here. CryptoCipher#update will
-                 * consume all input data and put result in outBuffer.
-                 * CryptoCipher#doFinal will reset the cipher context.
-                 */
-                cipher.doFinal(inBuffer, out);
-                cipherReset = true;
-            }
-        } catch (final GeneralSecurityException e) {
-            throw new IOException(e);
-        }
-    }
-
-    /**
-     * Get the underlying stream offset
-     *
-     * @return the underlying stream offset
-     */
-    protected long getStreamOffset() {
-        return streamOffset;
-    }
-
-    /**
-     * Set the underlying stream offset
+     * Sets the underlying stream offset
      *
      * @param streamOffset the underlying stream offset
      */

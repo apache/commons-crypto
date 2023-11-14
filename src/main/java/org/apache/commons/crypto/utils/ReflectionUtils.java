@@ -19,9 +19,14 @@ package org.apache.commons.crypto.utils;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
 
@@ -30,32 +35,94 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
  */
 public final class ReflectionUtils {
 
-    private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
+    /**
+     * A unique class which is used as a sentinel value in the caching for
+     * getClassByName. {@link #getClassByNameOrNull(String)}.
+     */
+    private static abstract class AbstractNegativeCacheSentinel {
+        // noop
+    }
 
-    private static final ClassLoader CLASSLOADER;
+    private static final Map<ClassLoader, Map<String, WeakReference<Class<?>>>> CACHE_CLASSES = new WeakHashMap<>();
+    private static final ConcurrentMap<ClassLoader, Set<String>> INIT_ERROR_CLASSES = new ConcurrentHashMap<>();
+
+    private static final ClassLoader CLASS_LOADER;
 
     static {
         final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : CryptoCipher.class.getClassLoader();
+        CLASS_LOADER = threadClassLoader != null ? threadClassLoader : CryptoCipher.class.getClassLoader();
     }
 
     /**
      * Sentinel value to store negative cache results in {@link #CACHE_CLASSES}.
      */
-    private static final Class<?> NEGATIVE_CACHE_SENTINEL = NegativeCacheSentinel.class;
+    private static final Class<?> NEGATIVE_CACHE_SENTINEL = AbstractNegativeCacheSentinel.class;
 
     /**
-     * The private constructor of {@link ReflectionUtils}.
+     * Loads a class by name.
+     *
+     * @param name the class name.
+     * @return the class object.
+     * @throws ClassNotFoundException if the class is not found.
      */
-    private ReflectionUtils() {
+    public static Class<?> getClassByName(final String name) throws ClassNotFoundException {
+        final Class<?> ret = getClassByNameOrNull(name);
+        if (ret == null) {
+            if (INIT_ERROR_CLASSES.get(CLASS_LOADER).contains(name)) {
+                throw new IllegalStateException("Class " + name + " initialization error");
+            }
+            throw new ClassNotFoundException("Class " + name + " not found");
+        }
+        return ret;
     }
 
     /**
-     * A unique class which is used as a sentinel value in the caching for
-     * getClassByName. {@link #getClassByNameOrNull(String)}.
+     * Loads a class by name, returning {@code null} rather than throwing an exception if it
+     * couldn't be loaded. This is to avoid the overhead of creating an exception.
+     *
+     * @param name the class name.
+     * @return the class object, or {@code null} if it could not be found or initialization failed.
      */
-    private static abstract class NegativeCacheSentinel {
-        // noop
+    private static Class<?> getClassByNameOrNull(final String name) {
+        final Set<String> set = INIT_ERROR_CLASSES.computeIfAbsent(CLASS_LOADER, k -> Collections.synchronizedSet(new HashSet<>()));
+
+        if (set.contains(name)) {
+            return null;
+        }
+
+        final Map<String, WeakReference<Class<?>>> map;
+
+        synchronized (CACHE_CLASSES) {
+            map = CACHE_CLASSES.computeIfAbsent(CLASS_LOADER, k -> Collections.synchronizedMap(new WeakHashMap<>()));
+        }
+
+        Class<?> clazz = null;
+        final WeakReference<Class<?>> ref = map.get(name);
+        if (ref != null) {
+            clazz = ref.get();
+        }
+
+        if (clazz == null) {
+            try {
+                clazz = Class.forName(name, true, CLASS_LOADER);
+            } catch (final ClassNotFoundException e) {
+                // Leave a marker that the class isn't found
+                map.put(name, new WeakReference<>(NEGATIVE_CACHE_SENTINEL));
+                return null;
+            } catch (final ExceptionInInitializerError error) {
+                // Leave a marker that the class initialization failed
+                set.add(name);
+                return null;
+            }
+            // two putters can race here, but they'll put the same class
+            map.put(name, new WeakReference<>(clazz));
+            return clazz;
+        }
+        if (clazz == NEGATIVE_CACHE_SENTINEL) {
+            return null; // not found
+        }
+        // cache hit
+        return clazz;
     }
 
     /**
@@ -79,9 +146,7 @@ public final class ReflectionUtils {
                 ctor = klass.getDeclaredConstructor();
             } else {
                 final Class<?>[] argClses = new Class[argsLength];
-                for (int i = 0; i < argsLength; i++) {
-                    argClses[i] = args[i].getClass();
-                }
+                Arrays.setAll(argClses, i -> args[i].getClass());
                 ctor = klass.getDeclaredConstructor(argClses);
             }
             ctor.setAccessible(true);
@@ -92,56 +157,8 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Loads a class by name.
-     *
-     * @param name the class name.
-     * @return the class object.
-     * @throws ClassNotFoundException if the class is not found.
+     * The private constructor of {@link ReflectionUtils}.
      */
-    public static Class<?> getClassByName(final String name) throws ClassNotFoundException {
-        final Class<?> ret = getClassByNameOrNull(name);
-        if (ret == null) {
-            throw new ClassNotFoundException("Class " + name + " not found");
-        }
-        return ret;
-    }
-
-    /**
-     * Loads a class by name, returning null rather than throwing an exception if it
-     * couldn't be loaded. This is to avoid the overhead of creating an exception.
-     *
-     * @param name the class name.
-     * @return the class object, or null if it could not be found.
-     */
-    private static Class<?> getClassByNameOrNull(final String name) {
-        final Map<String, WeakReference<Class<?>>> map;
-
-        synchronized (CACHE_CLASSES) {
-            map = CACHE_CLASSES.computeIfAbsent(CLASSLOADER, k -> Collections.synchronizedMap(new WeakHashMap<>()));
-        }
-
-        Class<?> clazz = null;
-        final WeakReference<Class<?>> ref = map.get(name);
-        if (ref != null) {
-            clazz = ref.get();
-        }
-
-        if (clazz == null) {
-            try {
-                clazz = Class.forName(name, true, CLASSLOADER);
-            } catch (final ClassNotFoundException e) {
-                // Leave a marker that the class isn't found
-                map.put(name, new WeakReference<>(NEGATIVE_CACHE_SENTINEL));
-                return null;
-            }
-            // two putters can race here, but they'll put the same class
-            map.put(name, new WeakReference<>(clazz));
-            return clazz;
-        } else if (clazz == NEGATIVE_CACHE_SENTINEL) {
-            return null; // not found
-        } else {
-            // cache hit
-            return clazz;
-        }
+    private ReflectionUtils() {
     }
 }

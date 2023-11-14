@@ -26,19 +26,21 @@ import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.random.CryptoRandom;
 import org.apache.commons.crypto.random.CryptoRandomFactory;
+import org.apache.commons.crypto.utils.AES;
+import org.apache.commons.crypto.utils.Utils;
 
 /**
  * Provides diagnostic information about Commons Crypto and keys for native
- * class loading
+ * class loading.
  */
 public final class Crypto {
 
-    private static class ComponentPropertiesHolder {
+    private static final class ComponentPropertiesHolder {
 
         static final Properties PROPERTIES = getComponentProperties();
 
         /**
-         * Get component properties from component.properties.
+         * Gets component properties from component.properties.
          *
          * @return Properties contains project version.
          */
@@ -48,7 +50,6 @@ public final class Crypto {
             if (url != null) {
                 try (InputStream inputStream = url.openStream()) {
                     versionData.load(inputStream);
-                    return versionData;
                 } catch (final IOException e) { // NOPMD
                 }
             }
@@ -79,6 +80,8 @@ public final class Crypto {
      */
     public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX + "lib.tempdir";
 
+    private static boolean quiet;
+
     /**
      * Gets the component version of Apache Commons Crypto.
      * <p>
@@ -87,7 +90,7 @@ public final class Crypto {
      * by Maven.
      * </p>
      *
-     * @return the version; may be null if not found
+     * @return the version; may be {@code null} if not found
      */
     public static String getComponentName() {
         // Note: the component properties file allows the method to work without needing
@@ -103,7 +106,7 @@ public final class Crypto {
      * by Maven.
      * </p>
      *
-     * @return the version; may be null if not found
+     * @return the version; may be {@code null} if not found
      */
     public static String getComponentVersion() {
         // Note: the component properties file allows the method to work without needing
@@ -114,7 +117,7 @@ public final class Crypto {
     /**
      * The loading error throwable, if loading failed.
      *
-     * @return null, unless loading failed.
+     * @return {@code null}, unless loading failed.
      */
     public static Throwable getLoadingError() {
         return NativeCodeLoader.getLoadingError();
@@ -127,14 +130,15 @@ public final class Crypto {
      * @param args   See {@link String#format(String, Object...)}.
      */
     private static void info(final String format, final Object... args) {
-        // TODO Find a better way to do this later.
-        System.out.println(String.format(format, args));
+        if (!quiet) { // suppress output for testing
+          System.out.println(String.format(format, args));
+        }
     }
 
     /**
      * Checks whether the native code has been successfully loaded for the platform.
      *
-     * @return true if the native code has been loaded successfully.
+     * @return {@code true} if the native code has been loaded successfully.
      */
     public static boolean isNativeCodeLoaded() {
         return NativeCodeLoader.isNativeCodeLoaded();
@@ -147,6 +151,9 @@ public final class Crypto {
      * @throws Exception if getCryptoRandom or getCryptoCipher get error.
      */
     public static void main(final String[] args) throws Exception {
+        quiet = args.length == 1 && args[0].equals("-q");
+        info("jni.library.path=%s", System.getProperty("jni.library.path"));
+        info("jni.library.name=%s", System.getProperty("jni.library.name"));
         info("%s %s", getComponentName(), getComponentVersion());
         if (isNativeCodeLoaded()) {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
@@ -154,30 +161,51 @@ public final class Crypto {
             info("Native built: %s", OpenSslInfoNative.NativeTimeStamp());
             info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslInfoNative.OpenSSL()));
             info("OpenSSL library info: %s", OpenSslInfoNative.OpenSSLVersion(0));
-            { // CryptoRandom
+            info("DLL name: %s", OpenSslInfoNative.DLLName());
+            info("DLL path: %s", OpenSslInfoNative.DLLPath());
+            info("Additional OpenSSL_version(n) details:");
+            for (int j = 1; j < Utils.OPENSSL_VERSION_MAX_INDEX; j++) { // entry 0 is shown above
+                String data = OpenSslInfoNative.OpenSSLVersion(j);
+                if (!"not available".equals(data)) {
+                    info("OpenSSLVersion(%d): %s", j, data);
+                }
+            }
+            try { // CryptoRandom
                 final Properties props = new Properties();
-                props.setProperty(CryptoRandomFactory.CLASSES_KEY,
-                        CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
+                props.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OPENSSL.getClassName());
                 try (CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props)) {
                     info("Random instance created OK: %s", cryptoRandom);
                 }
+            } catch (Exception e) {
+                info("Failed: %s", e);
             }
-            { // CryptoCipher
+            try { // CryptoCipher
                 final Properties props = new Properties();
-                props.setProperty(CryptoCipherFactory.CLASSES_KEY,
-                        CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
-                final String transformation = "AES/CTR/NoPadding";
-                try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(transformation, props)) {
-                    info("Cipher %s instance created OK: %s", transformation, cryptoCipher);
+                props.setProperty(CryptoCipherFactory.CLASSES_KEY, CryptoCipherFactory.CipherProvider.OPENSSL.getClassName());
+                try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, props)) {
+                    info("Cipher %s instance created OK: %s", AES.CTR_NO_PADDING, cryptoCipher);
                 }
-            }
-            info("Additional OpenSSL_version(n) details:");
-            for (int j = 1; j < 6; j++) {
-                info("%s: %s", j, OpenSslInfoNative.OpenSSLVersion(j));
+            } catch (Exception e) {
+                info("Failed: %s", e);
             }
         } else {
-            info("Native load failed: %s", getLoadingError());
+            Throwable error = getLoadingError();
+            String msg = "";
+            if (error != null) {
+                msg = error.getMessage();
+            }
+            info("Native load failed: %s %s", error, msg);
         }
+    }
+
+    /**
+     * Constructs a new instance.
+     *
+     * @deprecated Will be private in the next major release.
+     */
+    @Deprecated
+    public Crypto() {
+        // empty
     }
 
 }

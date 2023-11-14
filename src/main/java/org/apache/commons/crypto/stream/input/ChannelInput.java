@@ -20,11 +20,14 @@ package org.apache.commons.crypto.stream.input;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Objects;
+
+import org.apache.commons.crypto.stream.CryptoInputStream;
 
 /**
- * The ChannelInput class takes a {@code ReadableByteChannel} object and
- * wraps it as {@code Input} object acceptable by
- * {@code CryptoInputStream}.
+ * The ChannelInput class takes a {@link ReadableByteChannel} object and
+ * wraps it as {@link Input} object acceptable by
+ * {@link CryptoInputStream}.
  */
 public class ChannelInput implements Input {
     private static final int SKIP_BUFFER_SIZE = 2048;
@@ -37,58 +40,10 @@ public class ChannelInput implements Input {
      * {@link org.apache.commons.crypto.stream.input.ChannelInput}.
      *
      * @param channel the ReadableByteChannel object.
+     * @throws NullPointerException if channel is null.
      */
     public ChannelInput(final ReadableByteChannel channel) {
-        this.channel = channel;
-    }
-
-    /**
-     * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#read(ByteBuffer)}.
-     * Reads a sequence of bytes from input into the given buffer.
-     *
-     * @param dst The buffer into which bytes are to be transferred.
-     * @return the total number of bytes read into the buffer, or
-     *         {@code -1} if there is no more data because the end of the
-     *         stream has been reached.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public int read(final ByteBuffer dst) throws IOException {
-        return channel.read(dst);
-    }
-
-    /**
-     * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
-     * over and discards {@code n} bytes of data from this input stream.
-     *
-     * @param n the number of bytes to be skipped.
-     * @return the actual number of bytes skipped.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public long skip(final long n) throws IOException {
-        long remaining = n;
-        int nr;
-
-        if (n <= 0) {
-            return 0;
-        }
-
-        final int size = (int) Math.min(SKIP_BUFFER_SIZE, remaining);
-        final ByteBuffer skipBuffer = getSkipBuf();
-        while (remaining > 0) {
-            skipBuffer.clear();
-            skipBuffer.limit((int) Math.min(size, remaining));
-            nr = read(skipBuffer);
-            if (nr < 0) {
-                break;
-            }
-            remaining -= nr;
-        }
-
-        return n - remaining;
+        this.channel = Objects.requireNonNull(channel, "channel");
     }
 
     /**
@@ -107,6 +62,47 @@ public class ChannelInput implements Input {
     @Override
     public int available() throws IOException {
         return 0;
+    }
+
+    /**
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.input.Input#seek(long)}. Closes
+     * this input and releases any system resources associated with the under
+     * layer input.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void close() throws IOException {
+        channel.close();
+    }
+
+    /**
+     * Gets the skip buffer.
+     *
+     * @return the buffer.
+     */
+    private ByteBuffer getSkipBuf() {
+        if (buf == null) {
+            buf = ByteBuffer.allocate(SKIP_BUFFER_SIZE);
+        }
+        return buf;
+    }
+
+    /**
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.input.Input#read(ByteBuffer)}.
+     * Reads a sequence of bytes from input into the given buffer.
+     *
+     * @param dst The buffer into which bytes are to be transferred.
+     * @return the total number of bytes read into the buffer, or
+     *         {@code -1} if there is no more data because the end of the
+     *         stream has been reached.
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public int read(final ByteBuffer dst) throws IOException {
+        return channel.read(dst);
     }
 
     /**
@@ -150,26 +146,34 @@ public class ChannelInput implements Input {
 
     /**
      * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#seek(long)}. Closes
-     * this input and releases any system resources associated with the under
-     * layer input.
+     * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
+     * over and discards {@code n} bytes of data from this input stream.
      *
+     * @param n the number of bytes to be skipped.
+     * @return the actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void close() throws IOException {
-        channel.close();
-    }
+    public long skip(final long n) throws IOException {
+        long remaining = n;
+        int nr;
 
-    /**
-     * Gets the skip buffer.
-     *
-     * @return the buffer.
-     */
-    private ByteBuffer getSkipBuf() {
-        if (buf == null) {
-            buf = ByteBuffer.allocate(SKIP_BUFFER_SIZE);
+        if (n <= 0) {
+            return 0;
         }
-        return buf;
+
+        final int size = (int) Math.min(SKIP_BUFFER_SIZE, remaining);
+        final ByteBuffer skipBuffer = getSkipBuf();
+        while (remaining > 0) {
+            skipBuffer.clear();
+            skipBuffer.limit((int) Math.min(size, remaining));
+            nr = read(skipBuffer);
+            if (nr < 0) {
+                break;
+            }
+            remaining -= nr;
+        }
+
+        return n - remaining;
     }
 }

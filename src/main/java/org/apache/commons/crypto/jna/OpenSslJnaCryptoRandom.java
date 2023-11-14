@@ -21,10 +21,8 @@ import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
-import java.util.Random;
 
 import org.apache.commons.crypto.random.CryptoRandom;
-import org.apache.commons.crypto.utils.Utils;
 
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
@@ -46,9 +44,10 @@ import com.sun.jna.ptr.PointerByReference;
  * @see <a href="http://en.wikipedia.org/wiki/RdRand">
  *      http://en.wikipedia.org/wiki/RdRand</a>
  */
-class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
+final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
-    private static final long serialVersionUID = -7128193502768749585L;
+    private static final int ENGINE_METHOD_RAND = 0x0008;
+
     private final boolean rdrandEnabled;
     private final transient PointerByReference rdrandEngine;
 
@@ -56,7 +55,7 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
      * Constructs a {@link OpenSslJnaCryptoRandom}.
      *
      * @param props the configuration properties (not used)
-     * @throws GeneralSecurityException  if could not enable JNA access
+     * @throws GeneralSecurityException  if JNA access could not be enabled
      */
     public OpenSslJnaCryptoRandom(final Properties props) //NOPMD
             throws GeneralSecurityException {
@@ -68,13 +67,12 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
         try {
             OpenSslNativeJna.ENGINE_load_rdrand();
             rdrandEngine = OpenSslNativeJna.ENGINE_by_id("rdrand");
-            final int ENGINE_METHOD_RAND = 0x0008;
-            if(rdrandEngine != null) {
+            if (rdrandEngine != null) {
                 final int rc = OpenSslNativeJna.ENGINE_init(rdrandEngine);
 
-                if(rc != 0) {
+                if (rc != 0) {
                     final int rc2 = OpenSslNativeJna.ENGINE_set_default(rdrandEngine, ENGINE_METHOD_RAND);
-                    if(rc2 != 0) {
+                    if (rc2 != 0) {
                         rdrandLoaded = true;
                     }
                 }
@@ -86,9 +84,44 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
 
         rdrandEnabled = rdrandLoaded;
 
-        if(!rdrandLoaded) {
-            closeRdrandEngine();
+        if (!rdrandLoaded) {
+            closeRdrandEngine(false);
         }
+    }
+
+    /**
+     * Overrides {@link java.lang.AutoCloseable#close()}. Closes OpenSSL context
+     * if native enabled.
+     */
+    @Override
+    public void close() {
+        closeRdrandEngine(true);
+        OpenSslNativeJna.ENGINE_cleanup();
+
+        //cleanup locks
+        //OpenSslNativeJna.CRYPTO_set_locking_callback(null);
+        //LOCK.unlock();
+    }
+
+    /**
+     * Closes the rdrand engine.
+     * @param closing {@code true} when called while closing.
+     */
+    private void closeRdrandEngine(final boolean closing) {
+
+        if (rdrandEngine != null) {
+            throwOnError(OpenSslNativeJna.ENGINE_finish(rdrandEngine), closing);
+            throwOnError(OpenSslNativeJna.ENGINE_free(rdrandEngine), closing);
+        }
+    }
+
+    /**
+     * Checks if rdrand engine is used to retrieve random bytes
+     *
+     * @return {@code true} if rdrand is used, {@code false} if default engine is used
+     */
+    public boolean isRdrandEnabled() {
+        return rdrandEnabled;
     }
 
     /**
@@ -100,101 +133,33 @@ class OpenSslJnaCryptoRandom extends Random implements CryptoRandom {
     public void nextBytes(final byte[] bytes) {
 
         synchronized (OpenSslJnaCryptoRandom.class) {
-            //this method is synchronized for now
-            //to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
+            // this method is synchronized for now
+            // to support multithreading https://wiki.openssl.org/index.php/Manual:Threads(3) needs to be done
 
-            if(rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
+            if (rdrandEnabled && OpenSslNativeJna.RAND_get_rand_method().equals(OpenSslNativeJna.RAND_SSLeay())) {
                 close();
                 throw new IllegalStateException("rdrand should be used but default is detected");
             }
 
             final int byteLength = bytes.length;
             final ByteBuffer buf = ByteBuffer.allocateDirect(byteLength);
-            final int retVal = OpenSslNativeJna.RAND_bytes(buf, byteLength);
-            throwOnError(retVal);
+            throwOnError(OpenSslNativeJna.RAND_bytes(buf, byteLength), false);
             buf.rewind();
-            buf.get(bytes,0, byteLength);
+            buf.get(bytes, 0, byteLength);
         }
-    }
-
-    /**
-     * Overrides {@link OpenSslJnaCryptoRandom}. For {@link OpenSslJnaCryptoRandom},
-     * we don't need to set seed.
-     *
-     * @param seed the initial seed.
-     */
-    @Override
-    public void setSeed(final long seed) {
-        // Self-seeding.
-    }
-
-    /**
-     * Overrides Random#next(). Generates an integer containing the
-     * user-specified number of random bits(right justified, with leading
-     * zeros).
-     *
-     * @param numBits number of random bits to be generated, where 0
-     *        {@literal <=} {@code numBits} {@literal <=} 32.
-     * @return int an {@code int} containing the user-specified number of
-     *         random bits (right justified, with leading zeros).
-     */
-    @Override
-    final protected int next(final int numBits) {
-        Utils.checkArgument(numBits >= 0 && numBits <= 32);
-        final int numBytes = (numBits + 7) / 8;
-        final byte[] b = new byte[numBytes];
-        int next = 0;
-
-        nextBytes(b);
-        for (int i = 0; i < numBytes; i++) {
-            next = (next << 8) + (b[i] & 0xFF);
-        }
-
-        return next >>> (numBytes * 8 - numBits);
-    }
-
-    /**
-     * Overrides {@link java.lang.AutoCloseable#close()}. Closes OpenSSL context
-     * if native enabled.
-     */
-    @Override
-    public void close() {
-        closeRdrandEngine();
-        OpenSslNativeJna.ENGINE_cleanup();
-
-        //cleanup locks
-        //OpenSslNativeJna.CRYPTO_set_locking_callback(null);
-        //LOCK.unlock();
-    }
-
-    /**
-     * Closes the rdrand engine.
-     */
-    private void closeRdrandEngine() {
-
-        if(rdrandEngine != null) {
-            OpenSslNativeJna.ENGINE_finish(rdrandEngine);
-            OpenSslNativeJna.ENGINE_free(rdrandEngine);
-        }
-    }
-
-    /**
-     * Checks if rdrand engine is used to retrieve random bytes
-     *
-     * @return true if rdrand is used, false if default engine is used
-     */
-    public boolean isRdrandEnabled() {
-        return rdrandEnabled;
     }
 
     /**
      * @param retVal the result value of error.
+     * @param closing {@code true} when called while closing.
      */
-    private void throwOnError(final int retVal) {
+    private void throwOnError(final int retVal, final boolean closing) {
         if (retVal != 1) {
             final NativeLong err = OpenSslNativeJna.ERR_peek_error();
             final String errdesc = OpenSslNativeJna.ERR_error_string(err, null);
-            close();
+            if (!closing) {
+                close();
+            }
             throw new IllegalStateException("return code " + retVal + " from OpenSSL. Err code is " + err + ": " + errdesc);
         }
     }

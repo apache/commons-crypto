@@ -19,16 +19,47 @@ package org.apache.commons.crypto.stream.input;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
+
+import org.apache.commons.crypto.stream.CryptoInputStream;
 
 /**
  * The Input interface abstract the input source of
- * {@code CryptoInputStream} so that different implementation of input can
- * be used. The implementation Input interface will usually wraps an input
- * mechanism such as {@code InputStream} or
- * {@code ReadableByteChannel}.
+ * {@link CryptoInputStream} so that different implementation of input can
+ * be used. The implementation Input interface will usually wrap an input
+ * mechanism such as {@link InputStream} or
+ * {@link ReadableByteChannel}.
  */
 public interface Input extends Closeable {
+    /**
+     * Returns an estimate of the number of bytes that can be read (or skipped
+     * over) from this input without blocking by the next invocation of a method
+     * for this input stream. The next invocation might be the same thread or
+     * another thread. A single read or skip of this many bytes will not block,
+     * but may read or skip fewer bytes.
+     *
+     * <p>
+     * It is never correct to use the return value of this method to allocate a
+     * buffer intended to hold all data in this stream.
+     *
+     * @return an estimate of the number of bytes that can be read (or skipped
+     *         over) from this input stream without blocking or {@code 0} when
+     *         it reaches the end of the input stream.
+     * @throws IOException if an I/O error occurs.
+     */
+    int available() throws IOException;
+
+    /**
+     * Closes this input and releases any system resources associated with the
+     * under layer input.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    void close() throws IOException;
+
     /**
      * Reads a sequence of bytes from input into the given buffer.
      *
@@ -54,47 +85,6 @@ public interface Input extends Closeable {
      * @throws IOException If some other I/O error occurs.
      */
     int read(ByteBuffer dst) throws IOException;
-
-    /**
-     * Skips over and discards {@code n} bytes of data from this input The
-     * {@code skip} method may, for a variety of reasons, end up skipping
-     * over some smaller number of bytes, possibly {@code 0}. This may
-     * result from any of a number of conditions; reaching end of file before
-     * {@code n} bytes have been skipped is only one possibility. The
-     * actual number of bytes skipped is returned. If {@code n} is
-     * negative, no bytes are skipped.
-     *
-     * <p>
-     * The {@code skip} method of this class creates a byte array and then
-     * repeatedly reads into it until {@code n} bytes have been read or the
-     * end of the stream has been reached. Subclasses are encouraged to provide
-     * a more efficient implementation of this method. For instance, the
-     * implementation may depend on the ability to seek.
-     *
-     * @param n the number of bytes to be skipped.
-     * @return the actual number of bytes skipped.
-     * @throws IOException if the stream does not support seek, or if some
-     *            other I/O error occurs.
-     */
-    long skip(long n) throws IOException;
-
-    /**
-     * Returns an estimate of the number of bytes that can be read (or skipped
-     * over) from this input without blocking by the next invocation of a method
-     * for this input stream. The next invocation might be the same thread or
-     * another thread. A single read or skip of this many bytes will not block,
-     * but may read or skip fewer bytes.
-     *
-     * <p>
-     * It is never correct to use the return value of this method to allocate a
-     * buffer intended to hold all data in this stream.
-     *
-     * @return an estimate of the number of bytes that can be read (or skipped
-     *         over) from this input stream without blocking or {@code 0} when
-     *         it reaches the end of the input stream.
-     * @throws IOException if an I/O error occurs.
-     */
-    int available() throws IOException;
 
     /**
      * Reads up to the specified number of bytes from a given position within a
@@ -129,11 +119,25 @@ public interface Input extends Closeable {
     void seek(long position) throws IOException;
 
     /**
-     * Closes this input and releases any system resources associated with the
-     * under layer input.
+     * Skips over and discards {@code n} bytes of data from this input The
+     * {@code skip} method may, for a variety of reasons, end up skipping
+     * over some smaller number of bytes, possibly {@code 0}. This may
+     * result from any of a number of conditions; reaching end of file before
+     * {@code n} bytes have been skipped is only one possibility. The
+     * actual number of bytes skipped is returned. If {@code n} is
+     * negative, no bytes are skipped.
      *
-     * @throws IOException if an I/O error occurs.
+     * <p>
+     * The {@code skip} method of this class creates a byte array and then
+     * repeatedly reads into it until {@code n} bytes have been read or the
+     * end of the stream has been reached. Subclasses are encouraged to provide
+     * a more efficient implementation of this method. For instance, the
+     * implementation may depend on the ability to seek.
+     *
+     * @param n the number of bytes to be skipped.
+     * @return the actual number of bytes skipped.
+     * @throws IOException if the stream does not support seek, or if some
+     *            other I/O error occurs.
      */
-    @Override
-    void close() throws IOException;
+    long skip(long n) throws IOException;
 }

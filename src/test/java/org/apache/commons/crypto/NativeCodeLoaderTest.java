@@ -23,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -33,19 +34,20 @@ public class NativeCodeLoaderTest {
 
     @Test
     public void test() {
-        if (NativeCodeLoader.isNativeCodeLoaded()) {
-            // TODO display versions once available
-            System.out.println("** INFO: Native (JNI) code loaded successfully");
-        } else {
-            System.out.println("** WARN: Native (JNI) code was not loaded: "
-                + NativeCodeLoader.getLoadingError());
-        }
+        assertTrue(NativeCodeLoader.isNativeCodeLoaded(), "Native (JNI) code loaded successfully");
     }
 
     @Test
-    public void testNativePresent() {
+    @Disabled("Causes crash on Ubuntu when compiled with Java 17")
+    // The following error is reported:
+    // "Corrupted channel by directly writing to native stream in forked JVM 1"
+    // Note that this appears during a subsequent test, and does not
+    // happen every time.
+    // At this point it is not known where the native stream is written.
+    public void testCanLoadIfPresent() {
         assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
-        assertNull(NativeCodeLoader.getLoadingError());
+        // This will try to reload the library, so should work
+        assertNull(NativeCodeLoader.loadLibrary());
     }
 
     @Test
@@ -55,27 +57,29 @@ public class NativeCodeLoaderTest {
     }
 
     @Test
-    public void testCanLoadIfPresent() {
+    public void testNativePresent() {
         assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
-        // This will try to reload the library, so should work
-        assertNull(NativeCodeLoader.loadLibrary());
+        assertNull(NativeCodeLoader.getLoadingError());
     }
 
     @Test
     @Disabled("Seems to cause issues with other tests on Linux; disable for now")
+    // It causes problems because the system properties are temporarily changed.
+    // However, properties are only fetched once, thus the test either corrupts the settings
+    // or does not work, depending on the order of tests.
     public void testUnSuccessfulLoad() throws Exception {
         final String nameKey = System.getProperty(Crypto.LIB_NAME_KEY);
         final String pathKey = System.getProperty(Crypto.LIB_PATH_KEY);
         // An empty file should cause UnsatisfiedLinkError
-        final File empty = File.createTempFile("NativeCodeLoaderTest", "tmp");
+        final Path empty = Files.createTempFile("NativeCodeLoaderTest", "tmp");
         try {
-            System.setProperty(Crypto.LIB_PATH_KEY, empty.getParent());
-            System.setProperty(Crypto.LIB_NAME_KEY, empty.getName());
+            System.setProperty(Crypto.LIB_PATH_KEY, empty.getParent().toString());
+            System.setProperty(Crypto.LIB_NAME_KEY, empty.getFileName().toString());
             final Throwable result = NativeCodeLoader.loadLibrary();
             assertNotNull(result);
             assertTrue(result instanceof UnsatisfiedLinkError);
         } finally {
-            empty.delete();
+            Files.delete(empty);
             if (nameKey != null) {
                 System.setProperty(Crypto.LIB_NAME_KEY, nameKey);
             }

@@ -27,6 +27,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.crypto.cipher.CryptoCipher;
+import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
 
 /**
@@ -34,12 +35,35 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public class CipherByteBufferExample {
 
+    /**
+     * Converts ByteBuffer to String
+     *
+     * @param buffer input byte buffer
+     * @return the converted string
+     */
+    private static String asString(final ByteBuffer buffer) {
+        final ByteBuffer copy = buffer.duplicate();
+        final byte[] bytes = new byte[copy.remaining()];
+        copy.get(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Converts String to UTF8 bytes
+     *
+     * @param input the input string
+     * @return UTF8 bytes
+     */
+    private static byte[] getUTF8Bytes(final String input) {
+        return input.getBytes(StandardCharsets.UTF_8);
+    }
+
     public static void main(final String[] args) throws Exception {
-        final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"), "AES");
+        final SecretKeySpec key = AES.newSecretKeySpec(getUTF8Bytes("1234567890123456"));
         final IvParameterSpec iv = new IvParameterSpec(getUTF8Bytes("1234567890123456"));
         final Properties properties = new Properties();
         //Creates a CryptoCipher instance with the transformation and properties.
-        final String transform = "AES/CBC/PKCS5Padding";
+        final String transform = AES.CBC_PKCS5_PADDING;
         final ByteBuffer outBuffer;
         final int bufferSize = 1024;
         final int updateBytes;
@@ -54,7 +78,7 @@ public class CipherByteBufferExample {
             // Show the data is there
             System.out.println("inBuffer=" + asString(inBuffer));
 
-            // Initializes the cipher with ENCRYPT_MODE,key and iv.
+            // Initializes the cipher with ENCRYPT_MODE, key and iv.
             encipher.init(Cipher.ENCRYPT_MODE, key, iv);
             // Continues a multiple-part encryption/decryption operation for byte buffer.
             updateBytes = encipher.update(inBuffer, outBuffer);
@@ -79,29 +103,6 @@ public class CipherByteBufferExample {
             decoded.flip(); // ready for use
             System.out.println("decoded="+asString(decoded));
         }
-    }
-
-    /**
-     * Converts String to UTF8 bytes
-     *
-     * @param input the input string
-     * @return UTF8 bytes
-     */
-    private static byte[] getUTF8Bytes(final String input) {
-        return input.getBytes(StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Converts ByteBuffer to String
-     *
-     * @param buffer input byte buffer
-     * @return the converted string
-     */
-    private static String asString(final ByteBuffer buffer) {
-        final ByteBuffer copy = buffer.duplicate();
-        final byte[] bytes = new byte[copy.remaining()];
-        copy.get(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
     }
 
 }

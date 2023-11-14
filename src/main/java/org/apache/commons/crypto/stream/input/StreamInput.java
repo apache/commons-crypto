@@ -17,17 +17,21 @@
  */
 package org.apache.commons.crypto.stream.input;
 
+import static org.apache.commons.crypto.stream.CryptoInputStream.EOS;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
-import static org.apache.commons.crypto.stream.CryptoInputStream.EOS;
+import org.apache.commons.crypto.stream.CryptoInputStream;
 
  /**
- * The StreamInput class takes a {@code InputStream} object and wraps it as
- * {@code Input} object acceptable by {@code CryptoInputStream}.
+ * The StreamInput class takes a {@link InputStream} object and wraps it as
+ * {@link Input} object acceptable by {@link CryptoInputStream}.
  */
 public class StreamInput implements Input {
+
     private final byte[] buf;
     private final int bufferSize;
     final InputStream in;
@@ -35,13 +39,45 @@ public class StreamInput implements Input {
     /**
      * Constructs a {@link org.apache.commons.crypto.stream.input.StreamInput}.
      *
-     * @param inputStream the inputstream object.
-     * @param bufferSize the buffersize.
+     * @param inputStream the InputStream object.
+     * @param bufferSize the buffer size.
+     * @throws NullPointerException if inputStream is null.
      */
     public StreamInput(final InputStream inputStream, final int bufferSize) {
-        this.in = inputStream;
+        this.in = Objects.requireNonNull(inputStream, "inputStream");
         this.bufferSize = bufferSize;
-        buf = new byte[bufferSize];
+        this.buf = new byte[bufferSize];
+    }
+
+    /**
+     * Overrides the {@link Input#available()}. Returns an estimate of the
+     * number of bytes that can be read (or skipped over) from this input stream
+     * without blocking by the next invocation of a method for this input
+     * stream. The next invocation might be the same thread or another thread. A
+     * single read or skip of this many bytes will not block, but may read or
+     * skip fewer bytes.
+     *
+     * @return an estimate of the number of bytes that can be read (or skipped
+     *         over) from this input stream without blocking or {@code 0} when
+     *         it reaches the end of the input stream.
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public int available() throws IOException {
+        return in.available();
+    }
+
+    /**
+     * Overrides the
+     * {@link org.apache.commons.crypto.stream.input.Input#seek(long)}. Closes
+     * this input and releases any system resources associated with the under
+     * layer input.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void close() throws IOException {
+        in.close();
     }
 
     /**
@@ -67,45 +103,14 @@ public class StreamInput implements Input {
                     read = EOS;
                 }
                 break;
-            } else if (n > 0) {
+            }
+            if (n > 0) {
                 dst.put(buf, 0, n);
                 read += n;
                 remaining -= n;
             }
         }
         return read;
-    }
-
-    /**
-     * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
-     * over and discards {@code n} bytes of data from this input stream.
-     *
-     * @param n the number of bytes to be skipped.
-     * @return the actual number of bytes skipped.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public long skip(final long n) throws IOException {
-        return in.skip(n);
-    }
-
-    /**
-     * Overrides the {@link Input#available()}. Returns an estimate of the
-     * number of bytes that can be read (or skipped over) from this input stream
-     * without blocking by the next invocation of a method for this input
-     * stream. The next invocation might be the same thread or another thread. A
-     * single read or skip of this many bytes will not block, but may read or
-     * skip fewer bytes.
-     *
-     * @return an estimate of the number of bytes that can be read (or skipped
-     *         over) from this input stream without blocking or {@code 0} when
-     *         it reaches the end of the input stream.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public int available() throws IOException {
-        return in.available();
     }
 
     /**
@@ -126,10 +131,8 @@ public class StreamInput implements Input {
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public int read(final long position, final byte[] buffer, final int offset, final int length)
-            throws IOException {
-        throw new UnsupportedOperationException(
-                "Positioned read is not supported by this implementation");
+    public int read(final long position, final byte[] buffer, final int offset, final int length) throws IOException {
+        throw new UnsupportedOperationException("Positioned read is not supported by this implementation");
     }
 
     /**
@@ -143,20 +146,20 @@ public class StreamInput implements Input {
      */
     @Override
     public void seek(final long position) throws IOException {
-        throw new UnsupportedOperationException(
-                "Seek is not supported by this implementation");
+        throw new UnsupportedOperationException("Seek is not supported by this implementation");
     }
 
     /**
      * Overrides the
-     * {@link org.apache.commons.crypto.stream.input.Input#seek(long)}. Closes
-     * this input and releases any system resources associated with the under
-     * layer input.
+     * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
+     * over and discards {@code n} bytes of data from this input stream.
      *
+     * @param n the number of bytes to be skipped.
+     * @return the actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
     @Override
-    public void close() throws IOException {
-        in.close();
+    public long skip(final long n) throws IOException {
+        return in.skip(n);
     }
 }

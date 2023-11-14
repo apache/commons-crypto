@@ -13,18 +13,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package org.apache.commons.crypto.jna;
+
+import java.util.Objects;
 
 import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.random.CryptoRandom;
+import org.apache.commons.crypto.utils.Utils;
 
 /**
- * Public class to give access to the package protected class objects
+ * Provides access to package protected class objects and a {@link #main(String[])} method that prints version information.
  */
 public final class OpenSslJna {
+
+    private final static String KEY_DEBUG = Crypto.CONF_PREFIX + "debug";
 
     /**
      * Logs debug messages.
@@ -32,22 +36,26 @@ public final class OpenSslJna {
      * @param format See {@link String#format(String, Object...)}.
      * @param args   See {@link String#format(String, Object...)}.
      */
-    static void debug(final String format, final Object... args) {
+    static void debug(final Object format, final Object... args) {
         // TODO Find a better way to do this later.
-        if (Boolean.getBoolean(Crypto.CONF_PREFIX + "debug")) {
-            System.out.println(String.format(format, args));
+        if (Boolean.getBoolean(KEY_DEBUG)) {
+            System.out.println(String.format(Objects.toString(format), args));
         }
     }
 
     /**
-     * @return The cipher class of JNA implementation
+     * Gets the cipher class of JNA implementation.
+     *
+     * @return The cipher class of JNA implementation.
      */
     public static Class<? extends CryptoCipher> getCipherClass() {
         return OpenSslJnaCipher.class;
     }
 
     /**
-     * @return The random class of JNA implementation
+     * Gets the random class of JNA implementation.
+     *
+     * @return The random class of JNA implementation.
      */
     public static Class<? extends CryptoRandom> getRandomClass() {
         return OpenSslJnaCryptoRandom.class;
@@ -65,26 +73,47 @@ public final class OpenSslJna {
     }
 
     /**
-     * @return the error of JNA
+     * Gets the error from the JNA.
+     *
+     * @return the error from the JNA.
      */
     public static Throwable initialisationError() {
         return OpenSslNativeJna.INIT_ERROR;
     }
 
     /**
-     * @return true if JNA native loads successfully
+     * Tests whether NA native loads successfully.
+     *
+     * @return {@code true} if JNA native loaded successfully.
      */
     public static boolean isEnabled() {
         return OpenSslNativeJna.INIT_OK;
     }
 
-    public static void main(final String[] args) {
-        info("isEnabled(): %s", isEnabled());
+    /**
+     * Main API.
+     *
+     * @param args command line arguments.
+     * @throws Throwable Throws value from {@link #initialisationError()}.
+     */
+    public static void main(final String[] args) throws Throwable {
+        // These are used by JNA code if defined:
+        info("jna.library.path=%s", System.getProperty("jna.library.path"));
+        info("jna.platform.library.path=%s", System.getProperty("jna.platform.library.path"));
+        info("commons.crypto.OpenSslNativeJna=%s\n", System.getProperty("commons.crypto.OpenSslNativeJna"));
+        // can set jna.debug_load=true for loading info
+        info(Crypto.getComponentName() + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
         final Throwable initialisationError = initialisationError();
-        info("initialisationError(): %s", initialisationError);
         if (initialisationError != null) {
+            info("initialisationError(): %s", initialisationError);
             System.err.flush(); // helpful for stack traces to not mix in other output.
-            initialisationError.printStackTrace();
+            throw initialisationError; // propagate to make error obvious
+        }
+        for (int i = 0; i <= Utils.OPENSSL_VERSION_MAX_INDEX; i++) {
+            String data = OpenSSLVersion(i);
+            if (!"not available".equals(data)) {
+                info("OpenSSLVersion(%d): %s", i, data);
+            }
         }
     }
 
@@ -97,5 +126,15 @@ public final class OpenSslJna {
      */
     static String OpenSSLVersion(final int type) {
          return OpenSslNativeJna.OpenSSLVersion(type);
+    }
+
+    /**
+     * Constructs a new instance.
+     *
+     * @deprecated Will be private in the next major release.
+     */
+    @Deprecated
+    public OpenSslJna() {
+        // empty
     }
 }

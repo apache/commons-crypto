@@ -13,24 +13,37 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package org.apache.commons.crypto.random;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
-class DummyRandom implements CryptoRandom {
+/**
+ * Simulates scenarios where {@link OpenSslCryptoRandom} fails in the static code block {@code checkNative()} or
+ * {@code !OpenSslCryptoRandomNative.nextRandBytes(new byte[1])} is false.
+ */
+public class ExceptionInInitializerErrorRandom implements CryptoRandom {
 
-    // Should fail with NoSuchMethodException
-    DummyRandom() {
+    static {
+        try {
+            check();
+        } catch (final GeneralSecurityException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
+    private static void check() throws GeneralSecurityException {
+        throw new GeneralSecurityException("ExceptionInInitializerErrorRandom init failed");
     }
 
     @Override
-    public void close() {
+    public void close() throws IOException {
+        // empty
     }
 
     @Override
-    public void nextBytes(final byte[] bytes) {
+    public void nextBytes(byte[] bytes) {
+        // empty
     }
-
 }

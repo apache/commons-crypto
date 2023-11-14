@@ -18,7 +18,11 @@
 include Makefile.common
 
 COMMONS_CRYPTO_OUT:=$(TARGET)/$(commons-crypto)-$(os_arch)
-COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpenSslCryptoRandomNative.o OpenSslNative.o OpenSslInfoNative.o)
+COMMONS_CRYPTO_OBJ:=$(addprefix $(COMMONS_CRYPTO_OUT)/,OpenSslCryptoRandomNative.o OpenSslNative.o OpenSslInfoNative.o DynamicLoader.o)
+
+# Shorthand for local dependencies
+CRYPTO_H:=$(SRC_NATIVE)/org/apache/commons/crypto/org_apache_commons_crypto.h lib/include/config.h
+CRYPTO_RANDOM_H:=$(SRC_NATIVE)/org/apache/commons/crypto/random/org_apache_commons_crypto_random.h
 
 # Windows uses different path separators
 ifeq ($(OS_NAME),Windows)
@@ -35,28 +39,35 @@ endif
 NATIVE_TARGET_DIR:=$(TARGET)/classes/org/apache/commons/crypto/native/$(OS_NAME)/$(OS_ARCH)
 NATIVE_DLL:=$(NATIVE_TARGET_DIR)/$(LIBNAME)
 
-all: $(NATIVE_DLL)
+all: show $(NATIVE_DLL)
 
-#$(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h: $(TARGET)/classes/org/apache/commons/crypto/cipher/OpenSslNative.class
-#	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpenSslNative
+show:
+	@echo "=== OS_NAME=$(OS_NAME) OS_ARCH=$(OS_ARCH) os_arch=$(os_arch) ==="
 
-#$(TARGET)/jni-classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.h: $(TARGET)/classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.class
-#	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.random.OpenSslCryptoRandomNative
+$(TARGET)/jni-classes/org/apache/commons/crypto/cipher/OpenSslNative.h: $(TARGET)/classes/org/apache/commons/crypto/cipher/OpenSslNative.class
+	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.cipher.OpenSslNative
 
-$#(TARGET)/jni-classes/org/apache/commons/crypto/OpenSslInfoNative.h: $(TARGET)/classes/org/apache/commons/crypto/OpenSslInfoNative.class
-#	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.OpenSslInfoNative
+$(TARGET)/jni-classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.h: $(TARGET)/classes/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.class
+	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.random.OpenSslCryptoRandomNative
 
-$(COMMONS_CRYPTO_OUT)/OpenSslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpenSslNative.c $(TARGET)/jni-classes/org_apache_commons_crypto_cipher_OpenSslNative.h
+$(TARGET)/jni-classes/org/apache/commons/crypto/OpenSslInfoNative.h: $(TARGET)/classes/org/apache/commons/crypto/OpenSslInfoNative.class
+	$(JAVAH) -force -classpath $(TARGET)/classes -o $@ org.apache.commons.crypto.OpenSslInfoNative
+
+$(COMMONS_CRYPTO_OUT)/OpenSslNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/cipher/OpenSslNative.c $(CRYPTO_H) $(TARGET)/jni-classes/org_apache_commons_crypto_cipher_OpenSslNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(COMMONS_CRYPTO_OUT)/OpenSslCryptoRandomNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c $(TARGET)/jni-classes/org_apache_commons_crypto_random_OpenSslCryptoRandomNative.h
+$(COMMONS_CRYPTO_OUT)/OpenSslCryptoRandomNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c $(CRYPTO_H) $(CRYPTO_RANDOM_H) $(TARGET)/jni-classes/org_apache_commons_crypto_random_OpenSslCryptoRandomNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(COMMONS_CRYPTO_OUT)/OpenSslInfoNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/OpenSslInfoNative.c $(TARGET)/jni-classes/org_apache_commons_crypto_OpenSslInfoNative.h
+$(COMMONS_CRYPTO_OUT)/OpenSslInfoNative.o : $(SRC_NATIVE)/org/apache/commons/crypto/OpenSslInfoNative.c $(CRYPTO_H) $(TARGET)/jni-classes/org_apache_commons_crypto_OpenSslInfoNative.h
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -DVERSION='"$(VERSION)"' -DPROJECT_NAME='"$(PROJECT_NAME)"' -I"$(TARGET)/jni-classes" -c $< -o $@
+
+$(COMMONS_CRYPTO_OUT)/DynamicLoader.o : $(SRC_NATIVE)/org/apache/commons/crypto/DynamicLoader.c $(CRYPTO_H)
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(COMMONS_CRYPTO_OUT)/$(LIBNAME): $(COMMONS_CRYPTO_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $+ $(LINKFLAGS)
@@ -66,14 +77,14 @@ clean:
 	$(DELTREE) $(subst /,$(FSEP),$(TARGET)/jni-classes)
 	$(DELTREE) $(subst /,$(FSEP),$(COMMONS_CRYPTO_OUT))
 
-native: $(NATIVE_DLL)
+native: show $(NATIVE_DLL)
 
 $(NATIVE_DLL): $(COMMONS_CRYPTO_OUT)/$(LIBNAME)
 	@mkdir -p $(@D)
 	cp $< $@
-	@mkdir -p $(NATIVE_TARGET_DIR)
-	cp $< $(NATIVE_TARGET_DIR)/$(LIBNAME)
 
+# These targets should correspond with the entries in the list 'known_os_archs' defined in Makefile.common
+# e.g. linux32 corresponds with Linux-x86
 win32:
 	$(MAKE) native CROSS_PREFIX=i686-w64-mingw32- OS_NAME=Windows OS_ARCH=x86
 
@@ -86,6 +97,12 @@ mac32:
 
 mac64:
 	$(MAKE) native OS_NAME=Mac OS_ARCH=x86_64
+
+macArm64:
+	$(MAKE) native OS_NAME=Mac OS_ARCH=arm64
+
+mac-aarch64:
+	$(MAKE) native OS_NAME=Mac OS_ARCH=aarch64
 
 linux32:
 	$(MAKE) native OS_NAME=Linux OS_ARCH=x86
@@ -108,8 +125,25 @@ linux-armhf:
 linux-aarch64:
 	$(MAKE) native CROSS_PREFIX=aarch64-linux-gnu- OS_NAME=Linux OS_ARCH=aarch64
 
-clean-native-linux32:
-	$(MAKE) clean-native OS_NAME=Linux OS_ARCH=x86
+# for cross-compilation on Ubuntu, install the g++-riscv64-linux-gnu
+linux-riscv64:
+	$(MAKE) native CROSS_PREFIX=riscv64-linux-gnu- OS_NAME=Linux OS_ARCH=riscv64
 
-clean-native-win32:
-	$(MAKE) clean-native OS_NAME=Windows OS_ARCH=x86
+linux-ppc: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc
+
+linux-ppc64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=Linux OS_ARCH=ppc64
+
+sunos32: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=x86
+
+sunos64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=x86_64
+
+sunos-sparc: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=SunOS OS_ARCH=sparc
+
+aix-ppc64: # TODO: Untested; may need additional CROSS_PREFIX define
+	$(MAKE) native OS_NAME=AIX OS_ARCH=ppc64
+

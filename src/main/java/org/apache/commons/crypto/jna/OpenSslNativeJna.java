@@ -27,7 +27,7 @@ import com.sun.jna.NativeLibrary;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
 
-class OpenSslNativeJna {
+final class OpenSslNativeJna {
 
     static final int OPENSSL_INIT_ENGINE_RDRAND = 0x00000200;
 
@@ -38,232 +38,168 @@ class OpenSslNativeJna {
 
     static final Throwable INIT_ERROR;
 
-    public static final long VERSION;
-    public static final long VERSION_1_0_X = 0x10000000;
-    public static final long VERSION_1_1_X = 0x10100000;
+    /** Full version from JNA call. */
+    static final long VERSION;
+
+    /** Major Minor version from JNA call, without the maintenance level. */
+    static final long VERSION_X_Y;
+
+    static final long VERSION_1_1_X = 0x10100000;
+    static final long VERSION_2_0_X = 0x20000000;
+    static final long VERSION_3_0_X = 0x30000000;
+    static final long VERSION_3_1_X = 0x30100000;
+
+    private static final OpenSslInterfaceNativeJna JnaImplementation;
 
     static {
+        OpenSslJna.debug("OpenSslNativeJna static init start");
         final String libraryName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
-        OpenSslJna.debug("NativeLibrary.getInstance('%s')%n", libraryName);
+        OpenSslJna.debug("OpenSslNativeJna NativeLibrary.getInstance('%s')", libraryName);
+        @SuppressWarnings("resource") // NativeLibrary.getInstance returns a singleton
         final NativeLibrary crypto = NativeLibrary.getInstance(libraryName);
-        Function version = null;
+        OpenSslJna.debug("OpenSslNativeJna NativeLibrary.getInstance('%s') -> %s", libraryName, crypto);
+        Function versionFunction = null;
         try {
-            version = crypto.getFunction("SSLeay");
+            versionFunction = crypto.getFunction("SSLeay"); // Needed for LibreSSL 2.x
         } catch (final UnsatisfiedLinkError e) {
-            // Swallow the Error.
+            versionFunction = crypto.getFunction("OpenSSL_version_num");
         }
+        // Must find one of the above two functions; else give up
 
-        if (version == null) {
-            VERSION = VERSION_1_1_X;
-        } else {
-            VERSION = VERSION_1_0_X;
-        }
+        VERSION = versionFunction.invokeLong(new Object[]{});
+        //CHECKSTYLE:OFF
+        VERSION_X_Y = VERSION & 0xffff0000; // keep only major.minor checkstyle:
+        //CHECKSTYLE:ON
 
-        if (VERSION == VERSION_1_1_X) {
-            INIT_OK = OpenSsl11XNativeJna.INIT_OK;
-        } else {
-            INIT_OK = OpenSsl10XNativeJna.INIT_OK;
-        }
+        OpenSslJna.debug(String.format("OpenSslNativeJna detected version 0x%x => 0x%x", VERSION, VERSION_X_Y));
 
-        if (INIT_OK) {
-            INIT_ERROR = null;
-        } else if (VERSION == VERSION_1_1_X) {
-            INIT_ERROR = OpenSsl11XNativeJna.INIT_ERROR;
-        } else {
-            INIT_ERROR = OpenSsl10XNativeJna.INIT_ERROR;
-        }
+        if (VERSION_X_Y == VERSION_1_1_X) {
+            OpenSslJna.debug("Creating OpenSsl11XNativeJna");
+            JnaImplementation = new OpenSsl11XNativeJna();
+        } else if (VERSION_X_Y == VERSION_2_0_X) {
+            OpenSslJna.debug("Creating LibreSsl20XNativeJna");
+            JnaImplementation = new LibreSsl20XNativeJna();
+       } else if (VERSION_X_Y == VERSION_3_0_X || VERSION_X_Y == VERSION_3_1_X) { // assume these are the same
+           OpenSslJna.debug("Creating OpenSsl30XNativeJna");
+           JnaImplementation = new OpenSsl30XNativeJna();
+       } else {
+            throw new UnsupportedOperationException(String.format("Unsupported Version: %x", VERSION_X_Y));
+       }
+
+        INIT_OK = JnaImplementation._INIT_OK();
+
+        INIT_ERROR = INIT_OK ? null : JnaImplementation._INIT_ERROR();
+        OpenSslJna.debug("OpenSslNativeJna INIT_OK = %s, INIT_ERROR = '%s', JnaImplementation = %s", INIT_OK, INIT_ERROR, JnaImplementation.getClass());
+        OpenSslJna.debug("OpenSslNativeJna static init end");
     }
 
     public static PointerByReference ENGINE_by_id(final String string) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.ENGINE_by_id(string);
-        }
-        return OpenSsl10XNativeJna.ENGINE_by_id(string);
+        return JnaImplementation._ENGINE_by_id(string);
     }
 
-    public static void ENGINE_finish(final PointerByReference rdrandEngine) {
-        if (VERSION == VERSION_1_1_X) {
-            OpenSsl11XNativeJna.ENGINE_finish(rdrandEngine);
-        } else {
-            OpenSsl10XNativeJna.ENGINE_finish(rdrandEngine);
-        }
+    public static int ENGINE_cleanup() {
+        return JnaImplementation._ENGINE_cleanup();
     }
 
-    public static void ENGINE_free(final PointerByReference rdrandEngine) {
-        if (VERSION == VERSION_1_1_X) {
-            OpenSsl11XNativeJna.ENGINE_free(rdrandEngine);
-        } else {
-            OpenSsl10XNativeJna.ENGINE_free(rdrandEngine);
-        }
+    public static int ENGINE_finish(final PointerByReference rdrandEngine) {
+        return JnaImplementation._ENGINE_finish(rdrandEngine);
+    }
+
+    public static int ENGINE_free(final PointerByReference rdrandEngine) {
+        return JnaImplementation._ENGINE_free(rdrandEngine);
     }
 
     public static int ENGINE_init(final PointerByReference rdrandEngine) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.ENGINE_init(rdrandEngine);
-        }
-        return OpenSsl10XNativeJna.ENGINE_init(rdrandEngine);
+        return JnaImplementation._ENGINE_init(rdrandEngine);
+    }
+
+    public static void ENGINE_load_rdrand() {
+        JnaImplementation._ENGINE_load_rdrand();
     }
 
     public static int ENGINE_set_default(final PointerByReference rdrandEngine, final int eNGINE_METHOD_RAND) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
-        }
-        return OpenSsl10XNativeJna.ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
+        return JnaImplementation._ENGINE_set_default(rdrandEngine, eNGINE_METHOD_RAND);
     }
 
-    public static String ERR_error_string(final NativeLong err, final Object object) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.ERR_error_string(err, null);
-        }
-        return OpenSsl10XNativeJna.ERR_error_string(err, null);
+    public static String ERR_error_string(final NativeLong err, final char[] object) {
+        return JnaImplementation._ERR_error_string(err, null);
     }
 
     public static NativeLong ERR_peek_error() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.ERR_peek_error();
-        }
-        return OpenSsl10XNativeJna.ERR_peek_error();
+        return JnaImplementation._ERR_peek_error();
     }
 
     public static PointerByReference EVP_aes_128_cbc() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_aes_128_cbc();
-        }
-        return OpenSsl10XNativeJna.EVP_aes_128_cbc();
+        return JnaImplementation._EVP_aes_128_cbc();
     }
 
     public static PointerByReference EVP_aes_128_ctr() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_aes_128_ctr();
-        }
-        return OpenSsl10XNativeJna.EVP_aes_128_ctr();
+        return JnaImplementation._EVP_aes_128_ctr();
     }
 
     public static PointerByReference EVP_aes_192_cbc() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_aes_192_cbc();
-        }
-        return OpenSsl10XNativeJna.EVP_aes_192_cbc();
+        return JnaImplementation._EVP_aes_192_cbc();
     }
 
     public static PointerByReference EVP_aes_192_ctr() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_aes_192_ctr();
-        }
-        return OpenSsl10XNativeJna.EVP_aes_192_ctr();
+        return JnaImplementation._EVP_aes_192_ctr();
     }
 
     public static PointerByReference EVP_aes_256_cbc() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_aes_256_cbc();
-        }
-        return OpenSsl10XNativeJna.EVP_aes_256_cbc();
+        return JnaImplementation._EVP_aes_256_cbc();
     }
 
     public static PointerByReference EVP_aes_256_ctr() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_aes_256_ctr();
-        }
-        return OpenSsl10XNativeJna.EVP_aes_256_ctr();
+        return JnaImplementation._EVP_aes_256_ctr();
+    }
+
+    public static void EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
+        JnaImplementation._EVP_CIPHER_CTX_cleanup(context);
     }
 
     public static void EVP_CIPHER_CTX_free(final PointerByReference context) {
-        if (VERSION == VERSION_1_1_X) {
-            OpenSsl11XNativeJna.EVP_CIPHER_CTX_free(context);
-        } else {
-            OpenSsl10XNativeJna.EVP_CIPHER_CTX_free(context);
-        }
+        JnaImplementation._EVP_CIPHER_CTX_free(context);
     }
 
     public static PointerByReference EVP_CIPHER_CTX_new() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_CIPHER_CTX_new();
-        }
-        return OpenSsl10XNativeJna.EVP_CIPHER_CTX_new();
+        return JnaImplementation._EVP_CIPHER_CTX_new();
     }
 
-    public static void EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding) {
-        if (VERSION == VERSION_1_1_X) {
-            OpenSsl11XNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
-        } else {
-            OpenSsl10XNativeJna.EVP_CIPHER_CTX_set_padding(context, padding);
-        }
+    public static int EVP_CIPHER_CTX_set_padding(final PointerByReference context, final int padding) {
+        return JnaImplementation._EVP_CIPHER_CTX_set_padding(context, padding);
     }
 
     public static int EVP_CipherFinal_ex(final PointerByReference context, final ByteBuffer outBuffer,
             final int[] outlen) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
-        }
-        return OpenSsl10XNativeJna.EVP_CipherFinal_ex(context, outBuffer, outlen);
+        return JnaImplementation._EVP_CipherFinal_ex(context, outBuffer, outlen);
     }
 
     public static int EVP_CipherInit_ex(final PointerByReference context, final PointerByReference algo,
             final Object object, final byte[] encoded, final byte[] iv, final int cipherMode) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_CipherInit_ex(context, algo, null, encoded, iv,
-                    cipherMode);
-        }
-        return OpenSsl10XNativeJna.EVP_CipherInit_ex(context, algo, null, encoded, iv,
-                cipherMode);
+        return JnaImplementation._EVP_CipherInit_ex(context, algo, null, encoded, iv, cipherMode);
     }
 
     public static int EVP_CipherUpdate(final PointerByReference context, final ByteBuffer outBuffer,
             final int[] outlen, final ByteBuffer inBuffer, final int remaining) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
-                    remaining);
-        }
-        return OpenSsl10XNativeJna.EVP_CipherUpdate(context, outBuffer, outlen, inBuffer,
-                remaining);
-    }
-
-    public static int RAND_bytes(final ByteBuffer buf, final int length) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.RAND_bytes(buf, length);
-        }
-        return OpenSsl10XNativeJna.RAND_bytes(buf, length);
-    }
-
-    public static PointerByReference RAND_get_rand_method() {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.RAND_get_rand_method();
-        }
-        return OpenSsl10XNativeJna.RAND_get_rand_method();
-    }
-
-    public static PointerByReference RAND_SSLeay() {
-        if (VERSION == VERSION_1_1_X) {
-            return null;
-        }
-        return OpenSsl10XNativeJna.RAND_SSLeay();
+        return JnaImplementation._EVP_CipherUpdate(context, outBuffer, outlen, inBuffer, remaining);
     }
 
     public static String OpenSSLVersion(final int i) {
-        if (VERSION == VERSION_1_1_X) {
-            return OpenSsl11XNativeJna.OpenSSL_version(i);
-        }
-        return OpenSsl10XNativeJna.SSLeay_version(i);
+        return JnaImplementation._OpenSSL_version(i);
     }
 
-    public static void ENGINE_load_rdrand() {
-        if (VERSION == VERSION_1_1_X) {
-            return;
-        }
-        OpenSsl10XNativeJna.ENGINE_load_rdrand();
+    public static int RAND_bytes(final ByteBuffer buf, final int length) {
+        return JnaImplementation._RAND_bytes(buf, length);
     }
 
-    public static void ENGINE_cleanup() {
-        if (VERSION == VERSION_1_1_X) {
-            return;
-        }
-        OpenSsl10XNativeJna.ENGINE_cleanup();
+    public static PointerByReference RAND_get_rand_method() {
+        return JnaImplementation._RAND_get_rand_method();
     }
 
-    public static void EVP_CIPHER_CTX_cleanup(final PointerByReference context) {
-        if (VERSION == VERSION_1_1_X) {
-            return;
-        }
-        OpenSsl10XNativeJna.EVP_CIPHER_CTX_cleanup(context);
+    public static PointerByReference RAND_SSLeay() {
+        return JnaImplementation._RAND_SSLeay();
+    }
+
+    private OpenSslNativeJna() {
     }
 }

@@ -26,21 +26,21 @@ import org.apache.commons.crypto.random.CryptoRandom;
  * and implemented in the file
  * src/main/native/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c
  */
-class OpenSslInfoNative {
-
-    public static final long VERSION_1_0_2X = 0x10002000;
-    public static final long VERSION_1_1_0X = 0x10100000;
+final class OpenSslInfoNative {
 
     /**
-     * Makes the constructor private.
+     * Return the name used to load the dynamic linked library.
+     *
+     * @return the name used to load the library (e.g. crypto.dll)
      */
-    private OpenSslInfoNative() {
-    }
+    public static native String DLLName();
 
     /**
-     * @return version of native
+     * Return the path to the loaded dynamic linked library.
+     * [Currently not implemented on Windows]
+     * @return the path to the library that was loaded; may be {@code null}.
      */
-    public static native String NativeVersion();
+    public static native String DLLPath();
 
     /**
      * @return name of native
@@ -54,6 +54,11 @@ class OpenSslInfoNative {
 
 
     /**
+     * @return version of native
+     */
+    public static native String NativeVersion();
+
+    /**
      * @return the value of OPENSSL_VERSION_NUMBER.
      */
     public static native long OpenSSL();
@@ -65,4 +70,10 @@ class OpenSslInfoNative {
      * @return The text variant of the version number and the release date.
      */
     public static native String OpenSSLVersion(int type);
+
+    /**
+     * Makes the constructor private.
+     */
+    private OpenSslInfoNative() {
+    }
 }

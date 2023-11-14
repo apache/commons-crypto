@@ -1,0 +1,113 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Java AdHoc
+
+# Check for openssl and crypto installs
+
+on:
+  # allow direct trigger
+  workflow_dispatch:
+  # and self-trigger
+  push:
+    paths:
+      - '**/workflows/adhoctest.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    # env:
+      # LD_LIBRARY_PATH:  "/usr/local"
+      # DYLD_LIBRARY_PATH:  "/usr/local"
+      # ZLD_LIBRARY_PATH:  "/usr/local"
+      # ZDYLD_LIBRARY_PATH:  "/usr/local"
+      # DYLD:  "/usr/local"
+      # DYLD_:  "/usr/local"
+      # commons.crypto.debug: true
+    strategy:
+      matrix:
+        # os: [macos-latest]
+        os: [windows-latest]
+        java: [ 8 ]
+        # ref: [ 'rel/commons-crypto-1.1.0', master ]
+        ref: [ master ]
+      fail-fast: false
+
+    steps:
+    # - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+    #   with:
+    #     persist-credentials: false
+    #     ref: ${{ matrix.ref }}
+    # - name: Set up JDK ${{ matrix.java }}
+    #   uses: actions/setup-java@v3.5.1
+    #   with:
+    #     distribution: 'temurin'
+    #     java-version: ${{ matrix.java }}
+    - name: OpenSSL version
+      run: openssl version -a
+    - name: Find libcrypto
+      run: |
+        dir -s 'C:\Program Files\' libcrypto.dll
+    # - name: Compile with Maven
+    #   env:
+    #     OPENSSL_HOME: "C:\\Miniconda\\Library"
+    #   run: mvn -V compile -D"rat.skip" -D"animal.sniffer.skip" --no-transfer-progress -DtrimStackTrace=false
+    # - name: Run sample Crypto
+    #   run: |
+    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.Crypto" -D"commons.crypto.debug=true"
+    # - name: Run sample OpenSslJna (default library)
+    #   if: always()
+    #   run: |
+    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"commons.crypto.debug=true"
+    # # - name: Run sample OpenSslJna
+    # #   if: always()
+    # #   run: |
+    # #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=C:/Miniconda/Library/bin"
+    # - name: Run sample OpenSslJna (miniconda lib)
+    #   if: always()
+    #   run: |
+    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/miniconda/lib" -D"commons.crypto.debug=true"
+    # - name: Run sample OpenSslJna (Cellar lib from openssl version -a)
+    #   if: always()
+    #   run: |
+    #     mvn -q exec:java -D"exec.mainClass=org.apache.commons.crypto.jna.OpenSslJna" -D"jna.library.path=/usr/local/Cellar/openssl@1.1/1.1.1v/lib" -D"commons.crypto.debug=true"
+    # # - name: Find OpenSSL Mac
+    # #   if: ${{ matrix.os == 'macos-latest' }}
+    # #   run: |
+    # #     for i in $(which -a openssl) ; do  echo $i; $i version ; echo ""; done
+    # #     set -v
+    # #     find /usr/lib -name libcrypto*.dylib -ls || true
+    # #     find /usr/local -name libcrypto*.dylib -ls || true
+    # #     find /opt/local/lib -name libcrypto*.dylib -ls || true
+    # # - name: Find OpenSSL Win
+    # #   if: ${{ matrix.os == 'windows-latest' }}
+    # #   run: |
+    # #     where /T openssl
+    # #     echo "==="
+    # #     where /T libcrypto.dll
+    # #     echo "==="
+    # #     dir "C:\Program Files\OpenSSL\bin\"
+    # #     C:
+    # #     cd \
+    # #     dir /s libcrypto*.dll
+    # #   shell: cmd
+    # - name: env sort
+    #   if: always()
+    #   run: |
+    #     env | sort

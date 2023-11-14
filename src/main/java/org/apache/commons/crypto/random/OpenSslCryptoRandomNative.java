@@ -24,26 +24,26 @@ package org.apache.commons.crypto.random;
  * and implemented in the file
  * src/main/native/org/apache/commons/crypto/random/OpenSslCryptoRandomNative.c
  */
-class OpenSslCryptoRandomNative {
+final class OpenSslCryptoRandomNative {
+
+    /**
+     * Declares a native method to initialize SR.
+     */
+    public static native void initSR();
+
+    /**
+     * Judges whether to use {@link OpenSslCryptoRandomNative} to generate the
+     * user-specified number of random bits.
+     *
+     * @param bytes the array to be filled in with random bytes.
+     * @return {@code true} if use {@link OpenSslCryptoRandomNative} to generate the
+     *         user-specified number of random bits.
+     */
+    public static native boolean nextRandBytes(byte[] bytes);
 
     /**
      * The private constructor of {@link OpenSslCryptoRandomNative}.
      */
     private OpenSslCryptoRandomNative() {
     }
-
-    /**
-     * Declares a native method to initialize SR.
-     */
-    public native static void initSR();
-
-    /**
-     * Judges whether use {@link OpenSslCryptoRandomNative} to generate the
-     * user-specified number of random bits.
-     *
-     * @param bytes the array to be filled in with random bytes.
-     * @return true if use {@link OpenSslCryptoRandomNative} to generate the
-     *         user-specified number of random bits.
-     */
-    public native static boolean nextRandBytes(byte[] bytes);
 }
