@@ -1,0 +1,74 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Create Docker cross-build images
+
+on:
+  # allow direct trigger
+  workflow_dispatch:
+  # only rarely needs to run
+  push:
+    paths:
+      - '**/docker_images.yml'
+      - 'src/docker/Dockerfile*'
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Image prefix (lower case)
+        run: |
+          echo "IMAGE_PREFIX=$(echo ${{ env.REGISTRY }}/${{ github.repository }} | tr '[A-Z]' '[a-z]')" >>$GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push main image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: src/docker
+          file: src/docker/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_PREFIX }}:latest
+      - name: Build and push aarch64
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: src/docker
+          file: src/docker/Dockerfile.aarch64
+          platforms: linux/aarch64
+          push: true
+          tags: ${{ env.IMAGE_PREFIX }}-aarch64:latest
+      - name: Build and push riscv64
+        uses: docker/build-push-action@v5
+        with:
+          context: src/docker
+          file: src/docker/Dockerfile.riscv64
+          platforms: linux/riscv64
+          push: true
+          tags: ${{ env.IMAGE_PREFIX }}-riscv64:latest

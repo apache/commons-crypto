@@ -1,0 +1,56 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Java Cross Test
+
+on:
+  # allow direct trigger
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/native/**'
+      - '**/maven_crosstest.yml'
+      - 'src/docker/*'
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  test-cross:
+    strategy:
+      matrix:
+        include:
+          - platform: aarch64
+          - platform: riscv64
+            jna_override: "-Djna.version=5.12.0" # See https://github.com/java-native-access/jna/issues/1557
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
+      - uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
+      - name: Image prefix (lower case)
+        run: |
+          echo "IMAGE_PREFIX=$(echo ${{ env.REGISTRY }}/${{ github.repository }} | tr '[A-Z]' '[a-z]')" >>$GITHUB_ENV
+      - name: Build package
+        run: |
+          IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run crypto-gh src/docker/build.sh
+      - name: Run on platform
+        run: |
+          IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run crypto-${{ matrix.platform }}-gh \
+            mvn -V -B -ntp surefire:test ${{ matrix.jna_override }}

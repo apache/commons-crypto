@@ -1,0 +1,42 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Version of docker-compose for use with Github actions
+# References remote images and excludes build info
+
+version: '3'
+services:
+  crypto-gh:
+    image: ${IMAGE_PREFIX}:latest
+    # mount the source and Maven repo
+    volumes:
+      - ../..:/home/crypto
+      - ~/.m2/repository:/root/.m2/repository
+
+  crypto-aarch64-gh:
+    image: ${IMAGE_PREFIX}-aarch64:latest
+    platform: linux/arm64/v8
+    # mount the source and Maven repo
+    volumes:
+      - ../..:/home/crypto
+      - ~/.m2/repository:/root/.m2/repository
+
+  crypto-riscv64-gh:
+    image: ${IMAGE_PREFIX}-riscv64:latest
+    platform: linux/riscv64
+    # mount the source and Maven repo
+    volumes:
+      - ../..:/home/crypto
+      - ~/.m2/repository:/root/.m2/repository
