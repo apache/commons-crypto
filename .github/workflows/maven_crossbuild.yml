@@ -44,9 +44,10 @@ jobs:
       - uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
         with:
             platforms: ${{ matrix.platform }}
-      - run: |
-          # Build package
+      - name: Build package
+        run: |
           docker compose -f src/docker/docker-compose.yaml run crypto src/docker/build.sh
-          # Run on platform
+      - name: Run on platform
+        run: |
           docker compose -f src/docker/docker-compose.yaml run crypto-${{ matrix.platform }} \
             mvn -V -B -ntp surefire:test ${{ matrix.jna_override }}
