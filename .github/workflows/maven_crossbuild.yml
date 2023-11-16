@@ -24,6 +24,7 @@ on:
     paths:
       - '**/native/**'
       - '**/maven_crossbuild.yml'
+      - 'src/docker/*'
 
 permissions:
   contents: read

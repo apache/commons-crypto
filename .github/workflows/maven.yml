@@ -23,10 +23,13 @@ on:
   push:
     paths-ignore:
       - '**/workflows/*.yml'
+      - 'src/docker/*'
       - '!**/workflows/maven.yml'
   pull_request:
     paths-ignore:
       - '**/workflows/*.yml'
+      - 'src/docker/*'
+      - '!**/workflows/maven.yml'
 
 permissions:
   contents: read

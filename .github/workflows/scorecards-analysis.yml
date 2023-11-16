@@ -23,6 +23,7 @@ on:
     branches: [ "master" ]
     paths-ignore:
       - '**/workflows/*.yml'
+      - 'src/docker/*'
 
 permissions: read-all
 

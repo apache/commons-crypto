@@ -21,9 +21,11 @@ on:
   push:
     paths-ignore:
       - '**/workflows/*.yml'
+      - 'src/docker/*'
   pull_request:
     paths-ignore:
       - '**/workflows/*.yml'
+      - 'src/docker/*'
 
 permissions:
   contents: read
