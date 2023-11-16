@@ -20,11 +20,11 @@ name: Java Cross Build
 on:
   # allow direct trigger
   workflow_dispatch:
-  push:
-    paths:
-      - '**/native/**'
-      - '**/maven_crossbuild.yml'
-      - 'src/docker/*'
+  # push:
+  #   paths:
+  #     - '**/native/**'
+  #     - '**/maven_crossbuild.yml'
+  #     - 'src/docker/*'
 
 permissions:
   contents: read
