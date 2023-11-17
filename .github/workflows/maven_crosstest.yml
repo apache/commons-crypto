@@ -23,6 +23,12 @@ on:
       - '**/native/**'
       - '**/maven_crosstest.yml'
       - 'src/docker/*'
+      - '!src/docker/Dockerfile*'
+    # Don't trigger on docker change; will be started after build
+  workflow_run:
+    workflows: ['Docker images']
+    types: [completed]
+
 
 permissions:
   contents: read
