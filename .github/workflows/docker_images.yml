@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Create Docker cross-build images
+name: Docker images
+# N.B. This name is used by maven_crosstest.yml
 
 on:
   # allow direct trigger
