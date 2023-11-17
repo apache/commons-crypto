@@ -17,7 +17,10 @@
 # for Linux 64-bit and 32-bit, and Windows 64-bit and 32-bit.
 # See the README for further details.
 
-FROM ubuntu:20.04
+FROM amd64/ubuntu:20.04
+# macOS M1 defaults to aarch64, which does not support all the 32bit dependencies
+# So force the use of amd64 as per Ubuntu
+# This also works on macOS M1 (Sonoma)
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV MAVEN_HOME=/opt/maven
