@@ -30,7 +30,7 @@ import java.util.Random;
 import javax.crypto.AEADBadTagException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.Utils;
