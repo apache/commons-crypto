@@ -306,19 +306,6 @@ The following provides more details on the included cryptographic software:
         </plugins>
       </build>
     </profile>
-
-    <profile>
-      <activation>
-        <jdk>[11.,)</jdk>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.sun.xml.bind</groupId>
-          <artifactId>jaxb-impl</artifactId>
-          <version>2.3.8</version>
-        </dependency>
-      </dependencies>
-    </profile>
   </profiles>
 
   <build>
@@ -618,6 +605,12 @@ The following provides more details on the included cryptographic software:
       <version>2.15.0</version>
     </dependency>
     <!-- testing -->
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>3.0.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
