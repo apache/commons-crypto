@@ -92,12 +92,12 @@ jobs:
     - name: OpenSSL version
       run: openssl version -a
     - name: OpenSSL engine (macos)
-      # need to override the libarary on macOS
-      if: ${{ matrix.os == 'macos-11' }}
+      # need to override the libarary path on macOS to avoid 'unsafe load' complaint
+      if: ${{ matrix.os == 'macos-11' || matrix.os == 'macos-latest' }}
       run: |
         echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
     - name: OpenSSL engine (windows)
-      # need to override the libarary on windows
+      # need to override the library name on windows else it uses the default LibreSSL
       if: ${{ matrix.os == 'windows-latest' }}
       # e.g. NAME: "libcrypto-1_1-x64.dll"
       # Not sure how to derive this automatically
