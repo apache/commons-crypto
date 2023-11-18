@@ -93,12 +93,12 @@ jobs:
       run: openssl version -a
     - name: OpenSSL engine (macos)
       # need to override the libarary path on macOS to avoid 'unsafe load' complaint
-      if: ${{ startsWith('macos',matrix.os) }}
+      if: ${{ startsWith(matrix.os,'macos') }}
       run: |
         echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
     - name: OpenSSL engine (windows)
       # need to override the library name on windows else it uses the default LibreSSL
-      if: ${{ startsWith('windows',matrix.os) }}
+      if: ${{ startsWith(matrix.os,'windows') }}
       # e.g. NAME: "libcrypto-1_1-x64.dll"
       # Not sure how to derive this automatically
       run: |
@@ -112,7 +112,7 @@ jobs:
     # Instead of defining jni.library.path and jna.library.path we need to define
     # jni.library.name and commons.crypto.OpenSslNativeJna to override the file names
     - name: Build with Maven (Windows)
-      if: ${{ startsWith('windows',matrix.os) }}
+      if: ${{ startsWith(matrix.os,'windows') }}
       # OPENSSL_HOME is needed for Windows build to find some header files
       # It's not clear how one is supposed to find the correct setting;
       # The value below was found by searching for openssl files under C (warning: slow)
@@ -125,7 +125,7 @@ jobs:
       run: |
         mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
     - name: Build with Maven (not Windows)
-      if: ${{ ! startsWith('windows',matrix.os) }}
+      if: ${{ ! startsWith(matrix.os,'windows') }}
       run: |
         mvn -V -B -ntp -DtrimStackTrace=false -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR
     - name: Check benchmark code compiles
@@ -138,7 +138,7 @@ jobs:
       # N.B. the default library fails with 'java is loading libcrypto in an unsafe way'
       # so we need to define the appropriate library for each test
       # No need to test on all OS/Java combinations
-      if: ${{ matrix.java == '8' && startsWith('ubuntu',matrix.os) }}
+      if: ${{ matrix.java == '8' && startsWith(matrix.os,'ubuntu') }}
       run: |
         mvn -V -B -ntp test -Ptestjni -D"jni.library.path=$ENGINESDIR" -Dcommons.crypto.OpenSslNativeJna=___
         mvn -V -B -ntp test -Ptestjna -D"jna.library.path=$ENGINESDIR" -Djni.library.name=___
