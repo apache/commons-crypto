@@ -34,7 +34,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-11, macos-12, macos-13, ubuntu-20.04, ubuntu-22.04]
+        os: [macos-11, macos-12, macos-13, ubuntu-20.04, ubuntu-22.04]
       fail-fast: false
 
     steps:
@@ -48,4 +48,6 @@ jobs:
       if: ${{ ! startsWith(matrix.os,'windows') }}
       run: |
         which -a openssl
-        find /usr -name libcrypto* -ls
+        find /usr -name libcrypto* -ls || true
+        for i in $(which -a openssl); do echo $i; $i version -a; echo '====='; done
+
