@@ -51,7 +51,13 @@ jobs:
         #   - java: 21
         #     os: macos-13-arm64
         #     experimental: true
-#        include:
+        include:
+          - os: macos-latest
+            java: 8
+            experimental: true
+          - os: ubuntu-latest
+            java: 8
+            experimental: true
 #          - java: 22-ea
 #            os: ubuntu-20.04
 #            experimental: true
