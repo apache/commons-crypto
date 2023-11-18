@@ -34,7 +34,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, macos-12, macos-13, ubuntu-20.04, ubuntu-22.04]
+        os: [windows-latest]
+        # os: [macos-11, macos-12, macos-13, ubuntu-20.04, ubuntu-22.04]
       fail-fast: false
 
     steps:
@@ -43,7 +44,8 @@ jobs:
     - name: Find libcrypto on Windows
       if: ${{ startsWith(matrix.os,'windows') }}
       run: |
-        dir -s 'C:\Program Files\' libcrypto*.dll
+        dir "C:\Program Files\OpenSSL*\*"
+        dir "C:\Program Files\OpenSSL*\lib\*"
     - name: Find libcrypto on !Windows
       if: ${{ ! startsWith(matrix.os,'windows') }}
       run: |
