@@ -65,6 +65,7 @@
   <body>
     <release version="1.2.1" date="202X-MM-DD" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
+      <action issue="CRYPTO-173" type="fix" dev="sebb">docker build does not work on macOS M1</action>
       <action issue="CRYPTO-167" type="fix" dev="sebb">cannot use THROW to report missing env</action>
       <action issue="CRYPTO-171" type="fix" dev="sebb">openssl(2) not supported since Sierra on macOS M1</action>
       <action                    type="fix" dev="sebb">pom.xml: copy compiler args for benchmarks</action>
@@ -83,7 +84,7 @@
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate OpenSslJna.OpenSslJna().</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate Crypto.Crypto().</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate AES.AES().</action>
-      <action dev="ggregory"     type="fix" issue="CRYPTO-169" due-to="L. C. Hsieh, Yang Jie, Gary Gregory">Add protection for the ExceptionInInitializerError scenario to the CryptoRandomFactory#getCryptoRandom(Properties) method #258.</action>
+      <action issue="CRYPTO-169" type="fix" dev="ggregory" due-to="L. C. Hsieh, Yang Jie, Gary Gregory">Add protection for the ExceptionInInitializerError scenario to the CryptoRandomFactory#getCryptoRandom(Properties) method #258.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelInput.ChannelInput(ReadableByteChannel) now throws NullPointerException on null input.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">StreamInput.StreamInput(InputStream, int) now throws NullPointerException on null input.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelOutput.ChannelOutput(WritableByteChannel) now throws NullPointerException on null input.</action>
@@ -94,8 +95,8 @@
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 64 #225.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>
       <!-- ADD -->
-      <action                    type="add" dev="sebb" due-to="Ludovic Henry">CRYPTO-172: Add support for Linux-riscv64 #264</action>
-      <action                    type="add" dev="sebb">CRYPTO-174: Allow override of SSL library name for Windows</action>
+      <action issue="CRYPTO-172" type="add" dev="sebb" due-to="Ludovic Henry">Add support for Linux-riscv64 #264</action>
+      <action issue="CRYPTO-174" type="add" dev="sebb">Allow override of SSL library name for Windows</action>
     </release>
     <release version="1.2.0" date="2023-01-14" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
