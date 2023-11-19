@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.crypto.Crypto;
+import org.apache.commons.crypto.jna.OpenSslJna;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
-import org.apache.commons.crypto.jna.OpenSslJna;
 
 /**
  * Creates {@link CryptoCipher} instances.
