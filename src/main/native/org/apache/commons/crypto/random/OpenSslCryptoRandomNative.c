@@ -22,13 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef UNIX
-#include <pthread.h>
-#include <unistd.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
-#endif
-
 #ifdef WINDOWS
 #include <windows.h>
 #endif
