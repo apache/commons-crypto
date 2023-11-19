@@ -24,6 +24,7 @@ import java.util.Properties;
 import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
+import org.apache.commons.crypto.jna.OpenSslJna;
 
 /**
  * Creates {@link CryptoRandom} instances
@@ -50,6 +51,15 @@ public class CryptoRandomFactory {
          */
         // Please ensure the property description agrees with the implementation
         OPENSSL(OpenSslCryptoRandom.class),
+
+        /**
+         * The OpenSSL Random implementation (using JNA)
+         * <p>
+         * No properties are used for configuration, but they
+         * are passed to the {@link RandomProvider#JAVA} backup implementation
+         */
+        // Please ensure the property description agrees with the implementation
+        JNA(OpenSslJna.getRandomClass()),
 
         /**
          * The SecureRandom implementation from the JVM

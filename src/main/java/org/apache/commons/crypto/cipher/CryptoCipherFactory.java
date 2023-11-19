@@ -24,6 +24,7 @@ import java.util.Properties;
 import org.apache.commons.crypto.Crypto;
 import org.apache.commons.crypto.utils.ReflectionUtils;
 import org.apache.commons.crypto.utils.Utils;
+import org.apache.commons.crypto.jna.OpenSslJna;
 
 /**
  * Creates {@link CryptoCipher} instances.
@@ -51,6 +52,15 @@ public class CryptoCipherFactory {
          */
         // Please ensure the property description agrees with the implementation
         OPENSSL(OpenSslCipher.class),
+
+        /**
+         * The OpenSSL cipher implementation (using JNA)
+         * <p>
+         * This implementation does not use any properties
+         * </p>
+         */
+        // Please ensure the property description agrees with the implementation
+        JNA(OpenSslJna.getCipherClass()),
 
         /**
          * The JCE cipher implementation from the JVM
@@ -206,3 +216,4 @@ public class CryptoCipherFactory {
     }
 
 }
+

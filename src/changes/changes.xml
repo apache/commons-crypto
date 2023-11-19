@@ -95,6 +95,7 @@
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 64 #225.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>
       <!-- ADD -->
+      <action issue="CRYPTO-177" type="add" dev="sebb">Cipher and Random Factory classes don't include JNA</action>
       <action issue="CRYPTO-172" type="add" dev="sebb" due-to="Ludovic Henry">Add support for Linux-riscv64 #264</action>
       <action issue="CRYPTO-174" type="add" dev="sebb">Allow override of SSL library name for Windows</action>
     </release>
