@@ -59,16 +59,6 @@ final class OpenSslCryptoRandom implements CryptoRandom {
         }
         nativeEnabled = opensslLoaded;
         initException = except;
-        //
-        // Check that nextRandBytes works (is this really needed?)
-        try {
-            checkNative();
-        } catch (final GeneralSecurityException e) {
-            throw new IllegalStateException(e);
-        }
-        if (!OpenSslCryptoRandomNative.nextRandBytes(new byte[1])) {
-            throw new IllegalStateException("Check of nextRandBytes failed");
-        }
     }
 
     private static void checkNative() throws GeneralSecurityException {
