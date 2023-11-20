@@ -38,8 +38,7 @@ public class NativeCodeLoaderTest {
     }
 
     @Test
-    // Seems to work OK now?
-    // @Disabled("Causes crash on Ubuntu when compiled with Java 17")
+    @Disabled("Causes crash on Ubuntu when compiled with Java 17")
     // The following error is reported:
     // "Corrupted channel by directly writing to native stream in forked JVM 1"
     // Note that this appears during a subsequent test, and does not
