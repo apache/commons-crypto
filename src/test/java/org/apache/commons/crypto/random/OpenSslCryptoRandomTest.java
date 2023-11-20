@@ -24,12 +24,18 @@ import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import org.apache.commons.crypto.Crypto;
+import org.junit.jupiter.api.BeforeAll;
 
 public class OpenSslCryptoRandomTest extends AbstractRandomTest {
 
+    @BeforeAll
+    public static void beforeAll() {
+        assumeTrue(Crypto.isNativeCodeLoaded());
+        assumeTrue(OpenSslCryptoRandom.isNativeCodeEnabled()); // should not throw
+    }
+
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-        assumeTrue(Crypto.isNativeCodeLoaded());
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, OpenSslCryptoRandom.class.getName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
