@@ -72,6 +72,16 @@ final class OpenSslInfoNative {
     public static native String OpenSSLVersion(int type);
 
     /**
+     * @return version of OPENSSL_VERSION_TEXT from the header file used to compile the code
+     */
+    public static native String HeaderVersionText();
+
+    /**
+     * @return the value of OPENSSL_VERSION_NUMBER from the header file used to compile the code
+     */
+    public static native long HeaderVersionNumber();
+
+    /**
      * Makes the constructor private.
      */
     private OpenSslInfoNative() {

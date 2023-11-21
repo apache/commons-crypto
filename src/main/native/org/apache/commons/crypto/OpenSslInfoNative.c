@@ -101,6 +101,18 @@ JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_Nativ
   return (*env)->NewStringUTF(env, PROJECT_NAME);
 }
 
+JNIEXPORT jstring JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_HeaderVersionText
+  (JNIEnv *env, jobject object)
+{
+  return (*env)->NewStringUTF(env, OPENSSL_VERSION_TEXT); // from the OpenSSL header files
+}
+
+JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_HeaderVersionNumber
+  (JNIEnv *env, jclass clazz)
+{
+  return OPENSSL_VERSION_NUMBER; // from the OpenSSL header files
+}
+
 JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_OpenSslInfoNative_OpenSSL
   (JNIEnv *env, jclass clazz)
 {
