@@ -96,6 +96,9 @@ Maven build goals:
 * Deploy JAR to Maven repo    : mvn deploy
 * Change version              : mvn versions:set -DnewVersion=NEWVERSION
 
+Note: when running tests, you may need to override the default SSL library locations/names
+See the file LIBRARY_NAMES.txt for details
+
 ----------------------------------------------------------------------------------
 Importing projects to eclipse
 

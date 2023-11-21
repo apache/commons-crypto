@@ -79,13 +79,9 @@ The following provides more details on the included cryptographic software:
 
   mvn -q exec:java -Dexec.mainClass=org.apache.commons.crypto.Crypto
     - run a basic JNI test
-    -Djni.library.path=override default JNI library path (system dependent)
-    -Djni.library.name=override default JNI library name (libcrypto)
 
   mvn -q exec:java -Dexec.mainClass=org.apache.commons.crypto.jna.OpenSslJna
     - run a basic JNA test
-    -Djna.library.path=override default JNA library path (system dependent)
-    -Dcommons.crypto.OpenSslNativeJna=override default library name
 
   Running examples (these are under the test tree, so need test scope):
   mvn -q -Dexec.classpathScope=test -Dexec.mainClass=org.apache.commons.crypto.examples.CLASSNAME
@@ -94,6 +90,9 @@ The following provides more details on the included cryptographic software:
   Additional options
   -Djna.debug_load - debug JNA loading
   -Dcommons.crypto.debug - add some Commons Crypto debugging
+
+  See LIBRARY_NAMES.txt for details of SSL Cryptographic library overrides
+
 -->
 
   <inceptionYear>2016</inceptionYear>
