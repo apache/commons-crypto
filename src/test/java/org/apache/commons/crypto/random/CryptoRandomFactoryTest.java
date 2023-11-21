@@ -61,9 +61,9 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testDummmyRandom() {
+    public void testMissingPropertyCtrRandomRandom() {
         final Properties properties = new Properties();
-        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, NoopRandom.class.getName());
+        properties.setProperty(CryptoRandomFactory.CLASSES_KEY, MissingPropertyCtrRandom.class.getName());
         final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(properties));
         final String message = ex.getMessage();
         assertTrue(message.contains("NoSuchMethodException"), message);

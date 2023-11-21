@@ -17,10 +17,10 @@
 package org.apache.commons.crypto.random;
 
 
-final class NoopRandom implements CryptoRandom {
+final class MissingPropertyCtrRandom implements CryptoRandom {
 
-    /** Should fail with NoSuchMethodException. */
-    NoopRandom() {
+    /** Should fail with NoSuchMethodException (has no constructor with a Properties argument). */
+    MissingPropertyCtrRandom() {
         // empty
     }
 
