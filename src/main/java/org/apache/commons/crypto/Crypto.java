@@ -91,7 +91,7 @@ public final class Crypto {
     /**
      * Override property for the default SSL crypto library name when using JNI
      */
-    public static final String JNI_LIBRARY_NAME = "jni.library.name";
+    public static final String JNI_LIBRARY_NAME = "commons.crypto.OpenSslNativeJni";
 
     /**
      * Where to find the SSL crypto library when using JNA

@@ -110,7 +110,7 @@ jobs:
     # environment variables: $env:VARNAME instead of $VARNAME
     # Also, note that Windows stores all the DLLs in the same directory.
     # Instead of defining jni.library.path and jna.library.path we need to define
-    # jni.library.name and commons.crypto.OpenSslNativeJna to override the file names
+    # commons.crypto.OpenSslNativeJni and commons.crypto.OpenSslNativeJna to override the file names
     - name: Build with Maven (Windows)
       if: ${{ startsWith(matrix.os,'windows') }}
       # OPENSSL_HOME is needed for Windows build to find some header files
@@ -123,7 +123,7 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        mvn -V -B -ntp -DtrimStackTrace=false -D"jni.library.name=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
+        mvn -V -B -ntp -DtrimStackTrace=false -D"commons.crypto.OpenSslNativeJni=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
     - name: Build with Maven (not Windows)
       if: ${{ ! startsWith(matrix.os,'windows') }}
       run: |
@@ -141,4 +141,4 @@ jobs:
       if: ${{ matrix.java == '8' && startsWith(matrix.os,'ubuntu') }}
       run: |
         mvn -V -B -ntp test -Ptestjni -D"jni.library.path=$ENGINESDIR" -Dcommons.crypto.OpenSslNativeJna=___
-        mvn -V -B -ntp test -Ptestjna -D"jna.library.path=$ENGINESDIR" -Djni.library.name=___
+        mvn -V -B -ntp test -Ptestjna -D"jna.library.path=$ENGINESDIR" -Dcommons.crypto.OpenSslNativeJni=___

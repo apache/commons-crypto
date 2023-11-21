@@ -30,7 +30,7 @@ jna.library.path
 
 On Windows, multiple library versions may be installed in the system directory under a different name.
 The following properties can be used to override the JNI and JNA file names respectively:
-jni.library.name
+commons.crypto.OpenSslNativeJni
 commons.crypto.OpenSslNativeJna
 
 For testing with Maven, these properties can be defined on the command-line:
@@ -40,6 +40,6 @@ $ mvn ... -Djni.library.path=/usr/local/lib -Djna.library.path=/usr/local/lib ..
 
 Windows:
 
-> mvn ... -D"jni.library.name=libcrypto-1_1-x64" -D"commons.crypto.OpenSslNativeJna=libcrypto-1_1-x64" ...
+> mvn ... -D"commons.crypto.OpenSslNativeJni=libcrypto-1_1-x64" -D"commons.crypto.OpenSslNativeJna=libcrypto-1_1-x64" ...
 
 

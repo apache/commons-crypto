@@ -311,7 +311,7 @@ The following provides more details on the included cryptographic software:
       <id>testjna</id>
       <properties>
         <!-- prevent JNI code from loading -->
-        <jni.library.name>_</jni.library.name>
+        <commons.crypto.OpenSslNativeJni>_</commons.crypto.OpenSslNativeJni>
       </properties>
       <build>
         <plugins>
