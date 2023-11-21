@@ -53,7 +53,7 @@ final class OpenSslNativeJna {
 
     static {
         OpenSslJna.debug("OpenSslNativeJna static init start");
-        final String libraryName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
+        final String libraryName = System.getProperty(Crypto.JNA_LIBRARY_NAME, Crypto.JNA_LIBRARY_NAME_DEFAULT);
         OpenSslJna.debug("OpenSslNativeJna NativeLibrary.getInstance('%s')", libraryName);
         @SuppressWarnings("resource") // NativeLibrary.getInstance returns a singleton
         final NativeLibrary crypto = NativeLibrary.getInstance(libraryName);

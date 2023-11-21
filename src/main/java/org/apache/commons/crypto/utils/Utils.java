@@ -192,8 +192,8 @@ public final class Utils {
      }
 
     /*
-     * Override the default DLL name if jni.library.path is a valid directory
-     * If jni.library.name is defined, this overrides the default name.
+     * Override the default DLL name if Crypto.JNI_LIBRARY_PATH is a valid directory
+     * If Crypto.JNI_LIBRARY_NAME is defined, this overrides the default name.
      *
      * @param name - the default name, passed from native code
      * @return the updated library path
@@ -207,13 +207,13 @@ public final class Utils {
      * In each case, there is a link from the canonical name (libcrypto.xx) to the versioned name (libcrypto-1.2.3.xx)
      * However on Windows, all the DLL versions seem to be stored in the same directory.
      * This means that Windows code needs to be given the versioned name (e.g. libcrypto-1_1-x64)
-     * This is done by defining jni.library.name.
+     * This is done by defining Crypto.JNI_LIBRARY_NAME.
      * 
      * Do not change the method name or its signature!
      */
     static String libraryPath(final String name) {
-        final String overridename = System.getProperty("jni.library.name", name);
-        final String override = System.getProperty("jni.library.path");
+        final String overridename = System.getProperty(Crypto.JNI_LIBRARY_NAME, name);
+        final String override = System.getProperty(Crypto.JNI_LIBRARY_PATH);
         if (override != null && new File(override).isDirectory()) {
             return new File(override, overridename).getPath();
         }

@@ -36,7 +36,7 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
         boolean ok = false;
         Throwable thrown = null;
         try {
-            final String libName = System.getProperty(Crypto.CONF_PREFIX + OpenSslNativeJna.class.getSimpleName(), "crypto");
+            final String libName = System.getProperty(Crypto.JNA_LIBRARY_NAME, Crypto.JNA_LIBRARY_NAME_DEFAULT);
             OpenSslJna.debug("Native.register('%s')", libName);
             Native.register(libName);
             ok = true;

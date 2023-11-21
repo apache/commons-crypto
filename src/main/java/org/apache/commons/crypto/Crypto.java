@@ -80,6 +80,33 @@ public final class Crypto {
      */
     public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX + "lib.tempdir";
 
+    // property names related to SSL crypto library loading
+
+    /**
+     * Where to find the SSL crypto library when using JNI
+     * This is used in Utils.libraryPath()
+    */
+    public static final String JNI_LIBRARY_PATH = "jni.library.path";
+
+    /**
+     * Override property for the default SSL crypto library name when using JNI
+     */
+    public static final String JNI_LIBRARY_NAME = "jni.library.name";
+
+    /**
+     * Where to find the SSL crypto library when using JNA
+     * This is used by the JNA library code
+    */
+    public static final String JNA_LIBRARY_PATH = "jna.library.path";
+
+    /**
+     * Override property for the default SSL crypto library name when using JNA
+     */
+    public static final String JNA_LIBRARY_NAME = Crypto.CONF_PREFIX + "OpenSslNativeJna";
+
+    /** Default name for loading SSL crypto library using JNA */
+    public static final String JNA_LIBRARY_NAME_DEFAULT = "crypto";
+
     private static boolean quiet;
 
     /**
@@ -152,8 +179,8 @@ public final class Crypto {
      */
     public static void main(final String[] args) throws Exception {
         quiet = args.length == 1 && args[0].equals("-q");
-        info("jni.library.path=%s", System.getProperty("jni.library.path"));
-        info("jni.library.name=%s", System.getProperty("jni.library.name"));
+        info("%s=%s", JNI_LIBRARY_PATH, System.getProperty(JNI_LIBRARY_PATH));
+        info("%s=%s", JNI_LIBRARY_NAME, System.getProperty(JNI_LIBRARY_NAME));
         info("%s %s", getComponentName(), getComponentVersion());
         if (isNativeCodeLoaded()) {
             info("Native code loaded OK: %s", OpenSslInfoNative.NativeVersion());
