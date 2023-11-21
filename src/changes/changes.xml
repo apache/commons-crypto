@@ -65,6 +65,7 @@
   <body>
     <release version="1.2.1" date="202X-MM-DD" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
+      <action issue="CRYPTO-175" type="fix" dev="sebb">JNA tests rely on JNI code</action>
       <action issue="CRYPTO-178" type="fix" dev="sebb">OpenSslCryptoRandom.isNativeCodeEnabled() throws if library cannot be loaded</action>
       <action issue="CRYPTO-173" type="fix" dev="sebb">docker build does not work on macOS M1</action>
       <action issue="CRYPTO-167" type="fix" dev="sebb">cannot use THROW to report missing env</action>
