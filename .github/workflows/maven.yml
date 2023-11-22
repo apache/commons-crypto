@@ -41,9 +41,7 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
         os: [macos-11, ubuntu-20.04, windows-latest]
-        # These names are used in conditional statements below.
         java: [ 8, 11, 17, 21 ]
         experimental: [false]
         # macos-13-arm64 does not appear to be available
@@ -89,30 +87,14 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
-    - name: OpenSSL version
+    - name: OpenSSL version (default)
       run: openssl version -a
-    - name: OpenSSL engine (macos)
+    - name: OpenSSL engine (macOS)
       # need to override the libarary path on macOS to avoid 'unsafe load' complaint
-      if: ${{ startsWith(matrix.os,'macos') }}
+      if: ${{ runner.os == 'macOS' }}
       run: |
         echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
-    - name: OpenSSL engine (windows)
-      # need to override the library name on windows else it uses the default LibreSSL
-      if: ${{ startsWith(matrix.os,'windows') }}
-      # e.g. NAME: "libcrypto-1_1-x64.dll"
-      # Not sure how to derive this automatically
-      run: |
-        echo "NAME=libcrypto-1_1-x64.dll" >> $env:GITHUB_ENV
-    # N.B. '-V -B -ntp' is shorthand for '--show-version --batch-mode --no-transfer-progress'
-    # 
-    # The bash shell under Windows changes the openssl default library, so is not used for running tests
-    # Unfortunately that means separate steps for Windows, as it uses a different syntax for referrring to
-    # environment variables: $env:VARNAME instead of $VARNAME
-    # Also, note that Windows stores all the DLLs in the same directory.
-    # Instead of defining jni.library.path and jna.library.path we need to define
-    # commons.crypto.OpenSslNativeJni and commons.crypto.OpenSslNativeJna to override the file names
-    - name: Build with Maven (Windows)
-      if: ${{ startsWith(matrix.os,'windows') }}
+    - name: Build with Maven (skip tests)
       # OPENSSL_HOME is needed for Windows build to find some header files
       # It's not clear how one is supposed to find the correct setting;
       # The value below was found by searching for openssl files under C (warning: slow)
@@ -123,11 +105,18 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        mvn -V -B -ntp -DtrimStackTrace=false -D"commons.crypto.OpenSslNativeJni=$env:NAME" -D"commons.crypto.OpenSslNativeJna=$env:NAME"
-    - name: Build with Maven (not Windows)
-      if: ${{ ! startsWith(matrix.os,'windows') }}
+        mvn -V -B -ntp -DskipTests
+    - name: Test with Maven (macOS)
+      # macOS needs to override the library name
+      if: ${{ runner.os == 'macOS' }}
+      # Show the defaults after the main run (will likely fail with unsafe load)
       run: |
-        mvn -V -B -ntp -DtrimStackTrace=false -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR
+        mvn -V -B -ntp surefire:test -DtrimStackTrace=false -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR
+        mvn -V -B -ntp surefire:test -D"test=CryptoTest,OpenSslJnaTest" || true
+    - name: Test with Maven (not macOS)
+      if: ${{ runner.os != 'macOS' }}
+      run: |
+        mvn -V -B -ntp surefire:test -DtrimStackTrace=false
     - name: Check benchmark code compiles
       if: ${{ matrix.java == '8' }}
       env:
@@ -135,10 +124,8 @@ jobs:
       run: |
         mvn -V -B -ntp clean test-compile -Pbenchmark
     - name: Check JNI and JNA tests are independent
-      # N.B. the default library fails with 'java is loading libcrypto in an unsafe way'
-      # so we need to define the appropriate library for each test
       # No need to test on all OS/Java combinations
-      if: ${{ matrix.java == '8' && startsWith(matrix.os,'ubuntu') }}
+      if: ${{ matrix.java == '8' && runner.os == 'Ubuntu' }}
       run: |
-        mvn -V -B -ntp test -Ptestjni -D"jni.library.path=$ENGINESDIR" -Dcommons.crypto.OpenSslNativeJna=___
-        mvn -V -B -ntp test -Ptestjna -D"jna.library.path=$ENGINESDIR" -Dcommons.crypto.OpenSslNativeJni=___
+        mvn -V -B -ntp test -Ptestjni -Dcommons.crypto.OpenSslNativeJna=___
+        mvn -V -B -ntp test -Ptestjna -Dcommons.crypto.OpenSslNativeJni=___
