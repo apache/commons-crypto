@@ -46,22 +46,6 @@
     } \
   }
 
-/* Helper macro to return if an exception is pending */
-#define PASS_EXCEPTIONS(env) \
-  { \
-    if ((*env)->ExceptionCheck(env)) return; \
-  }
-
-#define PASS_EXCEPTIONS_GOTO(env, target) \
-  { \
-    if ((*env)->ExceptionCheck(env)) goto target; \
-  }
-
-#define PASS_EXCEPTIONS_RET(env, ret) \
-  { \
-    if ((*env)->ExceptionCheck(env)) return (ret); \
-  }
-
 void close_library();
 
 /**
@@ -260,37 +244,12 @@ static FARPROC WINAPI do_dlsym_fallback(JNIEnv *env, HMODULE handle, LPCSTR symb
 #endif
 // Windows part end
 
-
-#define LOCK_CLASS(env, clazz, classname) \
-  if ((*env)->MonitorEnter(env, clazz) != 0) { \
-    char exception_msg[128]; \
-    snprintf(exception_msg, sizeof(exception_msg), "Failed to lock %s", classname); \
-    THROW(env, "java/lang/InternalError", exception_msg); \
-  }
-
-#define UNLOCK_CLASS(env, clazz, classname) \
-  if ((*env)->MonitorExit(env, clazz) != 0) { \
-    char exception_msg[128]; \
-    snprintf(exception_msg, sizeof(exception_msg), "Failed to unlock %s", classname); \
-    THROW(env, "java/lang/InternalError", exception_msg); \
-  }
-
-#define RETRY_ON_EINTR(ret, expr) do { \
-  ret = expr; \
-} while ((ret == -1) && (errno == EINTR));
-
 #include "config.h"
 
 #include <openssl/aes.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/opensslv.h>
-
-/**
- * A helper macro to convert the java 'context-handle'
- * to a EVP_CIPHER_CTX pointer.
- */
-#define CONTEXT(context) ((EVP_CIPHER_CTX*)((ptrdiff_t)(context)))
 
 /**
  * A helper macro to convert the EVP_CIPHER_CTX pointer to the
