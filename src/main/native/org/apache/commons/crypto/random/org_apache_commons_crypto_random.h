@@ -21,8 +21,6 @@
 
 #include "org_apache_commons_crypto.h"
 
-#define UNUSED(x) ((void)(x))
-
 #include <openssl/crypto.h>
 #include <openssl/engine.h>
 #include <openssl/rand.h>
