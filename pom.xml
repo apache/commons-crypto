@@ -629,7 +629,7 @@ The following provides more details on the included cryptographic software:
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>3.0.1</version>
+      <version>4.0.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
