@@ -72,6 +72,8 @@ static void get_methods(JNIEnv *env, HMODULE openssl)
   #endif
 }
 
+static bool loaded = false; // have we successfully loaded the library and the methods?
+
 static int load_library(JNIEnv *env)
 {
   HMODULE openssl = open_library(env); // calls THROW and returns 0 on error
@@ -79,7 +81,10 @@ static int load_library(JNIEnv *env)
   if (!openssl) {
     return 0;
   }
-  get_methods(env, openssl);
+  if (!loaded) {
+    get_methods(env, openssl);
+    loaded = true;
+  }
   return 1;
 }
 
