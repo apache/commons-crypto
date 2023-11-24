@@ -45,7 +45,7 @@ Windows:
 Library override is needed on macOS
 -----------------------------------
 Attempts to load the default library on macOS cause the application to crash with a message of the form:
-'".../bin/java is loading libcrypto in an unsafe way"
+".../bin/java is loading libcrypto in an unsafe way"
 
 To fix this, he properties jni.library.path and/or jna.library.path need to be set to the appropriate path,
 for example /usr/local/lib.
