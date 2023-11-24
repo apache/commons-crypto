@@ -42,4 +42,16 @@ Windows:
 
 > mvn ... -D"commons.crypto.OpenSslNativeJni=libcrypto-1_1-x64" -D"commons.crypto.OpenSslNativeJna=libcrypto-1_1-x64" ...
 
+Library override is needed on macOS
+-----------------------------------
+Attempts to load the default library on macOS cause the application to crash with a message of the form:
+'".../bin/java is loading libcrypto in an unsafe way"
 
+To fix this, he properties jni.library.path and/or jna.library.path need to be set to the appropriate path,
+for example /usr/local/lib.
+
+An alternative is to ensure that there is a copy of the library in the application launch directory.
+This can be a soft link to the actual library. This only works for unrestricted processes.
+
+It does not appear to be possible to use any of the DYLIB_ environment variables.
+These are removed as part of System Integrity Protection, so are not seen by the application and dlopen().
