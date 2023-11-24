@@ -154,6 +154,8 @@ The following provides more details on the included cryptographic software:
 
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <jna.version>5.13.0</jna.version>
+    <!-- Version 4.0.1 requires Java 11+; the version is overridden in a profile if necessary -->
+    <jakarta.xml.bind.version>4.0.1</jakarta.xml.bind.version>
 
     <!-- The property "target.name" is used to specify the ant target, The "all" target will use
     OsInfo.java to detect the OS info and arch to generate the native binary for detected platform.
@@ -166,6 +168,16 @@ The following provides more details on the included cryptographic software:
   </properties>
 
   <profiles>
+    <profile>
+      <id>java8-10</id>
+      <activation>
+        <jdk>[1.8,11.0)</jdk>
+      </activation>
+      <properties>
+        <!-- Version 4.0.1 requires Java 11+ -->
+        <jakarta.xml.bind.version>3.0.1</jakarta.xml.bind.version>
+      </properties>
+    </profile>
     <profile>
       <id>jacoco</id>
       <activation>
@@ -629,7 +641,7 @@ The following provides more details on the included cryptographic software:
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>3.0.1</version>
+      <version>${jakarta.xml.bind.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
