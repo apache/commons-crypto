@@ -107,5 +107,10 @@ File menu: Choose Import..., select "Existing Maven Project".
 ----------------------------------------------------------------------------------
 Building distributions:
 
-Please read http://commons.apache.org/releases/index.html
+Commons Crypto includes a native code component that must be built for multiple hardware architectures and operating systems.
+These library files are then bundled into the binary jar.
 
+Building currently requires macOS and Docker, and uses the script: build_dist.sh
+
+
+For the general release process, please read http://commons.apache.org/releases/index.html
