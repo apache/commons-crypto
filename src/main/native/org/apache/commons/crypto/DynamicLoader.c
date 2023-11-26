@@ -39,6 +39,18 @@ HMODULE open_library(JNIEnv *env)
             }
         }
     }
+#ifdef MAC_OS
+    #include <string.h>
+    if (0 == strncmp(COMMONS_CRYPTO_OPENSSL_LIBRARY,libraryPath, sizeof(COMMONS_CRYPTO_OPENSSL_LIBRARY))) {
+        bool ret = dlopen_preflight(libraryPath);
+        if (!ret) {
+            char msg[1000];
+            snprintf(msg, sizeof(msg), "Cannot load default library '%s'; need jni.library.path! (%s)", libraryPath, dlerror());
+            THROW(env, "java/lang/UnsatisfiedLinkError", msg);
+            return 0;
+        }
+    }
+#endif
 #ifdef UNIX
     openssl = dlopen(libraryPath, RTLD_LAZY | RTLD_GLOBAL);
 #endif
