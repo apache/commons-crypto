@@ -163,14 +163,6 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     public static native PointerByReference EVP_CIPHER_CTX_new();
 
     /**
-     * Clears all information from a cipher context and free up any allocated * memory associate
-     * with it.
-     *
-     * @param c
-     *            openssl evp cipher
-     */
-
-    /**
      * Enables or disables padding
      *
      * @param c
