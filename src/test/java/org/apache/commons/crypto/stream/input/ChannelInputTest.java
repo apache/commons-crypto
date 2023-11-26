@@ -26,7 +26,6 @@ import java.nio.channels.Channels;
 
 import org.junit.jupiter.api.Test;
 
-
 /**
  * Tests {@link ChannelInput}.
  */

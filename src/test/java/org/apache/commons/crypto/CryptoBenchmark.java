@@ -79,7 +79,6 @@ public class CryptoBenchmark extends AbstractBenchmark {
         getRandom(RANDOM_OPENSSL);
     }
 
-
     @Benchmark
     public void RandomCreateOS() throws Exception {
         getRandom(RANDOM_OS);

@@ -45,7 +45,6 @@ final class OpenSslGaloisCounterMode extends AbstractOpenSslFeedbackCipher {
     private int tagBitLen = -1;
     private static final int BITS_TO_BYTES_SHIFT_COUNT = 3; // >> 3 divides by 8 == Byte.SIZE
 
-
     // buffer for storing input in decryption, not used for encryption
     private ByteArrayOutputStream inBuffer;
 

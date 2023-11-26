@@ -243,7 +243,6 @@ final class OpenSsl {
         return opensslBlockCipher.update(input, inputOffset, inputLen, output, outputOffset);
     }
 
-
     /**
      * Updates a multiple-part encryption or decryption operation. The data is
      * encrypted or decrypted, depending on how this cipher was initialized.

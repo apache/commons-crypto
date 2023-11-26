@@ -52,7 +52,6 @@ final class OpenSslInfoNative {
      */
     public static native String NativeTimeStamp();
 
-
     /**
      * @return version of native
      */

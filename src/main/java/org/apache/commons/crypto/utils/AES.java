@@ -54,7 +54,6 @@ public class AES {
         return new SecretKeySpec(key, ALGORITHM);
     }
 
-
     /**
      * Constructs a new instance.
      *

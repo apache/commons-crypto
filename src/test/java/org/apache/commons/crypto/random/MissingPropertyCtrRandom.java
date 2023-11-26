@@ -16,7 +16,6 @@
  */
 package org.apache.commons.crypto.random;
 
-
 final class MissingPropertyCtrRandom implements CryptoRandom {
 
     /** Should fail with NoSuchMethodException (has no constructor with a Properties argument). */

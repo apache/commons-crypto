@@ -26,5 +26,4 @@ public class CtrCryptoJnaStreamTest extends AbstractCipherJnaStreamTest {
         transformation = AES.CTR_NO_PADDING;
     }
 
-
 }

@@ -39,7 +39,6 @@ import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-
 public class OpenSslCipherTest extends AbstractCipherTest {
 
     private ByteBuffer dummyBuffer() {
@@ -119,7 +118,6 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     public void testInvalidIVClass() throws Exception {
         final OpenSsl cipher = OpenSsl.getInstance(AES.CTR_NO_PADDING);
         assertNotNull(cipher);
-
 
         assertThrows(InvalidAlgorithmParameterException.class,
                 () ->  cipher.init(OpenSsl.ENCRYPT_MODE, KEY, new GCMParameterSpec(IV.length, IV)));

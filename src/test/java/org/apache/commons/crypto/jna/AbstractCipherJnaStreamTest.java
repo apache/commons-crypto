@@ -103,5 +103,4 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
         doFieldGetterTest(CIPHER_OPENSSL_JNA, baos, true);
     }
 
-
 }

@@ -45,7 +45,6 @@ public class CryptoJnaBenchmark  extends AbstractBenchmark {
 
     private static final String CIPHER_OPENSSL_JNA = OpenSslJna.getCipherClass().getName();
 
-
     @Benchmark
     public void CipherCreateOpensslJna() throws Exception {
         getCipher(CIPHER_OPENSSL_JNA);

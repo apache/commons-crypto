@@ -187,7 +187,6 @@ final class JceCipher implements CryptoCipher {
                 .update(input, inputOffset, inputLen, output, outputOffset);
     }
 
-
     /**
      * Continues a multiple-part encryption/decryption operation. The data is
      * encrypted or decrypted, depending on how this cipher was initialized.
@@ -231,7 +230,6 @@ final class JceCipher implements CryptoCipher {
     public void updateAAD(final byte[] aad) {
         cipher.updateAAD(aad);
     }
-
 
     /**
      * Continues a multi-part update of the Additional Authentication

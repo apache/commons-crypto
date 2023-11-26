@@ -37,7 +37,6 @@ import org.apache.commons.crypto.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 public class GcmCipherTest {
 
     private static final String GCM_NO_PADDING = "AES/GCM/NoPadding";

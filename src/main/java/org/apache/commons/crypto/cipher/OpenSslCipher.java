@@ -193,7 +193,6 @@ final class OpenSslCipher implements CryptoCipher {
                 .update(input, inputOffset, inputLen, output, outputOffset);
     }
 
-
     /**
      * Continues a multiple-part encryption/decryption operation. The data is
      * encrypted or decrypted, depending on how this openSslEngine was initialized.
@@ -248,7 +247,6 @@ final class OpenSslCipher implements CryptoCipher {
 
         openSslEngine.updateAAD(aad);
     }
-
 
     /**
      * Continues a multi-part update of the Additional Authentication
