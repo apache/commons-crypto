@@ -23,7 +23,6 @@ import java.nio.ByteBuffer;
 import org.apache.commons.crypto.Crypto;
 
 import com.sun.jna.Function;
-import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import com.sun.jna.NativeLong;
 import com.sun.jna.ptr.PointerByReference;
