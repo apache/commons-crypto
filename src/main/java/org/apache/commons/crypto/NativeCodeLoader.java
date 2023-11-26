@@ -33,7 +33,7 @@ import org.apache.commons.io.IOUtils;
 /**
  * A helper to load the native code i.e. libcommons-crypto.so. This handles the
  * fallback to either the bundled libcommons-crypto-Linux-i386-32.so or the
- * default java implementations where appropriate.
+ * default Java implementations where appropriate.
  */
 final class NativeCodeLoader {
 
