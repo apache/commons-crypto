@@ -212,8 +212,8 @@ public final class Utils {
      * Do not change the method name or its signature!
      */
     static String libraryPath(final String name) {
-        final String overridename = System.getProperty(Crypto.JNI_LIBRARY_NAME, name);
-        final String override = System.getProperty(Crypto.JNI_LIBRARY_PATH);
+        final String overridename = System.getProperty(Crypto.JNI_LIBRARY_NAME_PROPERTY, name);
+        final String override = System.getProperty(Crypto.JNI_LIBRARY_PATH_PROPERTY);
         if (override != null && new File(override).isDirectory()) {
             return new File(override, overridename).getPath();
         }

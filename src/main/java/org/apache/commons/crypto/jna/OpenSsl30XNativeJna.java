@@ -38,7 +38,7 @@ final class OpenSsl30XNativeJna implements OpenSslInterfaceNativeJna {
         boolean ok = false;
         Throwable thrown = null;
         try {
-            final String libName = System.getProperty(Crypto.JNA_LIBRARY_NAME, Crypto.JNA_LIBRARY_NAME_DEFAULT);
+            final String libName = System.getProperty(Crypto.JNA_LIBRARY_NAME_PROPERTY, Crypto.JNA_LIBRARY_NAME_DEFAULT);
             OpenSslJna.debug("Native.register('%s')", libName);
             Native.register(libName);
             ok = true;

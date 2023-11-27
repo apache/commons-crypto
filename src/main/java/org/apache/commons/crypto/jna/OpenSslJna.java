@@ -98,9 +98,9 @@ public final class OpenSslJna {
      */
     public static void main(final String[] args) throws Throwable {
         // These are used by JNA code if defined:
-        info("%s=%s", Crypto.JNA_LIBRARY_PATH, System.getProperty(Crypto.JNA_LIBRARY_PATH));
+        info("%s=%s", Crypto.JNA_LIBRARY_PATH_PROPERTY, System.getProperty(Crypto.JNA_LIBRARY_PATH_PROPERTY));
         info("jna.platform.library.path=%s", System.getProperty("jna.platform.library.path"));
-        info("%s=%s\n", Crypto.JNA_LIBRARY_NAME, System.getProperty(Crypto.JNA_LIBRARY_NAME));
+        info("%s=%s\n", Crypto.JNA_LIBRARY_NAME_PROPERTY, System.getProperty(Crypto.JNA_LIBRARY_NAME_PROPERTY));
         // can set jna.debug_load=true for loading info
         info(Crypto.getComponentName() + " OpenSslJna: enabled = %s, version = 0x%08X", isEnabled(), OpenSslNativeJna.VERSION);
         final Throwable initialisationError = initialisationError();
