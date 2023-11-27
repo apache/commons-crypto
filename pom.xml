@@ -339,6 +339,23 @@ The following provides more details on the included cryptographic software:
         </plugins>
       </build>
     </profile>
+  
+    <!-- Allow testing with a packaged jar -->
+    <profile>
+      <id>test-with-jar</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <classesDirectory>/dev/null</classesDirectory>
+              <additionalClasspathElements>${project.build.directory}/${project.artifactId}-${project.version}.jar</additionalClasspathElements>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>      
+    </profile>
   </profiles>
 
   <build>
