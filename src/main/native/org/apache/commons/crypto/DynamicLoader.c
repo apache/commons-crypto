@@ -45,7 +45,7 @@ HMODULE open_library(JNIEnv *env)
         bool ret = dlopen_preflight(libraryPath);
         if (!ret) {
             char msg[1000];
-            snprintf(msg, sizeof(msg), "Cannot load default library '%s'; need jni.library.path! (%s)", libraryPath, dlerror());
+            snprintf(msg, sizeof(msg), "Cannot load default library '%s'; please define jni.library.path! (%s)", libraryPath, dlerror());
             THROW(env, "java/lang/UnsatisfiedLinkError", msg);
             return 0;
         }
