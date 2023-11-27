@@ -63,11 +63,10 @@ final class OpenSslNativeJna {
             String ret = OpenSslMacOS.checkLibrary(Crypto.MACOS_LIBRARY_NAME_DEFAULT);
             if (ret != null) {
                 throw new UnsatisfiedLinkError(
-                    String.format("Cannot load default library '%s'; need jni.library.path! (%s)",
-                        Crypto.MACOS_LIBRARY_NAME_DEFAULT, ret));
+                    String.format("Cannot load default library '%s'; please define %s! (%s)",
+                        Crypto.MACOS_LIBRARY_NAME_DEFAULT, Crypto.JNA_LIBRARY_PATH, ret));
             }
         }
-            System.err.println("Lib check4" );
         @SuppressWarnings("resource") // NativeLibrary.getInstance returns a singleton
         final NativeLibrary crypto = NativeLibrary.getInstance(libraryName);
         OpenSslJna.debug("OpenSslNativeJna NativeLibrary.getInstance('%s') -> %s", libraryName, crypto);
