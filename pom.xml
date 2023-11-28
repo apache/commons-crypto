@@ -483,10 +483,6 @@ The following provides more details on the included cryptographic software:
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-build-plugin</artifactId>
-      </plugin>
-      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
