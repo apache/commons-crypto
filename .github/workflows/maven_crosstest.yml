@@ -61,6 +61,7 @@ jobs:
         run: |
           IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run crypto-gh src/docker/build.sh
           IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run crypto-gh src/docker/build_linux32.sh
+          ls -l target
       - name: Run on platform
         run: |
           IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run crypto-${{ matrix.platform }}-gh \
