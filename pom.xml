@@ -196,11 +196,6 @@ The following provides more details on the included cryptographic software:
               </excludes>
             </configuration>
           </plugin>
-          <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
-            <version>4.3.0</version>
-          </plugin>
         </plugins>
       </build>
       <reporting>
