@@ -207,8 +207,6 @@ patches, or suggestions for improvement, see the Apache Commons Crypto website:
 
 https://commons.apache.org/proper/commons-crypto/
 
-Download page: https://commons.apache.org/crypto/download_crypto.cgi
-
 -----------------------------------------------------------------------------
 
               Apache Commons Crypto 1.0.0
