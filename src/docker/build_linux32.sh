@@ -27,7 +27,7 @@ cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 cp /usr/include/i386-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 
 # Needed for linux32, but causes linux 64 builds to fail
-apt-get --assume-yes install g++-multilib
+time apt-get --assume-yes -qq install g++-multilib
 
 mvn -DskipTests package -Dtarget.name=linux32
 
