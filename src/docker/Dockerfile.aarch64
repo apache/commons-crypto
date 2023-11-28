@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This file creates a Docker image for use in building linux-aarch64 on CI
+# This file creates a Docker image for use in testing linux-aarch64 on CI
 
 FROM ubuntu:20.04
 
