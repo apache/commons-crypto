@@ -13,6 +13,8 @@
 # script to build native libraries
 # requires Docker and macOS
 
+set -ex
+
 mvn clean
 
 # build linux 64 bit libraries
@@ -21,10 +23,15 @@ docker compose -f src/docker/docker-compose.yaml run crypto src/docker/build.sh
 # build linux 32 bit libraries
 docker compose -f src/docker/docker-compose.yaml run crypto src/docker/build_linux32.sh
 
+# Speed up builds by disabling unnecessary plugins
+# Note: spdx.skip requires version 0.7.1+
+MAVEN_ARGS="-V -B -ntp -Drat.skip -Djacoco.skip -DbuildNumber.skip -Danimal.sniffer.skip -Dcyclonedx.skip -Dspdx.skip"
+# requires Maven 3.9.0+ to be automatically read
+
 # build 64 bit macOS libraries
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=mac64
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=macArm64
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=mac-aarch64
+mvn process-classes -Dtarget.name=mac64 ${MAVEN_ARGS}
+mvn process-classes -Dtarget.name=macArm64 ${MAVEN_ARGS}
+mvn process-classes -Dtarget.name=mac-aarch64 ${MAVEN_ARGS}
 
 # package it all up
-mvn package -DskipTests
+mvn package -DskipTests ${MAVEN_ARGS}

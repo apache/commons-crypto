@@ -19,7 +19,7 @@
 
 # MUST not be run before build.sh
 
-set -e
+set -ex
 
 cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 
@@ -29,7 +29,12 @@ cp /usr/include/i386-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 # Needed for linux32, but causes linux 64 builds to fail
 time apt-get --assume-yes -qq install g++-multilib
 
-mvn -DskipTests package -Dtarget.name=linux32
+# Speed up builds by disabling unnecessary plugins
+# Note: spdx.skip requires version 0.7.1+
+MAVEN_ARGS="-V -B -ntp -Drat.skip -Djacoco.skip -DbuildNumber.skip -Danimal.sniffer.skip -Dcyclonedx.skip -Dspdx.skip"
+# requires Maven 3.9.0+ to be automatically read
+
+mvn -DskipTests package -Dtarget.name=linux32 ${MAVEN_ARGS}
 
 # Show generated files
 find target/classes/org/apache/commons/crypto/native -type f -ls

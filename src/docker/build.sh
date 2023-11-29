@@ -24,22 +24,27 @@ cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 # Ensure the correct config file is installed
 cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 
+# Speed up builds by disabling unnecessary plugins
+# Note: spdx.skip requires version 0.7.1+
+MAVEN_ARGS="-V -B -ntp -Drat.skip -Djacoco.skip -DbuildNumber.skip -Danimal.sniffer.skip -Dcyclonedx.skip -Dspdx.skip"
+# requires Maven 3.9.0+ to be automatically read
+
 # Run the 64-bit builds.
-mvn -V -B -ntp clean package -Drat.skip
+mvn clean package ${MAVEN_ARGS}
 
 # use process-classes rather than package to speed up builds
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux-aarch64
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux-riscv64
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=win64
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux64
+mvn process-classes -Dtarget.name=linux-aarch64 ${MAVEN_ARGS}
+mvn process-classes -Dtarget.name=linux-riscv64 ${MAVEN_ARGS}
+mvn process-classes -Dtarget.name=win64 ${MAVEN_ARGS}
+mvn process-classes -Dtarget.name=linux64 ${MAVEN_ARGS}
 
 # Ensure the correct config file is installed
 cp /usr/include/i386-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 
 # Run the 32-bit builds.
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux-armhf
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=linux-arm
-mvn -DskipTests -Drat.skip process-classes -Dtarget.name=win32
+mvn process-classes -Dtarget.name=linux-armhf ${MAVEN_ARGS}
+mvn process-classes -Dtarget.name=linux-arm ${MAVEN_ARGS}
+mvn process-classes -Dtarget.name=win32 ${MAVEN_ARGS}
 
 # see separate script for optional linux32 build
 
