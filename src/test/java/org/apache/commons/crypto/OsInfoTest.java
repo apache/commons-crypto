@@ -18,13 +18,23 @@
 package org.apache.commons.crypto;
 
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OsInfoTest {
 
+    private static final String EXPECTED_PATH_PROPERTY = "OsInfoTest.expectedPath";
     @Test
     public void testMain() {
         OsInfo.main(new String[0]);
         OsInfo.main(new String[] { "--os" });
         OsInfo.main(new String[] { "--arch" });
+
+        final String expectedPath = System.getProperty(EXPECTED_PATH_PROPERTY, "");
+        if (expectedPath.isEmpty()) {
+            System.out.println("Path was not checked");
+        } else {
+            assertEquals(expectedPath, OsInfo.getNativeLibFolderPathForCurrentOS(),"Path does not equal property" + EXPECTED_PATH_PROPERTY);
+            System.out.println("Path is as expected");
+        }
     }
 }
