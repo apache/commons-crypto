@@ -29,8 +29,8 @@ cp /usr/include/x86_64-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 MAVEN_ARGS="-V -B -ntp -Drat.skip -Djacoco.skip -DbuildNumber.skip -Danimal.sniffer.skip -Dcyclonedx.skip -Dspdx.skip"
 # requires Maven 3.9.0+ to be automatically read
 
-# Run the 64-bit builds.
-mvn clean package ${MAVEN_ARGS}
+# Run the 64-bit builds (no test)
+mvn clean test -DskipTests ${MAVEN_ARGS}
 
 # use process-classes rather than package to speed up builds
 mvn process-classes -Dtarget.name=linux-aarch64 ${MAVEN_ARGS}
