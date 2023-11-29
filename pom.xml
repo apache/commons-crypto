@@ -640,10 +640,9 @@ The following provides more details on the included cryptographic software:
       <version>${jna.version}</version>
     </dependency>
     <dependency>
-      <!-- Currently only used for IOUtils.contentEquals in NativeCodeLoader -->
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.15.0</version>
+      <version>2.15.1</version>
     </dependency>
     <!-- testing -->
     <dependency>
