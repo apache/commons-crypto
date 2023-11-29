@@ -34,7 +34,7 @@ time apt-get --assume-yes -qq install g++-multilib >/dev/null
 MAVEN_ARGS="-V -B -ntp -Drat.skip -Djacoco.skip -DbuildNumber.skip -Danimal.sniffer.skip -Dcyclonedx.skip -Dspdx.skip"
 # requires Maven 3.9.0+ to be automatically read
 
-mvn -DskipTests package -Dtarget.name=linux32 ${MAVEN_ARGS}
+mvn process-classes -Dtarget.name=linux32 ${MAVEN_ARGS}
 
 # Show generated files
 find target/classes/org/apache/commons/crypto/native -type f -ls
