@@ -42,12 +42,6 @@ env:
 
 jobs:
   test-cross:
-    strategy:
-      matrix:
-        include:
-          - platform: aarch64
-          - platform: riscv64
-            jna_override: "-Djna.version=5.12.0" # See https://github.com/java-native-access/jna/issues/1557
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -62,7 +56,12 @@ jobs:
           time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-gh src/docker/build.sh
           time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-gh src/docker/build_linux32.sh
           ls -l target
-      - name: Run on platform
+      - name: Run on aarch64
         run: |
-          time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-${{ matrix.platform }}-gh \
-            src/docker/test_cross.sh ${{ matrix.jna_override }}
+          time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-aarch64-gh \
+            src/docker/test_cross.sh
+      - name: Run on riscv64
+        # See https://github.com/java-native-access/jna/issues/1557
+        run: |
+          time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-riscv64-gh \
+            src/docker/test_cross.sh -Djna.version=5.12.0
