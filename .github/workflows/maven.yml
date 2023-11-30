@@ -80,10 +80,12 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       with:
         persist-credentials: false
-    - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
+    - name: Maven cache
+      uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -124,6 +126,7 @@ jobs:
     - name: Test with Maven (macOS) test-with-jar
       # macOS needs to override the library name (macOS-11)
       if: ${{ runner.os == 'macOS' }}
+      run: |
         mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR -Ptest-with-jar
     - name: Test with Maven (macOS) no library override
       # macOS needs to override the library name (macOS-11)
