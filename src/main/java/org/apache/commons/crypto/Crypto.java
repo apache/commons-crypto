@@ -112,6 +112,7 @@ public final class Crypto {
      */
     public static final String MACOS_LIBRARY_NAME_DEFAULT = "libcrypto.dylib";
 
+    /** If true, print some debug output */
     public static final boolean IS_DEBUG = Boolean.getBoolean(Crypto.CONF_PREFIX + "debug");
 
     private static boolean quiet;
