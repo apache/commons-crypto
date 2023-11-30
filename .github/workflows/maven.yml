@@ -94,7 +94,7 @@ jobs:
       if: ${{ runner.os == 'macOS' }}
       run: |
         echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
-    - name: Build with Maven (skip tests)
+    - name: Package with Maven (skip tests)
       # OPENSSL_HOME is needed for Windows build to find some header files
       # It's not clear how one is supposed to find the correct setting;
       # The value below was found by searching for openssl files under C (warning: slow)
@@ -105,18 +105,25 @@ jobs:
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
-        mvn -V -B -ntp -DskipTests
+        mvn -V -B -ntp -DskipTests clean package
     - name: Test with Maven (macOS)
-      # macOS needs to override the library name
+      # macOS needs to override the library name (sometimes!)
       if: ${{ runner.os == 'macOS' }}
       # Show the defaults after the main run (will likely fail with unsafe load)
       run: |
-        mvn -V -B -ntp surefire:test -DtrimStackTrace=false -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR
+        echo "------- Full test using classes -------"
+        mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR
+        echo "------- Full test using jar -------"
+        mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR -Ptest-with-jar
+        echo "------- Quick test without library override -------"
         mvn -V -B -ntp surefire:test -D"test=CryptoTest,OpenSslJnaTest" || true
     - name: Test with Maven (not macOS)
       if: ${{ runner.os != 'macOS' }}
       run: |
-        mvn -V -B -ntp surefire:test -DtrimStackTrace=false
+        echo "------- Full test using classes -------"
+        mvn -V -B -ntp surefire:test
+        echo "------- Full test using jar -------"
+        mvn -V -B -ntp surefire:test -Ptest-with-jar
     - name: Check benchmark code compiles
       if: ${{ matrix.java == '8' }}
       env:
