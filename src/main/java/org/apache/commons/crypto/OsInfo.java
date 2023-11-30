@@ -17,7 +17,6 @@
  */
 package org.apache.commons.crypto;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -27,6 +26,9 @@ import java.util.Locale;
  * information from the build environment.
  */
 final class OsInfo {
+
+    /** The separator to be used in constructing a resource path */
+    private static final String RESOURCE_PATH_SEPARATOR = "/";
 
     private final static HashMap<String, String> archMapping = new HashMap<>();
 
@@ -140,7 +142,7 @@ final class OsInfo {
      * @return the current OS's native lib folder.
      */
     static String getNativeLibFolderPathForCurrentOS() {
-        return getOSName() + File.separator + getArchName();
+        return getOSName() + RESOURCE_PATH_SEPARATOR + getArchName();
     }
 
     /**

@@ -37,6 +37,9 @@ import org.apache.commons.io.IOUtils;
  */
 final class NativeCodeLoader {
 
+    /** The separator to be used in constructing a resource path */
+    private static final String RESOURCE_PATH_SEPARATOR = "/";
+
     private static final String SIMPLE_NAME = NativeCodeLoader.class.getSimpleName();
 
     private static final String NATIVE_LIBNAME = "commons-crypto";
@@ -82,7 +85,7 @@ final class NativeCodeLoader {
      */
     private static File extractLibraryFile(final String libFolderForCurrentOS, final String libraryFileName,
             final String targetFolder) {
-        final String nativeLibraryFilePath = libFolderForCurrentOS + File.separator + libraryFileName;
+        final String nativeLibraryFilePath = libFolderForCurrentOS + RESOURCE_PATH_SEPARATOR + libraryFileName;
 
         // Attach UUID to the native library file to ensure multiple class loaders
         // can read the libcommons-crypto multiple times.
@@ -171,12 +174,12 @@ final class NativeCodeLoader {
         // Load an OS-dependent native library inside a jar file
         nativeLibraryPath = "/org/apache/commons/crypto/native/" + OsInfo.getNativeLibFolderPathForCurrentOS();
         debug("%s nativeLibraryPath = %s", SIMPLE_NAME, nativeLibraryPath);
-        final String resource = nativeLibraryPath + File.separator + nativeLibraryName;
+        final String resource = nativeLibraryPath + RESOURCE_PATH_SEPARATOR + nativeLibraryName;
         boolean hasNativeLib = hasResource(resource);
         debug("%s resource %s exists = %s", SIMPLE_NAME, resource, hasNativeLib);
         if (!hasNativeLib) {
             final String altName = NATIVE_LIBNAME_ALT;
-            if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + File.separator + altName)) {
+            if (OsInfo.getOSName().equals("Mac") && hasResource(nativeLibraryPath + RESOURCE_PATH_SEPARATOR + altName)) {
                 // Fix for openjdk7 for Mac
                 nativeLibraryName = altName;
                 hasNativeLib = true;
