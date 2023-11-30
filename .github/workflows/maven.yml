@@ -53,6 +53,12 @@ jobs:
           - os: macos-latest
             java: 8
             experimental: false
+          - os: macos-12
+            java: 8
+            experimental: false
+          - os: macos-13
+            java: 8
+            experimental: false
           - os: ubuntu-latest
             java: 8
             experimental: false
@@ -107,22 +113,32 @@ jobs:
       run: |
         mvn -V -B -ntp -DskipTests clean package
     - name: Test with Maven (macOS)
-      # macOS needs to override the library name (sometimes!)
+      # macOS needs to override the library name (macOS-11)
       if: ${{ runner.os == 'macOS' }}
       # Show the defaults after the main run (will likely fail with unsafe load)
       run: |
+        echo ""
         echo "------- Full test using classes -------"
+        echo ""
         mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR
+        echo ""
         echo "------- Full test using jar -------"
+        echo ""
         mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR -Ptest-with-jar
+        echo ""
         echo "------- Quick test without library override -------"
+        echo ""
         mvn -V -B -ntp surefire:test -D"test=CryptoTest,OpenSslJnaTest" || true
     - name: Test with Maven (not macOS)
       if: ${{ runner.os != 'macOS' }}
       run: |
+        echo ""
         echo "------- Full test using classes -------"
+        echo ""
         mvn -V -B -ntp surefire:test
+        echo ""
         echo "------- Full test using jar -------"
+        echo ""
         mvn -V -B -ntp surefire:test -Ptest-with-jar
     - name: Check benchmark code compiles
       if: ${{ matrix.java == '8' }}
