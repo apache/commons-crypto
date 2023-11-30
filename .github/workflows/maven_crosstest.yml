@@ -212,7 +212,7 @@ jobs:
         with:
           key: ${{ env.CACHE-ALL }}
           path: target
-      - name: Run on aarch64
+      - name: Run on Linux/aarch64
         run: |
           IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-aarch64-gh \
             src/docker/test_cross.sh -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/aarch64
@@ -221,10 +221,7 @@ jobs:
         run: |
           IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-riscv64-gh \
             src/docker/test_cross.sh -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/riscv64 -Djna.version=5.12.0
-      - name: Run on x86_64
+      - name: Run on Linux/x86_64
         run: |
           IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-gh \
             src/docker/test_cross.sh -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/x86_64
-      - name: Run on amd64
-        run: |
-          mvn -V -B -ntp surefire:test -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/amd64
