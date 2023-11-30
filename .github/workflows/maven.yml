@@ -44,18 +44,14 @@ jobs:
         os: [macos-11, ubuntu-20.04, windows-latest]
         java: [ 8, 11, 17, 21 ]
         experimental: [false]
-        # macos-13-arm64 does not appear to be available
-        # include:
-        #   - java: 21
-        #     os: macos-13-arm64
-        #     experimental: true
         include:
           - os: macos-latest
             java: 8
             experimental: false
-          - os: macos-12
-            java: 8
-            experimental: false
+          # macos-latest is currently macos-12
+          # - os: macos-12
+          #   java: 8
+          #   experimental: false
           - os: macos-13
             java: 8
             experimental: false
@@ -71,6 +67,11 @@ jobs:
 #          - java: 22-ea
 #            os: macos-latest
 #            experimental: true
+        # macos-13-arm64 does not appear to be available
+        #   - java: 21
+        #     os: macos-13-arm64
+        #     experimental: true
+
         # We don't need to build all Java versions every time
         # Try excluding 11, 17 on branch pushes
         exclude:
@@ -112,40 +113,42 @@ jobs:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
         mvn -V -B -ntp -DskipTests clean package
+
+#       macOS tests
+
     - name: Test with Maven (macOS)
       # macOS needs to override the library name (macOS-11)
       if: ${{ runner.os == 'macOS' }}
-      # Show the defaults after the main run (will likely fail with unsafe load)
       run: |
-        echo ""
-        echo "------- Full test using classes -------"
-        echo ""
         mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR
-        echo ""
-        echo "------- Full test using jar -------"
-        echo ""
+    - name: Test with Maven (macOS) test-with-jar
+      # macOS needs to override the library name (macOS-11)
+      if: ${{ runner.os == 'macOS' }}
         mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR -Ptest-with-jar
-        echo ""
-        echo "------- Quick test without library override -------"
-        echo ""
+    - name: Test with Maven (macOS) no library override
+      # macOS needs to override the library name (macOS-11)
+      if: ${{ runner.os == 'macOS' }}
+      run: |
         mvn -V -B -ntp surefire:test -D"test=CryptoTest,OpenSslJnaTest" || true
+
+#       tests (not macOS)
+
     - name: Test with Maven (not macOS)
       if: ${{ runner.os != 'macOS' }}
       run: |
-        echo ""
-        echo "------- Full test using classes -------"
-        echo ""
         mvn -V -B -ntp surefire:test
-        echo ""
-        echo "------- Full test using jar -------"
-        echo ""
+    - name: Test with Maven (not macOS) test-with-jar
+      if: ${{ runner.os != 'macOS' }}
+      run: |
         mvn -V -B -ntp surefire:test -Ptest-with-jar
+
     - name: Check benchmark code compiles
       if: ${{ matrix.java == '8' }}
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
       run: |
         mvn -V -B -ntp clean test-compile -Pbenchmark
+
     - name: Check JNI and JNA tests are independent
       # No need to test on all OS/Java combinations
       if: ${{ matrix.java == '8' && runner.os == 'Ubuntu' }}
