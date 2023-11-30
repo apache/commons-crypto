@@ -15,6 +15,10 @@
 
 name: Java Cross Test
 
+# Builds native binaries for various Linux and Windows architectures using Linux and Docker
+# These are then combined with a macOS build to produce a combined set of binaries and jars
+# The resulting binaries are then tested
+
 on:
   # allow direct trigger
   workflow_dispatch:
@@ -39,9 +43,32 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
+  # Output from build-cross-linux
+  CACHE-LINUX: crypto-target-linux
+  # Output from package-macos
+  CACHE-ALL: crypto-target-all
 
 jobs:
-  test-cross:
+  # Remove any existing caches
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      # `actions:write` permission is required to delete caches
+      #   See also: https://docs.github.com/en/rest/actions/cache?apiVersion=2022-11-28#delete-a-github-actions-cache-for-a-repository-using-a-cache-id
+      actions: write
+      contents: read
+    steps:
+    - name: clear cache
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh extension install actions/gh-actions-cache
+        gh actions-cache delete ${{ env.CACHE-LINUX }} -R ${{ github.repository }} -B ${{ github.ref_name }} --confirm || true
+        gh actions-cache delete ${{ env.CACHE-ALL }} -R ${{ github.repository }} -B ${{ github.ref_name }} --confirm || true
+
+  # Use Linux and Docker to build Linux and Windows binaries
+  build-cross-linux:
+    needs: cleanup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -58,12 +85,146 @@ jobs:
         run: |
           time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-gh src/docker/build_linux32.sh
           ls -l target
+      - name: Save generated Linux binaries
+        uses: actions/cache/save@v3
+        with:
+          key: ${{ env.CACHE-LINUX }}
+          path: target
+
+  # Use macOS to build its native binaries and package them with the Linux/Windows ones
+  package-macos:
+    needs: build-cross-linux
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
+      - name: Set up JDK
+        uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+        with:
+          distribution: 'temurin'
+          java-version: 8
+      - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build on macOS
+        run: |
+          mvn -V -B -ntp test -DskipTests
+          # build 64 bit macOS libraries
+          mvn -V -B -ntp -DskipTests -Drat.skip process-classes -Dtarget.name=mac64
+          mvn -V -B -ntp -DskipTests -Drat.skip process-classes -Dtarget.name=macArm64
+          mvn -V -B -ntp -DskipTests -Drat.skip process-classes -Dtarget.name=mac-aarch64
+          ls -l target
+      - name: Retrieve saved Linux binaries
+        uses: actions/cache/restore@v3
+        with:
+          key: ${{ env.CACHE-LINUX }}
+          path: target
+      - name: package on macOS
+        run: |
+          ls -l target
+          mvn -V -B -ntp jar:jar
+          ls -l target
+      # At some point would like to run the cross tests using only the jars
+      # In the meantime, use the target class structure
+      - name: Save generated Linux + macOS binaries
+        uses: actions/cache/save@v3
+        with:
+          key: ${{ env.CACHE-ALL }}
+          path: target
+      # This is only visible on the Workflow summary page
+      - name: Upload packaged jars for external testing
+        uses: actions/upload-artifact@v3
+        with:
+          name: crypto-package
+          path: target/*.jar
+          retention-days: 7
+
+  # Test Jobs that don't use Docker
+  standalone:
+    needs: package-macos
+    runs-on: ${{ matrix.os }}
+    # continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            java: 8
+            expectedPath: Mac/x86_64
+          - os: ubuntu-latest
+            java: 8
+            expectedPath: Linux/x86_64
+          - os: windows-latest
+            java: 8
+            expectedPath: Windows/x86_64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
+      - name: Retrieve saved target tree
+        uses: actions/cache/restore@v3
+        with:
+          key: ${{ env.CACHE-ALL }}
+          path: target
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
+      - name: Show files
+        run: ls -l target
+      - name: Cache Maven
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - name: OpenSSL version (default)
+        run: openssl version -a
+      - name: Test on ${{ matrix.os }} ${{ matrix.expectedPath }} (Java ${{ matrix.java }})
+        run: >
+          mvn -V -B -ntp surefire:test -Ptest-with-jar
+          -D"OsInfoTest.expectedPath=${{ matrix.expectedPath }}"
+
+  # use Linux and Docker to test some additional OS arch combinations
+  test-cross-linux:
+    needs: package-macos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
+      - name: Docker setup QEMU
+        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
+      - name: Image prefix (lower case)
+        run: |
+          echo "IMAGE_PREFIX=$(echo ${{ env.REGISTRY }}/${{ github.repository }} | tr '[A-Z]' '[a-z]')" >>$GITHUB_ENV
+      - name: Retrieve saved target tree
+        uses: actions/cache/restore@v3
+        with:
+          key: ${{ env.CACHE-ALL }}
+          path: target
       - name: Run on aarch64
         run: |
-          time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-aarch64-gh \
-            src/docker/test_cross.sh
+          IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-aarch64-gh \
+            src/docker/test_cross.sh -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/aarch64
       - name: Run on riscv64
         # See https://github.com/java-native-access/jna/issues/1557
         run: |
-          time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-riscv64-gh \
-            src/docker/test_cross.sh -Djna.version=5.12.0
+          IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-riscv64-gh \
+            src/docker/test_cross.sh -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/riscv64 -Djna.version=5.12.0
+      - name: Run on x86_64
+        run: |
+          IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-gh \
+            src/docker/test_cross.sh -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/x86_64
+      - name: Run on amd64
+        run: |
+          mvn -V -B -ntp surefire:test -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/amd64
