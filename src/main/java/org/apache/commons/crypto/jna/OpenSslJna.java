@@ -28,8 +28,6 @@ import org.apache.commons.crypto.utils.Utils;
  */
 public final class OpenSslJna {
 
-    private final static String KEY_DEBUG = Crypto.CONF_PREFIX + "debug";
-
     /**
      * Logs debug messages.
      *
@@ -37,8 +35,7 @@ public final class OpenSslJna {
      * @param args   See {@link String#format(String, Object...)}.
      */
     static void debug(final Object format, final Object... args) {
-        // TODO Find a better way to do this later.
-        if (Boolean.getBoolean(KEY_DEBUG)) {
+        if (Crypto.IS_DEBUG) {
             System.out.println(String.format(Objects.toString(format), args));
         }
     }

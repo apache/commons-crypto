@@ -65,8 +65,7 @@ final class NativeCodeLoader {
      * @param args   See {@link String#format(String, Object...)}.
      */
     private static void debug(final String format, final Object... args) {
-        // TODO Find a better way to do this later.
-        if (isDebug()) {
+        if (Crypto.IS_DEBUG) {
             System.out.println(String.format(format, args));
             if (args != null && args.length > 0 && args[0] instanceof Throwable) {
                 ((Throwable) args[0]).printStackTrace(System.out);
@@ -103,7 +102,7 @@ final class NativeCodeLoader {
             try {
                 path = extractedLibFile.toPath();
                 final long byteCount = Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
-                if (isDebug()) {
+                if (Crypto.IS_DEBUG) {
                     debug("Extracted '%s' to '%s': %,d bytes [%s]", nativeLibraryFilePath, extractedLibFile, byteCount,
                             Files.isExecutable(path) ? "X+" : "X-");
                     try {
@@ -216,10 +215,6 @@ final class NativeCodeLoader {
      */
     private static boolean hasResource(final String path) {
         return NativeCodeLoader.class.getResource(path) != null;
-    }
-
-    private static boolean isDebug() {
-        return Boolean.getBoolean(Crypto.CONF_PREFIX + "debug");
     }
 
     /**
