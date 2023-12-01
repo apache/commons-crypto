@@ -65,6 +65,7 @@
   <body>
     <release version="1.2.1" date="202X-MM-DD" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
+      <action issue="CRYPTO-158" type="fix" due-to=" Juan F Arjona" dev="sebb">Illegal reflective access</action>
       <action issue="CRYPTO-179" type="fix" dev="sebb">Crash on macOS with default crypto library</action>
       <action issue="CRYPTO-166" type="fix" dev="sebb">Library is reloaded multiple times</action>
       <action issue="CRYPTO-175" type="fix" dev="sebb">JNA tests rely on JNI code</action>

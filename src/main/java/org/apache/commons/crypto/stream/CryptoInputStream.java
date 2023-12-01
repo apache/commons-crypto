@@ -19,7 +19,6 @@ package org.apache.commons.crypto.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.security.GeneralSecurityException;
@@ -93,38 +92,6 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     static void checkStreamCipher(final CryptoCipher cipher) throws IOException {
         if (!cipher.getAlgorithm().equals(AES.CTR_NO_PADDING)) {
             throw new IOException(AES.CTR_NO_PADDING + " is required");
-        }
-    }
-
-    /**
-     * Forcibly free the direct buffer.
-     *
-     * @param buffer the bytebuffer to be freed.
-     */
-    static void freeDirectBuffer(final ByteBuffer buffer) {
-        if (buffer != null) {
-            try {
-                /*
-                 * Using reflection to implement sun.nio.ch.DirectBuffer.cleaner() .clean();
-                 */
-                final String SUN_CLASS = "sun.nio.ch.DirectBuffer";
-                final Class<?>[] interfaces = buffer.getClass().getInterfaces();
-                final Object[] EMPTY_OBJECT_ARRAY = {};
-
-                for (final Class<?> clazz : interfaces) {
-                    if (clazz.getName().equals(SUN_CLASS)) {
-                        /* DirectBuffer#cleaner() */
-                        final Method getCleaner = Class.forName(SUN_CLASS).getMethod("cleaner");
-                        final Object cleaner = getCleaner.invoke(buffer, EMPTY_OBJECT_ARRAY);
-                        /* Cleaner#clean() */
-                        final Method cleanMethod = Class.forName("sun.misc.Cleaner").getMethod("clean");
-                        cleanMethod.invoke(cleaner, EMPTY_OBJECT_ARRAY);
-                        return;
-                    }
-                }
-            } catch (final ReflectiveOperationException e) { // NOPMD
-                // Ignore the Reflection exception.
-            }
         }
     }
 
@@ -418,8 +385,8 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
 
     /** Forcibly free the direct buffers. */
     protected void freeBuffers() {
-        CryptoInputStream.freeDirectBuffer(inBuffer);
-        CryptoInputStream.freeDirectBuffer(outBuffer);
+        inBuffer.clear();
+        outBuffer.clear();
     }
 
     /**

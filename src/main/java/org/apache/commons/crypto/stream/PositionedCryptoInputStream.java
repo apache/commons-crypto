@@ -139,7 +139,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     private void cleanByteBufferPool() {
         ByteBuffer buf;
         while ((buf = byteBufferPool.poll()) != null) {
-            CryptoInputStream.freeDirectBuffer(buf);
+            buf.clear();
         }
     }
 
