@@ -147,11 +147,12 @@ public class CryptoCipherFactory {
      *
      * @param props The {@code Properties} class represents a set of
      *        properties.
-     * @return the cipher class based on the props.
+     * @return the cipher class based on the property {@link CryptoCipherFactory.CLASSES_KEY}
+     * If the property is missing or empty, {@link CLASSES_DEFAULT} is returned
      */
     private static String getCipherClassString(final Properties props) {
         String cipherClassString = props.getProperty(CryptoCipherFactory.CLASSES_KEY, CLASSES_DEFAULT);
-        if (cipherClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
+        if (cipherClassString.isEmpty()) {
             cipherClassString = CLASSES_DEFAULT;
         }
         return cipherClassString;
