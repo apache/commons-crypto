@@ -17,12 +17,24 @@
  */
 package org.apache.commons.crypto.jna;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 public class OpenSslJnaTest {
 
+    // If defined, then fail if the version does not match major/minor bits
+    private static final String EXPECTED_VERSION_PROPERTY = "OpenSslJnaTest.expectedVersion";
+
     @Test
     public void testMain() throws Throwable {
         OpenSslJna.main(new String[0]);
-    }
+        final String expectedVersion = System.getProperty(EXPECTED_VERSION_PROPERTY, "");
+        if (expectedVersion.isEmpty()) {
+            System.out.println("OpenSSL version was not checked");
+        } else {
+            assertEquals(expectedVersion, Long.toHexString(OpenSslNativeJna.OpenSSL_version_num() & 0xFFFF0000));
+            System.out.println("OpenSSL version is as expected");
+        }
+   }
 }

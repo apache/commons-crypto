@@ -16,12 +16,16 @@
  */
 package org.apache.commons.crypto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 public class CryptoTest {
+
+    // If defined, then fail if the version does not match major/minor bits
+    private static final String EXPECTED_VERSION_PROPERTY = "CryptoTest.expectedVersion";
 
     /**
      * This test may fail unless the code was built by Maven, as it relies on the VERSION file being set up correctly
@@ -58,6 +62,13 @@ public class CryptoTest {
         assertTrue(Crypto.isNativeCodeLoaded(), "Native code loaded OK");
         Crypto.main(new String[] { }); // show the JNI library details
         assertTrue(Crypto.isNativeCodeLoaded(), "Completed OK");
+        final String expectedVersion = System.getProperty(EXPECTED_VERSION_PROPERTY, "");
+        if (expectedVersion.isEmpty()) {
+            System.out.println("OpenSSL version was not checked");
+        } else {
+            assertEquals(expectedVersion, Long.toHexString(OpenSslInfoNative.OpenSSL() & 0xFFFF0000));
+            System.out.println("OpenSSL version is as expected");
+        }
     }
 
 }
