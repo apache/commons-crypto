@@ -200,6 +200,10 @@ final class OpenSslNativeJna {
         return JnaImplementation._OpenSSL_version(i);
     }
 
+    public static long OpenSSL_version_num() {
+        return JnaImplementation._OpenSSL_version_num();
+    }
+
     public static int RAND_bytes(final ByteBuffer buf, final int length) {
         return JnaImplementation._RAND_bytes(buf, length);
     }

@@ -240,6 +240,11 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     public static native String OpenSSL_version(int type);
 
     /**
+     * @return OPENSSL_VERSION_NUMBER which is a numeric release version identifier
+     */
+    public static native NativeLong OpenSSL_version_num();
+
+    /**
      * Generates random data
      *
      * @param buf
@@ -383,6 +388,11 @@ final class OpenSsl11XNativeJna  implements OpenSslInterfaceNativeJna {
     @Override
     public String _OpenSSL_version(final int i) {
         return OpenSSL_version(i);
+    }
+
+    @Override
+    public long _OpenSSL_version_num() {
+        return OpenSSL_version_num().longValue();
     }
 
     @Override

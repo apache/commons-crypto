@@ -89,6 +89,8 @@ interface OpenSslInterfaceNativeJna {
 
     String _OpenSSL_version(final int i);
 
+    long _OpenSSL_version_num();
+
     int _RAND_bytes(final ByteBuffer buf, final int length);
 
     PointerByReference _RAND_get_rand_method();

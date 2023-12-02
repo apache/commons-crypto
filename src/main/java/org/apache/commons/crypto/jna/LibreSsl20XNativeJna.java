@@ -286,7 +286,6 @@ final class LibreSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     public static native PointerByReference RAND_SSLeay();
 
     /**
-     * TODO (does not appear to be used yet)
      * @return OPENSSL_VERSION_NUMBER which is a numeric release version identifier
      */
     public static native NativeLong SSLeay();
@@ -427,6 +426,11 @@ final class LibreSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     @Override
     public String _OpenSSL_version(final int i) {
         return SSLeay_version(i);
+    }
+
+    @Override
+    public long _OpenSSL_version_num() {
+        return SSLeay().longValue();
     }
 
     @Override

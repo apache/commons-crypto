@@ -106,23 +106,13 @@ public final class OpenSslJna {
             System.err.flush(); // helpful for stack traces to not mix in other output.
             throw initialisationError; // propagate to make error obvious
         }
+        info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslNativeJna.OpenSSL_version_num()));
         for (int i = 0; i <= Utils.OPENSSL_VERSION_MAX_INDEX; i++) {
-            String data = OpenSSLVersion(i);
+            String data = OpenSslNativeJna.OpenSSLVersion(i);
             if (!"not available".equals(data)) {
                 info("OpenSSLVersion(%d): %s", i, data);
             }
         }
-    }
-
-    /**
-     * Retrieves version/build information about OpenSSL library.
-     *
-     * @param type type can be OPENSSL_VERSION, OPENSSL_CFLAGS, OPENSSL_BUILT_ON...
-     * @return A pointer to a constant string describing the version of the
-     * OpenSSL library or giving information about the library build.
-     */
-    static String OpenSSLVersion(final int type) {
-         return OpenSslNativeJna.OpenSSLVersion(type);
     }
 
     /**
