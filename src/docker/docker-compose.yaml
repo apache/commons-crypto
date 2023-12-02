@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This file is used for building and testing the images locally
+
+# See also docker-compose-gh.yml, which uses the images built by the docker_images.yml workflow
+
 version: '3'
 services:
   crypto:
