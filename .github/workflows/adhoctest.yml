@@ -51,5 +51,4 @@ jobs:
       run: |
         which -a openssl
         find /usr -name libcrypto* -ls || true
-        for i in $(which -a openssl); do echo $i; $i version -a; echo '====='; done
-
+        which -a openssl | while read a ;do echo "$a" ; "$a" version -a; echo '======='; done
