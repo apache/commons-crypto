@@ -21,18 +21,12 @@ package org.apache.commons.crypto.jna;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
-import org.apache.commons.crypto.utils.AES;
 
 public class OpenSslJnaCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {
         assumeTrue(OpenSslJna.isEnabled());
-        transformations = new String[] {
-                AES.CBC_NO_PADDING,
-                AES.CBC_PKCS5_PADDING,
-                AES.CTR_NO_PADDING
-                };
         cipherClass = OpenSslJnaCipher.class.getName();
     }
 }

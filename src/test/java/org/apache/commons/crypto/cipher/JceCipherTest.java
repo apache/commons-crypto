@@ -45,10 +45,6 @@ public class JceCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {
-        transformations = new String[] {
-                AES.CBC_NO_PADDING,
-                AES.CBC_PKCS5_PADDING,
-                AES.CTR_NO_PADDING};
         cipherClass = JCE_CIPHER_CLASSNAME;
     }
 }

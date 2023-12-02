@@ -48,10 +48,6 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Override
     public void init() {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
-        transformations = new String[] {
-                AES.CBC_NO_PADDING,
-                AES.CBC_PKCS5_PADDING,
-                AES.CTR_NO_PADDING};
         cipherClass = OPENSSL_CIPHER_CLASSNAME;
     }
 

@@ -59,7 +59,12 @@ public abstract class AbstractCipherTest {
 	private Properties props;
 
 	protected String cipherClass;
-	protected String[] transformations;
+	protected String[] transformations = new String[] {
+		AES.CBC_NO_PADDING,
+		AES.CBC_PKCS5_PADDING,
+		AES.CTR_NO_PADDING,
+	}; // TODO: add GCM transform
+
 	private CryptoCipher enc, dec;
 
 	/** test byte array whose data is randomly generated */
@@ -234,7 +239,7 @@ public abstract class AbstractCipherTest {
 		for (final String tran : transformations) {
 			/** uses the small data set in {@link TestData} */
 			cipherTests = TestData.getTestData(tran);
-			assertNotNull(cipherTests, tran);
+			assertNotNull(cipherTests, "TestData cannot supply data for: " + tran);
 			for (int i = 0; i != cipherTests.length; i += 5) {
 				final byte[] key = DatatypeConverter.parseHexBinary(cipherTests[i + 1]);
 				final byte[] iv = DatatypeConverter.parseHexBinary(cipherTests[i + 2]);
