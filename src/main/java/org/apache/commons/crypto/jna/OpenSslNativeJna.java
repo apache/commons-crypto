@@ -72,15 +72,15 @@ final class OpenSslNativeJna {
         OpenSslJna.debug("OpenSslNativeJna NativeLibrary.getInstance('%s') -> %s", libraryName, crypto);
         Function versionFunction = null;
         try {
-            versionFunction = crypto.getFunction("SSLeay"); // Needed for LibreSSL 2.x
+            versionFunction = crypto.getFunction("OpenSSL_version_num"); // Used by OpenSSL 1.1 and 3.x, so more likely
         } catch (final UnsatisfiedLinkError e) {
-            versionFunction = crypto.getFunction("OpenSSL_version_num");
+            versionFunction = crypto.getFunction("SSLeay"); // Fallback only needed for LibreSSL 2.x
         }
-        // Must find one of the above two functions; else give up
+        // Must find one of the above two functions; else give up with UnsatisfiedLinkError
 
         VERSION = versionFunction.invokeLong(new Object[]{});
         //CHECKSTYLE:OFF
-        VERSION_X_Y = VERSION & 0xffff0000; // keep only major.minor checkstyle:
+        VERSION_X_Y = VERSION & 0xffff0000; // keep only major.minor
         //CHECKSTYLE:ON
 
         OpenSslJna.debug(String.format("OpenSslNativeJna detected version 0x%x => 0x%x", VERSION, VERSION_X_Y));
