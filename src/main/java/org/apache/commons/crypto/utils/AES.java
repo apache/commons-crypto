@@ -45,6 +45,11 @@ public class AES {
     public static final String CTR_NO_PADDING = "AES/CTR/NoPadding";
 
     /**
+     * Defines {@value}.
+     */
+    public static final String GCM_NO_PADDING = "AES/GCM/NoPadding";
+
+    /**
      * Creates a new SecretKeySpec for the given key and {@link #ALGORITHM}.
      *
      * @param key a key.
