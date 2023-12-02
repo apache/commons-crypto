@@ -17,6 +17,12 @@ name: Java CI
 
 # cross-build tests are done in a separate action as they currrently take a long time
 
+# if the expectedVersion property is set, the test will check if the OpenSSL (or LibreSSL) version agrees
+# with the major/minor version (lower 32 bits are ignored)
+# N.B. LibreSSL may identify itself as 3.0.2 in the text output, but the long version is 0x20000000
+
+# The intention of the check is to show that various different versions have been tested at least once
+
 on:
   # allow direct trigger
   workflow_dispatch:
@@ -57,7 +63,17 @@ jobs:
             experimental: false
           - os: ubuntu-latest
             java: 8
+            expectedVersion: "30000000"
             experimental: false
+          # Add expectedVersion to some existing matrix combinations
+          - os: macos-11
+            java: 8
+            expectedVersion: "10100000"
+          - os: windows-latest
+            java: 8
+            # OpenSSLVersion(0): LibreSSL 3.0.2
+            # shows version: 0x20000000
+            expectedVersion: "20000000"
 #          - java: 22-ea
 #            os: ubuntu-20.04
 #            experimental: true
@@ -121,8 +137,10 @@ jobs:
     - name: Test with Maven (macOS)
       # macOS needs to override the library name (macOS-11)
       if: ${{ runner.os == 'macOS' }}
-      run: |
+      run: >
         mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR
+        -DOpenSslJnaTest.expectedVersion=${{ matrix.expectedVersion }}
+        -DCryptoTest.expectedVersion=${{ matrix.expectedVersion }}
     - name: Test with Maven (macOS) test-with-jar
       # macOS needs to override the library name (macOS-11)
       if: ${{ runner.os == 'macOS' }}
@@ -138,8 +156,11 @@ jobs:
 
     - name: Test with Maven (not macOS)
       if: ${{ runner.os != 'macOS' }}
-      run: |
+      run: >
         mvn -V -B -ntp surefire:test
+        -D"OpenSslJnaTest.expectedVersion=${{ matrix.expectedVersion }}"
+        -D"CryptoTest.expectedVersion=${{ matrix.expectedVersion }}"
+      
     - name: Test with Maven (not macOS) test-with-jar
       if: ${{ runner.os != 'macOS' }}
       run: |
