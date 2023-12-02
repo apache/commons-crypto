@@ -63,7 +63,7 @@ public abstract class AbstractCipherTest {
 		AES.CBC_NO_PADDING,
 		AES.CBC_PKCS5_PADDING,
 		AES.CTR_NO_PADDING,
-	}; // TODO: add GCM transform
+	}; // Note: GCM transform is currently only supported for OpenSSL (OpenSslGaloisCounterMode)
 
 	private CryptoCipher enc, dec;
 
