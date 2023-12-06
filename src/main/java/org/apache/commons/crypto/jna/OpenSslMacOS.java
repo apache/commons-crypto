@@ -26,7 +26,13 @@ import com.sun.jna.Native;
  */
 class OpenSslMacOS {
 
-    static native boolean dlopen_preflight(String path);
+    /*
+     * The method is declared as 'bool dlopen_preflight(const char* path)', which is not a standard
+     * JNA type, see:
+     * http://java-native-access.github.io/jna/5.13.0/javadoc/overview-summary.html#marshalling
+     * bool appears to be closest to a byte, where non-zero is true and zero is false
+     */
+    static native byte dlopen_preflight(String path);
 
     static native String dlerror();
 
@@ -40,10 +46,9 @@ class OpenSslMacOS {
      * @return null if OK, else error message
      */
     public static String checkLibrary(String path) {
-        if (dlopen_preflight(path)){
-            return null;
-        }
-        return dlerror();
+        boolean loadedOK = dlopen_preflight(path) != 0;
+        String dlerror = dlerror(); // fetch error, and clear for next call
+        return  loadedOK ? null : dlerror;
     }
 
 }
