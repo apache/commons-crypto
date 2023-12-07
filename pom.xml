@@ -135,6 +135,7 @@ The following provides more details on the included cryptographic software:
     <commons.release.desc>(Java 8 or above)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
+    <!-- The release to be used by japicmp for checking binary compatibility -->
     <commons.bc.version>1.2.0</commons.bc.version>
     <commons.componentid>crypto</commons.componentid>
     <commons.module.name>org.apache.commons.crypto</commons.module.name>

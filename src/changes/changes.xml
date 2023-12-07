@@ -63,7 +63,7 @@
    -->
 
   <body>
-    <release version="1.2.1" date="202X-MM-DD" description="Minor release (Java 8, OpenSSL 1.1.1)">
+    <release version="1.2.1" date="202X-MM-DD" description="Minor release (minimum Java 8 and OpenSSL 1.1.1)">
       <!-- FIX -->
       <action issue="CRYPTO-158" type="fix" due-to=" Juan F Arjona" dev="sebb">Illegal reflective access</action>
       <action issue="CRYPTO-179" type="fix" dev="sebb">Crash on macOS with default crypto library</action>
@@ -86,9 +86,9 @@
       <action                    type="fix" dev="ggregory" due-to="Martin Wittlinger">Refactor: Unnecessary toString() call #224.</action>
       <action dev="ggregory"     type="fix" due-to="step-security-bot, Gary Gregory">[StepSecurity] Harden GitHub builds #228, #234.</action>
       <action dev="ggregory"     type="fix" due-to="Martin Wiesner">Fixes grammar and typos in Javadoc #233.</action>
-      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate OpenSslJna.OpenSslJna().</action>
-      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate Crypto.Crypto().</action>
-      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate AES.AES().</action>
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate OpenSslJna constructor so it can be made private later.</action>
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate Crypto constructor so it can be made private later.</action>
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">Deprecate AES constructor so it can be made private later.</action>
       <action issue="CRYPTO-169" type="fix" dev="ggregory" due-to="L. C. Hsieh, Yang Jie, Gary Gregory">Add protection for the ExceptionInInitializerError scenario to the CryptoRandomFactory#getCryptoRandom(Properties) method #258.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelInput.ChannelInput(ReadableByteChannel) now throws NullPointerException on null input.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">StreamInput.StreamInput(InputStream, int) now throws NullPointerException on null input.</action>
