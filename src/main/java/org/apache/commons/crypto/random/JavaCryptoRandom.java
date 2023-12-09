@@ -51,7 +51,7 @@ final class JavaCryptoRandom implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link java.lang.AutoCloseable#close()}. For {@link JavaCryptoRandom}, we don't need to recycle resource.
+     * Overrides {@link AutoCloseable#close()}. For {@link JavaCryptoRandom}, we don't need to recycle resource.
      */
     @Override
     public void close() {

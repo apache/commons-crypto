@@ -90,7 +90,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link java.lang.AutoCloseable#close()}. Closes OpenSSL context
+     * Overrides {@link AutoCloseable#close()}. Closes OpenSSL context
      * if native enabled.
      */
     @Override

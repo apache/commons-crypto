@@ -68,7 +68,7 @@ final class OsCryptoRandom implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link java.lang.AutoCloseable#close()}. Closes the OS stream.
+     * Overrides {@link AutoCloseable#close()}. Closes the OS stream.
      */
     @Override
     synchronized public void close() {

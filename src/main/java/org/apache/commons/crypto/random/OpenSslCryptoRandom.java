@@ -90,7 +90,7 @@ final class OpenSslCryptoRandom implements CryptoRandom {
     }
 
     /**
-     * Overrides {@link java.lang.AutoCloseable#close()}.
+     * Overrides {@link AutoCloseable#close()}.
      * Does nothing.
      */
     @Override
