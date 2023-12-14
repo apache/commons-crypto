@@ -67,7 +67,7 @@ public abstract class AbstractCipherTest {
 
 	private CryptoCipher enc, dec;
 
-	/** test byte array whose data is randomly generated */
+	/** Test byte array whose data is randomly generated */
 	private void byteArrayTest(final String transformation, final byte[] key, final byte[] iv) throws Exception {
 		final int blockSize = enc.getBlockSize();
 
@@ -116,7 +116,7 @@ public abstract class AbstractCipherTest {
 		}
 	}
 
-	/** test byte array whose data is planned in {@link TestData} */
+	/** Test byte array whose data is planned in {@link TestData} */
 	private void byteArrayTest(final String transformation, final byte[] key, final byte[] iv, final byte[] input,
 			final byte[] output) throws Exception {
 		resetCipher(transformation, key, iv);
@@ -237,7 +237,7 @@ public abstract class AbstractCipherTest {
 	@Test
 	public void testCryptoTest() throws Exception {
 		for (final String tran : transformations) {
-			/** uses the small data set in {@link TestData} */
+			/** Uses the small data set in {@link TestData} */
 			cipherTests = TestData.getTestData(tran);
 			assertNotNull(cipherTests, "TestData cannot supply data for: " + tran);
 			for (int i = 0; i != cipherTests.length; i += 5) {
@@ -258,7 +258,7 @@ public abstract class AbstractCipherTest {
 				byteArrayTest(tran, key, iv, inputBytes, outputBytes);
 			}
 
-			/** uses randomly generated big data set */
+			/** Uses randomly generated big data set */
 			byteArrayTest(tran, KEY, IV);
 		}
 	}

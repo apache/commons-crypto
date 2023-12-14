@@ -37,10 +37,10 @@ import org.apache.commons.crypto.cipher.CryptoCipherFactory;
  */
 public final class Utils {
 
-    /** mask to keep a byte from a longer number */
+    /** Mask to keep a byte from a longer number */
     public static final int BYTE_MASK = 0xFF;
 
-    /** maximum number of OpenSslVersion entries to retrieve  */
+    /** Maximum number of OpenSslVersion entries to retrieve  */
     public static final int OPENSSL_VERSION_MAX_INDEX = 20; // max seen so far is 9, but leave some spare
 
     private static final class DefaultPropertiesHolder {
