@@ -118,7 +118,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /** Crypto key for the cipher. */
     final Key key; // package protected for access by crypto classes; do not expose further
 
-    /** the algorithm parameters */
+    /** The algorithm parameters */
     private final AlgorithmParameterSpec params;
 
     /** Flag to mark whether the input stream is closed. */

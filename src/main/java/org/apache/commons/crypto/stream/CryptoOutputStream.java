@@ -55,7 +55,7 @@ public class CryptoOutputStream extends OutputStream implements
     /** The output. */
     final Output output; // package protected for access by rypto classes; do not expose further
 
-    /** the CryptoCipher instance */
+    /** The CryptoCipher instance */
     final CryptoCipher cipher; // package protected for access by crypto classes; do not expose further
 
     /** The buffer size. */
@@ -64,7 +64,7 @@ public class CryptoOutputStream extends OutputStream implements
     /** Crypto key for the cipher. */
     final Key key; // package protected for access by crypto classes; do not expose further
 
-    /** the algorithm parameters */
+    /** The algorithm parameters */
     private final AlgorithmParameterSpec params;
 
     /** Flag to mark whether the output stream is closed. */
