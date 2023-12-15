@@ -137,7 +137,7 @@ jobs:
           path: target
       # This is only visible on the Workflow summary page
       - name: Upload packaged jars for external testing
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: crypto-package
           path: target/*.jar
