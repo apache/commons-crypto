@@ -142,6 +142,21 @@ jobs:
           name: crypto-package
           path: target/*.jar
           retention-days: 7
+      # deploy to Maven central
+      - name: Set up Apache Maven Central
+        uses: actions/setup-java@v4
+        with: # running setup-java again overwrites the settings.xml
+          distribution: 'temurin'
+          java-version: '8'
+          server-id: apache.snapshots.https # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: ASF_USERNAME # env variable for username in deploy
+          server-password: ASF_PASSWORD # env variable for token in deploy
+
+      - name: Publish to Apache Maven Central
+        env:
+          ASF_USERNAME: ${{ secrets.NEXUS_USER }}
+          ASF_PASSWORD: ${{ secrets.NEXUS_PW }}
+        run: mvn package deploy -DskipTests
 
   # Test Jobs that don't use Docker
   standalone:
