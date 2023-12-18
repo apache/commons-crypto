@@ -26,6 +26,9 @@ cd /home/crypto # must agree with virtual mount in docker-compose.yaml
 # Ensure the correct config file is installed
 cp /usr/include/i386-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 
+# ensure apt database is updated before a new install
+apt-get update
+
 # Needed for linux32, but causes linux 64 builds to fail
 time apt-get --assume-yes -qq install g++-multilib >/dev/null
 
