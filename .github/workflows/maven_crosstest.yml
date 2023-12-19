@@ -133,7 +133,7 @@ jobs:
           NEXUS_PW: ${{ secrets.NEXUS_PW }}
         run: |
           ls -l target
-          mvn -V -B -ntp package deploy
+          mvn -V -B -ntp deploy
           ls -l target
       # At some point would like to run the cross tests using only the jars
       # In the meantime, use the target class structure
