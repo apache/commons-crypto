@@ -104,6 +104,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 8
+          # these values cause the plugin to set up the Maven settings.xml file
+          server-id: apache.snapshots.https # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: NEXUS_USER # env variable for username in deploy
+          server-password: NEXUS_PW # env variable for token in deploy
       - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         with:
           path: ~/.m2/repository
@@ -123,10 +127,10 @@ jobs:
         with:
           key: ${{ env.CACHE-LINUX }}
           path: target
-      - name: package on macOS
+      - name: Package and deploy to Maven Central on macOS
         run: |
           ls -l target
-          mvn -V -B -ntp jar:jar
+          mvn -V -B -ntp package deploy
           ls -l target
       # At some point would like to run the cross tests using only the jars
       # In the meantime, use the target class structure
@@ -142,22 +146,6 @@ jobs:
           name: crypto-package
           path: target/*.jar
           retention-days: 7
-      # deploy to Maven central
-      - name: Set up Apache Maven Central
-        uses: actions/setup-java@v4
-        with: # running setup-java again overwrites the settings.xml
-          distribution: 'temurin'
-          java-version: '8'
-          # these values cause the plugin to set up the Maven settings.xml file
-          server-id: apache.snapshots.https # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: NEXUS_USER # env variable for username in deploy
-          server-password: NEXUS_PW # env variable for token in deploy
-
-      - name: Publish to Apache Maven Central
-        env:
-          NEXUS_USER: ${{ secrets.NEXUS_USER }}
-          NEXUS_PW: ${{ secrets.NEXUS_PW }}
-        run: mvn package deploy -DskipTests
 
   # Test Jobs that don't use Docker
   standalone:
