@@ -30,7 +30,7 @@ cp /usr/include/i386-linux-gnu/openssl/opensslconf.h /usr/include/openssl
 apt-get update
 
 # Needed for linux32, but causes linux 64 builds to fail
-time apt-get --assume-yes -qq install g++-multilib >/dev/null
+apt-get --assume-yes -qq install g++-multilib >/dev/null
 
 # Speed up builds by disabling unnecessary plugins
 # Note: spdx.skip requires version 0.7.1+
