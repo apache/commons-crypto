@@ -29,7 +29,7 @@ on:
       - '**/OpenSslNative.java'
       - '**/OpenSslCryptoRandomNative.java'
       - '**/OpenSslInfoNative.java'
-      - '**/maven_crosstest.yml'
+      - '**/workflows/maven_crosstest.yml'
       - 'src/docker/*'
       - '!src/docker/Dockerfile*'
     # Don't trigger on docker change; will be started after build
