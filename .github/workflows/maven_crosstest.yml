@@ -196,9 +196,15 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: OpenSSL version (default)
         run: openssl version -a
+      - name: OpenSSL engine (macOS)
+        # need to override the libarary path on macOS to avoid 'unsafe load' complaint
+        if: ${{ runner.os == 'macOS' }}
+        # set up ENGINESDIR from openssl
+        run: |
+          echo $(openssl version -e | sed -n -e 's/engines-.*//' -e 's/: "/=/p') >> "$GITHUB_ENV"
       - name: Test on ${{ matrix.os }} ${{ matrix.expectedPath }} (Java ${{ matrix.java }})
         run: >
-          mvn -V -B -ntp surefire:test -Ptest-with-jar
+          mvn -V -B -ntp surefire:test -Ptest-with-jar -D"jni.library.path=$ENGINESDIR" -D"jna.library.path=$ENGINESDIR"
           -D"OsInfoTest.expectedPath=${{ matrix.expectedPath }}"
 
   # use Linux and Docker to test some additional OS arch combinations
