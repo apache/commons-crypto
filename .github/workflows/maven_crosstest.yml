@@ -86,7 +86,7 @@ jobs:
           time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-gh src/docker/build_linux32.sh
           ls -l target
       - name: Save generated Linux binaries
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         with:
           key: ${{ env.CACHE-LINUX }}
           path: target
@@ -123,7 +123,7 @@ jobs:
           mvn -V -B -ntp -DskipTests -Drat.skip process-classes -Dtarget.name=mac-aarch64
           ls -l target
       - name: Retrieve saved Linux binaries
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         with:
           key: ${{ env.CACHE-LINUX }}
           path: target
@@ -139,13 +139,13 @@ jobs:
       # At some point would like to run the cross tests using only the jars
       # In the meantime, use the target class structure
       - name: Save generated Linux + macOS binaries
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         with:
           key: ${{ env.CACHE-ALL }}
           path: target
       # This is only visible on the Workflow summary page
       - name: Upload packaged jars for external testing
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
         with:
           name: crypto-package
           path: target/*.jar
@@ -174,7 +174,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Retrieve saved target tree
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         with:
           key: ${{ env.CACHE-ALL }}
           path: target
@@ -222,7 +222,7 @@ jobs:
         run: |
           echo "IMAGE_PREFIX=$(echo ${{ env.REGISTRY }}/${{ github.repository }} | tr '[A-Z]' '[a-z]')" >>$GITHUB_ENV
       - name: Retrieve saved target tree
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         with:
           key: ${{ env.CACHE-ALL }}
           path: target
