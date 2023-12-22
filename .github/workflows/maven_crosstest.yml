@@ -136,7 +136,7 @@ jobs:
         # Note: spdx.skip requires version 0.7.1+
         run: |
           ls -l target
-          mvn -V -B -ntp deploy -Drat.skip -Djacoco.skip -DbuildNumber.skip -Danimal.sniffer.skip -Dcyclonedx.skip -Dspdx.skip
+          mvn -V -B -ntp deploy -DskipTests -Drat.skip -Djacoco.skip -DbuildNumber.skip -Danimal.sniffer.skip -Dcyclonedx.skip -Dspdx.skip
           ls -l target
       # At some point would like to run the cross tests using only the jars
       # In the meantime, use the target class structure
