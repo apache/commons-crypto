@@ -132,9 +132,11 @@ jobs:
         env:
           NEXUS_USER: ${{ secrets.NEXUS_USER }}
           NEXUS_PW: ${{ secrets.NEXUS_PW }}
+        # Speed up builds by disabling unnecessary plugins
+        # Note: spdx.skip requires version 0.7.1+
         run: |
           ls -l target
-          mvn -V -B -ntp deploy
+          mvn -V -B -ntp deploy -Drat.skip -Djacoco.skip -DbuildNumber.skip -Danimal.sniffer.skip -Dcyclonedx.skip -Dspdx.skip
           ls -l target
       # At some point would like to run the cross tests using only the jars
       # In the meantime, use the target class structure
