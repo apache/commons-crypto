@@ -48,6 +48,7 @@ final class OpenSslNativeJna {
     static final long VERSION_2_0_X = 0x20000000;
     static final long VERSION_3_0_X = 0x30000000;
     static final long VERSION_3_1_X = 0x30100000;
+    static final long VERSION_3_2_X = 0x30200000;
 
     private static final OpenSslInterfaceNativeJna JnaImplementation;
 
@@ -91,7 +92,7 @@ final class OpenSslNativeJna {
         } else if (VERSION_X_Y == VERSION_2_0_X) {
             OpenSslJna.debug("Creating LibreSsl20XNativeJna");
             JnaImplementation = new LibreSsl20XNativeJna();
-       } else if (VERSION_X_Y == VERSION_3_0_X || VERSION_X_Y == VERSION_3_1_X) { // assume these are the same
+       } else if (VERSION_X_Y == VERSION_3_0_X || VERSION_X_Y == VERSION_3_1_X || VERSION_X_Y == VERSION_3_2_X) { // assume these are the same
            OpenSslJna.debug("Creating OpenSsl30XNativeJna");
            JnaImplementation = new OpenSsl30XNativeJna();
        } else {
