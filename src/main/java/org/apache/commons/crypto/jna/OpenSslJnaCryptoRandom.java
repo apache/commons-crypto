@@ -41,8 +41,8 @@ import com.sun.jna.ptr.PointerByReference;
  *
  * @see <a href="https://wiki.openssl.org/index.php/Random_Numbers">
  *      https://wiki.openssl.org/index.php/Random_Numbers</a>
- * @see <a href="http://en.wikipedia.org/wiki/RdRand">
- *      http://en.wikipedia.org/wiki/RdRand</a>
+ * @see <a href="https://en.wikipedia.org/wiki/RdRand">
+ *      https://en.wikipedia.org/wiki/RdRand</a>
  */
 final class OpenSslJnaCryptoRandom implements CryptoRandom {
 

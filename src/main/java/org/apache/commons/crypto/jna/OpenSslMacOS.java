@@ -29,7 +29,7 @@ class OpenSslMacOS {
     /*
      * The method is declared as 'bool dlopen_preflight(const char* path)', which is not a standard
      * JNA type, see:
-     * http://java-native-access.github.io/jna/5.13.0/javadoc/overview-summary.html#marshalling
+     * https://java-native-access.github.io/jna/5.13.0/javadoc/overview-summary.html#marshalling
      * bool appears to be closest to a byte, where non-zero is true and zero is false
      */
     static native byte dlopen_preflight(String path);

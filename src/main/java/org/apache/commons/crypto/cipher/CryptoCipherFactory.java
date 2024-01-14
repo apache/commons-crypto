@@ -129,8 +129,8 @@ public class CryptoCipherFactory {
     /**
      * For AES, the algorithm block is fixed size of 128 bits.
      *
-     * @see <a href="http://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
-     *      http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
+     * @see <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">
+     *      https://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
      */
     public static final int AES_BLOCK_SIZE = 16;
 

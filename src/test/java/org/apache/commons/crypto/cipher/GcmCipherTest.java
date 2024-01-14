@@ -62,8 +62,8 @@ public class GcmCipherTest {
         cHex = new String[casesNumber];
         tHex = new String[casesNumber];
 
-        // http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf
-        // http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf
+        // https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf
+        // https://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf
         // NIST Case2  -----------------------------
         // key length:          16 bytes
         // plain text length:   16 bytes
@@ -315,7 +315,7 @@ public class GcmCipherTest {
 
     /**
      * NIST AES Test Vectors
-     * http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf
+     * https://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf
      * @throws Exception Test failure
      */
     @Test

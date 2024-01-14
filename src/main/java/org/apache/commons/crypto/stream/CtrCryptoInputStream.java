@@ -66,8 +66,8 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * a lossless operation (concatenation, addition, or XOR).
      *
      * @see <a
-     *      href="http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">
-     *      http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29</a>
+     *      href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29">
+     *      https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_.28CTR.29</a>
      *
      * @param initIV initial IV
      * @param counter counter for input stream position
