@@ -94,6 +94,7 @@
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">StreamInput.StreamInput(InputStream, int) now throws NullPointerException on null input.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">ChannelOutput.ChannelOutput(WritableByteChannel) now throws NullPointerException on null input.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">StreamOutput.StreamOutput(OutputStream, int) now throws NullPointerException on null input.</action>
+      <action dev="ggregory"     type="fix" due-to="Gary Gregory">SecureRandom in JavaCryptoRandom is not seeded.</action>
       <!-- UPDATE -->
       <action                    type="update" dev="sebb" due-to="Ludovic Henry">Dockerfile: Bump maven to 3.8.8 (previous no longer online)</action>
       <action                    type="update" dev="sebb">Tests: show details of crypt library actually loaded</action>

@@ -47,6 +47,8 @@ final class JavaCryptoRandom implements CryptoRandom {
         } catch (final NoSuchAlgorithmException e) {
             tmp = new SecureRandom();
         }
+        // Seed the SecureRandom by calling nextBytes(byte[])
+        tmp.nextBytes(new byte[8]);
         instance = tmp;
     }
 
