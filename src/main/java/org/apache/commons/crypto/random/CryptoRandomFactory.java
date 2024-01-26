@@ -168,8 +168,7 @@ public class CryptoRandomFactory {
      * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
      */
     public static CryptoRandom getCryptoRandom() throws GeneralSecurityException {
-        final Properties properties = new Properties();
-        return getCryptoRandom(properties);
+        return getCryptoRandom(new Properties());
     }
 
     /**
