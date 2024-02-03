@@ -32,6 +32,26 @@ import org.apache.commons.crypto.utils.Utils;
  */
 final class JavaCryptoRandom implements CryptoRandom {
 
+    private static final int BUFFER_SIZE = 8;
+
+    private static SecureRandom createSecureRandom(final Properties properties) {
+        try {
+            return SecureRandom.getInstance(getAlgorithm(properties));
+        } catch (final NoSuchAlgorithmException e) {
+            return new SecureRandom();
+        }
+    }
+
+    private static String getAlgorithm(final Properties properties) {
+        return properties.getProperty(CryptoRandomFactory.JAVA_ALGORITHM_KEY, CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT);
+    }
+
+    private static SecureRandom seed(final SecureRandom secureRandom) {
+        // Seed the SecureRandom by calling nextBytes(byte[])
+        secureRandom.nextBytes(new byte[BUFFER_SIZE]);
+        return secureRandom;
+    }
+
     private final SecureRandom instance;
 
     /**
@@ -41,15 +61,7 @@ final class JavaCryptoRandom implements CryptoRandom {
      *        default of {@link CryptoRandomFactory#JAVA_ALGORITHM_DEFAULT}
      */
     public JavaCryptoRandom(final Properties properties) {
-        SecureRandom tmp;
-        try {
-            tmp = SecureRandom.getInstance(properties.getProperty(CryptoRandomFactory.JAVA_ALGORITHM_KEY, CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT));
-        } catch (final NoSuchAlgorithmException e) {
-            tmp = new SecureRandom();
-        }
-        // Seed the SecureRandom by calling nextBytes(byte[])
-        tmp.nextBytes(new byte[8]);
-        instance = tmp;
+        instance = seed(createSecureRandom(properties));
     }
 
     /**
@@ -70,7 +82,7 @@ final class JavaCryptoRandom implements CryptoRandom {
         Utils.checkArgument(numBits >= 0 && numBits <= Integer.SIZE);
         // Can't simply invoke instance.next(bits) here, because that is package protected.
         // But, this should do.
-        return instance.nextInt() >>> (Integer.SIZE - numBits);
+        return instance.nextInt() >>> Integer.SIZE - numBits;
     }
 
     /**

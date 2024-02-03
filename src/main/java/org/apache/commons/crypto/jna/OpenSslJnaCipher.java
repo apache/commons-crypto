@@ -48,6 +48,7 @@ final class OpenSslJnaCipher implements CryptoCipher {
     private static final int AES_128_ENCODED_KEYLEN = 16;
     private static final int AES_192_ENCODED_KEYLEN = 24;
     private static final int AES_256_ENCODED_KEYLEN = 32;
+    private static final int IV_LENGTH = 16;
 
     /**
      * AlgorithmMode of JNA. Currently only support AES/CTR/NoPadding.
@@ -76,8 +77,6 @@ final class OpenSslJnaCipher implements CryptoCipher {
     private final AlgorithmMode algorithmMode;
     private final int padding;
     private final String transformation;
-
-    private final int IV_LENGTH = 16;
 
     /**
      * Constructs a {@link CryptoCipher} using JNA into OpenSSL

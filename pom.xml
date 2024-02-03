@@ -18,7 +18,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>65</version>
+    <version>66</version>
   </parent>
 
   <artifactId>commons-crypto</artifactId>
@@ -164,8 +164,7 @@ The following provides more details on the included cryptographic software:
     <target.name>all</target.name>
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
 
-    <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
-    <maven.buildNumber.timestampFormat>yyyy-MM-dd HH:mm:ssZ</maven.buildNumber.timestampFormat>
+    <project.build.outputTimestamp>2024-01-01T00:00:00Z</project.build.outputTimestamp>
   </properties>
 
   <profiles>
