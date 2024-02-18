@@ -59,7 +59,7 @@ public abstract class AbstractCipherTest {
 	private Properties props;
 
 	protected String cipherClass;
-	protected String[] transformations = new String[] {
+	protected String[] transformations = {
 		AES.CBC_NO_PADDING,
 		AES.CBC_PKCS5_PADDING,
 		AES.CTR_NO_PADDING,

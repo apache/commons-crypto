@@ -108,7 +108,7 @@ public final class OpenSslJna {
         }
         info("OpenSSL library loaded OK, version: 0x%s", Long.toHexString(OpenSslNativeJna.OpenSSL_version_num()));
         for (int i = 0; i <= Utils.OPENSSL_VERSION_MAX_INDEX; i++) {
-            String data = OpenSslNativeJna.OpenSSLVersion(i);
+            final String data = OpenSslNativeJna.OpenSSLVersion(i);
             if (!"not available".equals(data)) {
                 info("OpenSSLVersion(%d): %s", i, data);
             }

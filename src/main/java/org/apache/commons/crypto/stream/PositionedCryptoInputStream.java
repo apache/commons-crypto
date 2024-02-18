@@ -149,7 +149,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         while ((cs = cipherStatePool.poll()) != null) {
             try {
                 cs.getCryptoCipher().close();
-            } catch (IOException ignored) {
+            } catch (final IOException ignored) {
                 // ignore
             }
         }

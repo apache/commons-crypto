@@ -108,7 +108,7 @@ public final class Crypto {
     public static final String JNA_LIBRARY_NAME_DEFAULT = "crypto";
     /**
      * Name for loading SSL crypto library using dlopen on macOS
-     * JNA automatically adds prefix and suffix; dlopen does not 
+     * JNA automatically adds prefix and suffix; dlopen does not
      */
     public static final String MACOS_LIBRARY_NAME_DEFAULT = "libcrypto.dylib";
 
@@ -201,7 +201,7 @@ public final class Crypto {
             info("DLL path: %s", OpenSslInfoNative.DLLPath());
             info("Additional OpenSSL_version(n) details:");
             for (int j = 1; j < Utils.OPENSSL_VERSION_MAX_INDEX; j++) { // entry 0 is shown above
-                String data = OpenSslInfoNative.OpenSSLVersion(j);
+                final String data = OpenSslInfoNative.OpenSSLVersion(j);
                 if (!"not available".equals(data)) {
                     info("OpenSSLVersion(%d): %s", j, data);
                 }
@@ -212,7 +212,7 @@ public final class Crypto {
                 try (CryptoRandom cryptoRandom = CryptoRandomFactory.getCryptoRandom(props)) {
                     info("Random instance created OK: %s", cryptoRandom);
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 info("Failed: %s", e);
             }
             try { // CryptoCipher
@@ -221,11 +221,11 @@ public final class Crypto {
                 try (CryptoCipher cryptoCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING, props)) {
                     info("Cipher %s instance created OK: %s", AES.CTR_NO_PADDING, cryptoCipher);
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 info("Failed: %s", e);
             }
         } else {
-            Throwable error = getLoadingError();
+            final Throwable error = getLoadingError();
             String msg = "";
             if (error != null) {
                 msg = error.getMessage();

@@ -61,7 +61,7 @@ final class OpenSslNativeJna {
             && System.getProperty(Crypto.JNA_LIBRARY_NAME_PROPERTY, "").isEmpty()
             && System.getProperty(Crypto.JNA_LIBRARY_PATH_PROPERTY, "").isEmpty()
         ) {
-            String ret = OpenSslMacOS.checkLibrary(Crypto.MACOS_LIBRARY_NAME_DEFAULT);
+            final String ret = OpenSslMacOS.checkLibrary(Crypto.MACOS_LIBRARY_NAME_DEFAULT);
             if (ret != null) {
                 throw new UnsatisfiedLinkError(
                     String.format("Cannot load default library '%s'; please define %s! (%s)",

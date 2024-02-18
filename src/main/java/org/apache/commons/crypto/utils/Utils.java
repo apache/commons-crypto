@@ -211,7 +211,7 @@ public final class Utils {
      * However on Windows, all the DLL versions seem to be stored in the same directory.
      * This means that Windows code needs to be given the versioned name (e.g. libcrypto-1_1-x64)
      * This is done by defining Crypto.JNI_LIBRARY_NAME.
-     * 
+     *
      * Do not change the method name or its signature!
      */
     static String libraryPath(final String name) {

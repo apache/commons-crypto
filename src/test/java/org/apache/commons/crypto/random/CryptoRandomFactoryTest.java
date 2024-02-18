@@ -79,7 +79,7 @@ public class CryptoRandomFactoryTest {
     @Test
     public void testExceptionInInitializerErrorRandom() throws GeneralSecurityException, IOException {
         final Properties properties = new Properties();
-        String classes = ExceptionInInitializerErrorRandom.class.getName().concat(",")
+        final String classes = ExceptionInInitializerErrorRandom.class.getName().concat(",")
             .concat(CryptoRandomFactory.RandomProvider.JAVA.getClassName());
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, classes);
         // Invoke 3 times to test the reentrancy of the method in the scenario of class initialization failure.

@@ -45,9 +45,9 @@ class OpenSslMacOS {
      * @param path
      * @return null if OK, else error message
      */
-    public static String checkLibrary(String path) {
-        boolean loadedOK = dlopen_preflight(path) != 0;
-        String dlerror = dlerror(); // fetch error, and clear for next call
+    public static String checkLibrary(final String path) {
+        final boolean loadedOK = dlopen_preflight(path) != 0;
+        final String dlerror = dlerror(); // fetch error, and clear for next call
         return  loadedOK ? null : dlerror;
     }
 

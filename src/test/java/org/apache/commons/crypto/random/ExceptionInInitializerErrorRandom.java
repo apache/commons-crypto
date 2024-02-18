@@ -43,7 +43,7 @@ public class ExceptionInInitializerErrorRandom implements CryptoRandom {
     }
 
     @Override
-    public void nextBytes(byte[] bytes) {
+    public void nextBytes(final byte[] bytes) {
         // empty
     }
 }
