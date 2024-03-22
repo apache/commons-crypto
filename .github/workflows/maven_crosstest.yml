@@ -86,7 +86,7 @@ jobs:
           time IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-gh src/docker/build_linux32.sh
           ls -l target
       - name: Save generated Linux binaries
-        uses: actions/cache/save@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: ${{ env.CACHE-LINUX }}
           path: target
@@ -108,7 +108,7 @@ jobs:
           server-id: apache.snapshots.https # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: NEXUS_USER # env variable for username in deploy
           server-password: NEXUS_PW # env variable for token in deploy
-      - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -123,7 +123,7 @@ jobs:
           mvn -V -B -ntp -DskipTests -Drat.skip process-classes -Dtarget.name=mac-aarch64
           ls -l target
       - name: Retrieve saved Linux binaries
-        uses: actions/cache/restore@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: ${{ env.CACHE-LINUX }}
           path: target
@@ -141,7 +141,7 @@ jobs:
       # At some point would like to run the cross tests using only the jars
       # In the meantime, use the target class structure
       - name: Save generated Linux + macOS binaries
-        uses: actions/cache/save@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: ${{ env.CACHE-ALL }}
           path: target
@@ -176,7 +176,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Retrieve saved target tree
-        uses: actions/cache/restore@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: ${{ env.CACHE-ALL }}
           path: target
@@ -185,7 +185,7 @@ jobs:
       - name: Show files
         run: ls -l target
       - name: Cache Maven
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -224,7 +224,7 @@ jobs:
         run: |
           echo "IMAGE_PREFIX=$(echo ${{ env.REGISTRY }}/${{ github.repository }} | tr '[A-Z]' '[a-z]')" >>$GITHUB_ENV
       - name: Retrieve saved target tree
-        uses: actions/cache/restore@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4.0.1
+        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
           key: ${{ env.CACHE-ALL }}
           path: target
