@@ -63,7 +63,7 @@
    -->
 
   <body>
-    <release version="1.2.1" date="202X-MM-DD" description="Minor release (minimum Java 8 and OpenSSL 1.1.1)">
+    <release version="1.2.1" date="YYYY-MM-DD" description="Minor release (minimum Java 8 and OpenSSL 1.1.1)">
       <!-- FIX -->
       <action issue="CRYPTO-158" type="fix" due-to=" Juan F Arjona" dev="sebb">Illegal reflective access</action>
       <action issue="CRYPTO-179" type="fix" dev="sebb">Crash on macOS with default crypto library</action>
@@ -104,6 +104,7 @@
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump net.java.dev.jna:jna from 5.13.0 to 5.14.0 #287.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump org.codehaus.mojo:exec-maven-plugin from 3.1.1 to 3.2.0 #303.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump jakarta.xml.bind:jakarta.xml.bind-api from 4.0.1 to 4.0.2 #311.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump commons-io:commons-io from 2.15.1 to 2.16.0 #321.</action>
       <!-- ADD -->
       <action                    type="add" dev="sebb">Added support for OpenSSL 3.0, 3.1, 3.2</action>
       <action                    type="add" dev="sebb">Implement OpenSSL_version_num for JNA</action>
