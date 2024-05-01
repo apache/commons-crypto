@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
+import org.apache.commons.lang3.SystemProperties;
 import org.junit.jupiter.api.Test;
 
 public class CryptoRandomFactoryTest {
@@ -116,7 +117,7 @@ public class CryptoRandomFactoryTest {
     @Test
     public void testGetOSRandom() throws GeneralSecurityException, IOException {
         // Windows does not have a /dev/random device
-        assumeTrue(!System.getProperty("os.name").contains("Windows"));
+        assumeTrue(!SystemProperties.getOsName().contains("Windows"));
         final Properties properties = new Properties();
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, CryptoRandomFactory.RandomProvider.OS.getClassName());
         try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
