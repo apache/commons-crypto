@@ -53,7 +53,7 @@ jobs:
         include:
           - os: macos-latest
             java: 8
-            experimental: false
+            experimental: true
           # macos-latest is currently macos-12
           # - os: macos-12
           #   java: 8
