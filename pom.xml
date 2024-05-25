@@ -261,8 +261,7 @@ The following provides more details on the included cryptographic software:
           <!-- Hook the benchmarks to the test phase -->
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.2.0</version>
+            <artifactId>maven-plugin</artifactId>
             <executions>
               <execution>
                 <id>benchmark</id>
