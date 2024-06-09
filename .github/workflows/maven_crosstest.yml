@@ -161,7 +161,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-latest
+          - os: macos-13  # macos-14 does not have Java 8
             java: 8
             expectedPath: Mac/x86_64
           - os: ubuntu-latest
