@@ -94,7 +94,7 @@ jobs:
   # Use macOS to build its native binaries and package them with the Linux/Windows ones
   package-macos:
     needs: build-cross-linux
-    runs-on: macos-latest
+    runs-on: macos-13 # macos-14 does not have Java 8
     steps:
       - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
         with:
