@@ -198,7 +198,7 @@ public final class Utils {
      * Override the default DLL name if Crypto.JNI_LIBRARY_PATH is a valid directory
      * If Crypto.JNI_LIBRARY_NAME is defined, this overrides the default name.
      *
-     * @param name - the default name, passed from native code
+     * @param name   the default name, passed from native code
      * @return the updated library path
      * This method is designed for use from the DynamicLoader native code.
      * Although it could all be implemented in native code, this hook method
