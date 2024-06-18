@@ -362,7 +362,7 @@ public class CryptoOutputStream extends OutputStream implements
     }
 
     /**
-     * Overrides the {@link java.io.OutputStream#write(byte[], int, int)}.
+     * Overrides the {@link OutputStream#write(byte[], int, int)}.
      * Encryption is buffer based. If there is enough room in {@link #inBuffer},
      * then write to this buffer. If {@link #inBuffer} is full, then do
      * encryption and write data to the underlying stream.
@@ -434,7 +434,7 @@ public class CryptoOutputStream extends OutputStream implements
     }
 
     /**
-     * Overrides the {@link java.io.OutputStream#write(byte[])}. Writes the
+     * Overrides the {@link OutputStream#write(byte[])}. Writes the
      * specified byte to this output stream.
      *
      * @param b the data.

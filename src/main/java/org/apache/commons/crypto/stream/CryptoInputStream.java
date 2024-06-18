@@ -469,7 +469,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     }
 
     /**
-     * Overrides the {@link java.io.InputStream#read()}. Reads the next byte of
+     * Overrides the {@link InputStream#read()}. Reads the next byte of
      * data from the input stream.
      *
      * @return the next byte of data, or {@code EOS (-1)} if the end of the
@@ -486,7 +486,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     }
 
     /**
-     * Overrides the {@link java.io.InputStream#read(byte[], int, int)}.
+     * Overrides the {@link InputStream#read(byte[], int, int)}.
      * Decryption is buffer based. If there is data in {@link #outBuffer}, then
      * read it out of this buffer. If there is no data in {@link #outBuffer},
      * then read more from the underlying stream and do the decryption.
@@ -573,7 +573,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     }
 
     /**
-     * Overrides the {@link java.io.InputStream#skip(long)}. Skips over and
+     * Overrides the {@link InputStream#skip(long)}. Skips over and
      * discards {@code n} bytes of data from this input stream.
      *
      * @param n the number of bytes to be skipped.
