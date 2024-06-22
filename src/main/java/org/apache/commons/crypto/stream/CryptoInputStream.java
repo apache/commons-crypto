@@ -78,8 +78,8 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * @return the remaining buffer size.
      */
     static int checkBufferSize(final CryptoCipher cipher, final int bufferSize) {
-        Utils.checkArgument(bufferSize >= CryptoInputStream.MIN_BUFFER_SIZE,
-                "Minimum value of buffer size is " + CryptoInputStream.MIN_BUFFER_SIZE + ".");
+        Utils.checkArgument(bufferSize >= MIN_BUFFER_SIZE,
+                "Minimum value of buffer size is " + MIN_BUFFER_SIZE + ".");
         return bufferSize - bufferSize % cipher.getBlockSize();
     }
 
@@ -103,8 +103,8 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * @return the buffer size.
      * */
     static int getBufferSize(final Properties props) {
-        final String bufferSizeStr = props.getProperty(CryptoInputStream.STREAM_BUFFER_SIZE_KEY, "");
-        return bufferSizeStr.isEmpty() ? CryptoInputStream.STREAM_BUFFER_SIZE_DEFAULT : Integer.parseInt(bufferSizeStr);
+        final String bufferSizeStr = props.getProperty(STREAM_BUFFER_SIZE_KEY, "");
+        return bufferSizeStr.isEmpty() ? STREAM_BUFFER_SIZE_DEFAULT : Integer.parseInt(bufferSizeStr);
     }
 
     private final byte[] oneByteBuf = new byte[1];
@@ -158,7 +158,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
             final Key key, final AlgorithmParameterSpec params) throws IOException {
         this.input = input;
         this.cipher = cipher;
-        this.bufferSize = CryptoInputStream.checkBufferSize(cipher, bufferSize);
+        this.bufferSize = checkBufferSize(cipher, bufferSize);
 
         this.key = key;
         this.params = params;
@@ -227,8 +227,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     public CryptoInputStream(final String transformation,
             final Properties properties, final InputStream inputStream, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
-        this(inputStream, Utils.getCipherInstance(transformation, properties),
-                CryptoInputStream.getBufferSize(properties), key, params);
+        this(inputStream, Utils.getCipherInstance(transformation, properties), getBufferSize(properties), key, params);
     }
 
     /**
@@ -249,8 +248,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     public CryptoInputStream(final String transformation,
             final Properties properties, final ReadableByteChannel channel, final Key key,
             final AlgorithmParameterSpec params) throws IOException {
-        this(channel, Utils.getCipherInstance(transformation, properties), CryptoInputStream
-                .getBufferSize(properties), key, params);
+        this(channel, Utils.getCipherInstance(transformation, properties), getBufferSize(properties), key, params);
     }
 
     /**

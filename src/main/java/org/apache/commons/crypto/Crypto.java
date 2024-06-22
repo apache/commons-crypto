@@ -66,19 +66,19 @@ public final class Crypto {
      * The configuration key of the file name for loading crypto library.
      */
 
-    public static final String LIB_NAME_KEY = Crypto.CONF_PREFIX + "lib.name";
+    public static final String LIB_NAME_KEY = CONF_PREFIX + "lib.name";
 
     // native lib related configuration keys
     /**
      * The configuration key of the path for loading crypto library.
      */
-    public static final String LIB_PATH_KEY = Crypto.CONF_PREFIX + "lib.path";
+    public static final String LIB_PATH_KEY = CONF_PREFIX + "lib.path";
 
     /**
      * The configuration key of temp directory for extracting crypto library.
      * Defaults to "java.io.tempdir" if not found.
      */
-    public static final String LIB_TEMPDIR_KEY = Crypto.CONF_PREFIX + "lib.tempdir";
+    public static final String LIB_TEMPDIR_KEY = CONF_PREFIX + "lib.tempdir";
 
     // property names related to SSL crypto library loading
 
@@ -102,7 +102,7 @@ public final class Crypto {
     /**
      * Override property for the default SSL crypto library name when using JNA
      */
-    public static final String JNA_LIBRARY_NAME_PROPERTY = Crypto.CONF_PREFIX + "OpenSslNativeJna";
+    public static final String JNA_LIBRARY_NAME_PROPERTY = CONF_PREFIX + "OpenSslNativeJna";
 
     /** Default name for loading SSL crypto library using JNA */
     public static final String JNA_LIBRARY_NAME_DEFAULT = "crypto";
@@ -113,7 +113,7 @@ public final class Crypto {
     public static final String MACOS_LIBRARY_NAME_DEFAULT = "libcrypto.dylib";
 
     /** If true, print some debug output */
-    public static final boolean IS_DEBUG = Boolean.getBoolean(Crypto.CONF_PREFIX + "debug");
+    public static final boolean IS_DEBUG = Boolean.getBoolean(CONF_PREFIX + "debug");
 
     private static boolean quiet;
 

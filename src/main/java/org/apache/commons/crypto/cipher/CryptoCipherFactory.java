@@ -151,7 +151,7 @@ public class CryptoCipherFactory {
      * If the property is missing or empty, {@link CLASSES_DEFAULT} is returned
      */
     private static String getCipherClassString(final Properties props) {
-        String cipherClassString = props.getProperty(CryptoCipherFactory.CLASSES_KEY, CLASSES_DEFAULT);
+        String cipherClassString = props.getProperty(CLASSES_KEY, CLASSES_DEFAULT);
         if (cipherClassString.isEmpty()) {
             cipherClassString = CLASSES_DEFAULT;
         }

@@ -154,7 +154,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
         this.initIV = iv.clone();
         this.iv = iv.clone();
 
-        CryptoInputStream.checkStreamCipher(cipher);
+        checkStreamCipher(cipher);
 
         resetStreamOffset(streamOffset);
     }
@@ -224,7 +224,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
             final byte[] iv, final long streamOffset) throws IOException {
         this(inputStream, Utils.getCipherInstance(
                 AES.CTR_NO_PADDING, properties),
-                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
+                getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
@@ -258,7 +258,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
             final byte[] key, final byte[] iv, final long streamOffset) throws IOException {
         this(in, Utils.getCipherInstance(
                 AES.CTR_NO_PADDING, properties),
-                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
+                getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
@@ -561,7 +561,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      */
     protected void resetCipher(final long position) throws IOException {
         final long counter = getCounter(position);
-        CtrCryptoInputStream.calculateIV(initIV, counter, iv);
+        calculateIV(initIV, counter, iv);
         try {
             cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         } catch (final GeneralSecurityException e) {

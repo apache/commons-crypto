@@ -112,8 +112,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by PositionedCryptoInputStream.
     public PositionedCryptoInputStream(final Properties properties, final Input in, final byte[] key,
             final byte[] iv, final long streamOffset) throws IOException {
-        this(properties, in, Utils.getCipherInstance(AES.CTR_NO_PADDING, properties),
-                CryptoInputStream.getBufferSize(properties), key, iv, streamOffset);
+        this(properties, in, Utils.getCipherInstance(AES.CTR_NO_PADDING, properties), getBufferSize(properties), key, iv, streamOffset);
     }
 
     /**
@@ -391,7 +390,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     @SuppressWarnings("resource") // getCryptoCipher does not allocate
     private void resetCipher(final CipherState state, final long position, final byte[] iv) {
         final long counter = getCounter(position);
-        CtrCryptoInputStream.calculateIV(getInitIV(), counter, iv);
+        calculateIV(getInitIV(), counter, iv);
         try {
             state.getCryptoCipher().init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         } catch (final GeneralSecurityException e) {

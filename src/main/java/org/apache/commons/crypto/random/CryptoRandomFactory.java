@@ -224,7 +224,7 @@ public class CryptoRandomFactory {
      * @return the CryptoRandom class based on the props.
      */
     private static String getRandomClassString(final Properties props) {
-        String randomClassString = props.getProperty(CryptoRandomFactory.CLASSES_KEY, CLASSES_DEFAULT);
+        String randomClassString = props.getProperty(CLASSES_KEY, CLASSES_DEFAULT);
         if (randomClassString.isEmpty()) { // TODO does it make sense to treat the empty string as the default?
             randomClassString = CLASSES_DEFAULT;
         }
