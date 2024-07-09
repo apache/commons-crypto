@@ -180,7 +180,7 @@ public class GcmCipherTest {
             len = enc.update(input, 0, partLen, encOutput, 0);
             assertEquals(partLen, len);
             len = enc.doFinal(input, partLen, input.length - partLen, encOutput, partLen);
-            assertEquals((input.length + (iv.getTLen() >> 3) - partLen), len);
+            assertEquals(input.length + (iv.getTLen() >> 3) - partLen, len);
 
             assertArrayEquals(expectedOutput, encOutput);
         }
