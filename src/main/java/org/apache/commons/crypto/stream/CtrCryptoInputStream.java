@@ -384,8 +384,8 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Does the decryption using inBuffer as input and buf as output. Upon
      * return, inBuffer is cleared; the buf's position will be equal to
-     * <i>p</i>&nbsp;{@code +}&nbsp;<i>n</i> where <i>p</i> is the position
-     * before decryption, <i>n</i> is the number of bytes decrypted. The buf's
+     * <em>p</em>&nbsp;{@code +}&nbsp;<em>n</em> where <em>p</em> is the position
+     * before decryption, <em>n</em> is the number of bytes decrypted. The buf's
      * limit will not have changed.
      *
      * @param buf The buffer into which bytes are to be transferred.

@@ -59,19 +59,19 @@ public interface Output extends Closeable {
      * Writes a sequence of bytes to this output from the given buffer.
      *
      * <p>
-     * An attempt is made to write up to <i>r</i> bytes to the channel, where
-     * <i>r</i> is the number of bytes remaining in the buffer, that is,
+     * An attempt is made to write up to <em>r</em> bytes to the channel, where
+     * <em>r</em> is the number of bytes remaining in the buffer, that is,
      * {@code src.remaining()}, at the moment this method is invoked.
      *
      * <p>
-     * Suppose that a byte sequence of length <i>n</i> is written, where
-     * {@code 0}&nbsp;{@code <=}&nbsp;<i>n</i>&nbsp;{@code <=}
-     * &nbsp;<i>r</i>. This byte sequence will be transferred from the buffer
-     * starting at index <i>p</i>, where <i>p</i> is the buffer's position at
+     * Suppose that a byte sequence of length <em>n</em> is written, where
+     * {@code 0}&nbsp;{@code <=}&nbsp;<em>n</em>&nbsp;{@code <=}
+     * &nbsp;<em>r</em>. This byte sequence will be transferred from the buffer
+     * starting at index <em>p</em>, where <em>p</em> is the buffer's position at
      * the moment this method is invoked; the index of the last byte written
-     * will be <i>p</i>&nbsp;{@code +}&nbsp;<i>n</i>&nbsp;{@code -}&nbsp;
+     * will be <em>p</em>&nbsp;{@code +}&nbsp;<em>n</em>&nbsp;{@code -}&nbsp;
      * {@code 1}. Upon return the buffer's position will be equal to
-     * <i>p</i>&nbsp;{@code +}&nbsp;<i>n</i>; its limit will not have changed.
+     * <em>p</em>&nbsp;{@code +}&nbsp;<em>n</em>; its limit will not have changed.
      *
      * @param src The buffer from which bytes are to be retrieved.
      *

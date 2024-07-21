@@ -159,7 +159,7 @@ public final class Utils {
      * @param properties The {@link Properties} class represents a set of
      *        properties.
      * @param transformation the name of the transformation, e.g.,
-     * <i>AES/CBC/PKCS5Padding</i>.
+     * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
      * @return the CryptoCipher instance.

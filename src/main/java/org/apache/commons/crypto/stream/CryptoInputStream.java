@@ -213,7 +213,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * Constructs a {@link CryptoInputStream}.
      *
      * @param transformation the name of the transformation, e.g.,
-     * <i>AES/CBC/PKCS5Padding</i>.
+     * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
      * @param properties The {@code Properties} class represents a set of
@@ -234,7 +234,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * Constructs a {@link CryptoInputStream}.
      *
      * @param transformation the name of the transformation, e.g.,
-     * <i>AES/CBC/PKCS5Padding</i>.
+     * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
      * @param properties The {@code Properties} class represents a set of

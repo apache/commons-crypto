@@ -64,19 +64,19 @@ public interface Input extends Closeable {
      * Reads a sequence of bytes from input into the given buffer.
      *
      * <p>
-     * An attempt is made to read up to <i>r</i> bytes from the input, where
-     * <i>r</i> is the number of bytes remaining in the buffer, that is,
+     * An attempt is made to read up to <em>r</em> bytes from the input, where
+     * <em>r</em> is the number of bytes remaining in the buffer, that is,
      * {@code dst.remaining()}, at the moment this method is invoked.
      *
      * <p>
-     * Suppose that a byte sequence of length <i>n</i> is read, where {@code 0}
-     * &nbsp;{@code <=}&nbsp;<i>n</i>&nbsp;{@code <=}&nbsp;<i>r</i>.
+     * Suppose that a byte sequence of length <em>n</em> is read, where {@code 0}
+     * &nbsp;{@code <=}&nbsp;<em>n</em>&nbsp;{@code <=}&nbsp;<em>r</em>.
      * This byte sequence will be transferred into the buffer so that the first
-     * byte in the sequence is at index <i>p</i> and the last byte is at index
-     * <i>p</i>&nbsp;{@code +}&nbsp;<i>n</i>&nbsp;{@code -}&nbsp;{@code 1},
-     * where <i>p</i> is the buffer's position at the moment this method is
+     * byte in the sequence is at index <em>p</em> and the last byte is at index
+     * <em>p</em>&nbsp;{@code +}&nbsp;<em>n</em>&nbsp;{@code -}&nbsp;{@code 1},
+     * where <em>p</em> is the buffer's position at the moment this method is
      * invoked. Upon return the buffer's position will be equal to
-     * <i>p</i>&nbsp;{@code +}&nbsp;<i>n</i>; its limit will not have changed.
+     * <em>p</em>&nbsp;{@code +}&nbsp;<em>n</em>; its limit will not have changed.
      *
      * @param dst The buffer into which bytes are to be transferred.
      * @return the total number of bytes read into the buffer, or
