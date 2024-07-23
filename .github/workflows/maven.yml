@@ -118,6 +118,7 @@ jobs:
       # N.B. This must *not* be run under the bash shell, as that changes the default openssl library under Windows
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
+        Mac_INC_OPENSSL: /opt/homebrew/include # Try to fix macos-14
       run: |
         mvn -V -B -ntp -DskipTests clean package
 
@@ -133,8 +134,6 @@ jobs:
     - name: Test with Maven (macOS) test-with-jar
       # macOS needs to override the library name (macOS-11)
       if: ${{ runner.os == 'macOS' }}
-      env:
-        Mac_INC_OPENSSL: /opt/homebrew/include # Try to fix macos-14
       run: |
         mvn -V -B -ntp surefire:test -Djni.library.path=$ENGINESDIR -Djna.library.path=$ENGINESDIR -Ptest-with-jar
     - name: Test with Maven (macOS) no library override
