@@ -194,6 +194,7 @@ Linux-riscv64_LINKFLAGS := -shared -static-libgcc
 Linux-riscv64_LIBNAME   := libcommons-crypto.so
 Linux-riscv64_COMMONS_CRYPTO_FLAGS  :=
 
+# For GitHub on macos-14, this needs to be defined as /opt/homebrew/include
 ifndef Mac_INC_OPENSSL
 Mac_INC_OPENSSL   := /usr/local/opt/openssl/include
 endif
