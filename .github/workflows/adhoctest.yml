@@ -49,9 +49,10 @@ jobs:
     - name: Find aes.h on !Windows
       if: ${{ runner.os != 'Windows' }}
       run: |
-        which -a openssl
         find /usr -name aes.h -ls || true
         find /usr -type d -name openssl -ls || true
         find /opt -name aes.h -ls || true
         find /opt -type d -name openssl -ls || true
+        ls -l /usr/local/include /usr/local/opt/openssl/include # is this where macos12-13 find aes.h?
+        ls -l /opt/local/include # Try this for macos-14
         which -a openssl | while read a ;do echo "$a" ; "$a" version -a; echo '======='; done
