@@ -118,7 +118,7 @@ jobs:
       # N.B. This must *not* be run under the bash shell, as that changes the default openssl library under Windows
       env:
         OPENSSL_HOME: "C:\\Miniconda\\Library"
-        Mac_INC_OPENSSL: /opt/homebrew/include # Try to fix macos-14
+        Mac_INC_OPENSSL: /opt/homebrew/include # Try to fix macos-14 (does not see to affect other mac versions)
       run: |
         mvn -V -B -ntp -DskipTests clean package
 
