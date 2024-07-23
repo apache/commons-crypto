@@ -51,4 +51,5 @@ jobs:
       run: |
         which -a openssl
         find /usr -name aes.h -ls || true
+        find /usr -type d -name openssl -ls || true
         which -a openssl | while read a ;do echo "$a" ; "$a" version -a; echo '======='; done
