@@ -34,7 +34,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [macos-latest]
         # os: [macos-11, macos-12, macos-13, ubuntu-20.04, ubuntu-22.04]
       fail-fast: false
 
@@ -42,13 +42,13 @@ jobs:
     - name: OpenSSL version
       run: openssl version -a
     - name: Find libcrypto on Windows
-      if: ${{ startsWith(matrix.os,'windows') }}
+      if: ${{ runner.os == 'Windows' }}
       run: |
         dir "C:\Program Files\OpenSSL*\*"
         dir "C:\Program Files\OpenSSL*\lib\*"
-    - name: Find libcrypto on !Windows
-      if: ${{ ! startsWith(matrix.os,'windows') }}
+    - name: Find aes.h on !Windows
+      if: ${{ runner.os != 'Windows' }}
       run: |
         which -a openssl
-        find /usr -name libcrypto* -ls || true
+        find /usr -name aes.h -ls || true
         which -a openssl | while read a ;do echo "$a" ; "$a" version -a; echo '======='; done
