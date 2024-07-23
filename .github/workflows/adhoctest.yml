@@ -56,4 +56,6 @@ jobs:
         find /opt -type d -name openssl -ls || true
         ls -l /usr/local/include /usr/local/opt/openssl/include  || true # is this where macos12-13 find aes.h?
         ls -l /opt/local/include  || true # Try this for macos-14
+        find /usr -type l -name openssl -ls 2>/dev/null
+        find /opt -type l -name openssl -ls 2>/dev/null
         which -a openssl | while read a ;do echo "$a" ; "$a" version -a; echo '======='; done
