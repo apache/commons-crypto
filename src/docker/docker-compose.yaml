@@ -17,7 +17,6 @@
 
 # See also docker-compose-gh.yml, which uses the images built by the docker_images.yml workflow
 
-version: '3'
 services:
   crypto:
     image: commons-crypto
