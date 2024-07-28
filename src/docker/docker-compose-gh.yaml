@@ -16,7 +16,6 @@
 # Version of docker-compose for use with Github actions
 # References remote images and excludes build info
 
-version: '3'
 services:
   crypto-gh:
     image: ${IMAGE_PREFIX}:latest
