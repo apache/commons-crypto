@@ -123,7 +123,7 @@ final class JceCipher implements CryptoCipher {
      * <p>
      * This is the same name that was specified in one of the
      * {@code CryptoCipherFactory#getInstance} calls that created this
-     * {@code CryptoCipher} object..
+     * {@code CryptoCipher} object.
      * </p>
      *
      * @return the algorithm name of this {@code CryptoCipher} object.
