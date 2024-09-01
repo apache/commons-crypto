@@ -17,7 +17,7 @@
 */
 package org.apache.commons.crypto.random;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.security.GeneralSecurityException;
 import java.util.Properties;
@@ -29,7 +29,7 @@ public class JavaCryptoRandomTest extends AbstractRandomTest {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, JavaCryptoRandom.class.getName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        assertTrue(random instanceof JavaCryptoRandom, "The CryptoRandom should be: " + JavaCryptoRandom.class.getName());
+        assertInstanceOf(JavaCryptoRandom.class, random, "The CryptoRandom should be: " + JavaCryptoRandom.class.getName());
         return random;
     }
 

@@ -18,8 +18,8 @@
 package org.apache.commons.crypto.random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.FileNotFoundException;
@@ -39,7 +39,7 @@ public class OsCryptoRandomTest extends AbstractRandomTest {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        assertTrue(random instanceof OsCryptoRandom, "The CryptoRandom should be: " + OsCryptoRandom.class.getName());
+        assertInstanceOf(OsCryptoRandom.class, random, "The CryptoRandom should be: " + OsCryptoRandom.class.getName());
         return random;
     }
 

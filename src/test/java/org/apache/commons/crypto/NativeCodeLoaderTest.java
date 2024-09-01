@@ -18,6 +18,7 @@
 
 package org.apache.commons.crypto;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -80,7 +81,7 @@ public class NativeCodeLoaderTest {
             System.setProperty(Crypto.LIB_NAME_KEY, empty.getFileName().toString());
             final Throwable result = NativeCodeLoader.loadLibrary();
             assertNotNull(result);
-            assertTrue(result instanceof UnsatisfiedLinkError);
+            assertInstanceOf(UnsatisfiedLinkError.class, result);
         } finally {
             Files.delete(empty);
             if (nameKey != null) {

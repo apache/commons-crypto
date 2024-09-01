@@ -17,7 +17,7 @@
 */
 package org.apache.commons.crypto.jna;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.security.GeneralSecurityException;
 import java.util.Properties;
@@ -35,7 +35,7 @@ public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, OpenSslJnaCryptoRandom.class.getName());
         final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props);
-        assertTrue(random instanceof OpenSslJnaCryptoRandom, "The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName());
+        assertInstanceOf(OpenSslJnaCryptoRandom.class, random, "The CryptoRandom should be: " + OpenSslJnaCryptoRandom.class.getName());
         return random;
     }
 
