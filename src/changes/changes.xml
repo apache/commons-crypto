@@ -101,7 +101,7 @@
       <action                    type="update" dev="sebb">Tests: show details of crypt library actually loaded</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 74 #323, #369, #380, #382.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>
-      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump net.java.dev.jna:jna from 5.13.0 to 5.14.0 #287.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump net.java.dev.jna:jna from 5.13.0 to 5.15.0 #287, #387.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump org.codehaus.mojo:exec-maven-plugin from 3.1.1 to 3.2.0 #303.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump jakarta.xml.bind:jakarta.xml.bind-api from 4.0.1 to 4.0.2 #311.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump commons-io:commons-io from 2.15.1 to 2.16.1 #321, #325.</action>
