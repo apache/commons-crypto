@@ -44,7 +44,7 @@ Apache Commons Crypto
 ===================
 
 [![Java CI](https://github.com/apache/commons-crypto/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-crypto/actions/workflows/maven.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/badge.svg?gav=true)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-crypto/?gav=true)
+[![Maven Central](https://img.shields.io/maven-central/v/org.apache.commons/commons-crypto?label=Maven%20Central)](https://search.maven.org/artifact/org.apache.commons/commons-crypto)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-crypto/1.2.0.svg)](https://javadoc.io/doc/org.apache.commons/commons-crypto/1.2.0)
 [![CodeQL](https://github.com/apache/commons-crypto/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/apache/commons-crypto/actions/workflows/codeql-analysis.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/apache/commons-crypto/badge)](https://api.securityscorecards.dev/projects/github.com/apache/commons-crypto)
