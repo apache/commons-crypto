@@ -29,7 +29,7 @@ import org.apache.commons.crypto.stream.input.Input;
 public final class IoUtils {
 
     /**
-     * Closes the Closeable objects and <b>ignore</b> any {@link IOException} or
+     * Closes the Closeable objects and <strong>ignore</strong> any {@link IOException} or
      * null pointers. Must only be used for cleanup in exception handlers.
      *
      * @param closeables the objects to close.
