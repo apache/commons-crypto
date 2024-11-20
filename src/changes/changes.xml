@@ -104,7 +104,7 @@
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump net.java.dev.jna:jna from 5.13.0 to 5.15.0 #287, #387.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump org.codehaus.mojo:exec-maven-plugin from 3.1.1 to 3.2.0 #303.</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump jakarta.xml.bind:jakarta.xml.bind-api from 4.0.1 to 4.0.2 #311.</action>
-      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump commons-io:commons-io from 2.15.1 to 2.17.0 #321, #325, #388.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot">Bump commons-io:commons-io from 2.15.1 to 2.18.0 #321, #325, #388, #413.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.17.0 #362, #373, #383.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.codehaus.mojo:taglist-maven-plugin from 3.1.0 to 3.2.1 #403.</action> 
       <!-- ADD -->
