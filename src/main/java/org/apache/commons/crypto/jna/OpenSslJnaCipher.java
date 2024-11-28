@@ -327,7 +327,6 @@ final class OpenSslJnaCipher implements CryptoCipher {
      * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
-     *
      * @throws IllegalArgumentException      if the {@code aad} byte array is {@code null}
      * @throws IllegalStateException         if this opensslEngine is in a wrong
      *                                       state (e.g., has not been initialized),
@@ -357,7 +356,6 @@ final class OpenSslJnaCipher implements CryptoCipher {
      * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
-     *
      * @throws IllegalArgumentException      if the {@code aad} byte array is {@code null}
      * @throws IllegalStateException         if this opensslEngine is in a wrong
      *                                       state (e.g., has not been initialized),

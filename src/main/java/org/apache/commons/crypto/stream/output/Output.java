@@ -74,9 +74,7 @@ public interface Output extends Closeable {
      * <em>p</em>&nbsp;{@code +}&nbsp;<em>n</em>; its limit will not have changed.
      *
      * @param src The buffer from which bytes are to be retrieved.
-     *
      * @return The number of bytes written, possibly zero.
-     *
      * @throws IOException If some other I/O error occurs.
      */
     int write(ByteBuffer src) throws IOException;

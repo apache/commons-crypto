@@ -73,7 +73,6 @@ public class ChannelOutput implements Output {
      * Writes a sequence of bytes to this output from the given buffer.
      *
      * @param src The buffer from which bytes are to be retrieved.
-     *
      * @return The number of bytes written, possibly zero.
      * @throws IOException if an I/O error occurs.
      */

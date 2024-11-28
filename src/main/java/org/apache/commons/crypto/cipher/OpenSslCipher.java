@@ -221,7 +221,6 @@ final class OpenSslCipher implements CryptoCipher {
      * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
-     *
      * @throws IllegalArgumentException if the {@code aad}
      * byte array is {@code null}
      * @throws IllegalStateException if this opensslEngine is in a wrong state
@@ -260,7 +259,6 @@ final class OpenSslCipher implements CryptoCipher {
      * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
-     *
      * @throws IllegalArgumentException if the {@code aad}
      * byte array is {@code null}
      * @throws IllegalStateException if this opensslEngine is in a wrong state

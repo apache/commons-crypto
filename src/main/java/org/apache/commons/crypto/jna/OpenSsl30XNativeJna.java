@@ -104,7 +104,6 @@ final class OpenSsl30XNativeJna implements OpenSslInterfaceNativeJna {
      * Generates a human-readable string representing the error code e.
      *
      * @see <a href="https://www.openssl.org/docs/man3.1.0/man3/ERR_error_string.html">ERR_error_string</a>
-     *
      * @param err
      *            the error code
      * @param null_

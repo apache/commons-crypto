@@ -167,7 +167,6 @@ public interface CryptoCipher extends Closeable {
      * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
-     *
      * @throws IllegalArgumentException if the {@code aad}
      * byte array is null
      * @throws IllegalStateException if this cipher is in a wrong state
@@ -195,7 +194,6 @@ public interface CryptoCipher extends Closeable {
      * </p>
      *
      * @param aad the buffer containing the Additional Authentication Data
-     *
      * @throws IllegalArgumentException if the {@code aad}
      * byte array is null
      * @throws IllegalStateException if this cipher is in a wrong state
