@@ -373,7 +373,6 @@ The following provides more details on the included cryptographic software:
         </plugin>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>${maven-antrun-plugin.version}</version>
           <dependencies>
             <dependency>
               <groupId>ant-contrib</groupId>
