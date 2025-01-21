@@ -36,6 +36,7 @@ limitations under the License.
     <module name="SuppressionCommentFilter" />
     <module name="UnusedImports" />
     <module name="NeedBraces" />
+    <module name="ParenPad" />
     <module name="JavadocMethod">
       <property name="accessModifiers" value="protected, public" />
     </module>
