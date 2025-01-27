@@ -62,7 +62,7 @@
   <rule ref="category/java/multithreading.xml/DoubleCheckedLocking"/>
   <rule ref="category/java/performance.xml/BigIntegerInstantiation"/>
 
-  <!-- Rule customisations. -->
+  <!-- Rule customizations. -->
 
   <rule ref="category/java/codestyle.xml/TooManyStaticImports">
     <properties>
