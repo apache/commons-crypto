@@ -98,7 +98,7 @@
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Fix SpotBugs [ERROR] Medium: Unread field: org.apache.commons.crypto.jna.OpenSslJnaCipher.IV_LENGTH; should this field be static? [org.apache.commons.crypto.jna.OpenSslJnaCipher] At OpenSslJnaCipher.java:[line 80] SS_SHOULD_BE_STATIC.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Pick up maven-antrun-plugin version from parent POM org.apache:apache.</action> 
       <!-- UPDATE -->
-      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 79 #323, #369, #380, #382, #389, #393, #398, #405.</action>
+      <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 81 #323, #369, #380, #382, #389, #393, #398, #405.</action>
       <action                    type="update" dev="sebb" due-to="Ludovic Henry">Dockerfile: Bump maven to 3.8.8 (previous no longer online)</action>
       <action                    type="update" dev="sebb">Tests: show details of crypt library actually loaded</action>
       <action                    type="update" dev="ggregory" due-to="Gary Gregory">Bump com.sun.xml.bind:jaxb-impl from 2.3.7 to 2.3.8.</action>
