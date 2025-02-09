@@ -39,7 +39,7 @@ public final class ReflectionUtils {
      * A unique class which is used as a sentinel value in the caching for
      * getClassByName. {@link #getClassByNameOrNull(String)}.
      */
-    private static abstract class AbstractNegativeCacheSentinel {
+    private abstract static class AbstractNegativeCacheSentinel {
         // noop
     }
 

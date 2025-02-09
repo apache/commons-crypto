@@ -71,7 +71,7 @@ final class OsCryptoRandom implements CryptoRandom {
      * Overrides {@link AutoCloseable#close()}. Closes the OS stream.
      */
     @Override
-    synchronized public void close() {
+    public synchronized void close() {
         if (stream != null) {
             IoUtils.closeQuietly(stream);
             stream = null;
@@ -102,7 +102,7 @@ final class OsCryptoRandom implements CryptoRandom {
      * @param bytes the array to be filled in with random bytes.
      */
     @Override
-    synchronized public void nextBytes(final byte[] bytes) {
+    public synchronized void nextBytes(final byte[] bytes) {
         int off = 0;
         int n = 0;
         while (off < bytes.length) {

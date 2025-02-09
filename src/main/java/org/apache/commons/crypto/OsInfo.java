@@ -30,7 +30,7 @@ final class OsInfo {
     /** The separator to be used in constructing a resource path */
     private static final String RESOURCE_PATH_SEPARATOR = "/";
 
-    private final static HashMap<String, String> archMapping = new HashMap<>();
+    private static final HashMap<String, String> archMapping = new HashMap<>();
 
     /**
      * The constant string represents for X86 architecture, the value is:
