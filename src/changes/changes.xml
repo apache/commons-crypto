@@ -63,7 +63,7 @@
    -->
 
   <body>
-    <release version="1.2.1" date="YYYY-MM-DD" description="Minor release (minimum Java 8 and OpenSSL 1.1.1)">
+    <release version="1.3.0" date="YYYY-MM-DD" description="Minor release (minimum Java 8 and OpenSSL 1.1.1)">
       <!-- FIX -->
       <action issue="CRYPTO-158" type="fix" due-to=" Juan F Arjona" dev="sebb">Illegal reflective access</action>
       <action issue="CRYPTO-179" type="fix" dev="sebb">Crash on macOS with default crypto library</action>
