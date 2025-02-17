@@ -146,4 +146,3 @@ sunos-sparc: # TODO: Untested; may need additional CROSS_PREFIX define
 
 aix-ppc64: # TODO: Untested; may need additional CROSS_PREFIX define
 	$(MAKE) native OS_NAME=AIX OS_ARCH=ppc64
-
