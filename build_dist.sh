@@ -18,7 +18,7 @@ set -ex
 mvn clean
 
 # build linux 64 bit libraries
-docker compose -f src/docker/docker-compose.yaml run --quiet-pull crypto src/docker/build.sh
+docker compose -f src/docker/docker-compose.yaml run --quiet-pull crypto src/docker/build-x86_64
 
 # build linux 32 bit libraries
 docker compose -f src/docker/docker-compose.yaml run crypto src/docker/build_linux32.sh
