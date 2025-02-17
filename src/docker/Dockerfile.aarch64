@@ -22,9 +22,9 @@ ENV MAVEN_HOME=/opt/maven
 ENV PATH=${MAVEN_HOME}/bin:${PATH}
 # Install 64-bit dependencies and tooling.
 RUN apt-get update -qq && apt-get -y -qq install \
-        openjdk-17-jre-headless \
+        openjdk-17-jdk-headless \
         libssl-dev \
-        curl \
+        curl dos2unix gcc g++ make gcc-riscv64-linux-gnu g++-riscv64-linux-gnu gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 \
 # Bug workaround see https://github.com/docker-library/openjdk/issues/19.
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
