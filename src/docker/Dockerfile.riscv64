@@ -29,8 +29,8 @@ RUN apt-get update -qq && apt-get -y -qq install \
       && /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 # Do this separately to make upgrades easier
-RUN curl -sL https://dlcdn.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz \
-        | tar xzf - -C /opt && ln -s /opt/apache-maven-3.8.8 /opt/maven
+RUN curl -sL https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz \
+        | tar xzf - -C /opt && ln -s /opt/apache-maven-3.9.9 /opt/maven
 
 # Ensure we are in the correct directory (this will be overlaid by the virtual mount)
 WORKDIR /home/crypto
