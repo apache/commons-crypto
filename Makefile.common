@@ -93,8 +93,8 @@ Linux-x86_COMMONS_CRYPTO_FLAGS:=
 Linux-x86_64_CC            := $(CROSS_PREFIX)gcc
 Linux-x86_64_CXX           := $(CROSS_PREFIX)g++
 Linux-x86_64_STRIP         := $(CROSS_PREFIX)strip
-Linux-x86_64_CXXFLAGS      := -Ilib/inc_linux -I"$(JAVA_HOME)/include" -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64 -Wall -Werror
-Linux-x86_64_CFLAGS        := -Ilib/inc_linux -I"$(JAVA_HOME)/include" -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -m64 -Wall -Werror
+Linux-x86_64_CXXFLAGS      := -Ilib/inc_linux -I"$(JAVA_HOME)/include" -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -march=armv8-a -Wall -Werror
+Linux-x86_64_CFLAGS        := -Ilib/inc_linux -I"$(JAVA_HOME)/include" -Ilib/inc_mac -O2 -fPIC -fvisibility=hidden -march=armv8-a -Wall -Werror
 Linux-x86_64_LINKFLAGS     := -shared -static-libgcc
 Linux-x86_64_LIBNAME       := libcommons-crypto.so
 Linux-x86_64_COMMONS_CRYPTO_FLAGS  :=
