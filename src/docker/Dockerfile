@@ -56,4 +56,4 @@ RUN curl -sL https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-
 # Ensure we are in the correct directory (this will be overlaid by the virtual mount)
 WORKDIR /home/crypto
 
-CMD ['/bin/bash']
+CMD ["/bin/bash"]
