@@ -32,6 +32,7 @@ import org.apache.commons.crypto.stream.input.Input;
 import org.apache.commons.crypto.utils.AES;
 import org.apache.commons.crypto.utils.IoUtils;
 import org.apache.commons.crypto.utils.Utils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * PositionedCryptoInputStream provides the capability to decrypt the stream
@@ -146,11 +147,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     private void cleanCipherStatePool() {
         CipherState cs;
         while ((cs = cipherStatePool.poll()) != null) {
-            try {
-                cs.getCryptoCipher().close();
-            } catch (final IOException ignored) {
-                // ignore
-            }
+            IOUtils.closeQuietly(cs.getCryptoCipher());
         }
     }
 

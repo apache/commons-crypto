@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.crypto.stream.input.Input;
+import org.apache.commons.io.IOUtils;
 
 /**
  * General utility methods for working with IO.
@@ -49,12 +50,7 @@ public final class IoUtils {
      * @since 1.1.0
      */
     public static void closeQuietly(final Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (final IOException e) { // NOPMD
-            }
-        }
+        IOUtils.closeQuietly(closeable);
     }
 
     /**
