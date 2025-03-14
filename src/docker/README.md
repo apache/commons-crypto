@@ -46,7 +46,7 @@ target/classes/org/apache/commons/crypto/native/Mac/x86_64/libcommons-crypto.jni
   OR
   docker compose run --entrypoint src/docker/build-x86_64.sh crypto # run full build
   docker compose run --entrypoint src/docker/build_linux32.sh crypto # optionally run linux32 build
-  # N.B. the linux32 build needs an additional install, but that causes linux 64 bit builds to fail.
+  # The linux32 build needs an additional install, but that causes linux 64 bit builds to fail.
 ```
 
 # Creating a release candidate using macOS

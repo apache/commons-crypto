@@ -14,7 +14,7 @@
 # limitations under the License.
 
 name: Docker images
-# N.B. This name is used by maven_crosstest.yml
+# This name is used by maven_crosstest.yml
 
 on:
   # allow direct trigger
