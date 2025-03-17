@@ -139,7 +139,7 @@ The following provides more details on the included cryptographic software:
     <checkstyle.resourceExcludes>LICENSE.txt, NOTICE.txt, **/maven-archiver/pom.properties</checkstyle.resourceExcludes>
     <japicmp.skip>false</japicmp.skip>
     <commons.release.isDistModule>true</commons.release.isDistModule>
-    <jna.version>5.16.0</jna.version>
+    <jna.version>5.17.0</jna.version>
     <!-- Version 4.0.1 requires Java 11+; the version is overridden in a profile if necessary -->
     <jakarta.xml.bind.version>4.0.2</jakarta.xml.bind.version>
 
