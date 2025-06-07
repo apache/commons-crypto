@@ -44,7 +44,7 @@ public class OsCryptoRandomTest extends AbstractRandomTest {
     }
 
     @Test
-    public void testInvalidRandom() {
+    void testInvalidRandom() {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, OsCryptoRandom.class.getName());
         // Invalid device

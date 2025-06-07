@@ -46,7 +46,7 @@ public class EnumTest {
     }
 
     @Test
-    public void testCipher() throws Exception {
+    void testCipher() throws Exception {
         for (final CipherProvider value : CryptoCipherFactory.CipherProvider.values()) {
             ReflectionUtils.getClassByName(value.getClassName());
             checkImplClass(value);
@@ -54,7 +54,7 @@ public class EnumTest {
     }
 
     @Test
-    public void testRandom() throws Exception {
+    void testRandom() throws Exception {
         for (final RandomProvider value : CryptoRandomFactory.RandomProvider.values()) {
             ReflectionUtils.getClassByName(value.getClassName());
             checkImplClass(value);

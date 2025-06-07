@@ -25,7 +25,7 @@ public class OsInfoTest {
 
     private static final String EXPECTED_PATH_PROPERTY = "OsInfoTest.expectedPath";
     @Test
-    public void testMain() {
+    void testMain() {
         OsInfo.main(new String[0]);
         OsInfo.main(new String[] { "--os" });
         OsInfo.main(new String[] { "--arch" });

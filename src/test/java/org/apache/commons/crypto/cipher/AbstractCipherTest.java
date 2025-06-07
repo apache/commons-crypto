@@ -208,7 +208,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void testCloseTestAfterInit() throws Exception {
+	void testCloseTestAfterInit() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
@@ -217,7 +217,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void testCloseTestNoInit() throws Exception {
+	void testCloseTestNoInit() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
 		try (final CryptoCipher enc = getCipher(transformations[0])) {
@@ -226,7 +226,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void testCloseTestRepeat() throws Exception {
+	void testCloseTestRepeat() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
@@ -236,7 +236,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void testCryptoTest() throws Exception {
+	void testCryptoTest() throws Exception {
 		for (final String tran : transformations) {
 			/** Uses the small data set in {@link TestData} */
 			cipherTests = TestData.getTestData(tran);
@@ -265,7 +265,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void testInvalidIV() throws Exception {
+	void testInvalidIV() throws Exception {
 		for (final String transform : transformations) {
 			try (final CryptoCipher cipher = getCipher(transform)) {
 				assertNotNull(cipher);
@@ -277,7 +277,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void testInvalidIVClass() throws Exception {
+	void testInvalidIVClass() throws Exception {
 		for (final String transform : transformations) {
 			try (final CryptoCipher cipher = getCipher(transform)) {
 				assertNotNull(cipher);
@@ -287,7 +287,7 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void testInvalidKey() throws Exception {
+	void testInvalidKey() throws Exception {
 		for (final String transform : transformations) {
 			try (final CryptoCipher cipher = getCipher(transform)) {
 				assertNotNull(cipher);
@@ -300,19 +300,19 @@ public abstract class AbstractCipherTest {
 	}
 
 	@Test
-	public void testInvalidTransform() {
+	void testInvalidTransform() {
 		assertThrows(IllegalArgumentException.class,
 				() -> getCipher("AES/CBR/NoPadding/garbage/garbage").close());
 	}
 
 	@Test
-	public void testNullTransform() {
+	void testNullTransform() {
 		assertThrows(IllegalArgumentException.class,
 				() -> getCipher(null).close());
 	}
 
 	@Test
-    public void testReInitAfterClose() throws Exception {
+    void testReInitAfterClose() throws Exception {
         // This test deliberately does not use try with resources in order to control
         // the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {
@@ -323,7 +323,7 @@ public abstract class AbstractCipherTest {
     }
 
 	@Test
-	public void testReInitTest() throws Exception {
+	void testReInitTest() throws Exception {
 		// This test deliberately does not use try with resources in order to control
 		// the sequence of operations exactly
         try (final CryptoCipher enc = getCipher(transformations[0])) {

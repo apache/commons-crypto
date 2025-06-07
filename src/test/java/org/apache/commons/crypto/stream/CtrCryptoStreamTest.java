@@ -162,7 +162,7 @@ public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testDecrypt() throws Exception {
+    void testDecrypt() throws Exception {
         doDecryptTest(AbstractCipherTest.JCE_CIPHER_CLASSNAME, false);
         doDecryptTest(AbstractCipherTest.OPENSSL_CIPHER_CLASSNAME, false);
 

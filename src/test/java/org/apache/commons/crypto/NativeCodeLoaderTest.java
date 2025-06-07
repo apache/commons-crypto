@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 public class NativeCodeLoaderTest {
 
     @Test
-    public void test() {
+    void test() {
         assertTrue(NativeCodeLoader.isNativeCodeLoaded(), "Native (JNI) code loaded successfully");
     }
 
@@ -48,20 +48,20 @@ public class NativeCodeLoaderTest {
     // Note that this appears during a subsequent test, and does not
     // happen every time.
     // At this point it is not known where the native stream is written.
-    public void testCanLoadIfPresent() {
+    void testCanLoadIfPresent() {
         assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
         // This will try to reload the library, so should work
         assertNull(NativeCodeLoader.loadLibrary());
     }
 
     @Test
-    public void testNativeNotPresent() {
+    void testNativeNotPresent() {
         assumeTrue(!NativeCodeLoader.isNativeCodeLoaded());
         assertNotNull(NativeCodeLoader.getLoadingError());
     }
 
     @Test
-    public void testNativePresent() {
+    void testNativePresent() {
         assumeTrue(NativeCodeLoader.isNativeCodeLoaded());
         assertNull(NativeCodeLoader.getLoadingError());
     }
@@ -71,7 +71,7 @@ public class NativeCodeLoaderTest {
     // It causes problems because the system properties are temporarily changed.
     // However, properties are only fetched once, thus the test either corrupts the settings
     // or does not work, depending on the order of tests.
-    public void testUnSuccessfulLoad() throws Exception {
+    void testUnSuccessfulLoad() throws Exception {
         final String nameKey = System.getProperty(Crypto.LIB_NAME_KEY);
         final String pathKey = System.getProperty(Crypto.LIB_PATH_KEY);
         // An empty file should cause UnsatisfiedLinkError

@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 public class StreamOutputTest {
 
 	@Test
-	public void testGetOut() throws IOException {
+	void testGetOut() throws IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try (StreamOutput streamOutput = new StreamOutput(baos, 1024)) {
 			assertEquals(baos, streamOutput.getOut());

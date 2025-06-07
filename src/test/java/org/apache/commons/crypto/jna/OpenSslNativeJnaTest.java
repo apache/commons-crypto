@@ -26,7 +26,7 @@ import org.junit.jupiter.api.TestReporter;
 public class OpenSslNativeJnaTest {
 
     @Test
-    public void test(final TestReporter reporter) {
+    void test(final TestReporter reporter) {
         if (OpenSslJna.isEnabled()) {
             reporter.publishEntry(String.format("JNA loaded OK for lib version 0x%x: ", OpenSslNativeJna.VERSION));
         } else {

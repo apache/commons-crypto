@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 public class CryptoRandomFactoryTest {
 
     @Test
-    public void testAbstractRandom() {
+    void testAbstractRandom() {
         final Properties properties = new Properties();
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, AbstractRandom.class.getName());
         final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(properties));
@@ -42,7 +42,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testDefaultRandom() throws GeneralSecurityException, IOException {
+    void testDefaultRandom() throws GeneralSecurityException, IOException {
         final Properties properties = new Properties();
         try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
             final String name = random.getClass().getName();
@@ -55,14 +55,14 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testDefaultRandomClass() throws GeneralSecurityException, IOException {
+    void testDefaultRandomClass() throws GeneralSecurityException, IOException {
         try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom()) {
             assertEquals(OpenSslCryptoRandom.class.getName(), random.getClass().getName());
         }
     }
 
     @Test
-    public void testMissingPropertyCtrRandomRandom() {
+    void testMissingPropertyCtrRandomRandom() {
         final Properties properties = new Properties();
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, MissingPropertyCtrRandom.class.getName());
         final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(properties));
@@ -71,14 +71,14 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testEmpty() throws Exception {
+    void testEmpty() throws Exception {
         final Properties properties = new Properties();
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, "");
         CryptoRandomFactory.getCryptoRandom(properties).close();
     }
 
     @Test
-    public void testExceptionInInitializerErrorRandom() throws GeneralSecurityException, IOException {
+    void testExceptionInInitializerErrorRandom() throws GeneralSecurityException, IOException {
         final Properties properties = new Properties();
         final String classes = ExceptionInInitializerErrorRandom.class.getName().concat(",")
             .concat(CryptoRandomFactory.RandomProvider.JAVA.getClassName());
@@ -92,7 +92,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testFailingRandom() {
+    void testFailingRandom() {
         final Properties properties = new Properties();
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, FailingRandom.class.getName());
         final Exception ex = assertThrows(GeneralSecurityException.class, () -> CryptoRandomFactory.getCryptoRandom(properties));
@@ -106,7 +106,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testFullClassName() throws GeneralSecurityException, IOException {
+    void testFullClassName() throws GeneralSecurityException, IOException {
         final Properties props = new Properties();
         props.setProperty(CryptoRandomFactory.CLASSES_KEY, JavaCryptoRandom.class.getName());
         try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(props)) {
@@ -115,7 +115,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testGetOSRandom() throws GeneralSecurityException, IOException {
+    void testGetOSRandom() throws GeneralSecurityException, IOException {
         // Windows does not have a /dev/random device
         assumeTrue(!SystemProperties.getOsName().contains("Windows"));
         final Properties properties = new Properties();
@@ -126,7 +126,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testInvalidRandom() {
+    void testInvalidRandom() {
         final Properties properties = new Properties();
         properties.setProperty(CryptoRandomFactory.CLASSES_KEY, "InvalidCipherName");
 
@@ -134,7 +134,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testInvalidRandomClass() throws GeneralSecurityException, IOException {
+    void testInvalidRandomClass() throws GeneralSecurityException, IOException {
         final Properties properties = new Properties();
         properties.setProperty("org.apache.commons.crypto.cipher", "OpenSsl");
         try (final CryptoRandom random = CryptoRandomFactory.getCryptoRandom(properties)) {
@@ -143,7 +143,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testNoClasses() {
+    void testNoClasses() {
         final Properties properties = new Properties();
         // An empty string currently means use the default
         // However the splitter drops empty fields
@@ -152,7 +152,7 @@ public class CryptoRandomFactoryTest {
     }
 
     @Test
-    public void testNull() {
+    void testNull() {
         assertThrows(NullPointerException.class, () -> CryptoRandomFactory.getCryptoRandom(null));
     }
 }

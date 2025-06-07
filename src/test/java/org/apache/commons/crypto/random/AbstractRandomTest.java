@@ -47,7 +47,7 @@ public abstract class AbstractRandomTest {
 
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testRandomBytes() throws Exception {
+    void testRandomBytes() throws Exception {
         try (CryptoRandom random = getCryptoRandom()) {
             // len = 16
             checkRandomBytes(random, 16);
@@ -62,7 +62,7 @@ public abstract class AbstractRandomTest {
 
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testRandomBytesMultiThreaded() throws Exception {
+    void testRandomBytesMultiThreaded() throws Exception {
         final int threadCount = 100;
         try (final CryptoRandom random = getCryptoRandom()) {
             final List<Thread> threads = new ArrayList<>(threadCount);

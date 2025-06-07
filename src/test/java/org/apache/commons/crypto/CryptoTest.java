@@ -31,7 +31,7 @@ public class CryptoTest {
      * This test may fail unless the code was built by Maven, as it relies on the VERSION file being set up correctly
      */
     @Test
-    public void testGetComponentName() {
+    void testGetComponentName() {
         final String version = Crypto.getComponentName();
         assertNotNull("Should not be null", version);
         assertTrue(version.matches("^Apache Commons Crypto.*"), version);
@@ -41,14 +41,14 @@ public class CryptoTest {
      * This test may fail unless the code was built by Maven, as it relies on the VERSION file being set up correctly.
      */
     @Test
-    public void testGetComponentVersion() {
+    void testGetComponentVersion() {
         final String version = Crypto.getComponentVersion();
         assertNotNull("Should not be null", version);
         assertTrue(version.matches("^\\d+\\.\\d+.*"), version);
     }
 
     @Test
-    public void testLoadingError() throws Throwable {
+    void testLoadingError() throws Throwable {
         final Throwable loadingError = Crypto.getLoadingError();
         if (loadingError != null) {
             throw loadingError;
@@ -57,7 +57,7 @@ public class CryptoTest {
     }
 
     @Test
-    public void testMain() throws Throwable {
+    void testMain() throws Throwable {
         // Check that Crypto.main will actually run tests
         assertTrue(Crypto.isNativeCodeLoaded(), "Native code loaded OK");
         Crypto.main(new String[] { }); // show the JNI library details

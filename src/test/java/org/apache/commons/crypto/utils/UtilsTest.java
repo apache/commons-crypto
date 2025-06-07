@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 public class UtilsTest {
     @Test
-    public void testGetProperties() {
+    void testGetProperties() {
         final Properties props = new Properties();
         props.setProperty(
             "garbage.in",
@@ -38,12 +38,12 @@ public class UtilsTest {
     }
 
     @Test
-    public void testSplitNull() {
+    void testSplitNull() {
         assertEquals(Collections.<String> emptyList(), Utils.splitClassNames(null, ","));
     }
 
     @Test
-    public void testSplitOmitEmptyLine() {
+    void testSplitOmitEmptyLine() {
         List<String> clazzNames = Utils.splitClassNames("", ",");
         assertEquals(Collections.<String> emptyList(), clazzNames);
 

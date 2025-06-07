@@ -30,12 +30,12 @@ import org.junit.jupiter.api.Test;
 public class CryptoCipherTest {
 
     @Test
-    public void testUpdateAADByteArray() {
+    void testUpdateAADByteArray() {
         assertThrows(UnsupportedOperationException.class, () -> new DefaultCryptoCipher().updateAAD((byte[]) null));
     }
 
     @Test
-    public void testUpdateAADByteBuffer() {
+    void testUpdateAADByteBuffer() {
         assertThrows(UnsupportedOperationException.class, () -> new DefaultCryptoCipher().updateAAD((ByteBuffer) null));
     }
 }

@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 public class ChannelInputTest {
 
 	@Test
-	public void testSkipWithSkipBuffer() throws IOException {
+	void testSkipWithSkipBuffer() throws IOException {
 		try (final ChannelInput channelInput = new ChannelInput(
 				Channels.newChannel(new ByteArrayInputStream(new byte[10])))) {
 			assertEquals(0, channelInput.skip(0));

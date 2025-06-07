@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 public class CryptoCipherFactoryTest {
 
     @Test
-    public void testDefaultCipher() throws GeneralSecurityException, IOException {
+    void testDefaultCipher() throws GeneralSecurityException, IOException {
         try (CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(AES.CTR_NO_PADDING)) {
             final String name = defaultCipher.getClass().getName();
             if (OpenSsl.getLoadingFailureReason() == null) {
@@ -42,7 +42,7 @@ public class CryptoCipherFactoryTest {
     }
 
     @Test
-    public void testEmptyCipher() throws GeneralSecurityException, IOException {
+    void testEmptyCipher() throws GeneralSecurityException, IOException {
         final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, ""); // TODO should this really mean use the default?
         try (CryptoCipher defaultCipher = CryptoCipherFactory.getCryptoCipher(AES.CBC_NO_PADDING, properties)) {
@@ -56,7 +56,7 @@ public class CryptoCipherFactoryTest {
     }
 
     @Test
-    public void testInvalidCipher() {
+    void testInvalidCipher() {
         final Properties properties = new Properties();
         properties.setProperty(CryptoCipherFactory.CLASSES_KEY, "InvalidCipherName");
         assertThrows(GeneralSecurityException.class, () -> CryptoCipherFactory.getCryptoCipher(AES.CBC_NO_PADDING, properties));
@@ -64,14 +64,14 @@ public class CryptoCipherFactoryTest {
     }
 
     @Test
-    public void testInvalidTransformation() {
+    void testInvalidTransformation() {
         final Properties properties = new Properties();
         assertThrows(GeneralSecurityException.class, () -> CryptoCipherFactory.getCryptoCipher("AES/Invalid/NoPadding", properties));
 
     }
 
     @Test
-    public void testNoCipher() {
+    void testNoCipher() {
         final Properties properties = new Properties();
         // An empty string currently means use the default
         // However the splitter drops empty fields

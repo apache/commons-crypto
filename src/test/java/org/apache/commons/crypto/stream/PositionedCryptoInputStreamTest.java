@@ -326,7 +326,7 @@ public class PositionedCryptoInputStreamTest {
     }
 
     @Test
-    public void testJCE() throws Exception {
+    void testJCE() throws Exception {
         testCipher(AbstractCipherTest.JCE_CIPHER_CLASSNAME);
     }
 

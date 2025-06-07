@@ -320,7 +320,7 @@ public class GcmCipherTest {
      * @throws Exception Test failure
      */
     @Test
-    public void testGcmNistCase2() throws Exception {
+    void testGcmNistCase2() throws Exception {
         // key length:          16 bytes
         // plain text length:   16 bytes
         // iv length:           12 bytes
@@ -342,7 +342,7 @@ public class GcmCipherTest {
     }
 
     @Test
-    public void testGcmNistCase4() throws Exception {
+    void testGcmNistCase4() throws Exception {
         // key length:          16 bytes
         // plain text length:   60 bytes
         // iv length:           12 bytes
@@ -371,7 +371,7 @@ public class GcmCipherTest {
     }
 
     @Test
-    public void testGcmNistCase5() throws Exception {
+    void testGcmNistCase5() throws Exception {
         // key length:          16 bytes
         // plain text length:   60 bytes
         // iv length:           8 bytes
@@ -404,7 +404,7 @@ public class GcmCipherTest {
     }
 
     @Test
-    public void testGcmNistCase6() throws Exception {
+    void testGcmNistCase6() throws Exception {
         // key length:          16 bytes
         // plain text length:   60 bytes
         // iv length:           60 bytes
@@ -440,7 +440,7 @@ public class GcmCipherTest {
     }
 
     @Test
-    public void testGcmNistCases() throws Exception {
+    void testGcmNistCases() throws Exception {
         for(int i = 0; i < kHex.length; i++) {
             testGcmEncryption(kHex[i], pHex[i], ivHex[i], aadHex[i], cHex[i], tHex[i]);
             testGcmDecryption(kHex[i], pHex[i], ivHex[i], aadHex[i], cHex[i], tHex[i]);
@@ -482,7 +482,7 @@ public class GcmCipherTest {
     }
 
     @Test
-    public void testGcmTamperedData() throws Exception {
+    void testGcmTamperedData() throws Exception {
 
         final Random r = new Random();
         final int textLength = r.nextInt(1024*1024);
@@ -529,7 +529,7 @@ public class GcmCipherTest {
     }
 
     @Test
-    public void testGMac() throws Exception {
+    void testGMac() throws Exception {
         // for GMAC,  aad is the input data,
         // tag is the digest message
 
@@ -582,7 +582,7 @@ public class GcmCipherTest {
 
     @Test
             //(expected = AEADBadTagException.class)
-    public void testGMacTamperedData() throws Exception {
+    void testGMacTamperedData() throws Exception {
         final Random r = new Random();
         final byte[] keyBytes = new byte[32];
         final byte[] input = {};

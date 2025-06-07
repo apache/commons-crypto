@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 public class OpenSslCommonModeTest {
 
     @Test
-    public void testUpdateAAD() {
+    void testUpdateAAD() {
         assertThrows(UnsupportedOperationException.class, () -> new OpenSslCommonMode(0, 0, 0).updateAAD(null));
     }
 }

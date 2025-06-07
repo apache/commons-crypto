@@ -27,7 +27,7 @@ public class OpenSslJnaTest {
     private static final String EXPECTED_VERSION_PROPERTY = "OpenSslJnaTest.expectedVersion";
 
     @Test
-    public void testMain() throws Throwable {
+    void testMain() throws Throwable {
         OpenSslJna.main(new String[0]);
         final String expectedVersion = System.getProperty(EXPECTED_VERSION_PROPERTY, "");
         if (expectedVersion.isEmpty()) {

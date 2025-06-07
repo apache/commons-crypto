@@ -52,7 +52,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     }
 
     @Test
-    public void testCipherLifecycle() throws Exception {
+    void testCipherLifecycle() throws Exception {
         try (OpenSslCipher cipher = new OpenSslCipher(new Properties(), AES.CTR_NO_PADDING)) {
 
             assertThrows(IllegalStateException.class, () -> cipher.update(dummyBuffer(), dummyBuffer()));
@@ -76,7 +76,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testDoFinalArguments() throws Exception {
+    void testDoFinalArguments() throws Exception {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
                 .getInstance(AES.CTR_NO_PADDING);
@@ -95,7 +95,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Override
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testInvalidIV() throws Exception {
+    void testInvalidIV() throws Exception {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
                 .getInstance(AES.CTR_NO_PADDING);
@@ -111,7 +111,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Override
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testInvalidIVClass() throws Exception {
+    void testInvalidIVClass() throws Exception {
         final OpenSsl cipher = OpenSsl.getInstance(AES.CTR_NO_PADDING);
         assertNotNull(cipher);
 
@@ -122,7 +122,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
     @Override
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testInvalidKey() throws Exception {
+    void testInvalidKey() throws Exception {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
                 .getInstance(AES.CTR_NO_PADDING);
@@ -137,7 +137,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testInvalidMode() {
+    void testInvalidMode() {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         assertThrows(NoSuchAlgorithmException.class,
                 () -> OpenSsl.getInstance("AES/CTR2/NoPadding"));
@@ -145,7 +145,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testInvalidPadding() {
+    void testInvalidPadding() {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         assertThrows(NoSuchPaddingException.class,
                 () -> OpenSsl.getInstance("AES/CTR/NoPadding2"));
@@ -153,7 +153,7 @@ public class OpenSslCipherTest extends AbstractCipherTest {
 
     @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
-    public void testUpdateArguments() throws Exception {
+    void testUpdateArguments() throws Exception {
         assumeTrue(OpenSsl.getLoadingFailureReason() == null);
         final OpenSsl cipher = OpenSsl
                 .getInstance(AES.CTR_NO_PADDING);
