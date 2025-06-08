@@ -28,7 +28,7 @@ import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 
-public class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
+class OpenSslJnaCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {

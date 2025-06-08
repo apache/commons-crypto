@@ -26,7 +26,7 @@ import java.util.Properties;
 import org.apache.commons.crypto.Crypto;
 import org.junit.jupiter.api.BeforeAll;
 
-public class OpenSslCryptoRandomTest extends AbstractRandomTest {
+class OpenSslCryptoRandomTest extends AbstractRandomTest {
 
     @BeforeAll
     public static void beforeAll() {

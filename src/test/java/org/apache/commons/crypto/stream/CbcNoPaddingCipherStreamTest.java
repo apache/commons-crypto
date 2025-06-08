@@ -19,7 +19,7 @@ package org.apache.commons.crypto.stream;
 
 import org.apache.commons.crypto.utils.AES;
 
-public class CbcNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
+class CbcNoPaddingCipherStreamTest extends AbstractCipherStreamTest {
 
     @Override
     public void setUp() {

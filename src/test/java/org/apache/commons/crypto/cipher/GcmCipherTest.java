@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 
 import jakarta.xml.bind.DatatypeConverter;
 
-public class GcmCipherTest {
+class GcmCipherTest {
 
     private static final String GCM_NO_PADDING = "AES/GCM/NoPadding";
     Properties props;

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class OpenSslJnaTest {
+class OpenSslJnaTest {
 
     // If defined, then fail if the version does not match major/minor bits
     private static final String EXPECTED_VERSION_PROPERTY = "OpenSslJnaTest.expectedVersion";

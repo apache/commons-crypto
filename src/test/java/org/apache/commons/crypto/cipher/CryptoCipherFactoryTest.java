@@ -27,7 +27,7 @@ import java.util.Properties;
 import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.Test;
 
-public class CryptoCipherFactoryTest {
+class CryptoCipherFactoryTest {
 
     @Test
     void testDefaultCipher() throws GeneralSecurityException, IOException {

@@ -27,7 +27,7 @@ import javax.crypto.Cipher;
 import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.BeforeAll;
 
-public class JceCipherTest extends AbstractCipherTest {
+class JceCipherTest extends AbstractCipherTest {
 
     private static final int MAX_KEY_LEN_LOWER_BOUND = 256;
 

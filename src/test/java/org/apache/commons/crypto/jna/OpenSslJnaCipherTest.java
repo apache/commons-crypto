@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.apache.commons.crypto.cipher.AbstractCipherTest;
 
-public class OpenSslJnaCipherTest extends AbstractCipherTest {
+class OpenSslJnaCipherTest extends AbstractCipherTest {
 
     @Override
     public void init() {

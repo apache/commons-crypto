@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test the enums used to define the internal implementation classes
  */
-public class EnumTest {
+class EnumTest {
 
     private void checkImplClass(final CipherProvider value) {
         final Class<? extends CryptoCipher> implClass = value.getImplClass();

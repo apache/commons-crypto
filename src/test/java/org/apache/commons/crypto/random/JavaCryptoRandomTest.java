@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
-public class JavaCryptoRandomTest extends AbstractRandomTest {
+class JavaCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {

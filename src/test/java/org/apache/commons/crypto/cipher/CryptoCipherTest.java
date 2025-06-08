@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests default methods.
  */
-public class CryptoCipherTest {
+class CryptoCipherTest {
 
     @Test
     void testUpdateAADByteArray() {

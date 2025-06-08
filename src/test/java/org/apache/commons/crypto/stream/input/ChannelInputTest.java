@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests {@link ChannelInput}.
  */
-public class ChannelInputTest {
+class ChannelInputTest {
 
 	@Test
 	void testSkipWithSkipBuffer() throws IOException {

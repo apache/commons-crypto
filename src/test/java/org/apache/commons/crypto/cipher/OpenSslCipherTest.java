@@ -39,7 +39,7 @@ import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-public class OpenSslCipherTest extends AbstractCipherTest {
+class OpenSslCipherTest extends AbstractCipherTest {
 
     private ByteBuffer dummyBuffer() {
         return ByteBuffer.allocateDirect(8);

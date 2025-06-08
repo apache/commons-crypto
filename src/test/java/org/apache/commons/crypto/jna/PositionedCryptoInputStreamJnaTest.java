@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  */
-public class PositionedCryptoInputStreamJnaTest extends PositionedCryptoInputStreamTest {
+class PositionedCryptoInputStreamJnaTest extends PositionedCryptoInputStreamTest {
 
     @BeforeEach
     public void init() {

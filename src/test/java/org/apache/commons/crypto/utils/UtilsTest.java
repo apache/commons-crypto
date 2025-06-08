@@ -26,7 +26,7 @@ import java.util.Properties;
 
 import org.junit.jupiter.api.Test;
 
-public class UtilsTest {
+class UtilsTest {
     @Test
     void testGetProperties() {
         final Properties props = new Properties();

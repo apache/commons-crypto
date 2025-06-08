@@ -30,7 +30,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.SystemProperties;
 import org.junit.jupiter.api.Test;
 
-public class OsCryptoRandomTest extends AbstractRandomTest {
+class OsCryptoRandomTest extends AbstractRandomTest {
 
     @Override
     public CryptoRandom getCryptoRandom() throws GeneralSecurityException {

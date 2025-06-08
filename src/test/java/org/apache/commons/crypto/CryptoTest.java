@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class CryptoTest {
+class CryptoTest {
 
     // If defined, then fail if the version does not match major/minor bits
     private static final String EXPECTED_VERSION_PROPERTY = "CryptoTest.expectedVersion";

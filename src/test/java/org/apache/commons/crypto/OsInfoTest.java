@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class OsInfoTest {
+class OsInfoTest {
 
     private static final String EXPECTED_PATH_PROPERTY = "OsInfoTest.expectedPath";
     @Test

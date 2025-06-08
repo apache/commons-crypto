@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests {@link StreamOutput}.
  */
-public class StreamOutputTest {
+class StreamOutputTest {
 
 	@Test
 	void testGetOut() throws IOException {

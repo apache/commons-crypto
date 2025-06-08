@@ -30,7 +30,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.SystemProperties;
 import org.junit.jupiter.api.Test;
 
-public class CryptoRandomFactoryTest {
+class CryptoRandomFactoryTest {
 
     @Test
     void testAbstractRandom() {

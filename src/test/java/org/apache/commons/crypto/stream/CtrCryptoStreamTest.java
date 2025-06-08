@@ -43,7 +43,7 @@ import org.apache.commons.crypto.utils.AES;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-public class CtrCryptoStreamTest extends AbstractCipherStreamTest {
+class CtrCryptoStreamTest extends AbstractCipherStreamTest {
 
     protected void doDecryptTest(final String cipherClass, final boolean withChannel)
             throws IOException {

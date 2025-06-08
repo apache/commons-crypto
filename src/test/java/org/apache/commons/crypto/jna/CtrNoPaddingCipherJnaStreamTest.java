@@ -19,7 +19,7 @@ package org.apache.commons.crypto.jna;
 
 import org.apache.commons.crypto.utils.AES;
 
-public class CtrNoPaddingCipherJnaStreamTest extends AbstractCipherJnaStreamTest {
+class CtrNoPaddingCipherJnaStreamTest extends AbstractCipherJnaStreamTest {
 
     @Override
     public void setUp() {
