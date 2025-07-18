@@ -97,6 +97,13 @@
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">SecureRandom in JavaCryptoRandom is not seeded.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Fix SpotBugs [ERROR] Medium: Unread field: org.apache.commons.crypto.jna.OpenSslJnaCipher.IV_LENGTH; should this field be static? [org.apache.commons.crypto.jna.OpenSslJnaCipher] At OpenSslJnaCipher.java:[line 80] SS_SHOULD_BE_STATIC.</action>
       <action dev="ggregory"     type="fix" due-to="Gary Gregory">Pick up maven-antrun-plugin version from parent POM org.apache:apache.</action> 
+      <!-- ADD -->
+      <action                    type="add" dev="sebb">Added support for OpenSSL 3.0, 3.1, 3.2</action>
+      <action                    type="add" dev="sebb">Implement OpenSSL_version_num for JNA</action>
+      <action issue="CRYPTO-177" type="add" dev="sebb">Cipher and Random Factory classes don't include JNA</action>
+      <action issue="CRYPTO-172" type="add" dev="sebb" due-to="Ludovic Henry">Add support for Linux-riscv64 #264</action>
+      <action issue="CRYPTO-174" type="add" dev="sebb">Allow override of SSL library name for Windows</action>
+      <action                    type="add" dev="ggregory" due-to="Gary Gregory">Add Maven property project.build.outputTimestamp for build reproducibility.</action>
       <!-- UPDATE -->
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 56 to 81 #323, #369, #380, #382, #389, #393, #398, #405.</action>
       <action                    type="update" dev="sebb" due-to="Ludovic Henry, Gary Gregory">Bump Apache Maven in Dockerfile files from 3.8.8 to 3.9.9.</action>
@@ -108,13 +115,6 @@
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump commons-io:commons-io from 2.15.1 to 2.19.0 #321, #325, #388, #413.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.commons:commons-lang3 from 3.14.0 to 3.18.0 #362, #373, #383, #475.</action>
       <action                    type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.codehaus.mojo:taglist-maven-plugin from 3.1.0 to 3.2.1 #403.</action> 
-      <!-- ADD -->
-      <action                    type="add" dev="sebb">Added support for OpenSSL 3.0, 3.1, 3.2</action>
-      <action                    type="add" dev="sebb">Implement OpenSSL_version_num for JNA</action>
-      <action issue="CRYPTO-177" type="add" dev="sebb">Cipher and Random Factory classes don't include JNA</action>
-      <action issue="CRYPTO-172" type="add" dev="sebb" due-to="Ludovic Henry">Add support for Linux-riscv64 #264</action>
-      <action issue="CRYPTO-174" type="add" dev="sebb">Allow override of SSL library name for Windows</action>
-      <action                    type="add" dev="ggregory" due-to="Gary Gregory">Add Maven property project.build.outputTimestamp for build reproducibility.</action>
     </release>
     <release version="1.2.0" date="2023-01-14" description="Minor release (Java 8, OpenSSL 1.1.1)">
       <!-- FIX -->
