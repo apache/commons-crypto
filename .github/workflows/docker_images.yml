@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "IMAGE_PREFIX=$(echo ${{ env.REGISTRY }}/${{ github.repository }} | tr '[A-Z]' '[a-z]')" >>$GITHUB_ENV
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: Set up QEMU
         uses: docker/setup-qemu-action@5964de0df58d5ad28b04d8fe2e6b80ad47105b91 # v3.5.0
       - name: Set up Docker Buildx
