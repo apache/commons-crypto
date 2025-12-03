@@ -74,7 +74,7 @@ jobs:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
-      - uses: docker/setup-qemu-action@5964de0df58d5ad28b04d8fe2e6b80ad47105b91 # v3.5.0
+      - uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
       - name: Image prefix (lower case)
         run: |
           echo "IMAGE_PREFIX=$(echo ${{ env.REGISTRY }}/${{ github.repository }} | tr '[A-Z]' '[a-z]')" >>$GITHUB_ENV
@@ -219,7 +219,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Docker setup QEMU
-        uses: docker/setup-qemu-action@5964de0df58d5ad28b04d8fe2e6b80ad47105b91 # v3.5.0
+        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
       - name: Image prefix (lower case)
         run: |
           echo "IMAGE_PREFIX=$(echo ${{ env.REGISTRY }}/${{ github.repository }} | tr '[A-Z]' '[a-z]')" >>$GITHUB_ENV
