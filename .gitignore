@@ -36,3 +36,7 @@ src/main/resources/com/intel/chimera/native/*
 .externalToolBuilders/*
 maven-eclipse.xml
 /libcrypto.dylib
+
+# NetBeans files
+nb-configuration.xml
+nbactions.xml
