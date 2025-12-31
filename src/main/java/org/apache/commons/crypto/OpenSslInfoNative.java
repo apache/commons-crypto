@@ -38,6 +38,7 @@ final class OpenSslInfoNative {
     /**
      * Return the path to the loaded dynamic linked library.
      * [Currently not implemented on Windows]
+     *
      * @return the path to the library that was loaded; may be {@code null}.
      */
     public static native String DLLPath();

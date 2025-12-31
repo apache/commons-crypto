@@ -78,6 +78,7 @@ public class CryptoCipherFactory {
 
         /**
          * The private constructor.
+         *
          * @param klass the Class of CryptoCipher
          */
         CipherProvider(final Class<? extends CryptoCipher> klass) {

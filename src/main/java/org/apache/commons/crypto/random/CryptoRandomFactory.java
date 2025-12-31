@@ -88,6 +88,7 @@ public class CryptoRandomFactory {
 
         /**
          * The private constructor.
+         *
          * @param klass the Class of CryptoRandom
          */
         RandomProvider(final Class<? extends CryptoRandom> klass) {

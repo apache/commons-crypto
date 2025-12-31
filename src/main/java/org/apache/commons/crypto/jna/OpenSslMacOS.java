@@ -42,6 +42,7 @@ class OpenSslMacOS {
 
     /**
      * Check if can load library OK
+     *
      * @param path
      * @return null if OK, else error message
      */

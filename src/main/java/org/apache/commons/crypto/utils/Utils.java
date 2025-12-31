@@ -177,6 +177,7 @@ public final class Utils {
      * Gets a properties instance that defaults to the System Properties
      * plus any other properties found in the file
      * {@link #SYSTEM_PROPERTIES_FILE}
+     *
      * @return a Properties instance with defaults
      */
     public static Properties getDefaultProperties() {
@@ -185,6 +186,7 @@ public final class Utils {
 
     /**
      * Gets the properties merged with default properties.
+     *
      * @param newProp  User-defined properties
      * @return User-defined properties with the default properties
      */

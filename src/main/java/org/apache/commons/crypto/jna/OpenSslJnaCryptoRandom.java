@@ -105,6 +105,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
 
     /**
      * Closes the rdrand engine.
+     *
      * @param closing {@code true} when called while closing.
      */
     private void closeRdrandEngine(final boolean closing) {
