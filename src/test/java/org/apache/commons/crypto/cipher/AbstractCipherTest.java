@@ -235,10 +235,10 @@ public abstract class AbstractCipherTest {
         }
 	}
 
+  /** Uses the small data set in {@link TestData}. */
 	@Test
 	void testCryptoTest() throws Exception {
 		for (final String tran : transformations) {
-			/** Uses the small data set in {@link TestData} */
 			cipherTests = TestData.getTestData(tran);
 			assertNotNull(cipherTests, "TestData cannot supply data for: " + tran);
 			for (int i = 0; i != cipherTests.length; i += 5) {
