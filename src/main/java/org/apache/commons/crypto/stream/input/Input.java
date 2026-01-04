@@ -33,6 +33,7 @@ import org.apache.commons.crypto.stream.CryptoInputStream;
  * {@link ReadableByteChannel}.
  */
 public interface Input extends Closeable {
+
     /**
      * Returns an estimate of the number of bytes that can be read (or skipped
      * over) from this input without blocking by the next invocation of a method

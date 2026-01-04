@@ -106,6 +106,7 @@ public final class Crypto {
 
     /** Default name for loading SSL crypto library using JNA */
     public static final String JNA_LIBRARY_NAME_DEFAULT = "crypto";
+
     /**
      * Name for loading SSL crypto library using dlopen on macOS
      * JNA automatically adds prefix and suffix; dlopen does not

@@ -50,6 +50,7 @@ import org.apache.commons.crypto.utils.Utils;
  * The underlying stream offset is maintained as state. It is not thread-safe.
  */
 public class CtrCryptoInputStream extends CryptoInputStream {
+
     /**
      * <p>
      * This method is only for Counter (CTR) mode. Generally the CryptoCipher

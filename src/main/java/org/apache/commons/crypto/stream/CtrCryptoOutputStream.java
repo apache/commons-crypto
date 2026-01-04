@@ -54,6 +54,7 @@ import org.apache.commons.crypto.utils.Utils;
  * </p>
  */
 public class CtrCryptoOutputStream extends CryptoOutputStream {
+
     /**
      * Underlying stream offset.
      */
