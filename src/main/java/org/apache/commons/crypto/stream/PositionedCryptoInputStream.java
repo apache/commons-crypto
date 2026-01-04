@@ -256,11 +256,11 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         try {
             final int n = state.getCryptoCipher().update(inByteBuffer, outByteBuffer);
             if (n < inputSize) {
-                /**
-                 * Typically code will not get here. CryptoCipher#update will
-                 * consume all input data and put result in outBuffer.
-                 * CryptoCipher#doFinal will reset the cipher context.
-                 */
+                //
+                // Typically code will not get here. CryptoCipher#update will
+                // consume all input data and put result in outBuffer.
+                // CryptoCipher#doFinal will reset the cipher context.
+                //
                 state.getCryptoCipher().doFinal(inByteBuffer, outByteBuffer);
                 state.reset(true);
             }
