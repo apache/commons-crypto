@@ -368,11 +368,11 @@ public class CtrCryptoInputStream extends CryptoInputStream {
         try {
             final int n = cipher.update(inBuffer, out);
             if (n < inputSize) {
-                /**
-                 * Typically code will not get here. CryptoCipher#update will
-                 * consume all input data and put result in outBuffer.
-                 * CryptoCipher#doFinal will reset the cipher context.
-                 */
+                //
+                // Typically code will not get here. CryptoCipher#update will
+                // consume all input data and put result in outBuffer.
+                // CryptoCipher#doFinal will reset the cipher context.
+                //
                 cipher.doFinal(inBuffer, out);
                 cipherReset = true;
             }
