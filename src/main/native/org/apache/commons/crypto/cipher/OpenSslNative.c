@@ -53,6 +53,8 @@ static EVP_CIPHER * (*dlsym_EVP_aes_128_cbc)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_256_gcm)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_192_gcm)(void);
 static EVP_CIPHER * (*dlsym_EVP_aes_128_gcm)(void);
+static EVP_CIPHER * (*dlsym_EVP_sm4_ctr)(void);
+static EVP_CIPHER * (*dlsym_EVP_sm4_cbc)(void);
 #endif
 
 #ifdef WINDOWS
@@ -82,6 +84,8 @@ typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_cbc)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_256_gcm)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_192_gcm)(void);
 typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_aes_128_gcm)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_sm4_ctr)(void);
+typedef EVP_CIPHER * (__cdecl *__dlsym_EVP_sm4_cbc)(void);
 static __dlsym_EVP_CIPHER_CTX_new dlsym_EVP_CIPHER_CTX_new;
 static __dlsym_EVP_CIPHER_CTX_free dlsym_EVP_CIPHER_CTX_free;
 static __dlsym_EVP_CIPHER_CTX_set_padding dlsym_EVP_CIPHER_CTX_set_padding;
@@ -102,6 +106,8 @@ static __dlsym_EVP_aes_128_cbc dlsym_EVP_aes_128_cbc;
 static __dlsym_EVP_aes_256_gcm dlsym_EVP_aes_256_gcm;
 static __dlsym_EVP_aes_192_gcm dlsym_EVP_aes_192_gcm;
 static __dlsym_EVP_aes_128_gcm dlsym_EVP_aes_128_gcm;
+static __dlsym_EVP_sm4_ctr dlsym_EVP_sm4_ctr;
+static __dlsym_EVP_sm4_cbc dlsym_EVP_sm4_cbc;
 #endif
 
 static void loadAes(JNIEnv *env, HMODULE openssl)
@@ -124,6 +130,10 @@ static void loadAes(JNIEnv *env, HMODULE openssl)
                       env, openssl, "EVP_aes_192_gcm");
   LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_aes_128_gcm, dlsym_EVP_aes_128_gcm,  \
                       env, openssl, "EVP_aes_128_gcm");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_sm4_ctr, dlsym_EVP_sm4_ctr,  \
+                      env, openssl, "EVP_sm4_ctr");
+  LOAD_DYNAMIC_SYMBOL(__dlsym_EVP_sm4_cbc, dlsym_EVP_sm4_cbc,  \
+                      env, openssl, "EVP_sm4_cbc");
 }
 
 JNIEXPORT void JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initIDs
@@ -240,13 +250,16 @@ static EVP_CIPHER_CTX * get_context(JNIEnv *env, jlong addr) {
 JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_initContext
     (JNIEnv *env, jclass clazz, jint alg, jint padding)
 {
-  if (alg != AES_CTR && alg != AES_CBC && alg != AES_GCM) {
+  if (alg != AES_CTR && alg != AES_CBC && alg != AES_GCM
+    && alg != SM4_CTR && alg != SM4_CBC) {
     THROW(env, "java/security/NoSuchAlgorithmException", NULL);
     return (jlong)0;
   }
   if (!(alg == AES_CTR && padding == NOPADDING)
       && !(alg == AES_CBC && (padding == NOPADDING|| padding == PKCS5PADDING))
-      && !(alg == AES_GCM && padding == NOPADDING)) {
+      && !(alg == AES_GCM && padding == NOPADDING)
+      && !(alg == SM4_CTR && (padding == NOPADDING || padding == PKCS5PADDING))
+      && !(alg == SM4_CBC && (padding == NOPADDING || padding == PKCS5PADDING))) {
     THROW(env, "javax/crypto/NoSuchPaddingException", NULL);
     return (jlong)0;
   }
@@ -269,6 +282,18 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
       dlsym_EVP_aes_192_gcm == NULL || dlsym_EVP_aes_128_gcm == NULL) {
     THROW(env, "java/security/NoSuchAlgorithmException",  \
     "Doesn't support AES GCM.");
+    return (jlong)0;
+  }
+
+  if (dlsym_EVP_sm4_ctr == NULL) {
+    THROW(env, "java/security/NoSuchAlgorithmException",  \
+    "Doesn't support SM4 CTR.");
+    return (jlong)0;
+  }
+
+  if (dlsym_EVP_sm4_cbc == NULL) {
+    THROW(env, "java/security/NoSuchAlgorithmException",  \
+    "Doesn't support SM4 CBC.");
     return (jlong)0;
   }
 
@@ -303,6 +328,14 @@ static EVP_CIPHER * getEvpCipher(int alg, int keyLen)
       cipher = dlsym_EVP_aes_192_gcm();
     } else if (keyLen == KEY_LENGTH_128) {
       cipher = dlsym_EVP_aes_128_gcm();
+    }
+  } else if (alg == SM4_CTR) {
+    if (keyLen == KEY_LENGTH_128) {
+      cipher = dlsym_EVP_sm4_ctr();
+    }
+  } else if (alg == SM4_CBC) {
+    if (keyLen == KEY_LENGTH_128) {
+      cipher = dlsym_EVP_sm4_cbc();
     }
   }
   return cipher;
@@ -350,7 +383,7 @@ JNIEXPORT jlong JNICALL Java_org_apache_commons_crypto_cipher_OpenSslNative_init
     goto cleanup;
   }
 
-  if (!(alg == AES_CTR || alg == AES_CBC || alg == AES_GCM)) {
+  if (!(alg == AES_CTR || alg == AES_CBC || alg == AES_GCM || alg == SM4_CTR || alg == SM4_CBC)) {
     THROW(env, "java/security/NoSuchAlgorithmException", "The algorithm is not supported.");
     goto cleanup;
   }
