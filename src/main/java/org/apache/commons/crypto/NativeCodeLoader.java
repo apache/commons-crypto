@@ -186,8 +186,8 @@ final class NativeCodeLoader {
         }
 
         if (!hasNativeLib) {
-            final String errorMessage = String.format("No native library is found for os.name=%s and os.arch=%s", OsInfo.getOSName(), OsInfo.getArchName());
-            throw new IllegalStateException(errorMessage);
+            throw new IllegalStateException(
+                    String.format("No native library is found for os.name=%s and os.arch=%s", OsInfo.getOSName(), OsInfo.getArchName()));
         }
 
         // Temporary folder for the native lib. Use the value of
