@@ -33,8 +33,9 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     strategy:
+      max-parallel: 20
       matrix:
-        os: [macos-13,macos-14]
+        os: [macos-13, macos-14]
         # os: [macos-11, macos-12, macos-13, ubuntu-20.04, ubuntu-22.04]
       fail-fast: false
 

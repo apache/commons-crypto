@@ -28,6 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     strategy:
+      max-parallel: 20
       matrix:
         # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
         os: [macos-11, ubuntu-20.04, windows-latest]

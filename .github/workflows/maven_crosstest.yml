@@ -159,6 +159,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     # continue-on-error: ${{ matrix.experimental }}
     strategy:
+      max-parallel: 20		
       matrix:
         include:
           - os: macos-13  # macos-14 does not have Java 8
