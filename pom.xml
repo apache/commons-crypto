@@ -81,7 +81,7 @@ The following provides more details on the included cryptographic software:
   Running examples (these are under the test tree, so need test scope):
   mvn -q -Dexec.classpathScope=test -Dexec.mainClass=org.apache.commons.crypto.examples.CLASSNAME
     where CLASSNAME is CipherByteArrayExample, CipherByteBufferExample, RandomExample, StreamExample
-  
+
   Additional options
   -Djna.debug_load - debug JNA loading
   -Dcommons.crypto.debug - add some Commons Crypto debugging
@@ -318,11 +318,12 @@ The following provides more details on the included cryptographic software:
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <classesDirectory>/dev/null</classesDirectory>
+              <testClassesDirectory>${project.build.testOutputDirectory}</testClassesDirectory>
               <additionalClasspathElements>${project.build.directory}/${project.artifactId}-${project.version}.jar</additionalClasspathElements>
             </configuration>
           </plugin>
         </plugins>
-      </build>      
+      </build>
     </profile>
   </profiles>
   <build>
@@ -623,7 +624,7 @@ The following provides more details on the included cryptographic software:
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
+      <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

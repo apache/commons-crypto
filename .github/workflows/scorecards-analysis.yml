@@ -32,7 +32,8 @@ jobs:
   analysis:
 
     name: "Scorecards analysis"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       # Needed to upload the results to the code-scanning dashboard.
       security-events: write

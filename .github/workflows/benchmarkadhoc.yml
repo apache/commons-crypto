@@ -24,16 +24,16 @@ permissions:
 
 jobs:
   build:
+    timeout-minutes: 5
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       max-parallel: 20
       matrix:
-        # macos-latest and ubuntu-latest uses OpenSSL 3 which breaks tests
-        os: [macos-11, ubuntu-20.04, windows-latest]
+        os: [macos-15, ubuntu-latest, windows-latest]
         # Run lowest and highest Java versions only
-        java: [ 8, 21 ]
+        java: [ 8, 21, 25 ]
         experimental: [false]
       fail-fast: false
 
@@ -50,7 +50,7 @@ jobs:
     - name: Set up JDK ${{ matrix.java }}
       uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
       with:
-        distribution: 'temurin'
+        distribution: 'zulu'
         java-version: ${{ matrix.java }}
     - name: OpenSSL version
       run: openssl version -a
