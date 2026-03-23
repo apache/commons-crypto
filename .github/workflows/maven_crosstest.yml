@@ -70,6 +70,7 @@ jobs:
   build-cross-linux:
     needs: cleanup
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -94,7 +95,8 @@ jobs:
   # Use macOS to build its native binaries and package them with the Linux/Windows ones
   package-macos:
     needs: build-cross-linux
-    runs-on: macos-13 # macos-14 does not have Java 8
+    runs-on: macos-15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -102,18 +104,13 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
-          distribution: 'temurin'
-          java-version: 8
+          distribution: 'zulu'
+          java-version: 11
+          cache: 'maven'
           # these values cause the plugin to set up the Maven settings.xml file
           server-id: apache.snapshots.https # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: NEXUS_USER # env variable for username in deploy
           server-password: NEXUS_PW # env variable for token in deploy
-      - uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 #v5.0.3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
       - name: Build on macOS
         run: |
           mvn -V -B -ntp test -DskipTests
@@ -157,19 +154,23 @@ jobs:
   standalone:
     needs: package-macos
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
     # continue-on-error: ${{ matrix.experimental }}
     strategy:
-      max-parallel: 20		
+      max-parallel: 20
       matrix:
         include:
-          - os: macos-13  # macos-14 does not have Java 8
-            java: 8
+          - os: macos-15-intel
+            java: 11
             expectedPath: Mac/x86_64
+          - os: macos-15
+            java: 11
+            expectedPath: Mac/aarch64
           - os: ubuntu-latest
-            java: 8
+            java: 11
             expectedPath: Linux/x86_64
           - os: windows-latest
-            java: 8
+            java: 11
             expectedPath: Windows/x86_64
     steps:
       - name: Checkout code
@@ -185,18 +186,12 @@ jobs:
           fail-on-cache-miss: true
       - name: Show files
         run: ls -l target
-      - name: Cache Maven
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 #v5.0.3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: ${{ matrix.java }}
+          cache: 'maven'
       - name: OpenSSL version (default)
         run: openssl version -a
       - name: OpenSSL engine (macOS)
@@ -214,6 +209,7 @@ jobs:
   test-cross-linux:
     needs: package-macos
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -234,7 +230,7 @@ jobs:
           IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-aarch64-gh \
             src/docker/test_cross.sh -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/aarch64
       - name: Run on riscv64
-        # See https://github.com/java-native-access/jna/issues/1557
+        # locked to 5.12.0 - see https://github.com/java-native-access/jna/issues/1557
         run: |
           IMAGE_PREFIX=${IMAGE_PREFIX} docker compose -f src/docker/docker-compose-gh.yaml run --quiet-pull crypto-riscv64-gh \
             src/docker/test_cross.sh -Ptest-with-jar -DOsInfoTest.expectedPath=Linux/riscv64 -Djna.version=5.12.0
