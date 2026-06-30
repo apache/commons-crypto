@@ -116,7 +116,7 @@ public final class Utils {
      * Ensures that an object reference passed as a parameter to the calling
      * method is not {@code null}.
      *
-     * @param <T> the type of the object reference to be checked.
+     * @param <T> The type of the object reference to be checked.
      * @param reference an object reference.
      * @return the non-null reference that was validated.
      * @throws NullPointerException if reference is {@code null}.
