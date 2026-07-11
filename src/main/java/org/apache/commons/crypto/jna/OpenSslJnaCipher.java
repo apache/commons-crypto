@@ -61,7 +61,7 @@ final class OpenSslJnaCipher implements CryptoCipher {
          *
          * @param algorithm the algorithm name
          * @param mode      the mode name
-         * @return the AlgorithmMode instance
+         * @return The AlgorithmMode instance
          * @throws NoSuchAlgorithmException if the algorithm is not support
          */
         static AlgorithmMode get(final String algorithm, final String mode) throws NoSuchAlgorithmException {
@@ -126,7 +126,7 @@ final class OpenSslJnaCipher implements CryptoCipher {
      * @param inputLen     the input length
      * @param output       the byte array for the result
      * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
+     * @return The number of bytes stored in output
      * @throws ShortBufferException      if the given output byte array is too small
      *                                   to hold the result
      * @throws BadPaddingException       if this cipher is in decryption mode, and
@@ -285,7 +285,7 @@ final class OpenSslJnaCipher implements CryptoCipher {
      * @param inputLen     the input length
      * @param output       the byte array for the result
      * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
+     * @return The number of bytes stored in output
      * @throws ShortBufferException if there is insufficient space in the output
      *                              byte array
      */

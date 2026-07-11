@@ -75,7 +75,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      *
      * @param cipher the {@link CryptoCipher} instance.
      * @param bufferSize the buffer size.
-     * @return the remaining buffer size.
+     * @return The remaining buffer size.
      */
     static int checkBufferSize(final CryptoCipher cipher, final int bufferSize) {
         Utils.checkArgument(bufferSize >= MIN_BUFFER_SIZE,
@@ -100,7 +100,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      *
      * @param props The {@code Properties} class represents a set of
      *        properties.
-     * @return the buffer size.
+     * @return The buffer size.
      * */
     static int getBufferSize(final Properties props) {
         final String bufferSizeStr = props.getProperty(STREAM_BUFFER_SIZE_KEY, "");
@@ -390,7 +390,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Gets the buffer size.
      *
-     * @return the bufferSize.
+     * @return The bufferSize.
      */
     protected int getBufferSize() {
         return bufferSize;
@@ -399,7 +399,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Gets the internal CryptoCipher.
      *
-     * @return the cipher instance.
+     * @return The cipher instance.
      */
     protected CryptoCipher getCipher() {
         return cipher;
@@ -408,7 +408,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Gets the input.
      *
-     * @return the input.
+     * @return The input.
      */
     protected Input getInput() {
         return input;
@@ -417,7 +417,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Gets the key.
      *
-     * @return the key.
+     * @return The key.
      */
     protected Key getKey() {
         return key;
@@ -426,7 +426,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Gets the specification of cryptographic parameters.
      *
-     * @return the params.
+     * @return The params.
      */
     protected AlgorithmParameterSpec getParams() {
         return params;
@@ -470,7 +470,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * Overrides the {@link InputStream#read()}. Reads the next byte of
      * data from the input stream.
      *
-     * @return the next byte of data, or {@code EOS (-1)} if the end of the
+     * @return The next byte of data, or {@code EOS (-1)} if the end of the
      *         stream is reached.
      * @throws IOException if an I/O error occurs.
      */
@@ -575,7 +575,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * discards {@code n} bytes of data from this input stream.
      *
      * @param n the number of bytes to be skipped.
-     * @return the actual number of bytes skipped.
+     * @return The actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
     @Override

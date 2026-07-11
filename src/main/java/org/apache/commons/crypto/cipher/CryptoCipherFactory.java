@@ -89,7 +89,7 @@ public class CryptoCipherFactory {
         /**
          * Gets the class name of the provider.
          *
-         * @return the fully qualified name of the provider class
+         * @return The fully qualified name of the provider class
          */
         public String getClassName() {
             return className;
@@ -98,7 +98,7 @@ public class CryptoCipherFactory {
         /**
          * Gets the implementation class of the provider.
          *
-         * @return the implementation class of the provider
+         * @return The implementation class of the provider
          */
         public Class<? extends CryptoCipher> getImplClass() {
             return klass;
@@ -148,7 +148,7 @@ public class CryptoCipherFactory {
      *
      * @param props The {@code Properties} class represents a set of
      *        properties.
-     * @return the cipher class based on the property {@link CryptoCipherFactory.CLASSES_KEY}
+     * @return The cipher class based on the property {@link CryptoCipherFactory.CLASSES_KEY}
      * If the property is missing or empty, {@link CLASSES_DEFAULT} is returned
      */
     private static String getCipherClassString(final Properties props) {

@@ -83,7 +83,7 @@ final class OpenSslNative {
      * @param padding the padding mode of OpenSsl cipher
      * @param key crypto key
      * @param iv crypto iv
-     * @return the context address of cipher
+     * @return The context address of cipher
      */
     public static native long init(long context, int mode, int alg,
                                    int padding, byte[] key, byte[] iv);
@@ -93,7 +93,7 @@ final class OpenSslNative {
      *
      * @param algorithm The algorithm name of cipher
      * @param padding The padding name of cipher
-     * @return the context address of cipher
+     * @return The context address of cipher
      */
     public static native long initContext(int algorithm, int padding);
 

@@ -31,7 +31,7 @@ final class OpenSslInfoNative {
     /**
      * Return the name used to load the dynamic linked library.
      *
-     * @return the name used to load the library (e.g. crypto.dll)
+     * @return The name used to load the library (e.g. crypto.dll)
      */
     public static native String DLLName();
 
@@ -39,7 +39,7 @@ final class OpenSslInfoNative {
      * Return the path to the loaded dynamic linked library.
      * [Currently not implemented on Windows]
      *
-     * @return the path to the library that was loaded; may be {@code null}.
+     * @return The path to the library that was loaded; may be {@code null}.
      */
     public static native String DLLPath();
 
@@ -59,7 +59,7 @@ final class OpenSslInfoNative {
     public static native String NativeVersion();
 
     /**
-     * @return the value of OPENSSL_VERSION_NUMBER.
+     * @return The value of OPENSSL_VERSION_NUMBER.
      */
     public static native long OpenSSL();
 
@@ -77,7 +77,7 @@ final class OpenSslInfoNative {
     public static native String HeaderVersionText();
 
     /**
-     * @return the value of OPENSSL_VERSION_NUMBER from the header file used to compile the code
+     * @return The value of OPENSSL_VERSION_NUMBER from the header file used to compile the code
      */
     public static native long HeaderVersionNumber();
 

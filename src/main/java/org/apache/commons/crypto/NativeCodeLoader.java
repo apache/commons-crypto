@@ -80,7 +80,7 @@ final class NativeCodeLoader {
      * @param libraryFileName       the library name.
      * @param targetFolder          Target folder for the native lib. Use the value
      *                              of commons-crypto.tempdir or java.io.tmpdir.
-     * @return the library file.
+     * @return The library file.
      */
     private static File extractLibraryFile(final String libFolderForCurrentOS, final String libraryFileName,
             final String targetFolder) {
@@ -148,7 +148,7 @@ final class NativeCodeLoader {
     /**
      * Finds the native library.
      *
-     * @return the jar file.
+     * @return The jar file.
      */
     private static File findNativeLibrary() {
         // Get the properties once
@@ -211,7 +211,7 @@ final class NativeCodeLoader {
      * Checks whether the given path has resource.
      *
      * @param path the path.
-     * @return the boolean.
+     * @return The boolean.
      */
     private static boolean hasResource(final String path) {
         return NativeCodeLoader.class.getResource(path) != null;

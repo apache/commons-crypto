@@ -72,7 +72,7 @@ public final class OpenSslJna {
     /**
      * Gets the error from the JNA.
      *
-     * @return the error from the JNA.
+     * @return The error from the JNA.
      */
     public static Throwable initialisationError() {
         return OpenSslNativeJna.INIT_ERROR;

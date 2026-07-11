@@ -59,7 +59,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         /**
          * Gets the CryptoCipher instance.
          *
-         * @return the cipher.
+         * @return The cipher.
          */
         public CryptoCipher getCryptoCipher() {
             return cryptoCipher;
@@ -68,7 +68,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         /**
          * Gets the reset.
          *
-         * @return the value of reset.
+         * @return The value of reset.
          */
         public boolean isReset() {
             return reset;
@@ -272,7 +272,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * Gets direct buffer from pool. Caller MUST also call {@link #returnToPool(ByteBuffer)}.
      *
-     * @return the buffer.
+     * @return The buffer.
      * @see #returnToPool(ByteBuffer)
      */
     private ByteBuffer getBuffer() {
@@ -283,7 +283,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * Gets CryptoCipher from pool. Caller MUST also call {@link #returnToPool(CipherState)}.
      *
-     * @return the CipherState instance.
+     * @return The CipherState instance.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // Caller calls #returnToPool(CipherState)
@@ -300,7 +300,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * @param inByteBuffer the input buffer.
      * @param position the offset from the start of the stream.
      * @param iv the iv.
-     * @return the padding.
+     * @return The padding.
      */
     private byte postDecryption(final CipherState state, final ByteBuffer inByteBuffer,
             final long position, final byte[] iv) {

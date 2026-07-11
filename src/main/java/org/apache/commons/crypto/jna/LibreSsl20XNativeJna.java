@@ -114,7 +114,7 @@ final class LibreSsl20XNativeJna implements OpenSslInterfaceNativeJna {
      *            the error code
      * @param null_
      *            buf is NULL, the error string is placed in a static buffer
-     * @return the human-readable error messages.
+     * @return The human-readable error messages.
      */
     public static native String ERR_error_string(NativeLong err, char[] null_);
 
@@ -125,7 +125,7 @@ final class LibreSsl20XNativeJna implements OpenSslInterfaceNativeJna {
     public static native void ERR_load_crypto_strings();
 
     /**
-     * @return the earliest error code from the thread's error queue without modifying it.
+     * @return The earliest error code from the thread's error queue without modifying it.
      */
     public static native NativeLong ERR_peek_error();
 

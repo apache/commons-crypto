@@ -39,7 +39,7 @@ public class CipherByteBufferExample {
      * Converts ByteBuffer to String
      *
      * @param buffer input byte buffer
-     * @return the converted string
+     * @return The converted string
      */
     private static String asString(final ByteBuffer buffer) {
         final ByteBuffer copy = buffer.duplicate();

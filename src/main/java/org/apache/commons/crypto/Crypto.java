@@ -126,7 +126,7 @@ public final class Crypto {
      * by Maven.
      * </p>
      *
-     * @return the version; may be {@code null} if not found
+     * @return The version; may be {@code null} if not found
      */
     public static String getComponentName() {
         // Note: the component properties file allows the method to work without needing
@@ -142,7 +142,7 @@ public final class Crypto {
      * by Maven.
      * </p>
      *
-     * @return the version; may be {@code null} if not found
+     * @return The version; may be {@code null} if not found
      */
     public static String getComponentVersion() {
         // Note: the component properties file allows the method to work without needing

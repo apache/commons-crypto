@@ -62,7 +62,7 @@ public final class ReflectionUtils {
      * Loads a class by name.
      *
      * @param name the class name.
-     * @return the class object.
+     * @return The class object.
      * @throws ClassNotFoundException if the class is not found.
      */
     public static Class<?> getClassByName(final String name) throws ClassNotFoundException {
@@ -81,7 +81,7 @@ public final class ReflectionUtils {
      * couldn't be loaded. This is to avoid the overhead of creating an exception.
      *
      * @param name the class name.
-     * @return the class object, or {@code null} if it could not be found or initialization failed.
+     * @return The class object, or {@code null} if it could not be found or initialization failed.
      */
     private static Class<?> getClassByNameOrNull(final String name) {
         final Set<String> set = INIT_ERROR_CLASSES.computeIfAbsent(CLASS_LOADER, k -> Collections.synchronizedSet(new HashSet<>()));

@@ -99,7 +99,7 @@ public class CryptoRandomFactory {
         /**
          * Gets the class name of the provider.
          *
-         * @return the name of the provider class
+         * @return The name of the provider class
          */
         public String getClassName() {
             return className;
@@ -108,7 +108,7 @@ public class CryptoRandomFactory {
         /**
          * Gets the implementation class of the provider.
          *
-         * @return the implementation class of the provider
+         * @return The implementation class of the provider
          */
         public Class<? extends CryptoRandom> getImplClass() {
             return klass;
@@ -222,7 +222,7 @@ public class CryptoRandomFactory {
      *
      * @param props The {@code Properties} class represents a set of
      *        properties.
-     * @return the CryptoRandom class based on the props.
+     * @return The CryptoRandom class based on the props.
      */
     private static String getRandomClassString(final Properties props) {
         String randomClassString = props.getProperty(CLASSES_KEY, CLASSES_DEFAULT);

@@ -46,7 +46,7 @@ final class OpenSsl {
          *
          * @param algorithm the algorithm.
          * @param mode the mode.
-         * @return the Algorithm mode.
+         * @return The Algorithm mode.
          * @throws NoSuchAlgorithmException if the algorithm is not available.
          */
         static int get(final String algorithm, final String mode) throws NoSuchAlgorithmException {
@@ -108,7 +108,7 @@ final class OpenSsl {
     /**
      * Gets the failure reason when loading OpenSsl native.
      *
-     * @return the failure reason; {@code null} if it was loaded and initialized successfully
+     * @return The failure reason; {@code null} if it was loaded and initialized successfully
      */
     public static Throwable getLoadingFailureReason() {
         return loadingFailureReason;
@@ -147,7 +147,7 @@ final class OpenSsl {
      * @param inputLen the input length
      * @param output the byte array for the result
      * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
+     * @return The number of bytes stored in output
      * @throws ShortBufferException if the given output byte array is too small
      *         to hold the result
      * @throws BadPaddingException if this cipher is in decryption mode, and
@@ -234,7 +234,7 @@ final class OpenSsl {
      * @param inputLen the input length
      * @param output the byte array for the result
      * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
+     * @return The number of bytes stored in output
      * @throws ShortBufferException if there is insufficient space in the output
      *         byte array
      */

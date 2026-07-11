@@ -431,7 +431,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * Gets the counter for input stream position.
      *
      * @param position the given position in the data.
-     * @return the counter for input stream position.
+     * @return The counter for input stream position.
      */
     protected long getCounter(final long position) {
         return position / cipher.getBlockSize();
@@ -440,7 +440,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Gets the initialization vector.
      *
-     * @return the initIV.
+     * @return The initIV.
      */
     protected byte[] getInitIV() {
         return initIV;
@@ -450,7 +450,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * Gets the padding for input stream position.
      *
      * @param position the given position in the data.
-     * @return the padding for input stream position.
+     * @return The padding for input stream position.
      */
     protected byte getPadding(final long position) {
         return (byte) (position % cipher.getBlockSize());
@@ -459,7 +459,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Gets the offset of the stream.
      *
-     * @return the stream offset.
+     * @return The stream offset.
      */
     protected long getStreamOffset() {
         return streamOffset;
@@ -468,7 +468,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
     /**
      * Gets the position of the stream.
      *
-     * @return the position of the stream.
+     * @return The position of the stream.
      */
     protected long getStreamPosition() {
         return streamOffset - outBuffer.remaining();
@@ -489,7 +489,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * cipher should be updated and recalculate padding if needed.
      *
      * @param position the given position in the data.
-     * @return the byte.
+     * @return The byte.
      * @throws IOException if an I/O error occurs.
      */
     protected byte postDecryption(final long position) throws IOException {
@@ -627,7 +627,7 @@ public class CtrCryptoInputStream extends CryptoInputStream {
      * discards {@code n} bytes of data from this input stream.
      *
      * @param n the number of bytes to be skipped.
-     * @return the actual number of bytes skipped.
+     * @return The actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
     @Override

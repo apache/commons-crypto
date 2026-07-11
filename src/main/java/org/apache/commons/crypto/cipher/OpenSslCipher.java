@@ -81,7 +81,7 @@ final class OpenSslCipher implements CryptoCipher {
      * @param inputLen the input length
      * @param output the byte array for the result
      * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
+     * @return The number of bytes stored in output
      * @throws ShortBufferException if the given output byte array is too small
      *         to hold the result
      * @throws BadPaddingException if this openSslEngine is in decryption mode, and
@@ -135,7 +135,7 @@ final class OpenSslCipher implements CryptoCipher {
      * {@code CryptoCipher} object.
      * </p>
      *
-     * @return the algorithm name of this {@code CryptoCipher} object.
+     * @return The algorithm name of this {@code CryptoCipher} object.
      */
     @Override
     public String getAlgorithm() {
@@ -145,7 +145,7 @@ final class OpenSslCipher implements CryptoCipher {
     /**
      * Returns the block size (in bytes).
      *
-     * @return the block size (in bytes), or 0 if the underlying algorithm is
+     * @return The block size (in bytes), or 0 if the underlying algorithm is
      * not a block openSslEngine
      */
     @Override
@@ -182,7 +182,7 @@ final class OpenSslCipher implements CryptoCipher {
      * @param inputLen the input length
      * @param output the byte array for the result
      * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
+     * @return The number of bytes stored in output
      * @throws ShortBufferException if there is insufficient space in the output
      *         byte array
      */

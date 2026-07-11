@@ -50,7 +50,7 @@ public final class Utils {
          * Loads system properties when configuration file of the name
          * {@link #SYSTEM_PROPERTIES_FILE} is found.
          *
-         * @return the default properties
+         * @return The default properties
          */
         private static Properties createDefaultProperties() {
           // default to system
@@ -118,7 +118,7 @@ public final class Utils {
      *
      * @param <T> The type of the object reference to be checked.
      * @param reference an object reference.
-     * @return the non-null reference that was validated.
+     * @return The non-null reference that was validated.
      * @throws NullPointerException if reference is {@code null}.
      * @deprecated Use {@link Objects#requireNonNull(Object)}.
      */
@@ -162,7 +162,7 @@ public final class Utils {
      * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
-     * @return the CryptoCipher instance.
+     * @return The CryptoCipher instance.
      * @throws IOException if an I/O error occurs.
      */
     public static CryptoCipher getCipherInstance(final String transformation, final Properties properties) throws IOException {
@@ -201,7 +201,7 @@ public final class Utils {
      * If Crypto.JNI_LIBRARY_NAME is defined, this overrides the default name.
      *
      * @param name   the default name, passed from native code
-     * @return the updated library path
+     * @return The updated library path
      * This method is designed for use from the DynamicLoader native code.
      * Although it could all be implemented in native code, this hook method
      * makes maintenance easier.

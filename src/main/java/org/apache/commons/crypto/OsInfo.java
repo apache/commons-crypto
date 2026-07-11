@@ -109,7 +109,7 @@ final class OsInfo {
     /**
      * Gets the architecture name.
      *
-     * @return the architecture name.
+     * @return The architecture name.
      */
     static String getArchName() {
         // if running Linux on ARM, need to determine ABI of JVM
@@ -141,7 +141,7 @@ final class OsInfo {
     /**
      * Gets the native lib folder.
      *
-     * @return the current OS's native lib folder.
+     * @return The current OS's native lib folder.
      */
     static String getNativeLibFolderPathForCurrentOS() {
         return getOSName() + RESOURCE_PATH_SEPARATOR + getArchName();
@@ -150,7 +150,7 @@ final class OsInfo {
     /**
      * Gets the OS name.
      *
-     * @return the OS name.
+     * @return The OS name.
      */
     static String getOSName() {
         return translateOSNameToFolderName(getOsNameProperty());
@@ -184,7 +184,7 @@ final class OsInfo {
      * Translates the architecture name to folder name.
      *
      * @param archName the architecture name.
-     * @return the folder name.
+     * @return The folder name.
      */
     private static String translateArchNameToFolderName(final String archName) {
         return archName.replaceAll("\\W", "");
@@ -194,7 +194,7 @@ final class OsInfo {
      * Translates the OS name to folder name.
      *
      * @param osName the OS name.
-     * @return the folder name.
+     * @return The folder name.
      */
     private static String translateOSNameToFolderName(final String osName) {
         if (osName.contains("Windows")) {

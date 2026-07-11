@@ -80,7 +80,7 @@ public class ChannelInput implements Input {
     /**
      * Gets the skip buffer.
      *
-     * @return the buffer.
+     * @return The buffer.
      */
     private ByteBuffer getSkipBuf() {
         if (buf == null) {
@@ -95,7 +95,7 @@ public class ChannelInput implements Input {
      * Reads a sequence of bytes from input into the given buffer.
      *
      * @param dst The buffer into which bytes are to be transferred.
-     * @return the total number of bytes read into the buffer, or
+     * @return The total number of bytes read into the buffer, or
      *         {@code -1} if there is no more data because the end of the
      *         stream has been reached.
      * @throws IOException if an I/O error occurs.
@@ -117,7 +117,7 @@ public class ChannelInput implements Input {
      * @param buffer the buffer into which the data is read.
      * @param offset the start offset in array buffer.
      * @param length the maximum number of bytes to read.
-     * @return the total number of bytes read into the buffer, or
+     * @return The total number of bytes read into the buffer, or
      *         {@code -1} if there is no more data because the end of the
      *         stream has been reached.
      * @throws IOException if an I/O error occurs.
@@ -150,7 +150,7 @@ public class ChannelInput implements Input {
      * over and discards {@code n} bytes of data from this input stream.
      *
      * @param n the number of bytes to be skipped.
-     * @return the actual number of bytes skipped.
+     * @return The actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
     @Override

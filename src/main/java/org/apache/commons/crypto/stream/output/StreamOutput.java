@@ -73,7 +73,7 @@ public class StreamOutput implements Output {
     /**
      * Gets the output stream.
      *
-     * @return the output stream.
+     * @return The output stream.
      */
     protected OutputStream getOut() {
         return out;

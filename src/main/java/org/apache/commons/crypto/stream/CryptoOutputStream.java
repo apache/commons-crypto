@@ -304,7 +304,7 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Gets the buffer size.
      *
-     * @return the buffer size.
+     * @return The buffer size.
      */
     protected int getBufferSize() {
         return bufferSize;
@@ -313,7 +313,7 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Gets the internal Cipher.
      *
-     * @return the cipher instance.
+     * @return The cipher instance.
      */
     protected CryptoCipher getCipher() {
         return cipher;
@@ -322,7 +322,7 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Gets the inBuffer.
      *
-     * @return the inBuffer.
+     * @return The inBuffer.
      */
     protected ByteBuffer getInBuffer() {
         return inBuffer;
@@ -331,7 +331,7 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Gets the outBuffer.
      *
-     * @return the outBuffer.
+     * @return The outBuffer.
      */
     protected ByteBuffer getOutBuffer() {
         return outBuffer;

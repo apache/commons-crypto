@@ -36,7 +36,7 @@ public class Transformation {
      * Parses a transformation.
      *
      * @param transformation current transformation
-     * @return the Transformation
+     * @return The Transformation
      * @throws NoSuchAlgorithmException if the algorithm is not supported
      * @throws NoSuchPaddingException Thrown when the padding is unsupported.
      */
@@ -89,7 +89,7 @@ public class Transformation {
     /**
      * Gets the algorithm.
      *
-     * @return the algorithm.
+     * @return The algorithm.
      */
     public String getAlgorithm() {
         return algorithm;
@@ -98,7 +98,7 @@ public class Transformation {
     /**
      * Gets the mode.
      *
-     * @return the mode.
+     * @return The mode.
      */
     public String getMode() {
         return mode;
@@ -107,7 +107,7 @@ public class Transformation {
     /**
      * Gets the padding.
      *
-     * @return the padding.
+     * @return The padding.
      */
     public Padding getPadding() {
         return padding;

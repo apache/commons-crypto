@@ -46,7 +46,7 @@ public interface CryptoCipher extends Closeable {
      * @param inputLen the input length
      * @param output the byte array for the result
      * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
+     * @return The number of bytes stored in output
      * @throws ShortBufferException if the given output byte array is too small
      *         to hold the result
      * @throws BadPaddingException if this cipher is in decryption mode, and
@@ -93,14 +93,14 @@ public interface CryptoCipher extends Closeable {
      * {@code CryptoCipher} object.
      * </p>
      *
-     * @return the algorithm name of this {@code CryptoCipher} object.
+     * @return The algorithm name of this {@code CryptoCipher} object.
      */
     String getAlgorithm();
 
     /**
      * Returns the block size (in bytes).
      *
-     * @return the block size (in bytes), or 0 if the underlying algorithm is
+     * @return The block size (in bytes), or 0 if the underlying algorithm is
      * not a block cipher
      */
     int getBlockSize();
@@ -135,7 +135,7 @@ public interface CryptoCipher extends Closeable {
      * @param inputLen the input length
      * @param output the byte array for the result
      * @param outputOffset the offset in output where the result is stored
-     * @return the number of bytes stored in output
+     * @return The number of bytes stored in output
      * @throws ShortBufferException if there is insufficient space in the output
      *         byte array
      */
