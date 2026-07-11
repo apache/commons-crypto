@@ -40,7 +40,7 @@ public class StreamExample {
     /**
      * Converts String to UTF8 bytes
      *
-     * @param input the input string
+     * @param input The input string
      * @return UTF8 bytes
      */
     private static byte[] getUTF8Bytes(final String input) {

@@ -35,7 +35,7 @@ final class OpenSslCryptoRandomNative {
      * Judges whether to use {@link OpenSslCryptoRandomNative} to generate the
      * user-specified number of random bits.
      *
-     * @param bytes the array to be filled in with random bytes.
+     * @param bytes The array to be filled in with random bytes.
      * @return {@code true} if use {@link OpenSslCryptoRandomNative} to generate the
      *         user-specified number of random bits.
      */

@@ -82,7 +82,7 @@ final class OpenSslCryptoRandom implements CryptoRandom {
     /**
      * Constructs a {@link OpenSslCryptoRandom}.
      *
-     * @param props the configuration properties - not used
+     * @param props The configuration properties - not used
      * @throws GeneralSecurityException if the native library could not be initialized successfully
      */
     public OpenSslCryptoRandom(final Properties props) throws GeneralSecurityException { // NOPMD
@@ -102,7 +102,7 @@ final class OpenSslCryptoRandom implements CryptoRandom {
      * Generates a user-specified number of random bytes. It's thread-safe.
      * Overrides {@link Random}.
      *
-     * @param bytes the array to be filled in with random bytes.
+     * @param bytes The array to be filled in with random bytes.
      */
     @Override
     public void nextBytes(final byte[] bytes) {

@@ -52,7 +52,7 @@ public class AES {
     /**
      * Creates a new SecretKeySpec for the given key and {@link #ALGORITHM}.
      *
-     * @param key a key.
+     * @param key A key.
      * @return A new SecretKeySpec.
      */
     public static SecretKeySpec newSecretKeySpec(final byte[] key) {

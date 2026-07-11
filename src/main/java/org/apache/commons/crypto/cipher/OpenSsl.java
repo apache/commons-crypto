@@ -44,8 +44,8 @@ final class OpenSsl {
         /**
          * Gets the mode.
          *
-         * @param algorithm the algorithm.
-         * @param mode the mode.
+         * @param algorithm The algorithm.
+         * @param mode The mode.
          * @return The Algorithm mode.
          * @throws NoSuchAlgorithmException if the algorithm is not available.
          */
@@ -83,7 +83,7 @@ final class OpenSsl {
      * Gets an {@code OpenSslCipher} that implements the specified
      * transformation.
      *
-     * @param transformation the name of the transformation, e.g.,
+     * @param transformation The name of the transformation, e.g.,
      *        AES/CTR/NoPadding.
      * @return OpenSslCipher an {@code OpenSslCipher} object
      * @throws NoSuchAlgorithmException if {@code transformation} is {@code null},
@@ -119,9 +119,9 @@ final class OpenSsl {
     /**
      * Constructs a {@link OpenSsl} instance based on context, algorithm and padding.
      *
-     * @param context the context.
-     * @param algorithm the algorithm.
-     * @param padding the padding.
+     * @param context The context.
+     * @param algorithm The algorithm.
+     * @param padding The padding.
      */
     private OpenSsl(final long context, final int algorithm, final int padding) {
         if (algorithm == AlgorithmMode.AES_GCM.ordinal()) {
@@ -142,11 +142,11 @@ final class OpenSsl {
      * Finalizes to encrypt or decrypt data in a single-part operation, or finishes a
      * multiple-part operation.
      *
-     * @param input the input byte array
-     * @param inputOffset the offset in input where the input starts
-     * @param inputLen the input length
-     * @param output the byte array for the result
-     * @param outputOffset the offset in output where the result is stored
+     * @param input The input byte array
+     * @param inputOffset The offset in input where the input starts
+     * @param inputLen The input length
+     * @param output The byte array for the result
+     * @param outputOffset The offset in output where the result is stored
      * @return The number of bytes stored in output
      * @throws ShortBufferException if the given output byte array is too small
      *         to hold the result
@@ -188,8 +188,8 @@ final class OpenSsl {
      * If any exception is thrown, this cipher object need to be reset before it
      * can be used again.
      *
-     * @param input the input ByteBuffer
-     * @param output the output ByteBuffer
+     * @param input The input ByteBuffer
+     * @param output The output ByteBuffer
      * @return int number of bytes stored in {@code output}
      * @throws ShortBufferException if the given output byte array is too small
      *         to hold the result.
@@ -218,7 +218,7 @@ final class OpenSsl {
      *
      * @param mode {@link #ENCRYPT_MODE} or {@link #DECRYPT_MODE}
      * @param key crypto key
-     * @param params the algorithm parameters
+     * @param params The algorithm parameters
      * @throws InvalidAlgorithmParameterException if IV length is wrong
      */
     public void init(final int mode, final byte[] key, final AlgorithmParameterSpec params) throws InvalidAlgorithmParameterException {
@@ -229,11 +229,11 @@ final class OpenSsl {
      * Updates a multiple-part encryption/decryption operation. The data is
      * encrypted or decrypted, depending on how this cipher was initialized.
      *
-     * @param input the input byte array
-     * @param inputOffset the offset in input where the input starts
-     * @param inputLen the input length
-     * @param output the byte array for the result
-     * @param outputOffset the offset in output where the result is stored
+     * @param input The input byte array
+     * @param inputOffset The offset in input where the input starts
+     * @param inputLen The input length
+     * @param output The byte array for the result
+     * @param outputOffset The offset in output where the result is stored
      * @return The number of bytes stored in output
      * @throws ShortBufferException if there is insufficient space in the output
      *         byte array
@@ -263,8 +263,8 @@ final class OpenSsl {
      * If {@code output.remaining()} bytes are insufficient to hold the
      * result, a {@code ShortBufferException} is thrown.
      *
-     * @param input the input ByteBuffer
-     * @param output the output ByteBuffer
+     * @param input The input ByteBuffer
+     * @param output The output ByteBuffer
      * @return int number of bytes stored in {@code output}
      * @throws ShortBufferException if there is insufficient space in the output
      *         buffer
@@ -285,7 +285,7 @@ final class OpenSsl {
      * {@code doFinal} methods).
      * </p>
      *
-     * @param aad the buffer containing the Additional Authentication Data
+     * @param aad The buffer containing the Additional Authentication Data
      */
     public void updateAAD(final byte[] aad) {
         this.opensslBlockCipher.updateAAD(aad);

@@ -95,10 +95,10 @@ public interface Input extends Closeable {
      * An implementation may not support positioned read. If the implementation
      * doesn't support positioned read, it throws UnsupportedOperationException.
      *
-     * @param position the given position within a stream.
-     * @param buffer the buffer into which the data is read.
-     * @param offset the start offset in array buffer.
-     * @param length the maximum number of bytes to read.
+     * @param position The given position within a stream.
+     * @param buffer The buffer into which the data is read.
+     * @param offset The start offset in array buffer.
+     * @param length The maximum number of bytes to read.
      * @return The total number of bytes read into the buffer, or
      *         {@code -1} if there is no more data because the end of the
      *         stream has been reached.
@@ -114,7 +114,7 @@ public interface Input extends Closeable {
      * An implementation may not support seek. If the implementation doesn't
      * support seek, it throws UnsupportedOperationException.
      *
-     * @param position the offset from the start of the stream.
+     * @param position The offset from the start of the stream.
      * @throws IOException if an I/O error occurs.
      */
     void seek(long position) throws IOException;
@@ -135,7 +135,7 @@ public interface Input extends Closeable {
      * a more efficient implementation of this method. For instance, the
      * implementation may depend on the ability to seek.
      *
-     * @param n the number of bytes to be skipped.
+     * @param n The number of bytes to be skipped.
      * @return The actual number of bytes skipped.
      * @throws IOException if the stream does not support seek, or if some
      *            other I/O error occurs.

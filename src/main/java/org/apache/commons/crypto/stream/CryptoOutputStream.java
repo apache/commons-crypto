@@ -85,11 +85,11 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Constructs a {@link CryptoOutputStream}.
      *
-     * @param output the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param output The output stream.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     protected CryptoOutputStream(final Output output, final CryptoCipher cipher,
@@ -119,11 +119,11 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Constructs a {@link CryptoOutputStream}.
      *
-     * @param outputStream the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param outputStream The output stream.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // Closing the instance closes the StreamOutput
@@ -136,15 +136,15 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Constructs a {@link CryptoOutputStream}.
      *
-     * @param transformation the name of the transformation, e.g.,
+     * @param transformation The name of the transformation, e.g.,
      * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param outputStream the output stream.
+     * @param outputStream The output stream.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoOutputStream.
@@ -159,15 +159,15 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Constructs a {@link CryptoOutputStream}.
      *
-     * @param transformation the name of the transformation, e.g.,
+     * @param transformation The name of the transformation, e.g.,
      * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param out the WritableByteChannel instance.
+     * @param out The WritableByteChannel instance.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoOutputStream.
@@ -182,11 +182,11 @@ public class CryptoOutputStream extends OutputStream implements
     /**
      * Constructs a {@link CryptoOutputStream}.
      *
-     * @param channel the WritableByteChannel instance.
-     * @param cipher the cipher instance.
-     * @param bufferSize the bufferSize.
+     * @param channel The WritableByteChannel instance.
+     * @param cipher The cipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // Closing the instance closes the ChannelOutput
@@ -367,9 +367,9 @@ public class CryptoOutputStream extends OutputStream implements
      * then write to this buffer. If {@link #inBuffer} is full, then do
      * encryption and write data to the underlying stream.
      *
-     * @param array the data.
-     * @param off the start offset in the data.
-     * @param len the number of bytes to write.
+     * @param array The data.
+     * @param off The start offset in the data.
+     * @param len The number of bytes to write.
      * @throws IOException if an I/O error occurs.
      */
     @Override
@@ -437,7 +437,7 @@ public class CryptoOutputStream extends OutputStream implements
      * Overrides the {@link OutputStream#write(byte[])}. Writes the
      * specified byte to this output stream.
      *
-     * @param b the data.
+     * @param b The data.
      * @throws IOException if an I/O error occurs.
      */
     @Override

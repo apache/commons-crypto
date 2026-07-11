@@ -49,7 +49,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         /**
          * Constructs a new instance.
          *
-         * @param cryptoCipher the CryptoCipher instance.
+         * @param cryptoCipher The CryptoCipher instance.
          */
         public CipherState(final CryptoCipher cryptoCipher) {
             this.cryptoCipher = cryptoCipher;
@@ -77,7 +77,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
         /**
          * Sets the value of reset.
          *
-         * @param reset the reset.
+         * @param reset The reset.
          */
         public void reset(final boolean reset) {
             this.reset = reset;
@@ -104,10 +104,10 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      *
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param in the input data.
+     * @param in The input data.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
+     * @param streamOffset The start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by PositionedCryptoInputStream.
@@ -119,13 +119,13 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * Constructs a {@link PositionedCryptoInputStream}.
      *
-     * @param properties the properties of stream
-     * @param input the input data.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param properties The properties of stream
+     * @param input The input data.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
+     * @param streamOffset The start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
     protected PositionedCryptoInputStream(final Properties properties, final Input input, final CryptoCipher cipher,
@@ -173,10 +173,10 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * return, inBuffer is cleared; the decrypted data starts at
      * outBuffer.position() and ends at outBuffer.limit().
      *
-     * @param state the CipherState instance.
-     * @param inByteBuffer the input buffer.
-     * @param outByteBuffer the output buffer.
-     * @param padding the padding.
+     * @param state The CipherState instance.
+     * @param inByteBuffer The input buffer.
+     * @param outByteBuffer The output buffer.
+     * @param padding The padding.
      * @throws IOException if an I/O error occurs.
      */
     private void decrypt(final CipherState state, final ByteBuffer inByteBuffer,
@@ -204,10 +204,10 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * Decrypts length bytes in buffer starting at offset. Output is also put
      * into buffer starting at offset. It is thread-safe.
      *
-     * @param buffer the buffer into which the data is read.
-     * @param offset the start offset in the data.
-     * @param position the offset from the start of the stream.
-     * @param length the maximum number of bytes to read.
+     * @param buffer The buffer into which the data is read.
+     * @param offset The start offset in the data.
+     * @param position The offset from the start of the stream.
+     * @param length The maximum number of bytes to read.
      * @throws IOException if an I/O error occurs.
      */
     protected void decrypt(final long position, final byte[] buffer, final int offset, final int length)
@@ -244,9 +244,9 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * Does the decryption using inBuffer as input and outBuffer as output.
      *
-     * @param state the CipherState instance.
-     * @param inByteBuffer the input buffer.
-     * @param outByteBuffer the output buffer.
+     * @param state The CipherState instance.
+     * @param inByteBuffer The input buffer.
+     * @param outByteBuffer The output buffer.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // getCryptoCipher does not allocate
@@ -296,10 +296,10 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * This method is executed immediately after decryption. Check whether
      * cipher should be updated and recalculate padding if needed.
      *
-     * @param state the CipherState instance.
-     * @param inByteBuffer the input buffer.
-     * @param position the offset from the start of the stream.
-     * @param iv the iv.
+     * @param state The CipherState instance.
+     * @param inByteBuffer The input buffer.
+     * @param position The offset from the start of the stream.
+     * @param iv The iv.
      * @return The padding.
      */
     private byte postDecryption(final CipherState state, final ByteBuffer inByteBuffer,
@@ -324,10 +324,10 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * stream and return the number of bytes read. This does not change the
      * current offset of the stream, and is thread-safe.
      *
-     * @param buffer the buffer into which the data is read.
-     * @param length the maximum number of bytes to read.
-     * @param offset the start offset in the data.
-     * @param position the offset from the start of the stream.
+     * @param buffer The buffer into which the data is read.
+     * @param length The maximum number of bytes to read.
+     * @param offset The start offset in the data.
+     * @param position The offset from the start of the stream.
      * @throws IOException if an I/O error occurs.
      * @return int the total number of decrypted data bytes read into the
      *         buffer.
@@ -348,8 +348,8 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * stream. This does not change the current offset of the stream and is
      * thread-safe.
      *
-     * @param position the offset from the start of the stream.
-     * @param buffer the buffer into which the data is read.
+     * @param position The offset from the start of the stream.
+     * @param buffer The buffer into which the data is read.
      * @throws IOException if an I/O error occurs.
      */
     public void readFully(final long position, final byte[] buffer) throws IOException {
@@ -361,10 +361,10 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
      * stream. This does not change the current offset of the stream and is
      * thread-safe.
      *
-     * @param buffer the buffer into which the data is read.
-     * @param length the maximum number of bytes to read.
-     * @param offset the start offset in the data.
-     * @param position the offset from the start of the stream.
+     * @param buffer The buffer into which the data is read.
+     * @param length The maximum number of bytes to read.
+     * @param offset The start offset in the data.
+     * @param position The offset from the start of the stream.
      * @throws IOException if an I/O error occurs.
      */
     public void readFully(final long position, final byte[] buffer, final int offset, final int length)
@@ -380,9 +380,9 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * Calculates the counter and iv, reset the cipher.
      *
-     * @param state the CipherState instance.
-     * @param position the offset from the start of the stream.
-     * @param iv the iv.
+     * @param state The CipherState instance.
+     * @param position The offset from the start of the stream.
+     * @param iv The iv.
      */
     @SuppressWarnings("resource") // getCryptoCipher does not allocate
     private void resetCipher(final CipherState state, final long position, final byte[] iv) {
@@ -399,7 +399,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * Returns direct buffer to pool.
      *
-     * @param buf the buffer.
+     * @param buf The buffer.
      */
     private void returnToPool(final ByteBuffer buf) {
         if (buf != null) {
@@ -411,7 +411,7 @@ public class PositionedCryptoInputStream extends CtrCryptoInputStream {
     /**
      * Returns CryptoCipher to pool.
      *
-     * @param state the CipherState instance.
+     * @param state The CipherState instance.
      */
     private void returnToPool(final CipherState state) {
         if (state != null) {

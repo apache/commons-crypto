@@ -37,8 +37,8 @@ public class StreamOutput implements Output {
     /**
      * Constructs a new instance.
      *
-     * @param out the OutputStream object.
-     * @param bufferSize the buffer size.
+     * @param out The OutputStream object.
+     * @param bufferSize The buffer size.
      * @throws NullPointerException if channel is null.
      */
     public StreamOutput(final OutputStream out, final int bufferSize) {

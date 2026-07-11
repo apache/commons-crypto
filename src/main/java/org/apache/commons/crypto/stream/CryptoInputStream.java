@@ -73,8 +73,8 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Checks and floors buffer size.
      *
-     * @param cipher the {@link CryptoCipher} instance.
-     * @param bufferSize the buffer size.
+     * @param cipher The {@link CryptoCipher} instance.
+     * @param bufferSize The buffer size.
      * @return The remaining buffer size.
      */
     static int checkBufferSize(final CryptoCipher cipher, final int bufferSize) {
@@ -86,7 +86,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Checks whether the cipher is supported streaming.
      *
-     * @param cipher the {@link CryptoCipher} instance.
+     * @param cipher The {@link CryptoCipher} instance.
      * @throws IOException if an I/O error occurs.
      */
     static void checkStreamCipher(final CryptoCipher cipher) throws IOException {
@@ -147,11 +147,11 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Constructs a {@link CryptoInputStream}.
      *
-     * @param input the input data.
-     * @param cipher the cipher instance.
-     * @param bufferSize the bufferSize.
+     * @param input The input data.
+     * @param cipher The cipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     protected CryptoInputStream(final Input input, final CryptoCipher cipher, final int bufferSize,
@@ -178,11 +178,11 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Constructs a {@link CryptoInputStream}.
      *
-     * @param cipher the cipher instance.
-     * @param inputStream the input stream.
-     * @param bufferSize the bufferSize.
+     * @param cipher The cipher instance.
+     * @param inputStream The input stream.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // Closing the instance closes the StreamInput
@@ -195,11 +195,11 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Constructs a {@link CryptoInputStream}.
      *
-     * @param channel the ReadableByteChannel instance.
-     * @param cipher the cipher instance.
-     * @param bufferSize the bufferSize.
+     * @param channel The ReadableByteChannel instance.
+     * @param cipher The cipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // Closing the instance closes the ChannelInput
@@ -212,15 +212,15 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Constructs a {@link CryptoInputStream}.
      *
-     * @param transformation the name of the transformation, e.g.,
+     * @param transformation The name of the transformation, e.g.,
      * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param inputStream the input stream.
+     * @param inputStream The input stream.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoInputStream.
@@ -233,15 +233,15 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
     /**
      * Constructs a {@link CryptoInputStream}.
      *
-     * @param transformation the name of the transformation, e.g.,
+     * @param transformation The name of the transformation, e.g.,
      * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param channel the ReadableByteChannel object.
+     * @param channel The ReadableByteChannel object.
      * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
+     * @param params The algorithm parameters.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CryptoInputStream.
@@ -489,9 +489,9 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * read it out of this buffer. If there is no data in {@link #outBuffer},
      * then read more from the underlying stream and do the decryption.
      *
-     * @param array the buffer into which the decrypted data is read.
-     * @param off the buffer offset.
-     * @param len the maximum number of decrypted data bytes to read.
+     * @param array The buffer into which the decrypted data is read.
+     * @param off The buffer offset.
+     * @param len The maximum number of decrypted data bytes to read.
      * @return int the total number of decrypted data bytes read into the
      *         buffer.
      * @throws IOException if an I/O error occurs.
@@ -574,7 +574,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * Overrides the {@link InputStream#skip(long)}. Skips over and
      * discards {@code n} bytes of data from this input stream.
      *
-     * @param n the number of bytes to be skipped.
+     * @param n The number of bytes to be skipped.
      * @return The actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */

@@ -76,11 +76,11 @@ final class OpenSslCipher implements CryptoCipher {
      * Encrypts or decrypts data in a single-part operation, or finishes a
      * multiple-part operation.
      *
-     * @param input the input byte array
-     * @param inputOffset the offset in input where the input starts
-     * @param inputLen the input length
-     * @param output the byte array for the result
-     * @param outputOffset the offset in output where the result is stored
+     * @param input The input byte array
+     * @param inputOffset The offset in input where the input starts
+     * @param inputLen The input length
+     * @param output The byte array for the result
+     * @param outputOffset The offset in output where the result is stored
      * @return The number of bytes stored in output
      * @throws ShortBufferException if the given output byte array is too small
      *         to hold the result
@@ -105,8 +105,8 @@ final class OpenSslCipher implements CryptoCipher {
      * multiple-part operation. The data is encrypted or decrypted, depending on
      * how this openSslEngine was initialized.
      *
-     * @param inBuffer the input ByteBuffer
-     * @param outBuffer the output ByteBuffer
+     * @param inBuffer The input ByteBuffer
+     * @param outBuffer The output ByteBuffer
      * @return int number of bytes stored in {@code output}
      * @throws BadPaddingException if this openSslEngine is in decryption mode, and
      *         (un)padding has been requested, but the decrypted data is not
@@ -158,7 +158,7 @@ final class OpenSslCipher implements CryptoCipher {
      *
      * @param mode {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
      * @param key crypto key for the openSslEngine
-     * @param params the algorithm parameters
+     * @param params The algorithm parameters
      * @throws InvalidKeyException If key length is invalid
      * @throws InvalidAlgorithmParameterException if IV length is wrong
      */
@@ -177,11 +177,11 @@ final class OpenSslCipher implements CryptoCipher {
      * Continues a multiple-part encryption/decryption operation. The data is
      * encrypted or decrypted, depending on how this openSslEngine was initialized.
      *
-     * @param input the input byte array
-     * @param inputOffset the offset in input where the input starts
-     * @param inputLen the input length
-     * @param output the byte array for the result
-     * @param outputOffset the offset in output where the result is stored
+     * @param input The input byte array
+     * @param inputOffset The offset in input where the input starts
+     * @param inputLen The input length
+     * @param output The byte array for the result
+     * @param outputOffset The offset in output where the result is stored
      * @return The number of bytes stored in output
      * @throws ShortBufferException if there is insufficient space in the output
      *         byte array
@@ -197,8 +197,8 @@ final class OpenSslCipher implements CryptoCipher {
      * Continues a multiple-part encryption/decryption operation. The data is
      * encrypted or decrypted, depending on how this openSslEngine was initialized.
      *
-     * @param inBuffer the input ByteBuffer
-     * @param outBuffer the output ByteBuffer
+     * @param inBuffer The input ByteBuffer
+     * @param outBuffer The output ByteBuffer
      * @return int number of bytes stored in {@code output}
      * @throws ShortBufferException if there is insufficient space in the output
      *         buffer
@@ -220,7 +220,7 @@ final class OpenSslCipher implements CryptoCipher {
      * {@code doFinal} methods).
      * </p>
      *
-     * @param aad the buffer containing the Additional Authentication Data
+     * @param aad The buffer containing the Additional Authentication Data
      * @throws IllegalArgumentException if the {@code aad}
      * byte array is {@code null}
      * @throws IllegalStateException if this opensslEngine is in a wrong state
@@ -258,7 +258,7 @@ final class OpenSslCipher implements CryptoCipher {
      * {@code doFinal} methods).
      * </p>
      *
-     * @param aad the buffer containing the Additional Authentication Data
+     * @param aad The buffer containing the Additional Authentication Data
      * @throws IllegalArgumentException if the {@code aad}
      * byte array is {@code null}
      * @throws IllegalStateException if this opensslEngine is in a wrong state

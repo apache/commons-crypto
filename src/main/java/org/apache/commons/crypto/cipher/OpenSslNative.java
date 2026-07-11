@@ -80,7 +80,7 @@ final class OpenSslNative {
      * @param context The cipher context address
      * @param mode ENCRYPT_MODE or DECRYPT_MODE
      * @param alg Algorithm Mode of OpenSsl
-     * @param padding the padding mode of OpenSsl cipher
+     * @param padding The padding mode of OpenSsl cipher
      * @param key crypto key
      * @param iv crypto iv
      * @return The context address of cipher

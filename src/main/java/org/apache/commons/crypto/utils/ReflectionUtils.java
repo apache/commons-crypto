@@ -61,7 +61,7 @@ public final class ReflectionUtils {
     /**
      * Loads a class by name.
      *
-     * @param name the class name.
+     * @param name The class name.
      * @return The class object.
      * @throws ClassNotFoundException if the class is not found.
      */
@@ -80,7 +80,7 @@ public final class ReflectionUtils {
      * Loads a class by name, returning {@code null} rather than throwing an exception if it
      * couldn't be loaded. This is to avoid the overhead of creating an exception.
      *
-     * @param name the class name.
+     * @param name The class name.
      * @return The class object, or {@code null} if it could not be found or initialization failed.
      */
     private static Class<?> getClassByNameOrNull(final String name) {
@@ -131,7 +131,7 @@ public final class ReflectionUtils {
      * specified initialization parameters.
      *
      * @param <T>   type for the new instance
-     * @param klass the Class object.
+     * @param klass The Class object.
      * @param args  array of objects to be passed as arguments to the constructor
      *              call.
      * @return A new object created by calling the constructor this object

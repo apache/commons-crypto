@@ -64,9 +64,9 @@ public class Transformation {
     /**
      * Constructs a new instance.
      *
-     * @param algorithm the algorithm name
-     * @param mode the mode name
-     * @param padding the padding name
+     * @param algorithm The algorithm name
+     * @param mode The mode name
+     * @param padding The padding name
      */
     private Transformation(final String algorithm, final String mode, final Padding padding) {
         this.algorithm = algorithm;
@@ -77,9 +77,9 @@ public class Transformation {
     /**
      * Constructs a new instance.
      *
-     * @param algorithm the algorithm name
-     * @param mode the mode name
-     * @param padding the padding name
+     * @param algorithm The algorithm name
+     * @param mode The mode name
+     * @param padding The padding name
      * @throws NoSuchPaddingException Thrown when the padding is unsupported.
      */
     private Transformation(final String algorithm, final String mode, final String padding) throws NoSuchPaddingException {

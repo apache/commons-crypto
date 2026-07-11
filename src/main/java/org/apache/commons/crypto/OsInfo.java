@@ -163,7 +163,7 @@ final class OsInfo {
     /**
      * The main method. This is used by the JNI make processing in {@code Makefile.common}
      *
-     * @param args the argv.
+     * @param args The argv.
      */
     public static void main(final String[] args) {
         if (args.length >= 1) {
@@ -183,7 +183,7 @@ final class OsInfo {
     /**
      * Translates the architecture name to folder name.
      *
-     * @param archName the architecture name.
+     * @param archName The architecture name.
      * @return The folder name.
      */
     private static String translateArchNameToFolderName(final String archName) {
@@ -193,7 +193,7 @@ final class OsInfo {
     /**
      * Translates the OS name to folder name.
      *
-     * @param osName the OS name.
+     * @param osName The OS name.
      * @return The folder name.
      */
     private static String translateOSNameToFolderName(final String osName) {

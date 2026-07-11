@@ -89,7 +89,7 @@ public final class Utils {
      * Ensures the truth of an expression involving one or more parameters to
      * the calling method.
      *
-     * @param expression a boolean expression.
+     * @param expression A boolean expression.
      * @throws IllegalArgumentException if expression is {@code false}.
      */
     public static void checkArgument(final boolean expression) {
@@ -101,8 +101,8 @@ public final class Utils {
     /**
      * Checks the truth of an expression.
      *
-     * @param expression a boolean expression.
-     * @param errorMessage the exception message to use if the check fails; will
+     * @param expression A boolean expression.
+     * @param errorMessage The exception message to use if the check fails; will
      *        be converted to a string using {@link String#valueOf(Object)}.
      * @throws IllegalArgumentException if expression is {@code false}.
      */
@@ -117,7 +117,7 @@ public final class Utils {
      * method is not {@code null}.
      *
      * @param <T> The type of the object reference to be checked.
-     * @param reference an object reference.
+     * @param reference An object reference.
      * @return The non-null reference that was validated.
      * @throws NullPointerException if reference is {@code null}.
      * @deprecated Use {@link Objects#requireNonNull(Object)}.
@@ -131,7 +131,7 @@ public final class Utils {
      * Ensures the truth of an expression involving the state of the calling
      * instance, but not involving any parameters to the calling method.
      *
-     * @param expression a boolean expression.
+     * @param expression A boolean expression.
      * @throws IllegalStateException if expression is {@code false}.
      */
     public static void checkState(final boolean expression) {
@@ -142,7 +142,7 @@ public final class Utils {
      * Ensures the truth of an expression involving the state of the calling
      * instance, but not involving any parameters to the calling method.
      *
-     * @param expression a boolean expression.
+     * @param expression A boolean expression.
      * @param message Error message for the exception when the expression is {@code false}.
      * @throws IllegalStateException if expression is {@code false}.
      */
@@ -158,7 +158,7 @@ public final class Utils {
      *
      * @param properties The {@link Properties} class represents a set of
      *        properties.
-     * @param transformation the name of the transformation, e.g.,
+     * @param transformation The name of the transformation, e.g.,
      * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
@@ -200,7 +200,7 @@ public final class Utils {
      * Override the default DLL name if Crypto.JNI_LIBRARY_PATH is a valid directory
      * If Crypto.JNI_LIBRARY_NAME is defined, this overrides the default name.
      *
-     * @param name   the default name, passed from native code
+     * @param name   The default name, passed from native code
      * @return The updated library path
      * This method is designed for use from the DynamicLoader native code.
      * Although it could all be implemented in native code, this hook method
@@ -229,9 +229,9 @@ public final class Utils {
      * Splits class names sequence into substrings, Trim each substring into an
      * entry, and returns a list of the entries.
      *
-     * @param classNames a string consist of a list of the entries joined by a
+     * @param classNames A string consist of a list of the entries joined by a
      *        delimiter, may be {@code null} or empty in which case an empty list is returned.
-     * @param separator a delimiter for the input string.
+     * @param separator A delimiter for the input string.
      * @return A list of class entries.
      */
     public static List<String> splitClassNames(final String classNames, final String separator) {

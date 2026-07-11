@@ -79,7 +79,7 @@ public class CryptoCipherFactory {
         /**
          * The private constructor.
          *
-         * @param klass the Class of CryptoCipher
+         * @param klass The Class of CryptoCipher
          */
         CipherProvider(final Class<? extends CryptoCipher> klass) {
             this.klass = klass;
@@ -163,7 +163,7 @@ public class CryptoCipherFactory {
      * Gets a cipher for algorithm/mode/padding in config value
      * commons.crypto.cipher.transformation
      *
-     * @param transformation the name of the transformation, e.g.,
+     * @param transformation The name of the transformation, e.g.,
      * <em>AES/CBC/PKCS5Padding</em>.
      * See the Java Cryptography Architecture Standard Algorithm Name Documentation
      * for information about standard transformation names.
@@ -178,7 +178,7 @@ public class CryptoCipherFactory {
     /**
      * Gets a cipher instance for specified algorithm/mode/padding.
      *
-     * @param properties  the configuration properties - uses {@link #CLASSES_KEY}
+     * @param properties  The configuration properties - uses {@link #CLASSES_KEY}
      * @param transformation  algorithm/mode/padding
      * @return CryptoCipher  the cipher  (defaults to OpenSslCipher)
      * @throws GeneralSecurityException if cipher initialize failed

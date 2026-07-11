@@ -37,7 +37,7 @@ public class ChannelOutput implements Output {
      * Constructs a
      * {@link org.apache.commons.crypto.stream.output.ChannelOutput}.
      *
-     * @param channel the WritableByteChannel object.
+     * @param channel The WritableByteChannel object.
      * @throws NullPointerException if channel is null.
      */
     public ChannelOutput(final WritableByteChannel channel) {

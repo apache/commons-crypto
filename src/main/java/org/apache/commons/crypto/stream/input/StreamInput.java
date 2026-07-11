@@ -39,8 +39,8 @@ public class StreamInput implements Input {
     /**
      * Constructs a {@link org.apache.commons.crypto.stream.input.StreamInput}.
      *
-     * @param inputStream the InputStream object.
-     * @param bufferSize the buffer size.
+     * @param inputStream The InputStream object.
+     * @param bufferSize The buffer size.
      * @throws NullPointerException if inputStream is null.
      */
     public StreamInput(final InputStream inputStream, final int bufferSize) {
@@ -120,10 +120,10 @@ public class StreamInput implements Input {
      * bytes, but a smaller number may be read. The number of bytes actually
      * read is returned as an integer.
      *
-     * @param position the given position within a stream.
-     * @param buffer the buffer into which the data is read.
-     * @param offset the start offset in array buffer.
-     * @param length the maximum number of bytes to read.
+     * @param position The given position within a stream.
+     * @param buffer The buffer into which the data is read.
+     * @param offset The start offset in array buffer.
+     * @param length The maximum number of bytes to read.
      * @return The total number of bytes read into the buffer, or
      *         {@code EOS (-1)} if there is no more data because the end of the
      *         stream has been reached.
@@ -140,7 +140,7 @@ public class StreamInput implements Input {
      * the given offset from the start of the stream. The next read() will be
      * from that location.
      *
-     * @param position the offset from the start of the stream.
+     * @param position The offset from the start of the stream.
      * @throws IOException if an I/O error occurs.
      */
     @Override
@@ -153,7 +153,7 @@ public class StreamInput implements Input {
      * {@link org.apache.commons.crypto.stream.input.Input#skip(long)}. Skips
      * over and discards {@code n} bytes of data from this input stream.
      *
-     * @param n the number of bytes to be skipped.
+     * @param n The number of bytes to be skipped.
      * @return The actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */

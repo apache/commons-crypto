@@ -33,7 +33,7 @@ public final class IoUtils {
      * Closes the Closeable objects and <strong>ignore</strong> any {@link IOException} or
      * null pointers. Must only be used for cleanup in exception handlers.
      *
-     * @param closeables the objects to close.
+     * @param closeables The objects to close.
      */
     public static void cleanup(final Closeable... closeables) {
         if (closeables != null) {
@@ -57,11 +57,11 @@ public final class IoUtils {
      * Does the readFully based on Input's positioned read. This does not change
      * the current offset of the stream and is thread-safe.
      *
-     * @param in the input source.
-     * @param position the given position.
-     * @param buffer the buffer to be read.
-     * @param length the maximum number of bytes to read.
-     * @param offset the start offset in array buffer.
+     * @param in The input source.
+     * @param position The given position.
+     * @param buffer The buffer to be read.
+     * @param length The maximum number of bytes to read.
+     * @param offset The start offset in array buffer.
      * @throws IOException if an I/O error occurs.
      */
     public static void readFully(final Input in, final long position, final byte[] buffer,
@@ -81,10 +81,10 @@ public final class IoUtils {
     /**
      * Does the readFully based on the Input read.
      *
-     * @param in the input stream of bytes.
-     * @param buf the buffer to be read.
-     * @param off the start offset in array buffer.
-     * @param len the maximum number of bytes to read.
+     * @param in The input stream of bytes.
+     * @param buf The buffer to be read.
+     * @param off The start offset in array buffer.
+     * @param len The maximum number of bytes to read.
      * @throws IOException if an I/O error occurs.
      */
     public static void readFully(final InputStream in, final byte[] buf, int off, final int len)

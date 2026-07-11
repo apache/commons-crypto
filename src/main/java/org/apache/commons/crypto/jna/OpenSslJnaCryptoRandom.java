@@ -54,7 +54,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
     /**
      * Constructs a {@link OpenSslJnaCryptoRandom}.
      *
-     * @param props the configuration properties (not used)
+     * @param props The configuration properties (not used)
      * @throws GeneralSecurityException  if JNA access could not be enabled
      */
     public OpenSslJnaCryptoRandom(final Properties props) //NOPMD
@@ -128,7 +128,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
     /**
      * Generates a user-specified number of random bytes. It's thread-safe.
      *
-     * @param bytes the array to be filled in with random bytes.
+     * @param bytes The array to be filled in with random bytes.
      */
     @Override
     public void nextBytes(final byte[] bytes) {
@@ -151,7 +151,7 @@ final class OpenSslJnaCryptoRandom implements CryptoRandom {
     }
 
     /**
-     * @param retVal the result value of error.
+     * @param retVal The result value of error.
      * @param closing {@code true} when called while closing.
      */
     private void throwOnError(final int retVal, final boolean closing) {

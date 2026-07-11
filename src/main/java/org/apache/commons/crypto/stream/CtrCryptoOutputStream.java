@@ -85,9 +85,9 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param output the Output instance.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param output The Output instance.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
@@ -100,12 +100,12 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param output the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param output The output stream.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
+     * @param streamOffset The start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
     protected CtrCryptoOutputStream(final Output output, final CryptoCipher cipher,
@@ -125,9 +125,9 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param out the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param out The output stream.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
@@ -140,12 +140,12 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param outputStream the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param outputStream The output stream.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
+     * @param streamOffset The start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // Closing the instance closes the StreamOutput
@@ -160,7 +160,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param props The {@code Properties} class represents a set of
      *        properties.
-     * @param out the output stream.
+     * @param out The output stream.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
@@ -175,10 +175,10 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param outputStream the output stream.
+     * @param outputStream The output stream.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
+     * @param streamOffset The start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoOutputStream.
@@ -194,7 +194,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param props The {@code Properties} class represents a set of
      *        properties.
-     * @param out the WritableByteChannel instance.
+     * @param out The WritableByteChannel instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
@@ -209,10 +209,10 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
      *
      * @param properties The {@code Properties} class represents a set of
      *        properties.
-     * @param channel the WritableByteChannel instance.
+     * @param channel The WritableByteChannel instance.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
+     * @param streamOffset The start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
     @SuppressWarnings("resource") // The CryptoCipher returned by getCipherInstance() is closed by CtrCryptoOutputStream.
@@ -226,9 +226,9 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param channel the WritableByteChannel instance.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param channel The WritableByteChannel instance.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
      * @throws IOException if an I/O error occurs.
@@ -242,12 +242,12 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Constructs a {@link CtrCryptoOutputStream}.
      *
-     * @param channel the WritableByteChannel instance.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
+     * @param channel The WritableByteChannel instance.
+     * @param cipher The CryptoCipher instance.
+     * @param bufferSize The bufferSize.
      * @param key crypto key for the cipher.
      * @param iv Initialization vector for the cipher.
-     * @param streamOffset the start offset in the data.
+     * @param streamOffset The start offset in the data.
      * @throws IOException if an I/O error occurs.
      */
    @SuppressWarnings("resource") // Closing the instance closes the ChannelOutput
@@ -302,7 +302,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Does the encryption if the ByteBuffer data.
      *
-     * @param out the output ByteBuffer.
+     * @param out The output ByteBuffer.
      * @throws IOException if an I/O error occurs.
      */
     private void encryptBuffer(final ByteBuffer out) throws IOException {
@@ -376,7 +376,7 @@ public class CtrCryptoOutputStream extends CryptoOutputStream {
     /**
      * Sets the underlying stream offset
      *
-     * @param streamOffset the underlying stream offset
+     * @param streamOffset The underlying stream offset
      */
     protected void setStreamOffset(final long streamOffset) {
         this.streamOffset = streamOffset;

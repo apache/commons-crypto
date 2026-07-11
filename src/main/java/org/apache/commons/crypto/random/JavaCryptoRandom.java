@@ -57,7 +57,7 @@ final class JavaCryptoRandom implements CryptoRandom {
     /**
      * Constructs a {@link JavaCryptoRandom}.
      *
-     * @param properties the configuration properties. Uses the key {@link CryptoRandomFactory#JAVA_ALGORITHM_KEY} to get the name of the algorithm, with a
+     * @param properties The configuration properties. Uses the key {@link CryptoRandomFactory#JAVA_ALGORITHM_KEY} to get the name of the algorithm, with a
      *        default of {@link CryptoRandomFactory#JAVA_ALGORITHM_DEFAULT}
      */
     public JavaCryptoRandom(final Properties properties) {
@@ -89,7 +89,7 @@ final class JavaCryptoRandom implements CryptoRandom {
      * Overrides {@link CryptoRandom#nextBytes(byte[])}. Generates random bytes and places them into a user-supplied byte array. The number of random bytes
      * produced is equal to the length of the byte array.
      *
-     * @param bytes the array to be filled in with random bytes.
+     * @param bytes The array to be filled in with random bytes.
      */
     @Override
     public void nextBytes(final byte[] bytes) {

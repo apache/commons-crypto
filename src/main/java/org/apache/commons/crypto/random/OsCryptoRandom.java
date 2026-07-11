@@ -44,7 +44,7 @@ final class OsCryptoRandom implements CryptoRandom {
     /**
      * Constructs a {@link OsCryptoRandom}.
      *
-     * @param props the configuration properties.
+     * @param props The configuration properties.
      * Uses {@link CryptoRandomFactory#DEVICE_FILE_PATH_KEY} to determine the
      * path to the random device, default is
      * {@link CryptoRandomFactory#DEVICE_FILE_PATH_DEFAULT}
@@ -81,7 +81,7 @@ final class OsCryptoRandom implements CryptoRandom {
     /**
      * Fills the reservoir.
      *
-     * @param min the length.
+     * @param min The length.
      */
     private void fillReservoir(final int min) {
         if (pos >= reservoir.length - min) {
@@ -99,7 +99,7 @@ final class OsCryptoRandom implements CryptoRandom {
      * and places them into a user-supplied byte array. The number of random
      * bytes produced is equal to the length of the byte array.
      *
-     * @param bytes the array to be filled in with random bytes.
+     * @param bytes The array to be filled in with random bytes.
      */
     @Override
     public synchronized void nextBytes(final byte[] bytes) {

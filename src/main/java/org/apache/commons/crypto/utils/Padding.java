@@ -34,7 +34,7 @@ public enum Padding {
     /**
      * Gets a Padding.
      *
-     * @param padding the padding name.
+     * @param padding The padding name.
      * @return A Padding instance.
      * @throws NoSuchPaddingException if the algorithm is not supported.
      */

@@ -89,7 +89,7 @@ public class CryptoRandomFactory {
         /**
          * The private constructor.
          *
-         * @param klass the Class of CryptoRandom
+         * @param klass The Class of CryptoRandom
          */
         RandomProvider(final Class<? extends CryptoRandom> klass) {
             this.klass = klass;
@@ -180,7 +180,7 @@ public class CryptoRandomFactory {
      * Failing that, it defaults to OpenSslCryptoRandom,JavaCryptoRandom
      * The properties are passed to the generated class.
      *
-     * @param props the configuration properties.
+     * @param props The configuration properties.
      * @return CryptoRandom  the cryptoRandom object.
      * @throws GeneralSecurityException if cannot create the {@link CryptoRandom} class
      * @throws IllegalArgumentException if no class name(s) are provided
