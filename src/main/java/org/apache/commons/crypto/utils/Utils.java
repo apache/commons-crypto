@@ -178,7 +178,7 @@ public final class Utils {
      * plus any other properties found in the file
      * {@link #SYSTEM_PROPERTIES_FILE}
      *
-     * @return a Properties instance with defaults
+     * @return A Properties instance with defaults
      */
     public static Properties getDefaultProperties() {
         return new Properties(DefaultPropertiesHolder.DEFAULT_PROPERTIES);
@@ -232,7 +232,7 @@ public final class Utils {
      * @param classNames a string consist of a list of the entries joined by a
      *        delimiter, may be {@code null} or empty in which case an empty list is returned.
      * @param separator a delimiter for the input string.
-     * @return a list of class entries.
+     * @return A list of class entries.
      */
     public static List<String> splitClassNames(final String classNames, final String separator) {
         final List<String> res = new ArrayList<>();

@@ -257,7 +257,7 @@ public class CryptoInputStream extends InputStream implements ReadableByteChanne
      * without blocking by the next invocation of a method for this input
      * stream.
      *
-     * @return an estimate of the number of bytes that can be read (or skipped
+     * @return An estimate of the number of bytes that can be read (or skipped
      *         over) from this input stream without blocking or {@code 0} when
      *         it reaches the end of the input stream.
      * @throws IOException if an I/O error occurs.

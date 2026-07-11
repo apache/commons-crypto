@@ -134,7 +134,7 @@ public final class ReflectionUtils {
      * @param klass the Class object.
      * @param args  array of objects to be passed as arguments to the constructor
      *              call.
-     * @return a new object created by calling the constructor this object
+     * @return A new object created by calling the constructor this object
      *         represents.
      */
     public static <T> T newInstance(final Class<T> klass, final Object... args) {

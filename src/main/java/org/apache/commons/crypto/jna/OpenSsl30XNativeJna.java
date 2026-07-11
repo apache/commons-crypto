@@ -118,32 +118,32 @@ final class OpenSsl30XNativeJna implements OpenSslInterfaceNativeJna {
     public static native NativeLong ERR_peek_error();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CBC mode
+     * @return An OpenSSL AES EVP cipher instance with a 128-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_128_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 128-bit key CTR mode
+     * @return An OpenSSL AES EVP cipher instance with a 128-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_128_ctr();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CBC mode
+     * @return An OpenSSL AES EVP cipher instance with a 192-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_192_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 192-bit key CTR mode
+     * @return An OpenSSL AES EVP cipher instance with a 192-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_192_ctr();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CBC mode
+     * @return An OpenSSL AES EVP cipher instance with a 256-bit key CBC mode
      */
     public static native PointerByReference EVP_aes_256_cbc();
 
     /**
-     * @return an OpenSSL AES EVP cipher instance with a 256-bit key CTR mode
+     * @return An OpenSSL AES EVP cipher instance with a 256-bit key CTR mode
      */
     public static native PointerByReference EVP_aes_256_ctr();
 
@@ -159,7 +159,7 @@ final class OpenSsl30XNativeJna implements OpenSslInterfaceNativeJna {
     /**
      * Creates a cipher context.
      *
-     * @return a pointer to a newly created EVP_CIPHER_CTX for success and NULL for failure.
+     * @return A pointer to a newly created EVP_CIPHER_CTX for success and NULL for failure.
      */
     public static native PointerByReference EVP_CIPHER_CTX_new();
 

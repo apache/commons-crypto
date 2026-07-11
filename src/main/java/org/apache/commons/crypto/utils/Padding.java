@@ -35,7 +35,7 @@ public enum Padding {
      * Gets a Padding.
      *
      * @param padding the padding name.
-     * @return a Padding instance.
+     * @return A Padding instance.
      * @throws NoSuchPaddingException if the algorithm is not supported.
      */
     public static Padding get(final String padding) throws NoSuchPaddingException {

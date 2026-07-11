@@ -54,7 +54,7 @@ public class ChannelInput implements Input {
      * single read or skip of this many bytes will not block, but may read or
      * skip fewer bytes.
      *
-     * @return an estimate of the number of bytes that can be read (or skipped
+     * @return An estimate of the number of bytes that can be read (or skipped
      *         over) from this input stream without blocking or {@code 0} when
      *         it reaches the end of the input stream.
      * @throws IOException if an I/O error occurs.
