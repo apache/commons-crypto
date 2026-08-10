@@ -23,6 +23,9 @@ on:
   # allow direct trigger
   workflow_dispatch:
   push:
+    branches:
+      - master
+      - release
     paths:
       - '**/native/**'
       - 'Makefile*'

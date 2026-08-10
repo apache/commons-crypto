@@ -27,6 +27,9 @@ on:
   # allow direct trigger
   workflow_dispatch:
   push:
+    branches:
+      - master
+      - release
     paths-ignore:
       - '**/workflows/*.yml'
       - 'src/docker/*'
