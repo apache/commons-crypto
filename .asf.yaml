@@ -16,6 +16,8 @@
 github:
   description: "Apache Commons Crypto"
   homepage: https://commons.apache.org/crypto/
+  autolink_jira:
+    - CRYPTO
   
   pull_requests:
     # allow auto-merge
