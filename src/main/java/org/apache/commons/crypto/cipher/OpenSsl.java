@@ -39,7 +39,7 @@ final class OpenSsl {
 
     /** Currently only support AES/CTR/NoPadding. */
     private enum AlgorithmMode {
-        AES_CTR, AES_CBC, AES_GCM;
+        AES_CTR, AES_CBC, AES_GCM, SM4_CTR, SM4_CBC;
 
         /**
          * Gets the mode.
