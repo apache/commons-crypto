@@ -40,6 +40,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
 
     /** Test byte buffer read with different buffer size. */
     @Override
+    @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testByteBufferRead() throws Exception {
         doByteBufferRead(CIPHER_OPENSSL_JNA, false);
@@ -49,6 +50,7 @@ public abstract class AbstractCipherJnaStreamTest extends AbstractCipherStreamTe
 
     /** Test byte buffer write. */
     @Override
+    @Test
     @Timeout(value = 120000, unit = TimeUnit.MILLISECONDS)
     public void testByteBufferWrite() throws Exception {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
