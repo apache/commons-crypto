@@ -18,6 +18,7 @@
 package org.apache.commons.crypto.stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -334,11 +335,7 @@ public abstract class AbstractCipherStreamTest {
         assertEquals(ex.getMessage(), "Stream closed");
 
         // Test closing a closed stream.
-        try {
-            closedIn.close(); // Don't throw exception on double-close.
-        } catch (final IOException ioEx) {
-            fail("Should not throw exception closing a closed stream.");
-        }
+        assertDoesNotThrow(closedIn::close, "Should not throw exception closing a closed stream.");
 
         // Test checking a closed stream.
         final OutputStream out = newCryptoOutputStream(transformation, props, baos, key, new IvParameterSpec(iv), withChannel);
@@ -347,11 +344,7 @@ public abstract class AbstractCipherStreamTest {
         assertThrows(IOException.class, ((CryptoOutputStream) out)::checkStream);
 
         // Test closing a closed stream.
-        try {
-            out.close(); // Don't throw exception.
-        } catch (final IOException ioEx) {
-            fail("Should not throw exception closing a closed stream.");
-        }
+        assertDoesNotThrow(out::close, "Should not throw exception closing a closed stream.");
 
         // Test checkStreamCipher
         try (CryptoCipher cipher = getCipher(cipherClass)) {
