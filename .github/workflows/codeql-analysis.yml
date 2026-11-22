@@ -29,8 +29,6 @@ on:
       - 'src/docker/*'
     # The branches below must be a subset of the branches above
     branches: [ master ]
-  # schedule:
-  #   - cron: '33 9 * * 4'
 
 permissions:
   contents: read
